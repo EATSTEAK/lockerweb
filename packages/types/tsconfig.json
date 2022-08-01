@@ -19,8 +19,6 @@
     "checkJs": true
   },
   "include": [
-    "./src/**/*.d.ts",
-    "./src/**/*.js",
-    "./src/**/*.ts"
+    "**/*.d.ts"
   ]
 }
