@@ -231,26 +231,30 @@ Resources:
     Properties:
       TableName: !Ref TableName
       AttributeDefinitions:
+        - AttributeName: type
+          AttributeType: S
         - AttributeName: id
           AttributeType: S
         - AttributeName: lockerId
           AttributeType: S
       KeySchema:
-        - AttributeName: dept
+        - AttributeName: type
           KeyType: HASH
         - AttributeName: id
           KeyType: RANGE
-      GlobalSecondaryIndexes:
+      LocalSecondaryIndexes:
         - IndexName: lockerIdIndex
           KeySchema:
-            - AttributeName: dept
+            - AttributeName: type
               KeyType: HASH
             - AttributeName: lockerId
               KeyType: RANGE
           Projection:
             ProjectionType: INCLUDE
             NonKeyAttributes:
-              - claimedUntil
+              - i
+              - n
+              - cU
       BillingMode: 'PAY_PER_REQUEST'
   FrontS3Bucket:
     DeletionPolicy: 'Delete'
@@ -280,8 +284,8 @@ Resources:
     Properties:
       CachePolicyConfig:
         Name: 'ApiCachePolicy'
-        DefaultTTL: 3600
-        MaxTTL: 31536000
+        DefaultTTL: 1
+        MaxTTL: 1
         MinTTL: 0
         ParametersInCacheKeyAndForwardedToOrigin:
           CookiesConfig:
