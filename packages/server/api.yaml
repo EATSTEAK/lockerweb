@@ -89,7 +89,7 @@ paths:
                 success: false
                 error: 401
                 errorDescription: Unauthorized
-  /locker/list:
+  /locker/query:
     get:
       tags:
         - locker
