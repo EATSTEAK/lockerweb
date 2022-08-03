@@ -1,0 +1,807 @@
+openapi: "3.0.2"
+info:
+  title: ssu-it-locker
+  version: "1.0"
+  description: 숭실대학교 IT대학 사물함 시스템의 내부 API 문서입니다.
+servers:
+  - url: https://itlocker.soongsil.dev/api/v1
+    description: 예상 주소
+tags:
+  - name: auth
+    description: 사용자 로그인/로그아웃 플로우를 구성합니다.
+  - name: user
+    description: 사용자 정보를 열람/수정합니다.
+  - name: locker
+    description: 사물함 정보를 열람, 대여/반납합니다.
+  - name: config
+    description: 서비스 설정 정보를 열람/수정합니다.
+paths:
+  /auth/ssu_login:
+    get:
+      tags:
+        - auth
+      summary: 숭실대 통합 로그인 엔드포인트
+      description: '숭실대 통합 로그인을 위한 엔드포인트입니다.
+      
+      `https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url=` 링크의 callback_url 을 이 엔드포인트로 지정해 주세요.'
+      parameters:
+        - name: result
+          in: query
+          required: true
+          style: simple
+          schema:
+            type: string
+          description: 통합 로그인 서비스에서 제공하는 검증 토큰입니다.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/AccessTokenInfo'
+        '401':
+          description: result 값이 전달되지 않을 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 401
+                errorDescription: Unauthorized
+  /auth/logout:
+    get:
+      tags:
+        - auth
+      summary: 로그아웃
+      description: '로그아웃을 위한 엔드포인트입니다. 로그아웃 이후에는 클라이언트에서 토큰을 폐기해 주세요.'
+      security:
+        - UserSessionAuth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: string
+        '401':
+          description: 로그인 상태가 아닐 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 401
+                errorDescription: Unauthorized
+  /locker/list:
+    get:
+      tags:
+        - locker
+      summary: 대여된 사물함 목록
+      description: 대여된 사물함 목록을 봅니다.
+      parameters:
+        - name: department
+          in: query
+          description: 학부 타입
+          required: true
+          style: simple
+          schema:
+            $ref: '#/components/schemas/DepartmentEnum'
+        - name: show_id
+          in: query
+          description: 대여한 사용자 표시 여부(관리자만 사용 가능)
+          schema:
+            type: boolean
+      security:
+        - UserSessionAuth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Locker'
+        '500':
+          description: 내부 오류 / department 없이 요청을 수행할 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+        '401':
+          description: 로그인 상태가 아닐 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 401
+                errorDescription: Unauthorized
+  /locker/count:
+    get:
+      tags:
+        - locker
+      summary: 대여된 사물함 갯수
+      description: 학부별 대여된 사물함 갯수를 가져옵니다.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+                example:
+                  success: true
+                  result:
+                    E: 10
+                    A: 20
+                    C: 13
+                    S: 28
+                    G: 0
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+  /locker/claim:
+    post:
+      tags:
+        - locker
+      summary: 사물함 대여(일반 학부생용)
+      description: 로그인된 학부생 명의로 사물함을 대여합니다.
+      security:
+        - UserSessionAuth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockerClaimRequest'
+            example:
+              lockerId: 21-05-B002
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+                    properties:
+                      lockerId:
+                        type: string
+        '403':
+          description: 사물함이 이미 점유되었을 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 403
+                errorDescription: Can't claim the locker that already reserved
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+  /user:
+    get:
+      tags:
+        - user
+      summary: 사용자 정보 열람
+      description: 사용자의 정보를 열람합니다.
+      security:
+        - UserSessionAuth
+      parameters:
+        - name: id
+          in: query
+          description: 열람할 사용자의 학번(관리자용)
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/User'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+    patch:
+      tags:
+        - user
+      summary: 사용자 정보 수정
+      description: 사용자의 정보를 수정합니다.
+      security:
+        - UserSessionAuth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          contents:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/UserUpdateRequest'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+    delete:
+      tags:
+        - user
+      summary: 사용자 정보 삭제
+      description: 사용자의 정보를 삭제합니다.
+        security:
+          - UserSessionAuth
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDeleteRequest'
+        responses:
+          '200':
+            description: OK
+            contents:
+              application/json:
+                schema:
+                  type: object
+                  required:
+                    - success
+                    - result
+                  properties:
+                    success:
+                      type: boolean
+                    result:
+                      $ref: '#/components/schemas/UserDeleteRequest'
+          '500':
+            description: 내부 오류
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  success: false
+                  error: 500
+                  errorDescription: Internal error
+        delete:
+  /user/query:
+    get:
+      tags:
+        - user
+      summary: 사용자 목록 열람
+      description: 사용자 목록을 열람합니다.
+      parameters:
+        - name: department
+          in: query
+          required: true
+          style: simple
+          schema:
+            $ref: '#/components/schemas/DepartmentEnum'
+        - name: starts
+          in: query
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '500':
+          description: 내부 오류 / department 값이 주어지지 않았을 때
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+  /user/batch:
+    put:
+      tags:
+        - user
+      summary: 사용자 일괄 삽입
+      description: 사용자를 일괄 삽입합니다.
+        security:
+          - UserSessionAuth
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBatchPutRequest'
+        responses:
+          '200':
+            description: OK
+            contents:
+              application/json:
+                schema:
+                  type: object
+                  required:
+                    - success
+                    - result
+                  properties:
+                    success:
+                      type: boolean
+                    result:
+                      $ref: '#/components/schemas/UserBatchPutRequest'
+          '500':
+            description: 내부 오류
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  success: false
+                  error: 500
+                  errorDescription: Internal error
+    delete:
+      tags:
+        - user
+      summary: 사용자 일괄 삭제
+      description: 사용자를 일괄 삭제합니다.
+        security:
+          - UserSessionAuth
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBatchDeleteRequest'
+        responses:
+          '200':
+            description: OK
+            contents:
+              application/json:
+                schema:
+                  type: object
+                  required:
+                    - success
+                    - result
+                  properties:
+                    success:
+                      type: boolean
+                    result:
+                      $ref: '#/components/schemas/UserBatchDeleteRequest'
+          '500':
+            description: 내부 오류
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  success: false
+                  error: 500
+                  errorDescription: Internal error
+  /config:
+    get:
+      tags:
+        - config
+      summary: 전체 설정 열람
+      description: 서비스의 전체 설정을 열람합니다.
+        security:
+          - UserSessionAuth
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required:
+                    - success
+                    - result
+                  properties:
+                    success:
+                      type: boolean
+                    result:
+                      type: object
+                      required:
+                        - SERVICE
+                      properties:
+                        SERVICE:
+                          $ref: '#/components/schemas/Config'
+          '500':
+            description: 내부 오류
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  success: false
+                  error: 500
+                  errorDescription: Internal error
+    patch:
+      tags:
+        - config
+      summary: 설정 수정
+      description: 서비스 혹은 학부의 설정을 수정합니다.
+        security:
+          - UserSessionAuth
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigUpdateRequest'
+        responses:
+          '200':
+            description: OK
+            contents:
+              application/json:
+                schema:
+                  type: object
+                  required:
+                    - success
+                    - result
+                  properties:
+                    success:
+                      type: boolean
+                    result:
+                      $ref: '#/components/schemas/ConfigUpdateRequest'
+          '500':
+            description: 내부 오류
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  success: false
+                  error: 500
+                  errorDescription: Internal error
+components:
+  securitySchemes:
+    UserLoginAuth:
+      name: UserLoginAuth
+      type: http
+      scheme: basic
+    UserSessionAuth:
+      name: UserSessionAuth
+      type: http
+      scheme: bearer
+  schemas:
+    DepartmentEnum:
+      title: DepartmentEnum
+      description: 학부 타입 목록입니다.
+      type: string
+      enum:
+        - E
+        - A
+        - C
+        - S
+        - G
+    ErrorResponse:
+      title: ErrorResponse
+      description: 오류 발생시 응답 형태입니다.
+      type: object
+      required:
+        - success
+        - error
+        - errorDescription
+      properties:
+        success:
+          type: boolean
+          default: false
+        error:
+          type: integer
+          format: int32
+        errorDescription:
+          type: string
+    AccessTokenInfo:
+      title: AccessTokenInfo
+      description: 로그인 성공 시 발급되는 엑세스 토큰의 정보입니다.
+      type: object
+      required:
+        - id
+        - accessToken
+        - tokenType
+        - expiresIn
+      properties:
+        id:
+          type: string
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          enum:
+            - Bearer
+        expiresIn:
+          type: integer
+          format: int32
+    Locker:
+      title: Locker
+      description: 사물함 정보입니다.
+      type: object
+      required:
+        - lockerId
+      properties:
+        lockerId:
+          type: string
+        id:
+          type: string
+          description: 이 사물함을 사용중인 사용자의 학번입니다.
+        claimedUntil:
+          type: string
+          format: date-time
+          description: 이 사물함을 사용하는 기한입니다. 없다면 무기한으로 사용중인 사물함입니다.
+    LockerClaimRequest:
+      title: LockerClaimRequest
+      description: 사물함 대여 요청입니다.
+      type: object
+      required:
+        - lockerId
+      properties:
+        lockerId:
+          type: string
+        until:
+          type: string
+          format: date-time
+    User:
+      title: User
+      description: 사용자 정보입니다.
+      type: object
+      required:
+        - id
+        - name
+        - isAdmin
+        - department
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isAdmin:
+          type: boolean
+        department:
+          $ref: '#/components/schemas/DepartmentEnum'
+        lockerId:
+          type: string
+        claimedUntil:
+          type: string
+          format: date-time
+    UserUpdateRequest:
+      title: UserUpdateRequest
+      description: 사용자 정보를 수정하고자 할 때 사용합니다.
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isAdmin:
+          type: boolean
+        department:
+          $ref: '#/components/schemas/DepartmentEnum'
+        lockerId:
+          type: string
+        claimedUntil:
+          type: string
+          format: date-time
+    UserDeleteRequest:
+      title: UserDeleteRequest
+      description: 사용자 정보를 삭제하고자 할 때 사용합니다.
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    UserBatchDeleteRequest:
+      title: UserBatchDeleteRequest
+      description: 사용자 정보를 일괄 삭제하고자 할 때 사용합니다. 사용자 ID의 배열이 필요합니다.
+      type: array
+      items:
+        type: string
+    UserBatchPutRequest:
+      title: UserBatchPutRequest
+      description: 사용자 정보를 일괄 삽입하고자 할 때 사용합니다.
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    Config:
+      title: Config
+      description: 서비스의 설정 정보입니다.
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        activateFrom:
+          type: string
+          format: date-time
+        activateTo:
+          type: string
+          format: date-time
+        buildings:
+          type: object
+          description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
+        lockers:
+          type: object
+          description: (서비스 설정 전용) 서비스에서 사용하는 사물함의 목록입니다. 학부 ID를 키로, `LockerSection` 을 값으로 하는 맵입니다.
+        contact:
+          type: string
+    ConfigUpdateRequest:
+      title: ConfigUpdateRequest
+      description: 서비스의 설정을 수정하고자 할 때 사용됩니다.
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        activateFrom:
+          type: string
+          format: date-time
+        activateTo:
+          type: string
+          format: date-time
+        buildings:
+          type: object
+          description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
+        lockers:
+          type: object
+          description: (서비스 설정 전용) 서비스에서 사용하는 사물함의 목록입니다. 학부 ID를 키로, `LockerSection` 을 값으로 하는 맵입니다.
+        contact:
+          type: string
+    Building:
+      title: Building
+      description: 건물을 표현합니다.
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    LockerSection:
+      title: LockerSection
+      description: 사물함의 한 구역입니다.
+      type: object
+      required:
+        - subsections
+        - disabled
+        - grid
+      properties:
+        subsections:
+          description: 사물함의 내부 구역의 목록입니다.
+          type: array
+          items:
+            $ref: '#/components/schemas/LockerSubsection'
+        disabled:
+          description: 사용할 수 없는 사물함의 번호 목록입니다.
+          type: array
+          items:
+            type: string
+        grid:
+          description: 실제 사물함 모양 추정을 위한 사물함의 가로 세로 칸 갯수입니다. 첫번째 값이 가로, 두번째 값이 세로입니다.
+          type: array
+          items:
+            type: integer
+            format: int32
+    LockerSubsection:
+      title: LockerSubsection
+      description: 사물함의 내부 구역입니다. 사물함의 한 구역을 각각 다른 학부가 관할할 때 사용됩니다.
+      type: object
+      required:
+        - department
+        - range
+      properties:
+        department:
+          $ref: '#/components/schemas/DepartmentEnum'
+        range:
+          type: array
+          items:
+            type: integer
+            format: int32
