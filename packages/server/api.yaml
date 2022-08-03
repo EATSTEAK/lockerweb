@@ -359,6 +359,8 @@ paths:
         - user
       summary: 사용자 목록 열람
       description: 사용자 목록을 열람합니다.
+      security:
+        - UserSessionAuth: []
       parameters:
         - name: department
           in: query
