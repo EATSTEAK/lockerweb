@@ -10,10 +10,6 @@ Parameters:
     Type: String
     Description: DynamoDB Table name for user, locker information.
     Default: 'LockerTable'
-  ApiBase:
-    Type: String
-    Description: Default location of API endpoint.
-    Default: '/api/v1'
   AwsSamLocal:
     Type: String
     Default: ''
@@ -42,37 +38,37 @@ Resources:
         AuthCallback:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/auth/callback'
+            Path: /api/v1/auth/callback
             Method: options
         AuthLogout:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/auth/logout'
+            Path: /api/v1/auth/logout
             Method: options
         LockerList:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/locker/list'
+            Path: /api/v1/locker/list
             Method: options
         LockerClaim:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/locker/claim'
+            Path: /api/v1/locker/claim
             Method: options
         LockerCount:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/locker/count'
+            Path: /api/v1/locker/count
             Method: options
         UserGet:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/user/get'
+            Path: /api/v1/user/get
             Method: options
         UserUpdate:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/user/update'
+            Path: /api/v1/user/update
             Method: options
   DependenciesLayer:
     Type: AWS::Serverless::LayerVersion
@@ -102,7 +98,7 @@ Resources:
         AuthCallback:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: !Sub '${ApiBase}/auth/callback'
+            Path: /api/v1/auth/callback
             Method: get
   AuthLogoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -122,7 +118,7 @@ Resources:
         AuthLogout:
           Type: Api
           Properties:
-            Path: !Sub '${ApiBase}/auth/logout'
+            Path: /api/v1/auth/logout
             Method: get
   LockerListFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -142,7 +138,7 @@ Resources:
         LockerList:
           Type: Api
           Properties:
-            Path: !Sub '${ApiBase}/locker/list'
+            Path: /api/v1/locker/list
             Method: get
   LockerCountFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -162,7 +158,7 @@ Resources:
         LockerCount:
           Type: Api
           Properties:
-            Path: !Sub '${ApiBase}/locker/count'
+            Path: /api/v1/locker/count
             Method: get
   LockerClaimFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -182,7 +178,7 @@ Resources:
         LockerClaim:
           Type: Api
           Properties:
-            Path: !Sub '${ApiBase}/locker/claim'
+            Path: /api/v1/locker/claim
             Method: post
   UserGetFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -202,7 +198,7 @@ Resources:
         UserGet:
           Type: Api
           Properties:
-            Path: !Sub '${ApiBase}/user/get'
+            Path: /api/v1/user/get
             Method: get
   UserUpdateFunction:
     Type: AWS::Serverless::Function
@@ -222,7 +218,7 @@ Resources:
         UserUpdate:
           Type: Api
           Properties:
-            Path: !Sub '${ApiBase}/user/update'
+            Path: /api/v1/user/update
             Method: post
   DynamoDBLockerTable:
     Type: AWS::DynamoDB::Table
