@@ -1,0 +1,23 @@
+name: OpenAPI Document Generation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+jobs:
+  openapi-gen:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui
+          spec-file: "**/packages/server/api.yaml"
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: swagger-ui
