@@ -28,7 +28,6 @@ paths:
         - name: result
           in: query
           required: true
-          style: simple
           schema:
             type: string
           description: 통합 로그인 서비스에서 제공하는 검증 토큰입니다.
@@ -64,7 +63,7 @@ paths:
       summary: 로그아웃
       description: '로그아웃을 위한 엔드포인트입니다. 로그아웃 이후에는 클라이언트에서 토큰을 폐기해 주세요.'
       security:
-        - UserSessionAuth
+        - UserSessionAuth: []
       responses:
         '200':
           description: OK
@@ -101,7 +100,6 @@ paths:
           in: query
           description: 학부 타입
           required: true
-          style: simple
           schema:
             $ref: '#/components/schemas/DepartmentEnum'
         - name: show_id
@@ -110,7 +108,7 @@ paths:
           schema:
             type: boolean
       security:
-        - UserSessionAuth
+        - UserSessionAuth: []
       responses:
         '200':
           description: OK
@@ -194,7 +192,7 @@ paths:
       summary: 사물함 대여(일반 학부생용)
       description: 로그인된 학부생 명의로 사물함을 대여합니다.
       security:
-        - UserSessionAuth
+        - UserSessionAuth: []
       requestBody:
         content:
           application/json:
@@ -247,12 +245,11 @@ paths:
       summary: 사용자 정보 열람
       description: 사용자의 정보를 열람합니다.
       security:
-        - UserSessionAuth
+        - UserSessionAuth: []
       parameters:
         - name: id
           in: query
-          description: 열람할 사용자의 학번(관리자용)
-          style: simple
+          description: 열람할 사용자의 학번(관리자용)\
           schema:
             type: string
       responses:
@@ -280,13 +277,14 @@ paths:
                 success: false
                 error: 500
                 errorDescription: Internal error
-    patch:
+  /user/update:
+    post:
       tags:
         - user
       summary: 사용자 정보 수정
       description: 사용자의 정보를 수정합니다.
       security:
-        - UserSessionAuth
+        - UserSessionAuth: []
       requestBody:
         content:
           application/json:
@@ -295,7 +293,7 @@ paths:
       responses:
         '200':
           description: OK
-          contents:
+          content:
             application/json:
               schema:
                 type: object
@@ -317,44 +315,44 @@ paths:
                 success: false
                 error: 500
                 errorDescription: Internal error
-    delete:
+  /user/delete:
+    post:
       tags:
         - user
       summary: 사용자 정보 삭제
       description: 사용자의 정보를 삭제합니다.
-        security:
-          - UserSessionAuth
-        requestBody:
+      security:
+        - UserSessionAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDeleteRequest'
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDeleteRequest'
-        responses:
-          '200':
-            description: OK
-            contents:
-              application/json:
-                schema:
-                  type: object
-                  required:
-                    - success
-                    - result
-                  properties:
-                    success:
-                      type: boolean
-                    result:
-                      $ref: '#/components/schemas/UserDeleteRequest'
-          '500':
-            description: 내부 오류
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error: 500
-                  errorDescription: Internal error
-        delete:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/UserDeleteRequest'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
   /user/query:
     get:
       tags:
@@ -365,12 +363,10 @@ paths:
         - name: department
           in: query
           required: true
-          style: simple
           schema:
             $ref: '#/components/schemas/DepartmentEnum'
         - name: starts
           in: query
-          style: simple
           schema:
             type: string
       responses:
@@ -400,164 +396,164 @@ paths:
                 success: false
                 error: 500
                 errorDescription: Internal error
-  /user/batch:
-    put:
+  /user/batch/put:
+    post:
       tags:
         - user
       summary: 사용자 일괄 삽입
       description: 사용자를 일괄 삽입합니다.
-        security:
-          - UserSessionAuth
-        requestBody:
+      security:
+        - UserSessionAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBatchPutRequest'
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserBatchPutRequest'
-        responses:
-          '200':
-            description: OK
-            contents:
-              application/json:
-                schema:
-                  type: object
-                  required:
-                    - success
-                    - result
-                  properties:
-                    success:
-                      type: boolean
-                    result:
-                      $ref: '#/components/schemas/UserBatchPutRequest'
-          '500':
-            description: 내부 오류
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error: 500
-                  errorDescription: Internal error
-    delete:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/UserBatchPutRequest'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+  /user/batch/delete:
+    post:
       tags:
         - user
       summary: 사용자 일괄 삭제
       description: 사용자를 일괄 삭제합니다.
-        security:
-          - UserSessionAuth
-        requestBody:
+      security:
+        - UserSessionAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBatchDeleteRequest'
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserBatchDeleteRequest'
-        responses:
-          '200':
-            description: OK
-            contents:
-              application/json:
-                schema:
-                  type: object
-                  required:
-                    - success
-                    - result
-                  properties:
-                    success:
-                      type: boolean
-                    result:
-                      $ref: '#/components/schemas/UserBatchDeleteRequest'
-          '500':
-            description: 내부 오류
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error: 500
-                  errorDescription: Internal error
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/UserBatchDeleteRequest'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
   /config:
     get:
       tags:
         - config
       summary: 전체 설정 열람
       description: 서비스의 전체 설정을 열람합니다.
-        security:
-          - UserSessionAuth
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  type: object
-                  required:
-                    - success
-                    - result
-                  properties:
-                    success:
-                      type: boolean
-                    result:
-                      type: object
-                      required:
-                        - SERVICE
-                      properties:
-                        SERVICE:
-                          $ref: '#/components/schemas/Config'
-          '500':
-            description: 내부 오류
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error: 500
-                  errorDescription: Internal error
-    patch:
+      security:
+        - UserSessionAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+                    required:
+                      - SERVICE
+                    properties:
+                      SERVICE:
+                        $ref: '#/components/schemas/Config'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
+  /config/update:
+    post:
       tags:
         - config
       summary: 설정 수정
       description: 서비스 혹은 학부의 설정을 수정합니다.
-        security:
-          - UserSessionAuth
-        requestBody:
+      security:
+        - UserSessionAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigUpdateRequest'
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConfigUpdateRequest'
-        responses:
-          '200':
-            description: OK
-            contents:
-              application/json:
-                schema:
-                  type: object
-                  required:
-                    - success
-                    - result
-                  properties:
-                    success:
-                      type: boolean
-                    result:
-                      $ref: '#/components/schemas/ConfigUpdateRequest'
-          '500':
-            description: 내부 오류
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error: 500
-                  errorDescription: Internal error
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/ConfigUpdateRequest'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
 components:
   securitySchemes:
     UserLoginAuth:
-      name: UserLoginAuth
       type: http
       scheme: basic
     UserSessionAuth:
-      name: UserSessionAuth
       type: http
       scheme: bearer
   schemas:
