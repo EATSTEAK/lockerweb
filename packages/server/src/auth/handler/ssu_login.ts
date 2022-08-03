@@ -1,11 +1,10 @@
 import https from 'https';
-import { issueToken, revokeToken } from './db_client';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import type { JwtPayload } from 'jsonwebtoken';
 import * as jwt from 'jsonwebtoken';
-import { JWT_SECRET } from './env';
-import { createResponse } from './common';
-import { ResponsibleError, UnauthorizedError } from './error';
+import { JWT_SECRET } from '../../env';
+import { createResponse } from '../../common';
+import { ResponsibleError, UnauthorizedError } from '../../error';
+import { issueToken } from "../data";
 
 function requestBody(result: string): Promise<string> {
 	return new Promise((resolve, reject) => {
@@ -34,7 +33,7 @@ async function obtainId(result: string) {
 	return body.substring(body.indexOf('pseudonym_session_unique_id') + 36).split('"')[0];
 }
 
-export const callbackHandler: APIGatewayProxyHandler = async (event) => {
+export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 	try {
 		const result = event?.queryStringParameters?.result;
 		if (result) {
@@ -66,22 +65,5 @@ export const callbackHandler: APIGatewayProxyHandler = async (event) => {
 			return createResponse(500, res);
 		}
 		return e.response();
-	}
-};
-
-export const logoutHandler: APIGatewayProxyHandler = async (event) => {
-	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
-	try {
-		const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
-		const res = await revokeToken(payload.aud as string, token);
-		return createResponse(200, { success: true, ...res });
-	} catch (err) {
-		const res = {
-			success: false,
-			token,
-			error: 401,
-			error_description: 'Unauthorized'
-		};
-		return createResponse(401, res);
 	}
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const app = require('../../src/auth.ts');
+const app = require('../../src/auth/handler/ssu_login.ts');
 const chai = require('chai');
 const expect = chai.expect;
 var event, context;
