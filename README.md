@@ -1,6 +1,6 @@
-# ssu-it-locker
+# 숭실대학교 IT대학 사물함 시스템
 
-Just a toy project with AWS.
+숭실대학교 IT대학 사물함 시스템
 
 ## To-Dos and Done
 
