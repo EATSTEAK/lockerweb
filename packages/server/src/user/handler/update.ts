@@ -6,7 +6,7 @@ import { JWT_SECRET } from "../../env";
 import { ResponsibleError } from "../../error";
 import { updateUserInfo } from "../data";
 
-export const updateUserInfoHandler: APIGatewayProxyHandler = async (event) => {
+export const updateUserHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
   let data: {
     id: string;

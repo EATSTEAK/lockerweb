@@ -5,7 +5,7 @@ import type { JwtPayload } from "jsonwebtoken";
 import { createResponse } from "../../common";
 import { queryLockers } from "../data";
 
-export const getClaimedLockersHandler: APIGatewayProxyHandler = async (event) => {
+export const queryClaimedLockersHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
   const floor = event.queryStringParameters?.floor ?? '';
   const showId = event.queryStringParameters?.show_id === 'true';

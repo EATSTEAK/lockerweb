@@ -5,7 +5,7 @@ import type { JwtPayload } from "jsonwebtoken";
 import { createResponse } from "../../common";
 import { getUserInfo } from "../data";
 
-export const getUserInfoHandler: APIGatewayProxyHandler = async (event) => {
+export const getUserHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
   const id = (jwt.verify(token, JWT_SECRET) as JwtPayload).aud as string;
   const res = await getUserInfo(id);
