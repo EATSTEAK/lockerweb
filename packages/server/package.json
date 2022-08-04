@@ -1,9 +1,7 @@
 {
   "name": "server",
   "version": "0.0.1",
-  "private": true,
-  "description": "Backend Lambda script for ssu-it-locker",
-  "author": "EATSTEAK <me@eatsteak.dev>",
+  "description": "Backend Lambda script for lockerweb",
   "license": "MIT",
   "scripts": {
     "build": "(cp -f ../../lockers.json src/ || copy ..\\..\\lockers.json src\\ /y) && tsc --module commonjs --target es5 --outDir dist/ && sam build",
