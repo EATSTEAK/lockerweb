@@ -1,7 +1,0 @@
-/* Variables and mixins declared here will be available in all other SCSS files */
-@import 'bootstrap/scss/functions'; /* Override Bootstrap's variables here */
-$enable-shadows: true;
-$primary: #00587c;
-$font-family-base: 'IBM Plex Sans KR';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
