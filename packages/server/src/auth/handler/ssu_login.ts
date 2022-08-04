@@ -3,18 +3,18 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
-import { ResponsibleError, UnauthorizedError } from '../../error';
-import { issueToken } from "../data";
+import { ResponsibleError, UnauthorizedError } from '../../util/error';
+import { issueToken } from '../data';
 
 function requestBody(result: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		https
 			.get(`https://canvas.ssu.ac.kr/learningx/login/from_cc?result=${result}`, (res) => {
 				let body = '';
-				res.on('data', function (chunk) {
+				res.on('data', function(chunk) {
 					body += chunk;
 				});
-				res.on('end', function () {
+				res.on('end', function() {
 					resolve(body);
 				});
 			})
@@ -46,10 +46,12 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			const left = Math.floor((issued.expires - Date.now()) / 1000);
 			const res = {
 				success: true,
-				id,
-				access_token: accessToken,
-				token_type: 'Bearer',
-				expires_in: left
+				result: {
+					id,
+					accessToken,
+					tokenType: 'Bearer',
+					expiresIn: left
+				}
 			};
 			return createResponse(200, { success: true, ...res });
 		}
