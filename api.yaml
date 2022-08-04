@@ -63,7 +63,7 @@ paths:
       summary: 로그아웃
       description: '로그아웃을 위한 엔드포인트입니다. 로그아웃 이후에는 클라이언트에서 토큰을 폐기해 주세요.'
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       responses:
         '200':
           description: OK
@@ -108,7 +108,7 @@ paths:
           schema:
             type: boolean
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       responses:
         '200':
           description: OK
@@ -192,7 +192,7 @@ paths:
       summary: 사물함 대여(일반 학부생용)
       description: 로그인된 학부생 명의로 사물함을 대여합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -245,7 +245,7 @@ paths:
       summary: 사용자 정보 열람
       description: 사용자의 정보를 열람합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       parameters:
         - name: id
           in: query
@@ -284,7 +284,7 @@ paths:
       summary: 사용자 정보 수정
       description: 사용자의 정보를 수정합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -322,7 +322,7 @@ paths:
       summary: 사용자 정보 삭제
       description: 사용자의 정보를 삭제합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -360,13 +360,8 @@ paths:
       summary: 사용자 목록 열람
       description: 사용자 목록을 열람합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       parameters:
-        - name: department
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/DepartmentEnum'
         - name: starts
           in: query
           schema:
@@ -405,7 +400,7 @@ paths:
       summary: 사용자 일괄 삽입
       description: 사용자를 일괄 삽입합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -443,7 +438,7 @@ paths:
       summary: 사용자 일괄 삭제
       description: 사용자를 일괄 삭제합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -481,7 +476,7 @@ paths:
       summary: 전체 설정 열람
       description: 서비스의 전체 설정을 열람합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       responses:
         '200':
           description: OK
@@ -519,7 +514,7 @@ paths:
       summary: 설정 수정
       description: 서비스 혹은 학부의 설정을 수정합니다.
       security:
-        - UserSessionAuth: []
+        - UserSessionAuth: [ ]
       requestBody:
         content:
           application/json:
