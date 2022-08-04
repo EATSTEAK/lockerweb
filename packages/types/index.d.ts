@@ -29,7 +29,7 @@ type UserDao = DaoData & {
 	n: { S: string };
 	iA: { BOOL: boolean };
 	d: { S: string };
-	lI?: { S: string };
+	lockerId?: { S: string };
 	cU?: { S: string };
 }
 
