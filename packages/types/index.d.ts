@@ -1,5 +1,5 @@
 type DaoData = {
-	type: { S: `user/${string}` | 'config' };
+	type: { S: `user` | 'config' };
 	id: { S: string };
 }
 
@@ -10,7 +10,19 @@ type User = {
 	department: string;
 	lockerId?: string;
 	claimedUntil?: string;
-	accessToken?: string;
+}
+
+type UserUpdateRequest = {
+	id: string;
+	name?: string;
+	isAdmin?: boolean;
+	department?: string;
+	lockerId?: string;
+	claimedUntil?: string;
+}
+
+type UserDeleteRequest = {
+	id: string;
 }
 
 type UserDao = DaoData & {
@@ -19,7 +31,6 @@ type UserDao = DaoData & {
 	d: { S: string };
 	lI?: { S: string };
 	cU?: { S: string };
-	aT?: { S: string };
 }
 
 type Config = {
