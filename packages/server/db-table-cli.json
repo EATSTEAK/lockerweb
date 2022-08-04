@@ -40,7 +40,8 @@
       "Projection": {
         "ProjectionType": "INCLUDE",
         "NonKeyAttributes": [
-          "i",
+          "iA",
+          "d",
           "n",
           "cU"
         ]

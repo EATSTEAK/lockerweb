@@ -398,8 +398,9 @@ Resources:
           Projection:
             ProjectionType: INCLUDE
             NonKeyAttributes:
-              - i
+              - iA
               - n
+              - d
               - cU
       BillingMode: 'PAY_PER_REQUEST'
   FrontS3Bucket:
