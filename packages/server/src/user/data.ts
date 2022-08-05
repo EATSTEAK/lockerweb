@@ -18,7 +18,7 @@ export const fromUserDao = (dao: UserDao): User => ({
 	name: dao.n?.S,
 	isAdmin: dao.iA.BOOL,
 	department: dao.d?.S,
-	...(dao.lI?.S && { lockerId: dao.lI?.S }),
+	...(dao.lockerId?.S && { lockerId: dao.lockerId?.S }),
 	...(dao.cU?.S && { lockerId: dao.cU?.S })
 });
 export const toUserDao = (user: User): UserDao => ({
