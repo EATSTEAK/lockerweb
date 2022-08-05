@@ -1,25 +1,30 @@
 import lockerData from '../lockers.json';
 
 type LockerMap = {
-	[floor: string]: {
-		[section: string]: {
-			range: number[];
-			department: 'E' | 'A' | 'C' | 'S' | 'G';
-		}[];
+	[building: string]: {
+		[floor: string]: {
+			[section: string]: {
+				range: number[];
+				department: 'E' | 'A' | 'C' | 'S' | 'G';
+			}[];
+		};
 	};
+
 };
 
 export const lockers: LockerMap = lockerData as LockerMap;
 
 export function isValidLocker(
-	lockerFloor: string,
 	lockerId: string,
-	department?: 'E' | 'A' | 'C' | 'S' | 'G'
+	department: string
 ): boolean {
 	const parsedLockerId = lockerId.split('-');
-	const lockerSectionNum = parseInt(parsedLockerId[1]);
-	const selectedSections = lockers?.[lockerFloor]?.[parsedLockerId[0]];
-	if (parsedLockerId.length !== 2) return false;
+	const buildingNum = parsedLockerId[0];
+	const lockerFloor = parsedLockerId[1];
+	const lockerSection = parsedLockerId[2].substr(0, 1);
+	const lockerSectionNum = parseInt(parsedLockerId[2].substr(1));
+	const selectedSections = lockers?.[buildingNum]?.[lockerFloor]?.[lockerSection];
+	if (parsedLockerId.length !== 3) return false;
 	if (!selectedSections) return false;
 	const section = selectedSections.find(
 		(sect) =>
@@ -31,14 +36,16 @@ export function isValidLocker(
 }
 
 export function getLockerDepartment(
-	lockerFloor: string,
 	lockerId: string
-): 'E' | 'A' | 'C' | 'S' | 'G' {
+): string {
 	const parsedLockerId = lockerId.split('-');
-	const lockerSectionNum = parseInt(parsedLockerId[1]);
-	const selectedSections = lockers?.[lockerFloor]?.[parsedLockerId[0]];
-	if (parsedLockerId.length !== 2) throw new Error('Given locker is not valid');
-	if (!selectedSections) throw new Error('Given locker is not valid');
+	const buildingNum = parsedLockerId[0];
+	const lockerFloor = parsedLockerId[1];
+	const lockerSection = parsedLockerId[2].substr(0, 1);
+	const lockerSectionNum = parseInt(parsedLockerId[2].substr(1));
+	const selectedSections = lockers?.[buildingNum]?.[lockerFloor]?.[lockerSection];
+	if (parsedLockerId.length !== 3) throw new Error('Given locker is not valid');
+	if (!selectedSections) Error('Given locker is not valid');
 	const section = selectedSections.find(
 		(sect) => sect.range[0] <= lockerSectionNum && sect.range[1] >= lockerSectionNum
 	);
