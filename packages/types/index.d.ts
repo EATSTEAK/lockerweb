@@ -57,25 +57,35 @@ type DepartmentConfigDao = DaoData & ConfigDao & {
 type ServiceConfig = Config & {
 	buildings: {
 		[buildingId: string]: Building
-	},
-	lockers: {
-		[lockerName: string]: LockerSection
 	}
 }
 
 type ServiceConfigDao = DaoData & ConfigDao & {
 	b: { M: { [buildingId: string]: { M: BuildingData } } }
-	l: { M: { [lockerName: string]: { M: LockerSectionData } } }
 }
 
 type Building = {
-	id: { S: string };
-	name: { S: string };
+	id: string;
+	name: string;
+	lockers: {
+		[floor: string]: {
+			[lockerName: string]: LockerSection
+		}
+	}
 }
 
 type BuildingData = {
-	i: string;
-	n: string;
+	i: { S: string };
+	n: { S: string };
+	l: {
+		M: {
+			[floor: string]: {
+				M: {
+					[lockerName: string]: LockerSectionData
+				}
+			}
+		}
+	}
 }
 
 type LockerSection = {
