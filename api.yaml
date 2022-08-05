@@ -715,9 +715,6 @@ components:
         buildings:
           type: object
           description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
-        lockers:
-          type: object
-          description: (서비스 설정 전용) 서비스에서 사용하는 사물함의 목록입니다. 학부 ID를 키로, `LockerSection` 을 값으로 하는 맵입니다.
         contact:
           type: string
     ConfigUpdateRequest:
@@ -740,9 +737,6 @@ components:
         buildings:
           type: object
           description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
-        lockers:
-          type: object
-          description: (서비스 설정 전용) 서비스에서 사용하는 사물함의 목록입니다. 학부 ID를 키로, `LockerSection` 을 값으로 하는 맵입니다.
         contact:
           type: string
     Building:
@@ -758,6 +752,9 @@ components:
           format: int32
         name:
           type: string
+        lockers:
+          type: object
+          description: 건물 내부에 존재하는 사물함의 목록입니다. "사물함 구역 이름을 키로, `LockerSection` 을 값으로 하는 맵"을 값으로 하고, 층수를 키로 하는 맵입니다.
     LockerSection:
       title: LockerSection
       description: 사물함의 한 구역입니다.
