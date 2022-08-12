@@ -5,6 +5,8 @@ import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import { ResponsibleError, UnauthorizedError } from '../../util/error';
 import { issueToken } from '../data';
+import { queryConfig } from '../../config/data';
+import { adminId } from '../../util/database';
 
 function requestBody(result: string): Promise<string> {
 	return new Promise((resolve, reject) => {
@@ -39,10 +41,23 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 		if (result) {
 			console.log(result);
 			const id = await obtainId(result);
+			const config = await queryConfig();
+			const blockedDepartments = config.filter((c) => {
+				const activateFrom = new Date(c.activateFrom);
+				const activateTo = new Date(c.activateTo);
+				return c.activateFrom && activateFrom.getTime() >= Date.now() && c.activateTo && activateTo.getTime() <= Date.now();
+			}).map(c => c.id);
+			if (adminId !== id && blockedDepartments.includes('SERVICE')) {
+				return createResponse(403, {
+					success: false,
+					error: 403,
+					errorDescription: 'Forbidden'
+				});
+			}
 			const accessToken = jwt.sign({ aud: id }, JWT_SECRET, {
 				expiresIn: 3600 * 1000
 			});
-			const issued = await issueToken(id, accessToken);
+			const issued = await issueToken(id, accessToken, blockedDepartments);
 			const left = Math.floor((issued.expires - Date.now()) / 1000);
 			const res = {
 				success: true,
