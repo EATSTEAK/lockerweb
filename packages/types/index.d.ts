@@ -36,14 +36,14 @@ type UserDao = DaoData & {
 type Config = {
 	id: string;
 	name: string;
-	activateFrom: string;
-	activateTo: string;
+	activateFrom?: string;
+	activateTo?: string;
 }
 
 type ConfigDao = DaoData & {
-	n: string;
-	aF: string;
-	aT: string;
+	n: { S: string };
+	aF?: { S: string };
+	aT?: { S: string };
 }
 
 type DepartmentConfig = Config & {
@@ -51,7 +51,7 @@ type DepartmentConfig = Config & {
 }
 
 type DepartmentConfigDao = DaoData & ConfigDao & {
-	c?: string;
+	c?: { S: string };
 }
 
 type ServiceConfig = Config & {
@@ -81,7 +81,7 @@ type BuildingData = {
 		M: {
 			[floor: string]: {
 				M: {
-					[lockerName: string]: { M : LockerSectionData }
+					[lockerName: string]: { M: LockerSectionData }
 				}
 			}
 		}
@@ -96,7 +96,7 @@ type LockerSection = {
 
 type LockerSectionData = {
 	s: { L: { M: LockerSubsectionData }[] };
-	d: { L: { S: string } };
+	d: { L: { S: string }[] };
 	height: { N: string };
 }
 
@@ -107,7 +107,7 @@ type LockerSubsection = {
 
 type LockerSubsectionData = {
 	d: { S: string },
-	range: { L: [{ N: string }, { N: string }] };
+	r: { L: [{ N: string }, { N: string }] };
 }
 
 type ConfigUpdateRequest = {
