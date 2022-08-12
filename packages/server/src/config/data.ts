@@ -8,12 +8,68 @@ import type {
 import { dynamoDB, TableName } from '../util/database';
 import { NotFoundError } from '../util/error';
 
+function fromLockerSubsectionData(data: LockerSubsectionData): LockerSubsection {
+	return {
+		department: data.d.S,
+		range: [parseInt(data.r?.L[0]?.N ?? '0'), parseInt(data.r?.L[1]?.N ?? '0')]
+	};
+}
+
+function toLockerSubsectionData(subsection: LockerSubsection): LockerSubsectionData {
+	return {
+		d: { S: subsection.department },
+		r: { L: [{ N: `${subsection.range[0] ?? 0}` }, { N: `${subsection.range[1] ?? 0}` }] }
+	};
+}
+
+function fromLockerSectionData(data: LockerSectionData): LockerSection {
+	return {
+		subsections: data.s.L.map(subsectionData => fromLockerSubsectionData(subsectionData.M)),
+		disabled: data.d.L.map(disabled => disabled.S),
+		height: parseInt(data.h?.N ?? '0')
+	};
+}
+
+function toLockerSectionData(section: LockerSection): LockerSectionData {
+	return {
+		s: { L: section.subsections.map(ss => ({ M: toLockerSubsectionData(ss) })) },
+		d: { L: section.disabled.map(d => ({ S: d })) },
+		h: { N: `${section.height}` }
+	};
+}
+
 function toBuildingData(building: Building): BuildingData {
-	return undefined;
+	return {
+		i: { S: building.id },
+		n: { S: building.name },
+		l: {
+			M: Object.fromEntries(
+				Object.entries(building.lockers).map(([floor, lockerSectionMap]) => {
+					return [floor,
+						{
+							M:
+								Object.fromEntries(
+									Object.entries(lockerSectionMap).map(([lockerName, section]) => [lockerName, { M: toLockerSectionData(section) }])
+								)
+						}];
+				}))
+		}
+	};
 }
 
 function fromBuildingData(data: BuildingData): Building {
-	return undefined;
+	return {
+		id: data.i.S,
+		name: data.n.S,
+		lockers: Object.fromEntries(
+			Object.entries(data.l.M).map(([floor, lockerSectionDataMap]) => {
+				return [floor,
+					Object.fromEntries(
+						Object.entries(lockerSectionDataMap.M).map(([lockerName, sectionData]) => [lockerName, fromLockerSectionData(sectionData.M)])
+					)];
+			})
+		)
+	};
 }
 
 function toConfigDao(data: Config): ConfigDao {
@@ -63,7 +119,7 @@ function fromDepartmentConfigDao(dao: DepartmentConfigDao): DepartmentConfig {
 	};
 }
 
-export const queryConfig = async function(startsWith: string): Promise<Array<Config>> {
+export const queryConfig = async function(startsWith = ''): Promise<Array<Config>> {
 	let composedRes: Array<Config> = [];
 	const req: QueryInput = {
 		TableName,

@@ -97,7 +97,7 @@ type LockerSection = {
 type LockerSectionData = {
 	s: { L: { M: LockerSubsectionData }[] };
 	d: { L: { S: string }[] };
-	height: { N: string };
+	h: { N: string };
 }
 
 type LockerSubsection = {
