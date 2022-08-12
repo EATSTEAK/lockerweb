@@ -98,12 +98,6 @@ paths:
       summary: 대여된 사물함 목록
       description: 대여된 사물함 목록을 봅니다.
       parameters:
-        - name: department
-          in: query
-          description: 학부 타입
-          required: true
-          schema:
-            $ref: '#/components/schemas/DepartmentEnum'
         - name: show_id
           in: query
           description: 대여한 사용자 표시 여부(관리자만 사용 가능)
