@@ -7,6 +7,7 @@ import { claimLocker, revokeLocker } from '../data';
 import { ResponsibleError } from '../../util/error';
 import { getUser } from '../../user/data';
 import { isValidLocker } from '../../util/locker';
+import { getConfig } from '../../config/data';
 
 export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -53,7 +54,8 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
 		const id = payload.aud as string;
 		const user = await getUser(id);
-		if (!isValidLocker(data.lockerId, user.department)) {
+		const config = await getConfig('SERVICE') as ServiceConfig;
+		if (!isValidLocker(config, data.lockerId, user.department)) {
 			return createResponse(500, {
 				success: false,
 				error: 500,
