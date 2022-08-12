@@ -477,8 +477,6 @@ paths:
         - config
       summary: 전체 설정 열람
       description: 서비스의 전체 설정을 열람합니다.
-      security:
-        - UserSessionAuth: [ ]
       responses:
         '200':
           description: OK
