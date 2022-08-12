@@ -4,7 +4,7 @@
   "description": "Backend Lambda script for lockerweb",
   "license": "MIT",
   "scripts": {
-    "build": "(cp -f ../../lockers.json src/ || copy ..\\..\\lockers.json src\\ /y) && tsc --module commonjs --target es5 --outDir dist/ && sam build",
+    "build": "tsc --module commonjs --target es5 --outDir dist/ && sam build",
     "dev": "pnpm build && pnpm stop-db && pnpm start-db && cross-env AWS_SAM_LOCAL=true sam local start-api --docker-network local-dev",
     "start-db": "(docker network create local-dev || echo Network is already created. proceed to next.) && docker-compose down && docker-compose up -d && aws dynamodb create-table --region ap-southeast-2 --endpoint http://localhost:8000 --cli-input-json file://db-table-cli.json",
     "stop-db": "docker-compose down",

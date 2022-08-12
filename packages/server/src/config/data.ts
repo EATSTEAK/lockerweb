@@ -176,21 +176,21 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 	}
 	if (config.activateFrom) {
 		attributes[':activateFrom'] = { S: config.activateFrom };
-		updateExp = `${updateExp ? ',' : 'SET'} aF = :activateFrom`;
+		updateExp += `${updateExp ? ',' : 'SET'} aF = :activateFrom`;
 	}
 	if (config.activateTo) {
 		attributes[':activateTo'] = { S: config.activateTo };
 		attributeNames['#aT'] = 'aT';
-		updateExp = `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
+		updateExp += `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
 		attributes[':buildings'] = { M: Object.fromEntries(Object.entries(buildings).map(([s, b]) => [s, { M: toBuildingData(b) }])) };
-		updateExp = `${updateExp ? ',' : 'SET'} b = :buildings`;
+		updateExp += `${updateExp ? ',' : 'SET'} b = :buildings`;
 	}
 	if ((config as DepartmentConfigUpdateRequest).contact) {
 		attributes[':contact'] = { S: (config as DepartmentConfigUpdateRequest).contact };
-		updateExp = `${updateExp ? ',' : 'SET'} c = :contact`;
+		updateExp += `${updateExp ? ',' : 'SET'} c = :contact`;
 	}
 
 	const req: UpdateItemInput = {

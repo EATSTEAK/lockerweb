@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "cross-env VITE_BASE_URL=http://localhost:3000 vite dev --port 5002 --host 0.0.0.0",
-    "build": "(cp -f ../../lockers.json src/ || copy ..\\..\\lockers.json src\\ /y) && vite build",
+    "build": "vite build",
     "package": "svelte-kit package",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
