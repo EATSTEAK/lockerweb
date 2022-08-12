@@ -2,31 +2,6 @@ import type { QueryInput, UpdateItemInput } from 'aws-sdk/clients/dynamodb';
 import { dynamoDB, TableName } from '../util/database';
 import { CantClaimError, UnauthorizedError } from '../util/error';
 
-export const revokeLocker = async function(
-	id: string,
-	token: string
-): Promise<{ id: string; lockerFloor?: string; lockerId?: string }> {
-	const req: UpdateItemInput = {
-		TableName,
-		Key: { type: { S: 'user' }, id: { S: id } },
-		UpdateExpression: 'REMOVE lockerId',
-		ConditionExpression: '#aT = :token',
-		ExpressionAttributeNames: {
-			'#aT': 'aT'
-		},
-		ExpressionAttributeValues: {
-			':token': { S: token }
-		},
-		ReturnValues: 'ALL_OLD'
-	};
-	const res = await dynamoDB.updateItem(req).promise();
-	if (res.Attributes.accessToken?.S !== token) {
-		throw new UnauthorizedError('Unauthorized');
-	}
-	if (res.Attributes.lockerId?.S) return { id, lockerId: res.Attributes.lockerId.S };
-	return { id };
-};
-
 export const claimLocker = async function(
 	id: string,
 	token: string,
@@ -37,9 +12,14 @@ export const claimLocker = async function(
 	const checkReq: QueryInput = {
 		TableName,
 		IndexName: 'lockerIdIndex',
-		KeyConditionExpression: 'lockerId = :lockerId',
+		KeyConditionExpression: '#type = :type AND #lockerId = :lockerId',
 		FilterExpression: 'cU < :zero OR cU > :claimedUntil',
+		ExpressionAttributeNames: {
+			'#type': 'type',
+			'#lockerId': 'lockerId'
+		},
 		ExpressionAttributeValues: {
+			':type': { S: 'user' },
 			':zero': { N: '0' },
 			':claimedUntil': { N: `${Date.now()}` },
 			':lockerId': { S: lockerId }
@@ -49,11 +29,12 @@ export const claimLocker = async function(
 	if (checkRes.Count > 0) throw new CantClaimError('Requested locker is already claimed');
 	const req: UpdateItemInput = {
 		TableName,
-		Key: { id: { S: id } },
+		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression:
-			'SET lockerId = :lockerId, cU = :claimedUntil',
+			'SET #lockerId = :lockerId, cU = :claimedUntil',
 		ConditionExpression: '#aT = :token',
 		ExpressionAttributeNames: {
+			'#lockerId': 'lockerId',
 			'#aT': 'aT'
 		},
 		ExpressionAttributeValues: {
