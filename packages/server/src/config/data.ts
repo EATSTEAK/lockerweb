@@ -1,4 +1,5 @@
 import type {
+	ExpressionAttributeNameMap,
 	ExpressionAttributeValueMap,
 	GetItemInput,
 	QueryInput,
@@ -167,6 +168,7 @@ export const getConfig = async function(id: string): Promise<Config> {
 
 export const updateConfig = async function(config: ConfigUpdateRequest) {
 	const attributes: ExpressionAttributeValueMap = {};
+	const attributeNames: ExpressionAttributeNameMap = {};
 	let updateExp = '';
 	if (config.name) {
 		attributes[':name'] = { S: config.name };
@@ -178,6 +180,7 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 	}
 	if (config.activateTo) {
 		attributes[':activateTo'] = { S: config.activateTo };
+		attributeNames['#aT'] = 'aT';
 		updateExp = `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
@@ -197,9 +200,7 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 			id: { S: config.id }
 		},
 		UpdateExpression: updateExp,
-		ExpressionAttributeNames: {
-			'#aT': 'aT'
-		},
+		...(attributeNames && { ExpressionAttributeNames: attributeNames }),
 		ExpressionAttributeValues: attributes
 	};
 	await dynamoDB.updateItem(req).promise();
