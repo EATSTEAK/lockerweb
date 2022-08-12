@@ -77,6 +77,9 @@ export const unclaimLocker = async function(
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
 		},
+		ExpressionAttributeValues: {
+			':token': { S: token }
+		},
 		ReturnValues: 'UPDATED_OLD'
 	};
 	const res = await dynamoDB.updateItem(req).promise();
