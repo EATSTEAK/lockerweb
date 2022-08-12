@@ -61,8 +61,8 @@ export async function assertAccessible(id: string, token: string, adminOnly = fa
 	const authReq: GetItemInput = {
 		TableName,
 		Key: {
-			module: { S: 'user' },
-			dataId: {
+			type: { S: 'user' },
+			id: {
 				S: `${id}`
 			}
 		}
