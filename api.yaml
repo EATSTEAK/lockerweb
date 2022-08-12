@@ -6,6 +6,8 @@ info:
 servers:
   - url: https://itlocker.soongsil.dev/api/v1
     description: 예상 주소
+  - url: http://localhost:3000/api/v1
+    description: 로컬 테스트용 주소
 tags:
   - name: auth
     description: 사용자 로그인/로그아웃 플로우를 구성합니다.
@@ -762,7 +764,7 @@ components:
       required:
         - subsections
         - disabled
-        - grid
+        - height
       properties:
         subsections:
           description: 사물함의 내부 구역의 목록입니다.
@@ -774,12 +776,10 @@ components:
           type: array
           items:
             type: string
-        grid:
-          description: 실제 사물함 모양 추정을 위한 사물함의 가로 세로 칸 갯수입니다. 첫번째 값이 가로, 두번째 값이 세로입니다.
-          type: array
-          items:
-            type: integer
-            format: int32
+        height:
+          description: 실제 사물함 모양 추정을 위한 사물함의 세로 칸 갯수입니다.
+          type: integer
+          format: int32
     LockerSubsection:
       title: LockerSubsection
       description: 사물함의 내부 구역입니다. 사물함의 한 구역을 각각 다른 학부가 관할할 때 사용됩니다.
