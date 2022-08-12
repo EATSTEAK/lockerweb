@@ -16,7 +16,7 @@ import { NotFoundError, ResponsibleError } from '../util/error';
 export const fromUserDao = (dao: UserDao): User => ({
 	id: dao.id.S,
 	name: dao.n?.S,
-	isAdmin: dao.iA.BOOL,
+	isAdmin: dao.iA?.BOOL ?? false,
 	department: dao.d?.S,
 	...(dao.lockerId?.S && { lockerId: dao.lockerId?.S }),
 	...(dao.cU?.S && { lockerId: dao.cU?.S })
