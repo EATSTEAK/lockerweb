@@ -125,7 +125,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        AuthCallback:
+        AuthSsuLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /api/v1/auth/ssu_login
@@ -165,7 +165,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerList:
+        ConfigGet:
           Type: Api
           Properties:
             Path: /api/v1/config
@@ -185,7 +185,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerList:
+        ConfigUpdate:
           Type: Api
           Properties:
             Path: /api/v1/config/update
@@ -194,7 +194,7 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: handler.locker.lockerClaimHandler
+      Handler: handler.locker.claimLockerHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -205,7 +205,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerCount:
+        LockerClaim:
           Type: Api
           Properties:
             Path: /api/v1/locker/claim
@@ -225,7 +225,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerClaim:
+        LockerCount:
           Type: Api
           Properties:
             Path: /api/v1/locker/count
@@ -245,7 +245,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerClaim:
+        LockerQuery:
           Type: Api
           Properties:
             Path: /api/v1/locker/query
@@ -285,7 +285,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        UserGet:
+        UserQuery:
           Type: Api
           Properties:
             Path: /api/v1/user/query
@@ -325,7 +325,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        UserUpdate:
+        UserDelete:
           Type: Api
           Properties:
             Path: /api/v1/user/delete
@@ -345,7 +345,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        UserUpdate:
+        UserBatchDelete:
           Type: Api
           Properties:
             Path: /api/v1/user/batch/delete
@@ -365,7 +365,7 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        UserUpdate:
+        UserBatchPut:
           Type: Api
           Properties:
             Path: /api/v1/user/batch/put
