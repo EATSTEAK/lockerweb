@@ -11,7 +11,7 @@ export const revokeToken = async function(
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
-		UpdateExpression: 'REMOVE aT',
+		UpdateExpression: 'REMOVE #aT',
 		ConditionExpression: '#aT = :token',
 		ExpressionAttributeNames: {
 			'#aT': 'aT'
