@@ -50,14 +50,14 @@ export const queryUser = async function(startsWith: string): Promise<Array<User>
 	let composedRes: Array<User> = [];
 	const req: QueryInput = {
 		TableName,
-		KeyConditionExpression: '#type = :v1 AND begins_with(#id, :v2)',
+		KeyConditionExpression: `#type = :v1${startsWith ? ' AND begins_with(#id, :v2)' : ''}`,
 		ExpressionAttributeNames: {
 			'#type': 'type',
-			'#id': 'id'
+			...(startsWith && { '#id': 'id' })
 		},
 		ExpressionAttributeValues: {
 			':v1': { S: 'user' },
-			':v2': { S: `${startsWith}` }
+			...(startsWith && { ':v2': { S: `${startsWith}` } })
 		},
 		ProjectionExpression: 'id, n, iA, d, lockerId, cU'
 	};
