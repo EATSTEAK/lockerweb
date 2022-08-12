@@ -81,7 +81,7 @@ type BuildingData = {
 		M: {
 			[floor: string]: {
 				M: {
-					[lockerName: string]: LockerSectionData
+					[lockerName: string]: { M : LockerSectionData }
 				}
 			}
 		}
@@ -91,13 +91,13 @@ type BuildingData = {
 type LockerSection = {
 	subsections: LockerSubsection[];
 	disabled: string[];
-	grid: [number, number]
+	height: number;
 }
 
 type LockerSectionData = {
 	s: { L: { M: LockerSubsectionData }[] };
 	d: { L: { S: string } };
-	grid: { L: [{ N: string }, { N: string }] };
+	height: { N: string };
 }
 
 type LockerSubsection = {
@@ -108,4 +108,21 @@ type LockerSubsection = {
 type LockerSubsectionData = {
 	d: { S: string },
 	range: { L: [{ N: string }, { N: string }] };
+}
+
+type ConfigUpdateRequest = {
+	id: string;
+	name?: string;
+	activateFrom?: string;
+	activateTo?: string;
+}
+
+type DepartmentConfigUpdateRequest = ConfigUpdateRequest & {
+	contact?: string;
+}
+
+type ServiceConfigUpdateRequest = ConfigUpdateRequest & {
+	buildings?: {
+		[buildingId: string]: Building
+	}
 }
