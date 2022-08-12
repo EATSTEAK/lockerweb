@@ -1,4 +1,4 @@
-import type { GetItemInput, UpdateItemInput } from 'aws-sdk/clients/dynamodb';
+import type { ExpressionAttributeValueMap, GetItemInput, UpdateItemInput } from 'aws-sdk/clients/dynamodb';
 import { UnauthorizedError } from '../util/error';
 import { adminId, dynamoDB, TableName } from '../util/database';
 
@@ -31,9 +31,13 @@ export const revokeToken = async function(
 
 export const issueToken = async function(
 	id: string,
-	token: string
+	token: string,
+	blockedDepartments: Array<string>
 ): Promise<{ id: string; expires: number }> {
 	const expires = Date.now() + 3600 * 1000 * 24;
+	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(blockedDepartments.map(d => ([`:${d}`, { S: d }])));
+	conditionValues[':true'] = { BOOL: true };
+	const condition = blockedDepartments.map(d => `(NOT d = :${d})`).join(' AND ');
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
@@ -41,10 +45,11 @@ export const issueToken = async function(
 		ExpressionAttributeNames: {
 			'#aT': 'aT'
 		},
-		...(id !== adminId && { ConditionExpression: 'attribute_exists(d)' }),
+		...(id !== adminId && { ConditionExpression: `iA = :true OR (${condition})` }),
 		ExpressionAttributeValues: {
 			':token': { S: token },
-			':expiresOn': { N: `${expires}` }
+			':expiresOn': { N: `${expires}` },
+			...(id !== adminId && conditionValues)
 		},
 		ReturnValues: 'UPDATED_NEW'
 	};
