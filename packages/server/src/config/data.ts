@@ -1,4 +1,5 @@
 import type {
+	ExpressionAttributeNameMap,
 	ExpressionAttributeValueMap,
 	GetItemInput,
 	QueryInput,
@@ -123,14 +124,14 @@ export const queryConfig = async function(startsWith = ''): Promise<Array<Config
 	let composedRes: Array<Config> = [];
 	const req: QueryInput = {
 		TableName,
-		KeyConditionExpression: '#type = :v1 AND begins_with(#id, :v2)',
+		KeyConditionExpression: `#type = :v1${startsWith ? ' AND begins_with(#id, :v2)' : ''}`,
 		ExpressionAttributeNames: {
 			'#type': 'type',
-			'#id': 'id'
+			...(startsWith && { '#id': 'id' })
 		},
 		ExpressionAttributeValues: {
 			':v1': { S: 'config' },
-			':v2': { S: `${startsWith}` }
+			...(startsWith && { ':v2': { S: `${startsWith}` } })
 		}
 	};
 	let res: QueryOutput;
@@ -167,6 +168,7 @@ export const getConfig = async function(id: string): Promise<Config> {
 
 export const updateConfig = async function(config: ConfigUpdateRequest) {
 	const attributes: ExpressionAttributeValueMap = {};
+	const attributeNames: ExpressionAttributeNameMap = {};
 	let updateExp = '';
 	if (config.name) {
 		attributes[':name'] = { S: config.name };
@@ -178,6 +180,7 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 	}
 	if (config.activateTo) {
 		attributes[':activateTo'] = { S: config.activateTo };
+		attributeNames['#aT'] = 'aT';
 		updateExp = `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
@@ -197,9 +200,7 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 			id: { S: config.id }
 		},
 		UpdateExpression: updateExp,
-		ExpressionAttributeNames: {
-			'#aT': 'aT'
-		},
+		...(Object.keys(attributeNames).length && { ExpressionAttributeNames: attributeNames }),
 		ExpressionAttributeValues: attributes
 	};
 	await dynamoDB.updateItem(req).promise();
