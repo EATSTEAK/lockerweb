@@ -45,7 +45,7 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		return createResponse(500, {
 			success: false,
 			error: 500,
-			error_description: 'Key "locker_floor" and "locker_id" are must be given'
+			error_description: 'Key "locker_id" is must be given'
 		});
 	}
 
