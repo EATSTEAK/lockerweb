@@ -82,6 +82,39 @@ export const claimLocker = async function(
 	}
 };
 
+export const unclaimLocker = async function(
+	id: string,
+	token: string
+): Promise<{ id: string; lockerId: string }> {
+	const req: UpdateItemInput = {
+		TableName,
+		Key: { type: { S: 'user' }, id: { S: id } },
+		UpdateExpression:
+			'REMOVE #lockerId',
+		ConditionExpression: '#aT = :token AND attribute_exists(#lockerId)',
+		ExpressionAttributeNames: {
+			'#lockerId': 'lockerId',
+			'#aT': 'aT'
+		},
+		ReturnValues: 'UPDATED_OLD'
+	};
+	const res = await dynamoDB.updateItem(req).promise();
+	console.debug(res);
+	if (
+		res.Attributes.hasOwnProperty('lockerId')
+	) {
+		return {
+			id: id,
+			lockerId: res.Attributes.lockerId.S
+		};
+	} else {
+		if (res.Attributes?.accessToken?.S !== token) {
+			throw new UnauthorizedError('Unauthorized', { id });
+		}
+		throw new CantClaimError('This user is not claimed an locker yet', { id });
+	}
+};
+
 export const queryLockers = async function(
 	starts = '',
 	showId?: boolean

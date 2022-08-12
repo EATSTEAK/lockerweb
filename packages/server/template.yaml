@@ -60,6 +60,11 @@ Resources:
           Properties:
             Path: /api/v1/locker/claim
             Method: options
+        LockerUnclaim:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/locker/unclaim
+            Method: options
         LockerCount:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
@@ -209,6 +214,26 @@ Resources:
           Type: Api
           Properties:
             Path: /api/v1/locker/claim
+            Method: post
+  LockerUnclaimFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.locker.unclaimLockerHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        LockerUnclaim:
+          Type: Api
+          Properties:
+            Path: /api/v1/locker/unclaim
             Method: post
   LockerCountFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
