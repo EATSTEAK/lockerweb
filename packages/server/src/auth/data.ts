@@ -1,7 +1,6 @@
 import type { GetItemInput, UpdateItemInput } from 'aws-sdk/clients/dynamodb';
 import { UnauthorizedError } from '../util/error';
 import { adminId, dynamoDB, TableName } from '../util/database';
-import { fromUserDao } from '../user/data';
 
 /* ISSUE/REVOKE TOKEN */
 
@@ -57,12 +56,12 @@ export const issueToken = async function(
 	}
 };
 
-export async function assertAccessible(id: string, token: string, adminOnly = false): Promise<User> {
+export async function assertAccessible(id: string, token: string, adminOnly = false): Promise<boolean> {
 	const authReq: GetItemInput = {
 		TableName,
 		Key: {
-			module: { S: 'user' },
-			dataId: {
+			type: { S: 'user' },
+			id: {
 				S: `${id}`
 			}
 		}
@@ -75,5 +74,5 @@ export async function assertAccessible(id: string, token: string, adminOnly = fa
 	) {
 		throw new UnauthorizedError('Unauthorized');
 	}
-	return fromUserDao(authRes.Item as unknown as UserDao);
+	return true;
 }

@@ -89,10 +89,14 @@ export const queryLockers = async function(
 	const req: QueryInput = {
 		TableName,
 		IndexName: 'lockerIdIndex',
-		KeyConditionExpression: 'type = :type AND begins_with(id, :starts)',
+		KeyConditionExpression: `#type = :type${starts ? ' AND begins_with(#id, :starts)' : ''}`,
 		FilterExpression: 'cU < :zero OR cU > :claimedUntil',
+		ExpressionAttributeNames: {
+			'#type': 'type',
+			...(starts && { '#id': 'id' })
+		},
 		ExpressionAttributeValues: {
-			':starts': { S: starts },
+			...(starts && { ':starts': { S: starts } }),
 			':zero': { N: '0' },
 			':claimedUntil': { N: `${Date.now()}` },
 			':type': { S: 'user' }

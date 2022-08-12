@@ -16,7 +16,7 @@ import { NotFoundError, ResponsibleError } from '../util/error';
 export const fromUserDao = (dao: UserDao): User => ({
 	id: dao.id.S,
 	name: dao.n?.S,
-	isAdmin: dao.iA.BOOL,
+	isAdmin: dao.iA?.BOOL ?? false,
 	department: dao.d?.S,
 	...(dao.lockerId?.S && { lockerId: dao.lockerId?.S }),
 	...(dao.cU?.S && { lockerId: dao.cU?.S })
@@ -50,14 +50,14 @@ export const queryUser = async function(startsWith: string): Promise<Array<User>
 	let composedRes: Array<User> = [];
 	const req: QueryInput = {
 		TableName,
-		KeyConditionExpression: '#type = :v1 AND begins_with(#id, :v2)',
+		KeyConditionExpression: `#type = :v1${startsWith ? ' AND begins_with(#id, :v2)' : ''}`,
 		ExpressionAttributeNames: {
 			'#type': 'type',
-			'#id': 'id'
+			...(startsWith && { '#id': 'id' })
 		},
 		ExpressionAttributeValues: {
 			':v1': { S: 'user' },
-			':v2': { S: `${startsWith}` }
+			...(startsWith && { ':v2': { S: `${startsWith}` } })
 		},
 		ProjectionExpression: 'id, n, iA, d, lockerId, cU'
 	};
@@ -86,7 +86,7 @@ export const updateUser = async function(info: UserUpdateRequest): Promise<UserU
 	}
 	if (info.isAdmin) {
 		attributes[':isAdmin'] = { BOOL: info.isAdmin };
-		updateExp += `${updateExp ? ',' : 'SET'} iA = :userName`;
+		updateExp += `${updateExp ? ',' : 'SET'} iA = :isAdmin`;
 	}
 	if (info.department) {
 		attributes[':department'] = { S: info.department };
