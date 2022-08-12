@@ -234,6 +234,52 @@ paths:
                 success: false
                 error: 500
                 errorDescription: Internal error
+  /locker/unclaim:
+    post:
+      tags:
+        - locker
+      summary: 사물함 반납(일반 학부생용)
+      description: 로그인된 학부생 명의로 대여된 사물함을 반납합니다.
+      security:
+        - UserSessionAuth: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+                    properties:
+                      lockerId:
+                        type: string
+        '403':
+          description: 사물함이 이미 점유되었을 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 403
+                errorDescription: Can't claim the locker that already reserved
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
   /user:
     get:
       tags:
