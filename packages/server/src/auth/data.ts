@@ -13,7 +13,10 @@ export const revokeToken = async function(
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
 		UpdateExpression: 'REMOVE aT',
-		ConditionExpression: 'aT = :token',
+		ConditionExpression: '#aT = :token',
+		ExpressionAttributeNames: {
+			'#aT': 'aT'
+		},
 		ExpressionAttributeValues: {
 			':token': { S: token }
 		},
@@ -35,7 +38,10 @@ export const issueToken = async function(
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
-		UpdateExpression: 'SET aT = :token, eO = :expiresOn',
+		UpdateExpression: 'SET #aT = :token, eO = :expiresOn',
+		ExpressionAttributeNames: {
+			'#aT': 'aT'
+		},
 		...(id !== adminId && { ConditionExpression: 'attribute_exists(d)' }),
 		ExpressionAttributeValues: {
 			':token': { S: token },

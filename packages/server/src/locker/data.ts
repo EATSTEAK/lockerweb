@@ -10,7 +10,10 @@ export const revokeLocker = async function(
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression: 'REMOVE lockerId',
-		ConditionExpression: 'aT = :token',
+		ConditionExpression: '#aT = :token',
+		ExpressionAttributeNames: {
+			'#aT': 'aT'
+		},
 		ExpressionAttributeValues: {
 			':token': { S: token }
 		},
@@ -49,7 +52,10 @@ export const claimLocker = async function(
 		Key: { id: { S: id } },
 		UpdateExpression:
 			'SET lockerId = :lockerId, cU = :claimedUntil',
-		ConditionExpression: 'aT = :token',
+		ConditionExpression: '#aT = :token',
+		ExpressionAttributeNames: {
+			'#aT': 'aT'
+		},
 		ExpressionAttributeValues: {
 			':lockerId': { S: lockerId },
 			':token': { S: token },

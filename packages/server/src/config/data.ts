@@ -178,7 +178,7 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 	}
 	if (config.activateTo) {
 		attributes[':activateTo'] = { S: config.activateTo };
-		updateExp = `${updateExp ? ',' : 'SET'} aT = :activateTo`;
+		updateExp = `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
@@ -197,6 +197,9 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 			id: { S: config.id }
 		},
 		UpdateExpression: updateExp,
+		ExpressionAttributeNames: {
+			'#aT': 'aT'
+		},
 		ExpressionAttributeValues: attributes
 	};
 	await dynamoDB.updateItem(req).promise();
