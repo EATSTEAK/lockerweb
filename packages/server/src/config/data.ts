@@ -200,7 +200,7 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 			id: { S: config.id }
 		},
 		UpdateExpression: updateExp,
-		...(attributeNames && { ExpressionAttributeNames: attributeNames }),
+		...(Object.keys(attributeNames).length && { ExpressionAttributeNames: attributeNames }),
 		ExpressionAttributeValues: attributes
 	};
 	await dynamoDB.updateItem(req).promise();
