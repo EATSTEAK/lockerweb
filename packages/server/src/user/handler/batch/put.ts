@@ -7,7 +7,7 @@ import { assertAccessible } from '../../../auth/data';
 import { batchPutUser } from '../../data';
 import { ResponsibleError } from '../../../util/error';
 
-export const userBatchPutHandler: APIGatewayProxyHandler = async (event) => {
+export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
 	let data: User[];
 	try {
