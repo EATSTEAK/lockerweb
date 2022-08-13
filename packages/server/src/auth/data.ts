@@ -1,10 +1,14 @@
-import type { ExpressionAttributeValueMap, GetItemInput, UpdateItemInput } from 'aws-sdk/clients/dynamodb';
+import type {
+	ExpressionAttributeValueMap,
+	GetItemInput,
+	UpdateItemInput
+} from 'aws-sdk/clients/dynamodb';
 import { UnauthorizedError } from '../util/error';
 import { adminId, dynamoDB, TableName } from '../util/database';
 
 /* ISSUE/REVOKE TOKEN */
 
-export const revokeToken = async function(
+export const revokeToken = async function (
 	id: string,
 	token: string
 ): Promise<{ accessToken: string }> {
@@ -29,15 +33,17 @@ export const revokeToken = async function(
 	}
 };
 
-export const issueToken = async function(
+export const issueToken = async function (
 	id: string,
 	token: string,
 	blockedDepartments: Array<string>
 ): Promise<{ id: string; expires: number }> {
 	const expires = Date.now() + 3600 * 1000 * 24;
-	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(blockedDepartments.map(d => ([`:${d}`, { S: d }])));
+	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(
+		blockedDepartments.map((d) => [`:${d}`, { S: d }])
+	);
 	conditionValues[':true'] = { BOOL: true };
-	const condition = blockedDepartments.map(d => `(NOT d = :${d})`).join(' AND ');
+	const condition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
@@ -45,11 +51,14 @@ export const issueToken = async function(
 		ExpressionAttributeNames: {
 			'#aT': 'aT'
 		},
-		...(id !== adminId && { ConditionExpression: `iA = :true OR (${condition})` }),
+		...(id !== adminId &&
+			condition && {
+				ConditionExpression: `iA = :true OR (${condition})`
+			}),
 		ExpressionAttributeValues: {
 			':token': { S: token },
 			':expiresOn': { N: `${expires}` },
-			...(id !== adminId && conditionValues)
+			...(id !== adminId && condition && conditionValues)
 		},
 		ReturnValues: 'UPDATED_NEW'
 	};
@@ -61,7 +70,11 @@ export const issueToken = async function(
 	}
 };
 
-export async function assertAccessible(id: string, token: string, adminOnly = false): Promise<boolean> {
+export async function assertAccessible(
+	id: string,
+	token: string,
+	adminOnly = false
+): Promise<boolean> {
 	const authReq: GetItemInput = {
 		TableName,
 		Key: {
