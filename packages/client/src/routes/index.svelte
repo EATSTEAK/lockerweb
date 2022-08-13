@@ -4,12 +4,29 @@
 	import Soongsil from '../icons/Soongsil.svelte';
 	import DepartmentLockerInfo from '../components/molecule/LockerStatus.svelte';
 	import ChevronDown from '../icons/ChevronDown.svelte';
+	import { browser } from '$app/env';
+	import { getAuthorization } from '$lib/auth';
+
+	let callbackUrl = undefined;
+
+	$: callbackNotLoaded = true;
+
+	if (browser) {
+		if (getAuthorization()) {
+			window.location.href = '/reserve';
+		}
+		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
+		callbackNotLoaded = false;
+	}
 </script>
 <div class='root'>
 	<div class='entry-wrap'>
 		<div class='entry'>
 			<Entry name='SOONGSIL UNIV. IT'>
-				<Button class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
+				<Button
+					bind:disabled={callbackNotLoaded}
+					href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
+					class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
 					통합 로그인
 					<Soongsil class='w-8 h-8' slot='icon' />
 				</Button>

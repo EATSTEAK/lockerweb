@@ -4,7 +4,7 @@
 	export { clazz as class };
 </script>
 
-<button class={`${clazz || ''}`}>
+<a class={`${clazz || ''}`} {...$$restProps}>
 	{#if !isIconRight}
 		<div class='btn-icon'>
 			<slot name='icon' />
@@ -16,14 +16,18 @@
 			<slot name='icon' />
 		</div>
 	{/if}
-</button>
+</a>
 
 <style>
-    button {
+    a {
         @apply flex justify-between rounded-lg shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 m-1 transition-all ease-in;
     }
 
-    button:hover {
+    a[disabled] {
+        @apply backdrop-brightness-75 shadow-none pointer-events-none;
+    }
+
+    a:hover {
         @apply brightness-90 drop-shadow-lg;
     }
 
