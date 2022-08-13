@@ -37,6 +37,13 @@ type UserDao = DaoData & {
 	cU?: { S: string };
 };
 
+type AccessTokenInfo = {
+	id: string;
+	accessToken: string;
+	tokenType: 'Bearer';
+	expiresIn: number;
+};
+
 /* Config Definition */
 
 type Config = {
