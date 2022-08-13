@@ -162,15 +162,7 @@ paths:
                   success:
                     type: boolean
                   result:
-                    type: object
-                example:
-                  success: true
-                  result:
-                    E: 10
-                    A: 20
-                    C: 13
-                    S: 28
-                    G: 0
+                    $ref: '#/components/schemas/LockerCountResponse'
         '500':
           description: 내부 오류
           content:
