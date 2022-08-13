@@ -162,15 +162,7 @@ paths:
                   success:
                     type: boolean
                   result:
-                    type: object
-                example:
-                  success: true
-                  result:
-                    E: 10
-                    A: 20
-                    C: 13
-                    S: 28
-                    G: 0
+                    $ref: '#/components/schemas/LockerCountResponse'
         '500':
           description: 내부 오류
           content:
@@ -261,7 +253,7 @@ paths:
                       lockerId:
                         type: string
         '403':
-          description: 사물함이 이미 점유되었을 경우
+          description: 점유한 사물함이 없을 경우
           content:
             application/json:
               schema:
@@ -269,7 +261,7 @@ paths:
               example:
                 success: false
                 error: 403
-                errorDescription: Can't claim the locker that already reserved
+                errorDescription: This user is not claimed an locker yet
         '500':
           description: 내부 오류
           content:
@@ -291,7 +283,7 @@ paths:
       parameters:
         - name: id
           in: query
-          description: 열람할 사용자의 학번(관리자용)\
+          description: 열람할 사용자의 학번(관리자용)
           schema:
             type: string
       responses:
@@ -658,6 +650,17 @@ components:
           type: string
           format: date-time
           description: 이 사물함을 사용하는 기한입니다. 없다면 무기한으로 사용중인 사물함입니다.
+    LockerCountResponse:
+      title: LockerCountResponse
+      description: 사물함 갯수 요청 시 반환하는 형식입니다.
+      type: object
+      properties:
+        departmentId:
+          type: object
+          properties:
+            floor:
+              type: number
+              format: int32
     LockerClaimRequest:
       title: LockerClaimRequest
       description: 사물함 대여 요청입니다.
