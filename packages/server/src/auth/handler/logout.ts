@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { assertAccessible, revokeToken } from '../data';
 import { createResponse } from '../../common';
-import { ResponsibleError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -14,8 +14,8 @@ export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await revokeToken(payload.aud as string, token);
 		return createResponse(200, { success: true, ...res });
 	} catch (err) {
-		if (err instanceof ResponsibleError) {
-			return err.response();
+		if (isResponsibleError(err)) {
+			return errorResponse(err as ResponsibleError);
 		}
 		const res = {
 			success: false,

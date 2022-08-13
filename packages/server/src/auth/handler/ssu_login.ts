@@ -3,7 +3,7 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
-import { ResponsibleError, UnauthorizedError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError, UnauthorizedError } from '../../util/error';
 import { issueToken } from '../data';
 import { queryConfig } from '../../config/data';
 import { adminId } from '../../util/database';
@@ -70,9 +70,9 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			};
 			return createResponse(200, { success: true, ...res });
 		}
-		return new UnauthorizedError('Unauthorized').response();
+		return errorResponse(new UnauthorizedError('Unauthorized'));
 	} catch (e) {
-		if (!(e instanceof ResponsibleError)) {
+		if (!(isResponsibleError(e))) {
 			console.error(e);
 			const res = {
 				success: false,
@@ -81,6 +81,6 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			};
 			return createResponse(500, res);
 		}
-		return e.response();
+		return errorResponse(e as ResponsibleError);
 	}
 };

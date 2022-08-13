@@ -4,10 +4,10 @@ import type { JwtPayload } from 'jsonwebtoken';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { claimLocker } from '../data';
-import { ResponsibleError } from '../../util/error';
 import { getUser } from '../../user/data';
 import { isValidLocker } from '../../util/locker';
 import { getConfig } from '../../config/data';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -59,7 +59,7 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 			: await claimLocker(id, token, lockerId);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		if (!(e instanceof ResponsibleError)) {
+		if (!(isResponsibleError(e))) {
 			console.error(e);
 			const res = {
 				success: false,
@@ -68,6 +68,6 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 			};
 			return createResponse(500, res);
 		}
-		return e.response();
+		return errorResponse(e as ResponsibleError);
 	}
 };

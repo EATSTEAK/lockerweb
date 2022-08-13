@@ -5,7 +5,7 @@ import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import { assertAccessible } from '../../auth/data';
 import { queryUser } from '../data';
-import { ResponsibleError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
 	const startsWith = event.queryStringParameters?.starts ?? '';
@@ -20,8 +20,8 @@ export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
 			result
 		});
 	} catch (e) {
-		if (e instanceof ResponsibleError) {
-			return e.response();
+		if (isResponsibleError(e)) {
+			return errorResponse(e as ResponsibleError);
 		}
 		console.error(e);
 		return createResponse(500, {

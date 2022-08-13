@@ -5,7 +5,7 @@ import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import { getUser } from '../data';
-import { ResponsibleError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const getUserHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -17,8 +17,8 @@ export const getUserHandler: APIGatewayProxyHandler = async (event) => {
 			result
 		});
 	} catch (e) {
-		if (e instanceof ResponsibleError) {
-			return e.response();
+		if (isResponsibleError(e)) {
+			return errorResponse(e as ResponsibleError);
 		}
 		if (e instanceof JsonWebTokenError || e instanceof TokenExpiredError) {
 			return createResponse(401, {

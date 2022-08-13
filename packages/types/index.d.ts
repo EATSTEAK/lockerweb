@@ -1,7 +1,11 @@
+/* Common DAO Definition */
+
 type DaoData = {
 	type: { S: `user` | 'config' };
 	id: { S: string };
 }
+
+/* User Definition */
 
 type User = {
 	id: string;
@@ -32,6 +36,8 @@ type UserDao = DaoData & {
 	lockerId?: { S: string };
 	cU?: { S: string };
 }
+
+/* Config Definition */
 
 type Config = {
 	id: string;
@@ -125,4 +131,13 @@ type ServiceConfigUpdateRequest = ConfigUpdateRequest & {
 	buildings?: {
 		[buildingId: string]: Building
 	}
+}
+
+
+/* Error Definition */
+
+type ResponsibleError = {
+	errorType: string;
+	message?: string;
+	additionalInfo?: Record<string, unknown>
 }

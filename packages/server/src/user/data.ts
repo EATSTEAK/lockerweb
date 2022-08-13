@@ -126,7 +126,7 @@ export const deleteUser = async function(id: string): Promise<string> {
 };
 export const batchPutUser = async function(infos: Array<User>): Promise<Array<User>> {
 	if (infos.length === 0) return infos;
-	if (infos.length > 25) throw new ResponsibleError('Maximum amount of batch creation is 25');
+	if (infos.length > 25) throw new ResponsibleError(500, 'Maximum amount of batch creation is 25');
 	const requests: WriteRequest[] = infos.map((v: User) => ({
 		PutRequest: {
 			Item: {
@@ -145,7 +145,7 @@ export const batchPutUser = async function(infos: Array<User>): Promise<Array<Us
 
 export const batchDeleteUser = async function(ids: Array<string>): Promise<Array<string>> {
 	if (ids.length === 0) return ids;
-	if (ids.length > 25) throw new ResponsibleError('Maximum amount of batch creation is 25');
+	if (ids.length > 25) throw new ResponsibleError(500, 'Maximum amount of batch creation is 25');
 	const requests: WriteRequest[] = ids.map((v: string) => ({
 		DeleteRequest: {
 			Key: {
