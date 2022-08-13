@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
 import { queryConfig } from '../data';
-import { ResponsibleError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const getConfigHandler: APIGatewayProxyHandler = async (event) => {
 	try {
@@ -11,8 +11,8 @@ export const getConfigHandler: APIGatewayProxyHandler = async (event) => {
 			result: configs
 		});
 	} catch (e) {
-		if (e instanceof ResponsibleError) {
-			return e.response();
+		if (isResponsibleError(e)) {
+			return errorResponse(e as ResponsibleError);
 		}
 		return createResponse(200, {
 			success: false,

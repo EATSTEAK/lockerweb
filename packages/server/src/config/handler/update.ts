@@ -4,8 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import { assertAccessible } from '../../auth/data';
-import { ResponsibleError } from '../../util/error';
 import { updateConfig } from '../data';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const updateConfigHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -43,8 +43,8 @@ export const updateConfigHandler: APIGatewayProxyHandler = async (event) => {
 		await updateConfig(data);
 		return createResponse(200, { success: true });
 	} catch (e) {
-		if (e instanceof ResponsibleError) {
-			return e.response();
+		if (isResponsibleError(e)) {
+			return errorResponse(e as ResponsibleError);
 		}
 		console.error(e);
 		const res = {

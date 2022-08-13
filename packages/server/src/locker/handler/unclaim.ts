@@ -4,7 +4,7 @@ import type { JwtPayload } from 'jsonwebtoken';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { unclaimLocker } from '../data';
-import { ResponsibleError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const unclaimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -15,7 +15,7 @@ export const unclaimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await unclaimLocker(id, token);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		if (!(e instanceof ResponsibleError)) {
+		if (!(isResponsibleError(e))) {
 			console.error(e);
 			const res = {
 				success: false,
@@ -24,6 +24,6 @@ export const unclaimLockerHandler: APIGatewayProxyHandler = async (event) => {
 			};
 			return createResponse(500, res);
 		}
-		return e.response();
+		return errorResponse(e as ResponsibleError);
 	}
 };

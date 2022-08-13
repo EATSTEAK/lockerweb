@@ -5,7 +5,7 @@ import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import { assertAccessible } from '../../auth/data';
 import { deleteUser } from '../data';
-import { ResponsibleError } from '../../util/error';
+import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
 
 export const deleteUserHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -43,8 +43,8 @@ export const deleteUserHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await deleteUser(data.id);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		if (e instanceof ResponsibleError) {
-			return e.response();
+		if (isResponsibleError(e)) {
+			return errorResponse(e as ResponsibleError);
 		}
 		console.error(e);
 		const res = {

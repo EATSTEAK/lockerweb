@@ -2,52 +2,50 @@ import type { APIGatewayProxyResult } from 'aws-lambda';
 import { createResponse } from '../common';
 
 export class ResponsibleError extends Error {
+	message: string;
+
+	errorCode: number;
+
 	additionalInfo: Record<string, unknown>;
 
-	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
-		super(message);
-		this.additionalInfo = additionalInfo;
-	}
+	errorType: string;
 
-	response(): APIGatewayProxyResult {
-		return createResponse(500, {
-			success: false,
-			error: 500,
-			error_description: 'Internal error',
-			...this.additionalInfo
-		});
+	constructor(errorCode: number, errorType: string, message?: string, additionalInfo?: Record<string, unknown>) {
+		super(message);
+		this.errorCode = errorCode;
+		this.errorType = errorType;
+		this.message = message;
+		this.additionalInfo = additionalInfo;
 	}
 }
 
 export class UnauthorizedError extends ResponsibleError {
-	response(): APIGatewayProxyResult {
-		return createResponse(401, {
-			success: false,
-			error: 401,
-			error_description: this.message,
-			...this.additionalInfo
-		});
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(401, 'UnauthorizedError', message, additionalInfo);
 	}
 }
 
 export class NotFoundError extends ResponsibleError {
-	response(): APIGatewayProxyResult {
-		return createResponse(404, {
-			success: false,
-			error: 404,
-			error_description: this.message,
-			...this.additionalInfo
-		});
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(404, 'NotFoundError', message, additionalInfo);
 	}
 }
 
 export class CantClaimError extends ResponsibleError {
-	response(): APIGatewayProxyResult {
-		return createResponse(403, {
-			success: false,
-			error: 403,
-			error_description: this.message,
-			...this.additionalInfo
-		});
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(403, 'CantClaimError', message, additionalInfo);
 	}
+}
+
+export function isResponsibleError(error: unknown) {
+	return typeof error === 'object' && Object.keys(error).includes('errorType');
+}
+
+export function errorResponse(error: ResponsibleError, overrideDescription?: string): APIGatewayProxyResult {
+	return createResponse(error.errorCode, {
+		success: false,
+		error: error.errorCode,
+		error_description: overrideDescription ?? error.message,
+		...error.additionalInfo
+	});
 }
