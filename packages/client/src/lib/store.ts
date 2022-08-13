@@ -33,6 +33,13 @@ export const config: Readable<Config[] | undefined | null> = readable<Config[] |
 					.then((data) => {
 						if (data.success) {
 							const result: Config[] = data.result;
+							localStorage.setItem(
+								'config',
+								JSON.stringify({
+									lastUpdated: new Date().toISOString(),
+									configs: result
+								})
+							);
 							set(result);
 						} else {
 							throw new Error(`Request error ${data.error}: ${data.errorDescription}`);
