@@ -24,32 +24,34 @@ export const config: Readable<Config[] | undefined | null> = readable<Config[] |
 					const lastUpdated = new Date(configStore.lastUpdated);
 					if (Date.now() - lastUpdated.getTime() <= 1000 * 60) {
 						set(configStore.configs);
+						return function stop() {
+							set(undefined);
+						};
 					}
 				}
-			} else {
-				set(undefined);
-				fetch(variables.baseUrl + '/api/v1/config')
-					.then((res) => res.json())
-					.then((data) => {
-						if (data.success) {
-							const result: Config[] = data.result;
-							localStorage.setItem(
-								'config',
-								JSON.stringify({
-									lastUpdated: new Date().toISOString(),
-									configs: result
-								})
-							);
-							set(result);
-						} else {
-							throw new Error(`Request error ${data.error}: ${data.errorDescription}`);
-						}
-					})
-					.catch((err) => {
-						console.log(err);
-						set(null);
-					});
 			}
+			set(undefined);
+			fetch(variables.baseUrl + '/api/v1/config')
+				.then((res) => res.json())
+				.then((data) => {
+					if (data.success) {
+						const result: Config[] = data.result;
+						localStorage.setItem(
+							'config',
+							JSON.stringify({
+								lastUpdated: new Date().toISOString(),
+								configs: result
+							})
+						);
+						set(result);
+					} else {
+						throw new Error(`Request error ${data.error}: ${data.errorDescription}`);
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					set(null);
+				});
 		}
 		return function stop() {
 			set(undefined);
