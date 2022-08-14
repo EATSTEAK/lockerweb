@@ -4,28 +4,135 @@
 	import DepartmentSelectionGroup from '../atom/DepartmentSelectionGroup.svelte';
 	import DepartmentSelection from '../atom/DepartmentSelection.svelte';
 	import DepartmentLockerStatus from './DepartmentLockerStatus.svelte';
+	import type { LockerCount } from '$lib/types';
 
-	let selectedDept;
+	const lockerCount: LockerCount = {
+		E: {
+			canRserve: true,
+			lockerLeft: 50,
+			totalLocker: 100,
+			availableFrom: new Date(),
+			availableTo: new Date(),
+			contact: 'test',
+			floors: {
+				'B1': {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				},
+				'1F': {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				},
+				'2F': {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				}
+			}
+		},
+		A: {
+			canRserve: true,
+			lockerLeft: 50,
+			totalLocker: 100,
+			availableFrom: new Date(),
+			availableTo: new Date(),
+			contact: 'test',
+			floors: {
+				B1: {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				}
+			}
+		},
+		C: {
+			canRserve: true,
+			lockerLeft: 50,
+			totalLocker: 100,
+			availableFrom: new Date(),
+			availableTo: new Date(),
+			contact: 'test',
+			floors: {
+				B1: {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				}
+			}
+		},
+		S: {
+			canRserve: true,
+			lockerLeft: 50,
+			totalLocker: 100,
+			availableFrom: new Date(),
+			availableTo: new Date(),
+			contact: 'test',
+			floors: {
+				B1: {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				}
+			}
+		},
+		G: {
+			canRserve: true,
+			lockerLeft: 50,
+			totalLocker: 100,
+			availableFrom: new Date(),
+			availableTo: new Date(),
+			contact: 'test',
+			floors: {
+				B1: {
+					canReserve: true,
+					percentage: 50,
+					totalLocker: 50,
+					lockerLeft: 25
+				}
+			}
+		}
+	};
+
+	let selectedDept = 'C';
+	$: departmentStatus = selectedDept ? lockerCount[selectedDept] : {};
+	$: availableDates = [];
+
+	function availableCalc(availableFrom: Date, availableTo: Date): string {
+		const fromDate = availableFrom ? `${availableFrom.getMonth() + 1}/${availableFrom.getDate()}` : '';
+		const toDate = availableTo ? `${availableTo.getMonth() + 1}/${availableTo.getDate()}` : '';
+		const fromTime = availableFrom ? `${availableFrom.getHours()}:${availableFrom.getMinutes()}` : '';
+		const toTime = availableTo ? `${availableTo.getHours()}:${availableTo.getMinutes()}` : '';
+		const isToDateDifferent = toDate && toDate !== fromDate;
+		return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
+	}
 </script>
 
 <div class='wrap'>
 	<div class='control'>
 		<div class='title'>
 			<h3>사물함 예약 현황</h3>
-			<Tag class='bg-gray-200 text-primary-800'>8/13</Tag>
+			<Tag class='bg-gray-200 text-primary-800'>{new Date().getMonth() + 1}/{new Date().getDate()}</Tag>
 		</div>
 		<div class='selection'>
 			<DepartmentSelectionGroup bind:selectedId={selectedDept}>
-				<DepartmentSelection id='C' departmentText='컴퓨터학부' lockerLeft={50} totalLocker={50} />
-				<DepartmentSelection id='S' departmentText='소프트웨어학부' lockerLeft={20} totalLocker={50} />
-				<DepartmentSelection id='G' departmentText='글로벌미디어학부' lockerLeft={20} totalLocker={50} />
-				<DepartmentSelection id='E' departmentText='전자정보공학부' lockerLeft={20} totalLocker={50} />
-				<DepartmentSelection id='A' departmentText='AI융합학부' lockerLeft={20} totalLocker={50} />
+				{#each Object.entries(lockerCount) as [key, value], index(key)}
+					<DepartmentSelection id={key} departmentText={key} lockerLeft={value.lockerLeft}
+															 totalLocker={value.totalLocker}
+															 availableTime={availableCalc(value.availableFrom, value.availableTo)} />
+				{/each}
 			</DepartmentSelectionGroup>
 		</div>
 	</div>
 	<div class='tab'>
-		<DepartmentLockerStatus />
+		<DepartmentLockerStatus {departmentStatus} />
 	</div>
 </div>
 
