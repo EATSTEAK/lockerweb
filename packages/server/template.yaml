@@ -21,6 +21,9 @@ Globals:
       Variables:
         TABLE_NAME: !Ref TableName
         AWS_SAM_LOCAL: !Ref AwsSamLocal
+        ADMIN_ID:
+          Type: String
+          Default: '20211561'
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
