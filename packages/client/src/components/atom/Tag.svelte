@@ -10,6 +10,6 @@
 
 <style>
     .tag {
-        @apply rounded-xl py-1 px-2 font-semibold;
+        @apply rounded-xl py-1 px-2 font-semibold inline;
     }
 </style>
