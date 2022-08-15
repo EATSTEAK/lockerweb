@@ -1,500 +1,524 @@
 {
-  "id": "SERVICE",
-  "name": "IT대학 사물함 예약 시스템",
-  "buildings": {
-    "05": {
-      "id": "05",
-      "name": "형남공학관",
-      "lockers": {
-        "B1": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  20
+  "configs": [
+    {
+      "id": "SERVICE",
+      "name": "IT대학 사물함 예약 시스템",
+      "buildings": {
+        "05": {
+          "id": "05",
+          "name": "형남공학관",
+          "lockers": {
+            "B1": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      20
+                    ],
+                    "department": "A"
+                  }
                 ],
-                "department": "A"
+                "disabled": [],
+                "height": 4
               }
-            ],
-            "disabled": [],
-            "height": 4
+            },
+            "1": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      10
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "B": {
+                "subsections": [
+                  {
+                    "range": [
+                      11,
+                      40
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "C": {
+                "subsections": [
+                  {
+                    "range": [
+                      41,
+                      300
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "D": {
+                "subsections": [
+                  {
+                    "range": [
+                      301,
+                      340
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              }
+            },
+            "4": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      21,
+                      90
+                    ],
+                    "department": "A"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "E": {
+                "subsections": [
+                  {
+                    "range": [
+                      341,
+                      400
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "F": {
+                "subsections": [
+                  {
+                    "range": [
+                      401,
+                      460
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "G": {
+                "subsections": [
+                  {
+                    "range": [
+                      461,
+                      490
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "H": {
+                "subsections": [
+                  {
+                    "range": [
+                      491,
+                      510
+                    ],
+                    "department": "E"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              }
+            }
           }
         },
-        "1": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  10
+        "21": {
+          "id": "21",
+          "name": "정보과학관",
+          "lockers": {
+            "B1": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      60
+                    ],
+                    "department": "G"
+                  }
                 ],
-                "department": "E"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "B": {
-            "subsections": [
-              {
-                "range": [
-                  11,
-                  40
+                "disabled": [],
+                "height": 4
+              },
+              "B": {
+                "subsections": [
+                  {
+                    "range": [
+                      61,
+                      80
+                    ],
+                    "department": "S"
+                  }
                 ],
-                "department": "E"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "C": {
-            "subsections": [
-              {
-                "range": [
-                  41,
-                  300
+                "disabled": [],
+                "height": 4
+              },
+              "C": {
+                "subsections": [
+                  {
+                    "range": [
+                      81,
+                      150
+                    ],
+                    "department": "C"
+                  }
                 ],
-                "department": "E"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "D": {
-            "subsections": [
-              {
-                "range": [
-                  301,
-                  340
+                "disabled": [],
+                "height": 4
+              },
+              "D": {
+                "subsections": [
+                  {
+                    "range": [
+                      151,
+                      170
+                    ],
+                    "department": "S"
+                  }
                 ],
-                "department": "E"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "4": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  21,
-                  90
+                "disabled": [],
+                "height": 4
+              },
+              "E": {
+                "subsections": [
+                  {
+                    "range": [
+                      171,
+                      190
+                    ],
+                    "department": "C"
+                  }
                 ],
-                "department": "A"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "E": {
-            "subsections": [
-              {
-                "range": [
-                  341,
-                  400
+                "disabled": [],
+                "height": 4
+              },
+              "F": {
+                "subsections": [
+                  {
+                    "range": [
+                      191,
+                      220
+                    ],
+                    "department": "C"
+                  }
                 ],
-                "department": "E"
+                "disabled": [],
+                "height": 4
               }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "F": {
-            "subsections": [
-              {
-                "range": [
-                  401,
-                  460
+            },
+            "1": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      30
+                    ],
+                    "department": "C"
+                  }
                 ],
-                "department": "E"
+                "disabled": [],
+                "height": 4
               }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "G": {
-            "subsections": [
-              {
-                "range": [
-                  461,
-                  490
+            },
+            "2": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      40
+                    ],
+                    "department": "C"
+                  }
                 ],
-                "department": "E"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "H": {
-            "subsections": [
-              {
-                "range": [
-                  491,
-                  510
+                "disabled": [],
+                "height": 4
+              },
+              "B": {
+                "subsections": [
+                  {
+                    "range": [
+                      41,
+                      100
+                    ],
+                    "department": "C"
+                  }
                 ],
-                "department": "E"
+                "disabled": [],
+                "height": 4
+              },
+              "C": {
+                "subsections": [
+                  {
+                    "range": [
+                      101,
+                      140
+                    ],
+                    "department": "C"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "D": {
+                "subsections": [
+                  {
+                    "range": [
+                      141,
+                      170
+                    ],
+                    "department": "C"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "E": {
+                "subsections": [
+                  {
+                    "range": [
+                      171,
+                      200
+                    ],
+                    "department": "C"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
               }
-            ],
-            "disabled": [],
-            "height": 4
+            },
+            "3": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      20
+                    ],
+                    "department": "S"
+                  },
+                  {
+                    "range": [
+                      21,
+                      40
+                    ],
+                    "department": "C"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "B": {
+                "subsections": [
+                  {
+                    "range": [
+                      41,
+                      100
+                    ],
+                    "department": "C"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "C": {
+                "subsections": [
+                  {
+                    "range": [
+                      101,
+                      140
+                    ],
+                    "department": "S"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "D": {
+                "subsections": [
+                  {
+                    "range": [
+                      141,
+                      170
+                    ],
+                    "department": "S"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "E": {
+                "subsections": [
+                  {
+                    "range": [
+                      171,
+                      200
+                    ],
+                    "department": "S"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              }
+            },
+            "4": {
+              "A": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      80
+                    ],
+                    "department": "S"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "C": {
+                "subsections": [
+                  {
+                    "range": [
+                      101,
+                      140
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              }
+            },
+            "5": {
+              "E": {
+                "subsections": [
+                  {
+                    "range": [
+                      1,
+                      40
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "F": {
+                "subsections": [
+                  {
+                    "range": [
+                      41,
+                      70
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "G": {
+                "subsections": [
+                  {
+                    "range": [
+                      71,
+                      100
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "H": {
+                "subsections": [
+                  {
+                    "range": [
+                      101,
+                      140
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              }
+            },
+            "6": {
+              "I": {
+                "subsections": [
+                  {
+                    "range": [
+                      51,
+                      70
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              },
+              "J": {
+                "subsections": [
+                  {
+                    "range": [
+                      71,
+                      100
+                    ],
+                    "department": "G"
+                  }
+                ],
+                "disabled": [],
+                "height": 4
+              }
+            }
           }
         }
       }
     },
-    "21": {
-      "id": "21",
-      "name": "정보과학관",
-      "lockers": {
-        "B1": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  60
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "B": {
-            "subsections": [
-              {
-                "range": [
-                  61,
-                  80
-                ],
-                "department": "S"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "C": {
-            "subsections": [
-              {
-                "range": [
-                  81,
-                  150
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "D": {
-            "subsections": [
-              {
-                "range": [
-                  151,
-                  170
-                ],
-                "department": "S"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "E": {
-            "subsections": [
-              {
-                "range": [
-                  171,
-                  190
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "F": {
-            "subsections": [
-              {
-                "range": [
-                  191,
-                  220
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "1": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  30
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "2": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  40
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "B": {
-            "subsections": [
-              {
-                "range": [
-                  41,
-                  100
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "C": {
-            "subsections": [
-              {
-                "range": [
-                  101,
-                  140
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "D": {
-            "subsections": [
-              {
-                "range": [
-                  141,
-                  170
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "E": {
-            "subsections": [
-              {
-                "range": [
-                  171,
-                  200
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "3": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  20
-                ],
-                "department": "S"
-              },
-              {
-                "range": [
-                  21,
-                  40
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "B": {
-            "subsections": [
-              {
-                "range": [
-                  41,
-                  100
-                ],
-                "department": "C"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "C": {
-            "subsections": [
-              {
-                "range": [
-                  101,
-                  140
-                ],
-                "department": "S"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "D": {
-            "subsections": [
-              {
-                "range": [
-                  141,
-                  170
-                ],
-                "department": "S"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "E": {
-            "subsections": [
-              {
-                "range": [
-                  171,
-                  200
-                ],
-                "department": "S"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "4": {
-          "A": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  80
-                ],
-                "department": "S"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "C": {
-            "subsections": [
-              {
-                "range": [
-                  101,
-                  140
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "5": {
-          "E": {
-            "subsections": [
-              {
-                "range": [
-                  1,
-                  40
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "F": {
-            "subsections": [
-              {
-                "range": [
-                  41,
-                  70
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "G": {
-            "subsections": [
-              {
-                "range": [
-                  71,
-                  100
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "H": {
-            "subsections": [
-              {
-                "range": [
-                  101,
-                  140
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        },
-        "6": {
-          "I": {
-            "subsections": [
-              {
-                "range": [
-                  51,
-                  70
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          },
-          "J": {
-            "subsections": [
-              {
-                "range": [
-                  71,
-                  100
-                ],
-                "department": "G"
-              }
-            ],
-            "disabled": [],
-            "height": 4
-          }
-        }
-      }
+    {
+      "id": "E",
+      "name": "전자정보공학부"
+    },
+    {
+      "id": "A",
+      "name": "AI융합학부"
+    },
+    {
+      "id": "C",
+      "name": "컴퓨터학부"
+    },
+    {
+      "id": "S",
+      "name": "소프트웨어학부"
+    },
+    {
+      "id": "G",
+      "name": "글로벌미디어학부"
     }
-  }
+  ]
 }
