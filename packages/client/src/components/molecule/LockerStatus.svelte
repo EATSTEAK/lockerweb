@@ -7,8 +7,8 @@
 
 	export let lockerCount;
 
-	let selectedDept = 'C';
-	$: departmentStatus = selectedDept ? lockerCount[selectedDept] : {};
+	let selectedDept = lockerCount ? Object.keys(lockerCount)[0] : undefined;
+	$: departmentStatus = selectedDept ? lockerCount[selectedDept] : undefined;
 	$: availableDates = [];
 
 
