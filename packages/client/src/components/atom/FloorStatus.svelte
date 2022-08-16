@@ -4,10 +4,10 @@
 	export let totalLocker: number;
 	let clazz = '';
 	export { clazz as class };
-	$: percentage = totalLocker ? Math.round(((lockerLeft ?? 0) / totalLocker) * 100) : 0;
+	$: percentage = totalLocker ? Math.round(((totalLocker - (lockerLeft ?? 0)) / totalLocker) * 100) : 0;
 </script>
 
-<div class={`progress-wrap ${clazz || ''} ${lockerLeft >= totalLocker ? 'disabled' : ''}`}>
+<div class={`progress-wrap ${clazz || ''} ${lockerLeft <= 0 ? 'disabled' : ''}`}>
 	<div class='progress' style='width: {percentage}%'></div>
 	<div class='progress-text'>
 		<div class='percentage-text-wrap' style='width: {percentage}%'>
@@ -27,7 +27,7 @@
 			<div class='floor'>{floor} |</div>
 			<div>
 				<span class='hidden sm:inline'>
-				{#if lockerLeft < totalLocker}
+				{#if lockerLeft > 0}
 					예약 가능
 				{:else}
 					예약 불가
