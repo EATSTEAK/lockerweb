@@ -31,7 +31,7 @@
 
 <button
 	bind:this={ref}
-	class={`${lockerLeft >= totalLocker ? 'unavailable' : ''} ${selected ? "active" : ''}`}
+	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? "active" : ''}`}
 	on:click
 	on:click|preventDefault={() => {
 		ctx.update(id);
@@ -51,16 +51,17 @@
 	<div class='wrap'>
 		<div class='department-text'>{departmentText}</div>
 		<div class='locker-status'>
-			<span class='left-locker'>{lockerLeft}</span><span class='all-locker'>/{totalLocker}</span>
+			<div class='left-locker'>{lockerLeft}</div>
+			<div class='all-locker'>/{totalLocker}</div>
 		</div>
-		<div class='availableTime'>{availableTime}</div>
+		<div class='available-time'>{availableTime}</div>
 	</div>
 
 </button>
 
 <style>
     button {
-        @apply aspect-square rounded-2xl m-1 bg-gray-100 box-border transition-all;
+        @apply aspect-square max-w-[160px] rounded-2xl m-1 bg-gray-100 box-border transition-all flex-grow-0 flex-shrink-0 basis-[160px];
         box-shadow: inset 0 0 0 2px theme('colors.gray.300');
     }
 
@@ -69,15 +70,11 @@
     }
 
     .wrap {
-        @apply flex flex-col px-5;
-    }
-
-    .wrap > div {
-        @apply my-1;
+        @apply flex flex-col p-5;
     }
 
     .locker-status {
-        @apply font-bold;
+        @apply font-bold flex flex-col items-stretch flex-wrap;
     }
 
     .unavailable .left-locker {
@@ -85,11 +82,11 @@
     }
 
     .left-locker {
-        @apply text-primary-800 text-6xl;
+        @apply text-primary-800 text-6xl grow text-center;
     }
 
     .all-locker {
-        @apply text-2xl;
+        @apply text-2xl grow text-right;
     }
 
     .unavailable.active {
