@@ -11,7 +11,11 @@
     import {variables} from "$lib/variables";
     import {getDepartmentLockerCountsByFloor} from "$lib/utils";
 
-	let callbackUrl = undefined;
+    let callbackUrl = undefined;
+
+    let countData: LockerCountResponse;
+
+    let lockerCount: LockerCount;
 
     $: callbackNotLoaded = true;
     $: mappedConfigsData = {};
