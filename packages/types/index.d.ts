@@ -83,7 +83,7 @@ type Building = {
 	id: string;
 	name: string;
 	lockers: {
-		[floor: string]: {
+		[floor: string]: { // TODO: Make buildings distinguishable
 			[lockerName: string]: LockerSection;
 		};
 	};
