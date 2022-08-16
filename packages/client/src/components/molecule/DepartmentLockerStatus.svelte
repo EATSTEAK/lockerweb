@@ -1,18 +1,22 @@
 <script lang='ts'>
-	import FloorStatus from '../atom/FloorStatus.svelte';
+    import FloorStatus from '../atom/FloorStatus.svelte';
 
-	export let departmentStatus;
+    export let departmentStatus;
 </script>
+{#if departmentStatus}
 
     <h3><span class='dept-name'>{departmentStatus.departmentName}</span> 층별 예약 현황</h3>
     <p>{departmentStatus.departmentName} 관련 문의: {departmentStatus.contact}</p>
 
-<div class='list'>
-	{#each Object.entries(departmentStatus.floors) as [key, value], index(key)}
-		<FloorStatus class='my-2' floor={key} lockerLeft={value.lockerLeft}
-								 totalLocker={value.totalLocker} />
-	{/each}
-</div>
+    <div class='list'>
+        {#each Object.entries(departmentStatus?.floors ?? {}) as [key, value], index(key)}
+            <FloorStatus class='my-2' floor={key} lockerLeft={value.lockerLeft}
+                         totalLocker={value.totalLocker}/>
+        {/each}
+    </div>
+{:else}
+    로딩중
+{/if}
 
 <style>
     .dept-name {
