@@ -7,9 +7,13 @@
       "ES2015.Collection",
       "es2016",
       "es2017",
+      "es2017.object",
       "es2020",
+      "es2019.object",
+
       "DOM",
-      "es2015.promise"
+      "es2015.promise",
+      "esnext"
     ],
     "baseUrl": ".",
     "allowJs": true,
