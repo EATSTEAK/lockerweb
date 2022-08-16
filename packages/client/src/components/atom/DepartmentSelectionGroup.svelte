@@ -50,8 +50,12 @@
 	});
 </script>
 
-<slot />
+<div class="wrap">
+    <slot />
+</div>
 
 <style>
-
+    .wrap {
+        @apply flex overflow-x-scroll overflow-y-hidden;
+    }
 </style>
