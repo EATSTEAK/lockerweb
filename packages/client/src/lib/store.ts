@@ -26,18 +26,20 @@ export function refreshable<T>(
 	return {
 		subscribe,
 		refresh: () => {
-			if (typeof refresher === 'object' && typeof (refresher as Promise<T>).then === 'function') {
-				(refresher as Promise<T>).then((v: T) => set(v));
+			if (refresher === undefined) return;
+			const result = refresher();
+			if (typeof result === 'object' && typeof (result as Promise<T>).then === 'function') {
+				(result as Promise<T>).then((v: T) => set(v));
 			} else {
-				set((refresher as () => T)());
+				set(result as T);
 			}
 		}
 	};
 }
 
-async function refreshConfig() {
+async function refreshConfig(forceFetch = false): Promise<Config[]> {
 	if (browser) {
-		if (localStorage.getItem('config')) {
+		if (localStorage.getItem('config') && !forceFetch) {
 			const item = localStorage.getItem('config');
 			if (item !== null) {
 				const configStore: ConfigStore = JSON.parse(item);
@@ -66,9 +68,10 @@ async function refreshConfig() {
 			});
 		return configs;
 	}
+	throw new Error('This function must be ran in browser');
 }
 
-async function refreshUser() {
+async function refreshUser(): Promise<User> {
 	if (getAuthorization()) {
 		const result = await fetchWithAuth(`${variables.baseUrl as string}/api/v1/user`)
 			.then((res) => res.json())
@@ -99,7 +102,7 @@ export const config: Refreshable<Config[] | undefined | null> = refreshable<
 			set(undefined);
 		};
 	},
-	refreshConfig
+	() => refreshConfig(true)
 );
 
 export const user: Refreshable<User | undefined | null> = refreshable<User | undefined | null>(
