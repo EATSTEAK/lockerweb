@@ -1,13 +1,43 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
-	"compilerOptions": {
-		"allowJs": true,
-		"checkJs": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"sourceMap": true,
-		"strict": true
-	}
+  "extends": "./.svelte-kit/tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "es5",
+      "es2015",
+      "ES2015.Collection",
+      "es2016",
+      "es2017",
+      "es2017.object",
+      "es2020",
+      "es2019.object",
+
+      "DOM",
+      "es2015.promise",
+      "esnext"
+    ],
+    "baseUrl": ".",
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "paths": {
+      "$lib": [
+        "src/lib"
+      ],
+      "$lib/*": [
+        "src/lib/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "../types/index.d.ts"
+  ]
 }

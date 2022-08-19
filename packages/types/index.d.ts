@@ -37,6 +37,13 @@ type UserDao = DaoData & {
 	cU?: { S: string };
 };
 
+type AccessTokenInfo = {
+	id: string;
+	accessToken: string;
+	tokenType: 'Bearer';
+	expiresIn: number;
+};
+
 /* Config Definition */
 
 type Config = {
@@ -76,7 +83,7 @@ type Building = {
 	id: string;
 	name: string;
 	lockers: {
-		[floor: string]: {
+		[floor: string]: { // TODO: Make buildings distinguishable
 			[lockerName: string]: LockerSection;
 		};
 	};
