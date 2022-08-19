@@ -17,7 +17,7 @@ export const queryClaimedLockersHandler: APIGatewayProxyHandler = async (event) 
 		return createResponse(401, {
 			success: false,
 			error: 401,
-			error_description: 'Unauthorized'
+			errorDescription: 'Unauthorized'
 		});
 	}
 	await assertAccessible(id, token, showId);

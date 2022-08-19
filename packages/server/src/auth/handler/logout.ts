@@ -21,7 +21,7 @@ export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 			success: false,
 			token,
 			error: 401,
-			error_description: 'Unauthorized'
+			errorDescription: 'Unauthorized'
 		};
 		return createResponse(401, res);
 	}
