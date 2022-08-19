@@ -10,7 +10,12 @@ export class ResponsibleError extends Error {
 
 	errorType: string;
 
-	constructor(errorCode: number, errorType: string, message?: string, additionalInfo?: Record<string, unknown>) {
+	constructor(
+		errorCode: number,
+		errorType: string,
+		message?: string,
+		additionalInfo?: Record<string, unknown>
+	) {
 		super(message);
 		this.errorCode = errorCode;
 		this.errorType = errorType;
@@ -41,11 +46,14 @@ export function isResponsibleError(error: unknown) {
 	return typeof error === 'object' && Object.keys(error).includes('errorType');
 }
 
-export function errorResponse(error: ResponsibleError, overrideDescription?: string): APIGatewayProxyResult {
+export function errorResponse(
+	error: ResponsibleError,
+	overrideDescription?: string
+): APIGatewayProxyResult {
 	return createResponse(error.errorCode, {
 		success: false,
 		error: error.errorCode,
-		error_description: overrideDescription ?? error.message,
+		errorDescription: overrideDescription ?? error.message,
 		...error.additionalInfo
 	});
 }
