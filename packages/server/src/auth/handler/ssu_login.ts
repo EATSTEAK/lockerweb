@@ -3,7 +3,12 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
-import { errorResponse, isResponsibleError, ResponsibleError, UnauthorizedError } from '../../util/error';
+import {
+	errorResponse,
+	isResponsibleError,
+	ResponsibleError,
+	UnauthorizedError
+} from '../../util/error';
 import { issueToken } from '../data';
 import { queryConfig } from '../../config/data';
 import { adminId } from '../../util/database';
@@ -13,10 +18,10 @@ function requestBody(result: string): Promise<string> {
 		https
 			.get(`https://canvas.ssu.ac.kr/learningx/login/from_cc?result=${result}`, (res) => {
 				let body = '';
-				res.on('data', function(chunk) {
+				res.on('data', function (chunk) {
 					body += chunk;
 				});
-				res.on('end', function() {
+				res.on('end', function () {
 					resolve(body);
 				});
 			})
@@ -42,11 +47,18 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			console.log(result);
 			const id = await obtainId(result);
 			const config = await queryConfig();
-			const blockedDepartments = config.filter((c) => {
-				const activateFrom = new Date(c.activateFrom);
-				const activateTo = new Date(c.activateTo);
-				return c.activateFrom && activateFrom.getTime() >= Date.now() && c.activateTo && activateTo.getTime() <= Date.now();
-			}).map(c => c.id);
+			const blockedDepartments = config
+				.filter((c) => {
+					const activateFrom = new Date(c.activateFrom);
+					const activateTo = new Date(c.activateTo);
+					return (
+						c.activateFrom &&
+						activateFrom.getTime() >= Date.now() &&
+						c.activateTo &&
+						activateTo.getTime() <= Date.now()
+					);
+				})
+				.map((c) => c.id);
 			if (adminId !== id && blockedDepartments.includes('SERVICE')) {
 				return createResponse(403, {
 					success: false,
@@ -72,12 +84,12 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return errorResponse(new UnauthorizedError('Unauthorized'));
 	} catch (e) {
-		if (!(isResponsibleError(e))) {
+		if (!isResponsibleError(e)) {
 			console.error(e);
 			const res = {
 				success: false,
 				error: 500,
-				error_description: 'Internal error'
+				errorDescription: 'Internal error'
 			};
 			return createResponse(500, res);
 		}

@@ -16,14 +16,14 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		return createResponse(500, {
 			success: false,
 			error: 500,
-			error_description: 'Data body is malformed JSON'
+			errorDescription: 'Data body is malformed JSON'
 		});
 	}
 	if (!data || !Array.isArray(data)) {
 		return createResponse(500, {
 			success: false,
 			error: 500,
-			error_description: 'Internal error'
+			errorDescription: 'Internal error'
 		});
 	}
 	let payload: JwtPayload;
@@ -34,7 +34,7 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		return createResponse(401, {
 			success: false,
 			error: 401,
-			error_description: 'Unauthorized'
+			errorDescription: 'Unauthorized'
 		});
 	}
 	let i = 0;
@@ -55,7 +55,7 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		const res = {
 			success: false,
 			error: 500,
-			error_description: 'Internal error',
+			errorDescription: 'Internal error',
 			failed_data: JSON.stringify(data.slice(i, data.length))
 		};
 		return createResponse(500, res);

@@ -15,12 +15,12 @@ export const unclaimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await unclaimLocker(id, token);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		if (!(isResponsibleError(e))) {
+		if (!isResponsibleError(e)) {
 			console.error(e);
 			const res = {
 				success: false,
 				error: 500,
-				error_description: 'Internal error'
+				errorDescription: 'Internal error'
 			};
 			return createResponse(500, res);
 		}
