@@ -21,8 +21,8 @@ type UserUpdateRequest = {
 	name?: string;
 	isAdmin?: boolean;
 	department?: string;
-	lockerId?: string;
-	claimedUntil?: string;
+	lockerId?: string | null;
+	claimedUntil?: string | null;
 };
 
 type UserDeleteRequest = {
@@ -83,7 +83,8 @@ type Building = {
 	id: string;
 	name: string;
 	lockers: {
-		[floor: string]: { // TODO: Make buildings distinguishable
+		[floor: string]: {
+			// TODO: Make buildings distinguishable
 			[lockerName: string]: LockerSection;
 		};
 	};
@@ -128,8 +129,8 @@ type LockerSubsectionData = {
 type ConfigUpdateRequest = {
 	id: string;
 	name?: string;
-	activateFrom?: string;
-	activateTo?: string;
+	activateFrom?: string | null;
+	activateTo?: string | null;
 };
 
 type DepartmentConfigUpdateRequest = ConfigUpdateRequest & {

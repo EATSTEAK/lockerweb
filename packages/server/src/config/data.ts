@@ -193,6 +193,7 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 	const attributes: ExpressionAttributeValueMap = {};
 	const attributeNames: ExpressionAttributeNameMap = {};
 	let updateExp = '';
+	let removeExp = '';
 	if (config.name) {
 		attributes[':name'] = { S: config.name };
 		updateExp = 'SET n = :name';
@@ -205,6 +206,13 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 		attributes[':activateTo'] = { S: config.activateTo };
 		attributeNames['#aT'] = 'aT';
 		updateExp += `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
+	}
+	if (config.activateFrom === null) {
+		removeExp += `${removeExp ? ',' : 'REMOVE'} aF`;
+	}
+	if (config.activateTo === null) {
+		attributeNames['#aT'] = 'aT';
+		removeExp += `${removeExp ? ',' : 'REMOVE'} #aT`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
@@ -226,9 +234,9 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 			type: { S: 'config' },
 			id: { S: config.id }
 		},
-		UpdateExpression: updateExp,
+		UpdateExpression: updateExp + `${removeExp ? ' ' + removeExp : ''}`,
 		...(Object.keys(attributeNames).length && { ExpressionAttributeNames: attributeNames }),
-		ExpressionAttributeValues: attributes
+		...(Object.keys(attributes).length && { ExpressionAttributeValues: attributes })
 	};
 	await dynamoDB.updateItem(req).promise();
 	return config;
