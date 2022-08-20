@@ -12,6 +12,7 @@ import { updateUserHandler } from './user/handler/update';
 import { batchDeleteUserHandler } from './user/handler/batch/delete';
 import { batchPutUserHandler } from './user/handler/batch/put';
 import { unclaimLockerHandler } from './locker/handler/unclaim';
+import { deleteConfigHandler } from './config/handler/delete';
 
 export const auth = {
 	ssuLoginHandler,
@@ -20,7 +21,8 @@ export const auth = {
 
 export const config = {
 	getConfigHandler,
-	updateConfigHandler
+	updateConfigHandler,
+	deleteConfigHandler
 };
 
 export const locker = {
