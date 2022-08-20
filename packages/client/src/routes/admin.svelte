@@ -1,17 +1,17 @@
 <script lang='ts'>
-  import Soongsil from '../icons/Soongsil.svelte';
-  import Button from '../components/atom/Button.svelte';
-  import ArrowExportLtr from '../icons/ArrowExportLtr.svelte';
-  import MailInbox from '../icons/MailInbox.svelte';
-  import Profile from '../components/molecule/Profile.svelte';
-  import SelectionListItemGroup from '../components/atom/SelectionListItemGroup.svelte';
-  import SelectionListItem from '../components/atom/SelectionListItem.svelte';
-  import UserSettings from '../components/molecule/UserSettings.svelte';
-  import ServiceSettings from '../components/molecule/ServiceSettings.svelte';
-  import { user } from '$lib/store';
+	import Soongsil from '../icons/Soongsil.svelte';
+	import Button from '../components/atom/Button.svelte';
+	import ArrowExportLtr from '../icons/ArrowExportLtr.svelte';
+	import MailInbox from '../icons/MailInbox.svelte';
+	import Profile from '../components/molecule/Profile.svelte';
+	import SelectionListItemGroup from '../components/atom/SelectionListItemGroup.svelte';
+	import SelectionListItem from '../components/atom/SelectionListItem.svelte';
+	import UserSettings from '../components/molecule/UserSettings.svelte';
+	import ServiceSettings from '../components/molecule/ServiceSettings.svelte';
+	import { user } from '$lib/store';
 
 
-  let selectedTab;
+	let selectedTab;
 </script>
 
 <div class='root'>
@@ -74,7 +74,7 @@
     }
 
     .dashboard {
-        @apply p-8 grow h-screen overflow-scroll;
+        @apply p-8 grow h-screen overflow-y-scroll bg-gray-100;
     }
 
     .logo {
