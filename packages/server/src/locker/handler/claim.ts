@@ -6,8 +6,9 @@ import { JWT_SECRET } from '../../env';
 import { claimLocker } from '../data';
 import { getUser } from '../../user/data';
 import { isValidLocker } from '../../util/locker';
-import { getConfig } from '../../config/data';
+import { queryConfig } from '../../config/data';
 import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
+import { adminId } from '../../util/database';
 
 export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -37,8 +38,33 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
 		const id = payload.aud as string;
 		const user = await getUser(id);
-		const config = (await getConfig('SERVICE')) as ServiceConfig;
-		if (!isValidLocker(config, data.lockerId, user.department)) {
+		const config = await queryConfig();
+		const blockedDepartments = config
+			.filter((c) => {
+				const activateFrom = new Date(c.activateFrom);
+				const activateTo = new Date(c.activateTo);
+				return (
+					c.activateFrom &&
+					activateFrom.getTime() >= Date.now() &&
+					c.activateTo &&
+					activateTo.getTime() <= Date.now()
+				);
+			})
+			.map((c) => c.id);
+		if (adminId !== id && blockedDepartments.includes('SERVICE')) {
+			return createResponse(403, {
+				success: false,
+				error: 403,
+				errorDescription: 'Forbidden'
+			});
+		}
+		if (
+			!isValidLocker(
+				config.find((v) => v.id === 'SERVICE') as ServiceConfig,
+				data.lockerId,
+				user.department
+			)
+		) {
 			return createResponse(500, {
 				success: false,
 				error: 500,
@@ -55,8 +81,8 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		const lockerId = data.lockerId;
 		const until = data?.until;
 		const res = until
-			? await claimLocker(id, token, lockerId, until)
-			: await claimLocker(id, token, lockerId);
+			? await claimLocker(id, token, blockedDepartments, lockerId, until)
+			: await claimLocker(id, token, blockedDepartments, lockerId);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
 		if (!isResponsibleError(e)) {
