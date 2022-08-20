@@ -10,7 +10,8 @@ export type DepartmentLockerCount = {
 	availableFrom?: Date;
 	availableTo?: Date;
 	contact: string;
-	floors: { // TODO: Make buildings distinguishable
+	floors: {
+		// TODO: Make buildings distinguishable
 		[floor: string]: {
 			canReserve: boolean;
 			percentage: number;
@@ -18,4 +19,10 @@ export type DepartmentLockerCount = {
 			lockerLeft: number;
 		};
 	};
+};
+
+export type DepthData = {
+	id: string;
+	name: string;
+	children?: DepthData[];
 };
