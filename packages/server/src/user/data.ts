@@ -31,7 +31,7 @@ export const toUserDao = (user: User): UserDao => ({
 	...(user.claimedUntil && { cU: { S: user.claimedUntil } })
 });
 
-export const getUser = async function(id: string): Promise<User> {
+export const getUser = async function (id: string): Promise<User> {
 	const req: GetItemInput = {
 		TableName,
 		Key: {
@@ -46,7 +46,7 @@ export const getUser = async function(id: string): Promise<User> {
 	const dao: UserDao = res.Item as unknown as UserDao;
 	return fromUserDao(dao);
 };
-export const queryUser = async function(startsWith: string): Promise<Array<User>> {
+export const queryUser = async function (startsWith: string): Promise<Array<User>> {
 	let composedRes: Array<User> = [];
 	const req: QueryInput = {
 		TableName,
@@ -77,9 +77,10 @@ export const queryUser = async function(startsWith: string): Promise<Array<User>
 	return composedRes;
 };
 
-export const updateUser = async function(info: UserUpdateRequest): Promise<UserUpdateRequest> {
+export const updateUser = async function (info: UserUpdateRequest): Promise<UserUpdateRequest> {
 	const attributes: ExpressionAttributeValueMap = {};
 	let updateExp = '';
+	let removeExp = '';
 	if (info.name) {
 		attributes[':name'] = { S: info.name };
 		updateExp = 'SET n = :name';
@@ -100,20 +101,26 @@ export const updateUser = async function(info: UserUpdateRequest): Promise<UserU
 		attributes[':claimedUntil'] = { S: info.claimedUntil };
 		updateExp += `${updateExp ? ',' : 'SET'} cU = :claimedUntil`;
 	}
+	if (info.lockerId === null) {
+		removeExp += `${removeExp ? ',' : 'REMOVE'} lockerId`;
+	}
+	if (info.claimedUntil === null) {
+		removeExp += `${removeExp ? ',' : 'REMOVE'} cU`;
+	}
 	const req: UpdateItemInput = {
 		TableName,
 		Key: {
 			type: { S: 'user' },
 			id: { S: `${info.id}` }
 		},
-		UpdateExpression: updateExp,
-		ExpressionAttributeValues: attributes
+		UpdateExpression: updateExp + `${removeExp ? ' ' + removeExp : ''}`,
+		...(Object.keys(attributes).length && { ExpressionAttributeValues: attributes })
 	};
 	await dynamoDB.updateItem(req).promise();
 	return info;
 };
 
-export const deleteUser = async function(id: string): Promise<string> {
+export const deleteUser = async function (id: string): Promise<string> {
 	const req: DeleteItemInput = {
 		TableName,
 		Key: {
@@ -124,7 +131,7 @@ export const deleteUser = async function(id: string): Promise<string> {
 	await dynamoDB.deleteItem(req).promise();
 	return id;
 };
-export const batchPutUser = async function(infos: Array<User>): Promise<Array<User>> {
+export const batchPutUser = async function (infos: Array<User>): Promise<Array<User>> {
 	if (infos.length === 0) return infos;
 	if (infos.length > 25) throw new ResponsibleError(500, 'Maximum amount of batch creation is 25');
 	const requests: WriteRequest[] = infos.map((v: User) => ({
@@ -143,7 +150,7 @@ export const batchPutUser = async function(infos: Array<User>): Promise<Array<Us
 	return infos;
 };
 
-export const batchDeleteUser = async function(ids: Array<string>): Promise<Array<string>> {
+export const batchDeleteUser = async function (ids: Array<string>): Promise<Array<string>> {
 	if (ids.length === 0) return ids;
 	if (ids.length > 25) throw new ResponsibleError(500, 'Maximum amount of batch creation is 25');
 	const requests: WriteRequest[] = ids.map((v: string) => ({
