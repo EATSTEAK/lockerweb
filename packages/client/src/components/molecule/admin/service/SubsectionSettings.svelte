@@ -1,7 +1,7 @@
 <script lang='ts'>
-	import SubsectionEntry from '../atom/SubsectionEntry.svelte';
-	import Button from '../atom/Button.svelte';
-	import Add from '../../icons/Add.svelte';
+	import SubsectionEntry from '../../../atom/SubsectionEntry.svelte';
+	import Button from '../../../atom/Button.svelte';
+	import Add from '../../../../icons/Add.svelte';
 
 	export let subsections: LockerSubsection[];
 </script>

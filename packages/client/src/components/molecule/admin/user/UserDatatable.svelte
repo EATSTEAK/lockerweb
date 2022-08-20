@@ -2,7 +2,7 @@
 	import { Datatable } from 'svelte-simple-datatables';
 	import { getDepartmentNameById } from '$lib/utils';
 	import { config } from '$lib/store';
-	import Button from '../atom/Button.svelte';
+	import Button from '../../../atom/Button.svelte';
 
 	const settings = {
 		sortable: true,

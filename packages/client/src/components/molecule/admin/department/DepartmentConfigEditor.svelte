@@ -1,8 +1,8 @@
 <script lang='ts'>
 	import type { DepthData } from '$lib/types';
-	import DepthExplorer from './DepthExplorer.svelte';
-	import AddSquare from '../../icons/AddSquare.svelte';
-	import SelectScreen from '../atom/SelectScreen.svelte';
+	import DepthExplorer from '../../DepthExplorer.svelte';
+	import AddSquare from '../../../../icons/AddSquare.svelte';
+	import SelectScreen from '../../../atom/SelectScreen.svelte';
 	import DepartmentConfigSettings from './DepartmentConfigSettings.svelte';
 
 	export let configs: Config[] = [];

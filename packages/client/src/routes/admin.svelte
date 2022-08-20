@@ -6,8 +6,8 @@
 	import Profile from '../components/molecule/Profile.svelte';
 	import SelectionListItemGroup from '../components/atom/SelectionListItemGroup.svelte';
 	import SelectionListItem from '../components/atom/SelectionListItem.svelte';
-	import UserSettings from '../components/molecule/UserSettings.svelte';
-	import ServiceSettings from '../components/molecule/ServiceSettings.svelte';
+	import UserSettings from '../components/molecule/admin/user/UserSettings.svelte';
+	import ServiceSettings from '../components/molecule/admin/service/ServiceSettings.svelte';
 	import { user } from '$lib/store';
 
 

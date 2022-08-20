@@ -1,7 +1,7 @@
 <script lang='ts'>
-	import Button from '../atom/Button.svelte';
-	import SaveEdit from '../../icons/SaveEdit.svelte';
-	import Delete from '../../icons/Delete.svelte';
+	import Button from '../../../atom/Button.svelte';
+	import SaveEdit from '../../../../icons/SaveEdit.svelte';
+	import Delete from '../../../../icons/Delete.svelte';
 	import SubsectionSettings from './SubsectionSettings.svelte';
 
 	export let floor: string = '';

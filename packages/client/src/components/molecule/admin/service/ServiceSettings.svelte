@@ -1,7 +1,7 @@
 <script lang='ts'>
 	import { config } from '$lib/store';
 	import BuildingEditor from './BuildingEditor.svelte';
-	import DepartmentConfigEditor from './DepartmentConfigEditor.svelte';
+	import DepartmentConfigEditor from '../department/DepartmentConfigEditor.svelte';
 
 	$: serviceConfig = $config ? $config.find(v => v.id === 'SERVICE') : undefined;
 
