@@ -577,6 +577,44 @@ paths:
                 success: false
                 error: 500
                 errorDescription: Internal error
+  /config/delete:
+    post:
+      tags:
+        - config
+      summary: 설정 삭제
+      description: 학부의 설정을 삭제합니다.
+      security:
+        - UserSessionAuth: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigDeleteRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - result
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/ConfigDeleteRequest'
+        '500':
+          description: 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: 500
+                errorDescription: Internal error
 components:
   securitySchemes:
     UserLoginAuth:
@@ -781,6 +819,15 @@ components:
           type: object
           description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
         contact:
+          type: string
+    ConfigDeleteRequest:
+      title: ConfigDeleteRequest
+      description: 설정 정보를 삭제하고자 할 때 사용합니다.
+      type: object
+      required:
+        - id
+      properties:
+        id:
           type: string
     Building:
       title: Building

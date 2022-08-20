@@ -1,4 +1,5 @@
 import type {
+	DeleteItemInput,
 	ExpressionAttributeNameMap,
 	ExpressionAttributeValueMap,
 	GetItemInput,
@@ -25,16 +26,16 @@ function toLockerSubsectionData(subsection: LockerSubsection): LockerSubsectionD
 
 function fromLockerSectionData(data: LockerSectionData): LockerSection {
 	return {
-		subsections: data.s.L.map(subsectionData => fromLockerSubsectionData(subsectionData.M)),
-		disabled: data.d.L.map(disabled => disabled.S),
+		subsections: data.s.L.map((subsectionData) => fromLockerSubsectionData(subsectionData.M)),
+		disabled: data.d.L.map((disabled) => disabled.S),
 		height: parseInt(data.h?.N ?? '0')
 	};
 }
 
 function toLockerSectionData(section: LockerSection): LockerSectionData {
 	return {
-		s: { L: section.subsections.map(ss => ({ M: toLockerSubsectionData(ss) })) },
-		d: { L: section.disabled.map(d => ({ S: d })) },
+		s: { L: section.subsections.map((ss) => ({ M: toLockerSubsectionData(ss) })) },
+		d: { L: section.disabled.map((d) => ({ S: d })) },
 		h: { N: `${section.height}` }
 	};
 }
@@ -46,14 +47,19 @@ function toBuildingData(building: Building): BuildingData {
 		l: {
 			M: Object.fromEntries(
 				Object.entries(building.lockers).map(([floor, lockerSectionMap]) => {
-					return [floor,
+					return [
+						floor,
 						{
-							M:
-								Object.fromEntries(
-									Object.entries(lockerSectionMap).map(([lockerName, section]) => [lockerName, { M: toLockerSectionData(section) }])
-								)
-						}];
-				}))
+							M: Object.fromEntries(
+								Object.entries(lockerSectionMap).map(([lockerName, section]) => [
+									lockerName,
+									{ M: toLockerSectionData(section) }
+								])
+							)
+						}
+					];
+				})
+			)
 		}
 	};
 }
@@ -64,10 +70,15 @@ function fromBuildingData(data: BuildingData): Building {
 		name: data.n.S,
 		lockers: Object.fromEntries(
 			Object.entries(data.l.M).map(([floor, lockerSectionDataMap]) => {
-				return [floor,
+				return [
+					floor,
 					Object.fromEntries(
-						Object.entries(lockerSectionDataMap.M).map(([lockerName, sectionData]) => [lockerName, fromLockerSectionData(sectionData.M)])
-					)];
+						Object.entries(lockerSectionDataMap.M).map(([lockerName, sectionData]) => [
+							lockerName,
+							fromLockerSectionData(sectionData.M)
+						])
+					)
+				];
 			})
 		)
 	};
@@ -95,14 +106,20 @@ function fromConfigDao(dao: ConfigDao): Config {
 function toServiceConfigDao(data: ServiceConfig): ServiceConfigDao {
 	return {
 		...toConfigDao(data),
-		b: { M: Object.fromEntries(Object.entries(data.buildings).map(([s, b]) => [s, { M: toBuildingData(b) }])) }
+		b: {
+			M: Object.fromEntries(
+				Object.entries(data.buildings).map(([s, b]) => [s, { M: toBuildingData(b) }])
+			)
+		}
 	};
 }
 
 function fromServiceConfigDao(dao: ServiceConfigDao): ServiceConfig {
 	return {
 		...fromConfigDao(dao),
-		buildings: Object.fromEntries(Object.entries(dao.b?.M ?? {}).map(([s, bd]) => [s, fromBuildingData(bd.M)]))
+		buildings: Object.fromEntries(
+			Object.entries(dao.b?.M ?? {}).map(([s, bd]) => [s, fromBuildingData(bd.M)])
+		)
 	};
 }
 
@@ -120,7 +137,7 @@ function fromDepartmentConfigDao(dao: DepartmentConfigDao): DepartmentConfig {
 	};
 }
 
-export const queryConfig = async function(startsWith = ''): Promise<Array<Config>> {
+export const queryConfig = async function (startsWith = ''): Promise<Array<Config>> {
 	let composedRes: Array<Config> = [];
 	const req: QueryInput = {
 		TableName,
@@ -144,13 +161,17 @@ export const queryConfig = async function(startsWith = ''): Promise<Array<Config
 			.promise();
 		composedRes = [
 			...composedRes,
-			...res.Items.map<Config>((v) => v.id.S === 'SERVICE' ? fromServiceConfigDao(v as unknown as ServiceConfigDao) : fromDepartmentConfigDao(v as unknown as DepartmentConfigDao))
+			...res.Items.map<Config>((v) =>
+				v.id.S === 'SERVICE'
+					? fromServiceConfigDao(v as unknown as ServiceConfigDao)
+					: fromDepartmentConfigDao(v as unknown as DepartmentConfigDao)
+			)
 		];
 	} while (res.LastEvaluatedKey);
 	return composedRes;
 };
 
-export const getConfig = async function(id: string): Promise<Config> {
+export const getConfig = async function (id: string): Promise<Config> {
 	const req: GetItemInput = {
 		TableName,
 		Key: {
@@ -163,10 +184,12 @@ export const getConfig = async function(id: string): Promise<Config> {
 		throw new NotFoundError(`Cannot find config of id ${id}`);
 	}
 	const dao: ConfigDao = res.Item as unknown as ConfigDao;
-	return dao.id.S === 'SERVICE' ? fromServiceConfigDao(dao as ServiceConfigDao) : fromDepartmentConfigDao(dao as DepartmentConfigDao);
+	return dao.id.S === 'SERVICE'
+		? fromServiceConfigDao(dao as ServiceConfigDao)
+		: fromDepartmentConfigDao(dao as DepartmentConfigDao);
 };
 
-export const updateConfig = async function(config: ConfigUpdateRequest) {
+export const updateConfig = async function (config: ConfigUpdateRequest) {
 	const attributes: ExpressionAttributeValueMap = {};
 	const attributeNames: ExpressionAttributeNameMap = {};
 	let updateExp = '';
@@ -185,7 +208,11 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
-		attributes[':buildings'] = { M: Object.fromEntries(Object.entries(buildings).map(([s, b]) => [s, { M: toBuildingData(b) }])) };
+		attributes[':buildings'] = {
+			M: Object.fromEntries(
+				Object.entries(buildings).map(([s, b]) => [s, { M: toBuildingData(b) }])
+			)
+		};
 		updateExp += `${updateExp ? ',' : 'SET'} b = :buildings`;
 	}
 	if ((config as DepartmentConfigUpdateRequest).contact) {
@@ -205,4 +232,16 @@ export const updateConfig = async function(config: ConfigUpdateRequest) {
 	};
 	await dynamoDB.updateItem(req).promise();
 	return config;
+};
+
+export const deleteConfig = async function (id: string): Promise<string> {
+	const req: DeleteItemInput = {
+		TableName,
+		Key: {
+			type: { S: 'config' },
+			id: { S: id }
+		}
+	};
+	await dynamoDB.deleteItem(req).promise();
+	return id;
 };
