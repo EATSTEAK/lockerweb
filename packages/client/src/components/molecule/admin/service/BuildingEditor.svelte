@@ -31,7 +31,9 @@
 
 <section class='wrap'>
 	<aside class='explorer'>
-		<DepthExplorer rootText='건물 선택' breadcrumbClass='p-1' class='bg-white rounded-md overflow-hidden' data={depthData}
+		<DepthExplorer rootText='건물 선택' breadcrumbClass='p-1'
+									 class='bg-white rounded-md max-h-[480px] overflow-x-hidden overflow-y-scroll'
+									 data={depthData}
 									 bind:selections={selections}>
 			<div slot='item' let:option let:selected class='depth-item' class:selected={selected}>
 				{option.name}
@@ -43,7 +45,7 @@
 	</aside>
 	<article class='edit'>
 		{#if selections.length === 0}
-			<SelectScreen />
+			<SelectScreen class='min-h-[540px]' />
 		{:else if selections.length === 1}
 			<BuildingSettings original={selectedBuilding} isNew={selections[0] === 'add'} />
 		{:else if selections.length === 2}
@@ -56,11 +58,11 @@
 
 <style>
     .wrap {
-        @apply flex flex-col xl:flex-row flex-wrap md:gap-2;
+        @apply flex flex-col xl:flex-row flex-wrap gap-2;
     }
 
     .explorer {
-        @apply p-3 xl:w-1/4 rounded-md bg-gray-200;
+        @apply p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px];
     }
 
     .depth-item {

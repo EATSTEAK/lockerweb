@@ -30,7 +30,7 @@
 	</aside>
 	<article class='edit'>
 		{#if selections.length === 0}
-			<SelectScreen />
+			<SelectScreen class='min-h-[540px]' />
 		{:else if selections.length === 1}
 			<DepartmentConfigSettings original={selectedDepartmentConfig} isNew={selections[0] === 'add'} />
 		{/if}
@@ -40,11 +40,11 @@
 
 <style>
     .wrap {
-        @apply flex flex-col xl:flex-row flex-wrap md:gap-2;
+        @apply flex flex-col xl:flex-row flex-wrap gap-2;
     }
 
     .explorer {
-        @apply p-3 xl:w-1/4 rounded-md bg-gray-200;
+        @apply p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px];
     }
 
     .depth-item {
