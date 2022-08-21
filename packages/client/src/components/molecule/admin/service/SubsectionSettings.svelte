@@ -8,9 +8,9 @@
 
 <div class='wrap'>
 	<p class='text-xl font-bold'>세부 구역 설정</p>
-	{#each subsections as subsection}
+	{#each subsections as subsection, index}
 		<div class='my-1'>
-			<SubsectionEntry subsection={subsection} />
+			<SubsectionEntry key={index} subsection={subsection} />
 		</div>
 	{/each}
 	<Button class='bg-white' isIconRight>

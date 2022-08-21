@@ -4,6 +4,7 @@
 	import NumberInput from '../../../atom/form/NumberInput.svelte';
 	import Select from '../../../atom/form/Select.svelte';
 
+	export let key: string;
 	export let subsection: LockerSubsection;
 
 	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
@@ -26,9 +27,9 @@
 		</div>
 		<div class='department'>
 			<label>대상 학부</label>
-			<Select required>
+			<Select id={`subsection_${key}_department`} label='대상 학부' value={subsection?.department} required>
 				{#each departments as department}
-					<option value={department.id} selected={subsection?.department === department.id}>{department.name}</option>
+					<option value={department.id}>{department.name}</option>
 				{/each}
 			</Select>
 		</div>
