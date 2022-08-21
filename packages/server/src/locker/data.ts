@@ -1,10 +1,15 @@
-import type { QueryInput, UpdateItemInput } from 'aws-sdk/clients/dynamodb';
-import { dynamoDB, TableName } from '../util/database';
+import type {
+	ExpressionAttributeValueMap,
+	QueryInput,
+	UpdateItemInput
+} from 'aws-sdk/clients/dynamodb';
+import { adminId, dynamoDB, TableName } from '../util/database';
 import { CantClaimError, UnauthorizedError } from '../util/error';
 
-export const claimLocker = async function(
+export const claimLocker = async function (
 	id: string,
 	token: string,
+	blockedDepartments: Array<string>,
 	lockerId: string,
 	claimedUntil?: number
 ): Promise<{ id: string; lockerId: string; claimedUntil: number }> {
@@ -27,12 +32,16 @@ export const claimLocker = async function(
 	};
 	const checkRes = await dynamoDB.query(checkReq).promise();
 	if (checkRes.Count > 0) throw new CantClaimError('Requested locker is already claimed');
+	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(
+		blockedDepartments.map((d) => [`:${d}`, { S: d }])
+	);
+	conditionValues[':true'] = { BOOL: true };
+	const condition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
-		UpdateExpression:
-			'SET #lockerId = :lockerId, cU = :claimedUntil',
-		ConditionExpression: '#aT = :token',
+		UpdateExpression: 'SET #lockerId = :lockerId, cU = :claimedUntil',
+		ConditionExpression: `#aT = :token${condition ? ` AND ((${condition}) OR iA = true)` : ''}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
@@ -40,16 +49,14 @@ export const claimLocker = async function(
 		ExpressionAttributeValues: {
 			':lockerId': { S: lockerId },
 			':token': { S: token },
-			':claimedUntil': { N: `${claimedUntil}` }
+			':claimedUntil': { N: `${claimedUntil}` },
+			...(id !== adminId && condition && conditionValues)
 		},
 		ReturnValues: 'ALL_NEW'
 	};
 	const res = await dynamoDB.updateItem(req).promise();
 	console.debug(res);
-	if (
-		res.Attributes.hasOwnProperty('lockerId') &&
-		res.Attributes.lockerId?.S === lockerId
-	) {
+	if (res.Attributes.hasOwnProperty('lockerId') && res.Attributes.lockerId?.S === lockerId) {
 		return {
 			id,
 			claimedUntil,
@@ -59,34 +66,40 @@ export const claimLocker = async function(
 		if (res.Attributes?.accessToken?.S !== token) {
 			throw new UnauthorizedError('Unauthorized', { id, lockerId, claimedUntil });
 		}
-		throw new CantClaimError('Can\'t claim requested locker', { id, lockerId, claimedUntil });
+		throw new CantClaimError("Can't claim requested locker", { id, lockerId, claimedUntil });
 	}
 };
 
-export const unclaimLocker = async function(
+export const unclaimLocker = async function (
 	id: string,
-	token: string
+	token: string,
+	blockedDepartments: Array<string>
 ): Promise<{ id: string; lockerId: string }> {
+	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(
+		blockedDepartments.map((d) => [`:${d}`, { S: d }])
+	);
+	conditionValues[':true'] = { BOOL: true };
+	const condition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
-		UpdateExpression:
-			'REMOVE #lockerId',
-		ConditionExpression: '#aT = :token AND attribute_exists(#lockerId)',
+		UpdateExpression: 'REMOVE #lockerId',
+		ConditionExpression: `#aT = :token AND attribute_exists(#lockerId)${
+			condition ? ` AND ((${condition}) OR iA = true)` : ''
+		}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
 		},
 		ExpressionAttributeValues: {
-			':token': { S: token }
+			':token': { S: token },
+			...(id !== adminId && condition && conditionValues)
 		},
 		ReturnValues: 'UPDATED_OLD'
 	};
 	const res = await dynamoDB.updateItem(req).promise();
 	console.debug(res);
-	if (
-		res.Attributes.hasOwnProperty('lockerId')
-	) {
+	if (res.Attributes.hasOwnProperty('lockerId')) {
 		return {
 			id: id,
 			lockerId: res.Attributes.lockerId.S
@@ -99,7 +112,7 @@ export const unclaimLocker = async function(
 	}
 };
 
-export const queryLockers = async function(
+export const queryLockers = async function (
 	starts = '',
 	showId?: boolean
 ): Promise<Array<{ lockerId: string; claimedUntil: number; id?: string }>> {
