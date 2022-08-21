@@ -1,8 +1,8 @@
 <script lang='ts'>
-	import Subtract from '../../icons/Subtract.svelte';
+	import Subtract from '../../../../icons/Subtract.svelte';
 	import { config } from '$lib/store';
-	import NumberInput from './form/NumberInput.svelte';
-	import Select from './form/Select.svelte';
+	import NumberInput from '../../../atom/form/NumberInput.svelte';
+	import Select from '../../../atom/form/Select.svelte';
 
 	export let subsection: LockerSubsection;
 

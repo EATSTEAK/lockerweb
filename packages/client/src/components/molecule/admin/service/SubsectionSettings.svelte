@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import SubsectionEntry from '../../../atom/SubsectionEntry.svelte';
+	import SubsectionEntry from './SubsectionEntry.svelte';
 	import Button from '../../../atom/Button.svelte';
 	import Add from '../../../../icons/Add.svelte';
 
