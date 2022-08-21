@@ -35,12 +35,12 @@
 									 class='bg-white rounded-md max-h-[480px] overflow-x-hidden overflow-y-scroll'
 									 data={depthData}
 									 bind:selections={selections}>
-			<div slot='item' let:option let:selected class='depth-item' class:selected={selected}>
+			<button tabindex='0' slot='item' let:option let:selected class='depth-item' class:selected={selected}>
 				{option.name}
 				{#if option.id === 'add'}
 					<AddSquare />
 				{/if}
-			</div>
+			</button>
 		</DepthExplorer>
 	</aside>
 	<article class='edit'>
@@ -66,11 +66,19 @@
     }
 
     .depth-item {
-        @apply text-gray-700 flex justify-between p-2 bg-white cursor-pointer border-l-2 border-white transition-all;
+        @apply my-1 w-full text-gray-700 flex justify-between p-2 bg-white cursor-pointer border-l-2 border-white transition-all outline-primary-800 outline-0 outline-none;
     }
 
     .depth-item:hover {
         @apply brightness-90 scale-[1.01];
+    }
+
+    .depth-item:active {
+        @apply brightness-75 scale-100;
+    }
+
+    .depth-item:focus {
+        @apply brightness-75;
     }
 
     .selected {
