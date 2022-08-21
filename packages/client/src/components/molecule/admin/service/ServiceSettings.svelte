@@ -3,6 +3,9 @@
 	import BuildingEditor from './BuildingEditor.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
 	import DateTimeInput from '../../../atom/form/DateTimeInput.svelte';
+	import Button from '../../../atom/Button.svelte';
+	import SaveEdit from '../../../../icons/SaveEdit.svelte';
+	import ArrowUndo from '../../../../icons/ArrowUndo.svelte';
 
 	$: serviceConfig = $config ? $config.find(v => v.id === 'SERVICE') : undefined;
 
@@ -22,7 +25,19 @@
 </script>
 
 <div class='wrap'>
-	<h3 class='title'>서비스 설정</h3>
+	<div class='title'>
+		<h3>서비스 설정</h3>
+		<div class='service-control'>
+			<Button class='bg-white text-gray-700' isIconRight>
+				되돌리기
+				<ArrowUndo slot='icon' />
+			</Button>
+			<Button class='bg-primary-800 text-white' isIconRight>
+				저장
+				<SaveEdit slot='icon' />
+			</Button>
+		</div>
+	</div>
 	<section class='card'>
 		<h4>전체 서비스 설정</h4>
 		{#if newServiceConfig}
@@ -54,7 +69,11 @@
     }
 
     .title {
-        @apply mx-6 md:mx-0;
+        @apply mx-6 md:mx-0 flex flex-wrap items-start;
+    }
+
+    .service-control {
+        @apply grow flex justify-end gap-1;
     }
 
     .card {

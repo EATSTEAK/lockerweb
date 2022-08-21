@@ -1,8 +1,8 @@
 <script lang='ts'>
 	import Button from '../../../atom/Button.svelte';
-	import SaveEdit from '../../../../icons/SaveEdit.svelte';
 	import Delete from '../../../../icons/Delete.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
+	import Add from '../../../../icons/Add.svelte';
 
 	export let original: Building;
 	export let isNew = false;
@@ -28,11 +28,13 @@
 					삭제
 					<Delete slot='icon' />
 				</Button>
+			{:else}
+				<Button class='bg-primary-800 text-white' isIconRight>
+					추가
+					<Add slot='icon' />
+				</Button>
 			{/if}
-			<Button class='bg-primary-800 text-white' isIconRight>
-				저장
-				<SaveEdit slot='icon' />
-			</Button>
+
 		</div>
 	</div>
 </div>
