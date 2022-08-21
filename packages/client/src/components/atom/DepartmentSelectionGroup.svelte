@@ -58,4 +58,12 @@
     .wrap {
         @apply flex overflow-x-scroll overflow-y-hidden;
     }
+
+    .wrap::-webkit-scrollbar{
+        display:none;
+    }
+    .wrap {
+        -ms-overflow-style: none;  /* IE and 엣지 */
+        scrollbar-width: none;  /* 파이어폭스 */
+    }
 </style>
