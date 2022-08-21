@@ -6,7 +6,7 @@
 </script>
 
 <div class='wrap'>
-	<h3>학부별 설정</h3>
+	<h3 class='title'>학부별 설정</h3>
 	<div class='card'>
 		<DepartmentConfigEditor {configs} />
 	</div>
@@ -14,11 +14,15 @@
 
 <style>
     .wrap {
-        @apply flex flex-col gap-3;
+        @apply my-8 md:mx-8 flex flex-col gap-3;
+    }
+
+    .title {
+        @apply mx-6 md:mx-0;
     }
 
     .card {
-        @apply rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
+        @apply md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
 
     }
 </style>

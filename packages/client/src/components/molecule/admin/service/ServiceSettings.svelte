@@ -20,7 +20,7 @@
 </script>
 
 <div class='wrap'>
-	<h3>서비스 설정</h3>
+	<h3 class='title'>서비스 설정</h3>
 	<section class='card'>
 		<h4>전체 서비스 설정</h4>
 		{#if newServiceConfig}
@@ -56,7 +56,11 @@
 
 <style>
     .wrap {
-        @apply flex flex-col gap-3;
+        @apply my-8 md:mx-8 flex flex-col gap-3;
+    }
+
+    .title {
+        @apply mx-6 md:mx-0;
     }
 
     .card {

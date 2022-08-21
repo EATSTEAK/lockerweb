@@ -20,7 +20,7 @@
 </script>
 
 <div class='wrap'>
-	<h3>사용자 설정</h3>
+	<h3 class='title'>사용자 설정</h3>
 	{#await userPromise}
 		로드중
 	{:then users}
@@ -33,7 +33,12 @@
 
 <style>
     .wrap {
-        @apply flex flex-col gap-3 h-full;
+        @apply my-8 md:mx-8 flex flex-col gap-3 h-full;
+    }
+
+    .title {
+        @apply mx-6 md:mx-0;
+
     }
 
     .table {

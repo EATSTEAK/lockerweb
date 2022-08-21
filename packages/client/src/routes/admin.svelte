@@ -80,7 +80,7 @@
     }
 
     .dashboard {
-        @apply p-8 grow h-screen overflow-y-scroll bg-gray-100;
+        @apply grow h-screen md:overflow-y-scroll bg-gray-100;
     }
 
     .logo {
