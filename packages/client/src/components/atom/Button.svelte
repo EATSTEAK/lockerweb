@@ -6,21 +6,25 @@
 
 <a class={`${clazz || ''}`} {...$$restProps}>
 	{#if !isIconRight}
-		<div class='btn-icon'>
-			<slot name='icon' />
-		</div>
+		{#if $$slots.icon}
+			<div class='btn-icon'>
+				<slot name='icon' />
+			</div>
+		{/if}
 		<slot />
 	{:else}
 		<slot />
-		<div class='btn-icon'>
-			<slot name='icon' />
-		</div>
+		{#if $$slots.icon}
+			<div class='btn-icon'>
+				<slot name='icon' />
+			</div>
+		{/if}
 	{/if}
 </a>
 
 <style>
     a {
-        @apply flex justify-between rounded-lg shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 transition-all ease-in;
+        @apply cursor-pointer flex justify-between rounded-lg shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 transition-all ease-in;
     }
 
     a[disabled] {
@@ -29,10 +33,6 @@
 
     a:hover {
         @apply brightness-90 drop-shadow-lg;
-    }
-
-    .btn-icon {
-
     }
 
     :global(.btn-icon path:not([fill="none"])) {
