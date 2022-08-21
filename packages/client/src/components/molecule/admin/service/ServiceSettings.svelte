@@ -78,6 +78,5 @@
 
     .card {
         @apply md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
-
     }
 </style>
