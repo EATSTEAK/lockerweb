@@ -35,6 +35,10 @@
         @apply brightness-90 shadow-lg;
     }
 
+    a:active {
+        @apply brightness-75 shadow-md;
+    }
+
     :global(.btn-icon path:not([fill="none"])) {
         fill: currentColor;
     }
