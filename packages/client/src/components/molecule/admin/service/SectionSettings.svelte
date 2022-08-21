@@ -5,6 +5,7 @@
 	import SubsectionSettings from './SubsectionSettings.svelte';
 	import Tag from '../../../atom/Tag.svelte';
 	import Add from '../../../../icons/Add.svelte';
+	import TextInput from '../../../atom/form/TextInput.svelte';
 
 	export let floor: string = '';
 	export let originalId: string;
@@ -24,23 +25,14 @@
 		{:else}
 			<h4>{readableFloor} 구역 {originalId} 수정</h4>
 		{/if}
-		<div class='form-group'>
-			<label for='floor'>층</label>
-			<input id='floor' type='text' disabled={!isNew}
-						 value={floor ?? ''}
-						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
-		</div>
-		<div class='form-group'>
-			<label for='building_id'>구역 이름</label>
-			<input id='building_id' type='text' disabled={!isNew}
-						 value={originalId ?? ''}
-						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
-		</div>
-		<div class='form-group'>
-			<label for='disabled'>사용 불가 사물함 목록</label>
+		<TextInput class='my-2' inputClass='reactive-input' id='floor' label='층' showLabel disabled={!isNew}
+							 value={floor ?? ''} />
+		<TextInput class='my-2' inputClass='reactive-input' id='id' label='구역 이름' showLabel disabled={!isNew}
+							 value={originalId ?? ''} />
+		<div class='disabled-edit'>
+			<p class='font-bold'>사용 불가 사물함 목록</p>
 			<div class='disabled-input'>
-				<input id='disabled' type='text'
-							 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
+				<TextInput class='my-2' inputClass='reactive-input' id='disabled' label='사용 불가 사물함 목록' value='' />
 				<button class='disabled-add-btn'>
 					<Add />
 				</button>
@@ -77,6 +69,10 @@
         @apply flex flex-col justify-between p-3;
     }
 
+    .wrap :global(.reactive-input) {
+        @apply w-full max-w-sm;
+    }
+
     .editor {
         @apply mb-3;
     }
@@ -91,7 +87,7 @@
     }
 
     .disabled-add-btn {
-        @apply rounded-md bg-gray-200 text-gray-500;
+        @apply transition-all rounded-md bg-gray-200 text-gray-500;
     }
 
     .disabled-add-btn:hover {
@@ -102,23 +98,7 @@
         @apply brightness-75;
     }
 
-    :global(.disabled-id) {
-        @apply cursor-pointer;
-    }
-
-    :global(.disabled-id:hover) {
-        @apply brightness-90;
-    }
-
     .actions {
         @apply flex justify-end gap-1 mt-3;
-    }
-
-    .form-group {
-        @apply my-2 flex flex-col items-start;
-    }
-
-    .form-group label {
-        @apply font-bold block mb-1;
     }
 </style>

@@ -22,6 +22,5 @@
 <style>
     .wrap {
         @apply flex flex-col items-start;
-
     }
 </style>
