@@ -6,6 +6,7 @@
 	export let disabled: boolean = false;
 	export let labelClass: string = '';
 	export let inputClass: string = '';
+	export let placeholder: string = '';
 	let clazz = '';
 	export { clazz as class };
 
@@ -16,6 +17,7 @@
 	<input id={id} type='text'
 				 disabled={disabled}
 				 class={inputClass}
+				 {placeholder}
 				 {value}
 	/>
 </div>
