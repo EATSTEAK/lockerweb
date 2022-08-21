@@ -9,6 +9,7 @@
 	import UserSettings from '../components/molecule/admin/user/UserSettings.svelte';
 	import ServiceSettings from '../components/molecule/admin/service/ServiceSettings.svelte';
 	import { user } from '$lib/store';
+	import DepartmentSettings from '../components/molecule/admin/department/DepartmentSettings.svelte';
 
 
 	let selectedTab;
@@ -33,6 +34,9 @@
 					<SelectionListItem id='service'>
 						서비스 설정
 					</SelectionListItem>
+					<SelectionListItem id='department'>
+						학부별 설정
+					</SelectionListItem>
 				</SelectionListItemGroup>
 			</div>
 		</div>
@@ -52,6 +56,8 @@
 			<UserSettings />
 		{:else if selectedTab === "service"}
 			<ServiceSettings />
+		{:else if selectedTab === "department"}
+			<DepartmentSettings />
 		{/if}
 	</div>
 </div>

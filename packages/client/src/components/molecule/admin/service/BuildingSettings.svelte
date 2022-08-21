@@ -16,12 +16,14 @@
 		{/if}
 		<div class='form-group'>
 			<label for='building_id'>건물 번호</label>
-			<input id='building_id' type='text'
+			<input id='building_id' type='text' disabled={!isNew}
+						 value={original?.id ?? ''}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 		<div class='form-group'>
 			<label for='building_name'>건물 이름</label>
 			<input id='building_name' type='text'
+						 value={original?.name ?? ''}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 	</div>
@@ -56,7 +58,7 @@
     }
 
     .form-group {
-        @apply my-2;
+        @apply my-2 flex flex-col items-start;
     }
 
     .form-group label {

@@ -14,7 +14,7 @@
 		</div>
 	{/each}
 	<Button class='bg-white' isIconRight>
-		추가
+		세부 구역 추가
 		<Add slot='icon' />
 	</Button>
 </div>

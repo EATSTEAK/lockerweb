@@ -8,34 +8,19 @@
 
 	export let buildings: { [buildingNum: string]: Building } = {};
 
-	let depthData: DepthData[] = [
-		{
-			id: '21',
-			name: '정보과학관',
-			children: [
-				{
-					id: '1-A',
-					name: '1F 구역 A'
-				},
-				{
-					id: '1-B',
-					name: '1F 구역 B'
-				},
-				{
-					id: '1-C',
-					name: '1F 구역 C'
-				},
-				{
-					id: 'add',
-					name: '구역 추가...'
-				}
-			]
-		},
-		{
-			id: 'add',
-			name: '건물 추가...'
-		}
-	];
+	function formatFloor(floor: string) {
+		return floor.length < 2 ? `${floor}F` : floor;
+	}
+
+	$: depthData = [...Object.entries(buildings).map<DepthData>(([buildingNum, building]) => ({
+		id: buildingNum,
+		name: building.name,
+		children: [...Object.entries(building.lockers).flatMap<DepthData>(([floor, sections]) => Object.keys(sections).map<DepthData>((sectionId) => ({
+			id: `${floor}-${sectionId}`,
+			name: `${formatFloor(floor ?? '')} 구역 ${sectionId}`
+		}))), { id: 'add', name: '구역 추가...' }]
+	})), { id: 'add', name: '건물 추가...' }];
+
 	let selections: string[] = [];
 
 	$: selectedBuilding = buildings[selections[0]];

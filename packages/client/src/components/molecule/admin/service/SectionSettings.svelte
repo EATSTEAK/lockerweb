@@ -3,6 +3,8 @@
 	import SaveEdit from '../../../../icons/SaveEdit.svelte';
 	import Delete from '../../../../icons/Delete.svelte';
 	import SubsectionSettings from './SubsectionSettings.svelte';
+	import Tag from '../../../atom/Tag.svelte';
+	import Add from '../../../../icons/Add.svelte';
 
 	export let floor: string = '';
 	export let originalId: string;
@@ -12,20 +14,8 @@
 
 	$: readableFloor = floor && floor.length < 2 ? `${floor}F` : floor;
 
-	let subsections = [
-		{
-			range: [0, 100],
-			department: 'G'
-		},
-		{
-			range: [0, 100],
-			department: 'G'
-		},
-		{
-			range: [0, 100],
-			department: 'G'
-		}
-	];
+	$: subsections = original?.subsections ?? [];
+	console.log(subsections);
 </script>
 <div class='wrap'>
 	<div class='editor'>
@@ -35,14 +25,31 @@
 			<h4>{readableFloor} 구역 {originalId} 수정</h4>
 		{/if}
 		<div class='form-group'>
+			<label for='floor'>층</label>
+			<input id='floor' type='text' disabled={!isNew}
+						 value={floor ?? ''}
+						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
+		</div>
+		<div class='form-group'>
 			<label for='building_id'>구역 이름</label>
-			<input id='building_id' type='text'
+			<input id='building_id' type='text' disabled={!isNew}
+						 value={originalId ?? ''}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 		<div class='form-group'>
 			<label for='disabled'>사용 불가 사물함 목록</label>
-			<input id='disabled' type='text'
-						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
+			<div class='disabled-input'>
+				<input id='disabled' type='text'
+							 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
+				<button class='disabled-add-btn'>
+					<Add />
+				</button>
+			</div>
+			<div class='disabled-list'>
+				{#each original?.disabled ?? [] as disabledId}
+					<Tag class='disabled-id bg-gray-400'>{disabledId}</Tag>
+				{/each}
+			</div>
 		</div>
 		<div class='my-2'>
 			<SubsectionSettings {subsections} />
@@ -74,12 +81,41 @@
         @apply mb-3;
     }
 
+    .disabled-input {
+        @apply flex items-center gap-2;
+
+    }
+
+    .disabled-list {
+        @apply py-3 flex flex-wrap;
+    }
+
+    .disabled-add-btn {
+        @apply rounded-md bg-gray-200 text-gray-500;
+    }
+
+    .disabled-add-btn:hover {
+        @apply brightness-90;
+    }
+
+    .disabled-add-btn:active {
+        @apply brightness-75;
+    }
+
+    :global(.disabled-id) {
+        @apply cursor-pointer;
+    }
+
+    :global(.disabled-id:hover) {
+        @apply brightness-90;
+    }
+
     .actions {
         @apply flex justify-end gap-1 mt-3;
     }
 
     .form-group {
-        @apply my-2;
+        @apply my-2 flex flex-col items-start;
     }
 
     .form-group label {

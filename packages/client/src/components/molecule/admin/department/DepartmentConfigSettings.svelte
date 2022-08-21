@@ -16,27 +16,32 @@
 		{/if}
 		<div class='form-group'>
 			<label for='department_id'>학부 ID</label>
-			<input id='department_id' type='text'
+			<input id='department_id' type='text' disabled={!isNew}
+						 value={original?.id ?? ''}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 		<div class='form-group'>
 			<label for='department_name'>학부명</label>
 			<input id='department_name' type='text'
+						 value={original?.name ?? ''}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 		<div class='form-group'>
 			<label for='activate_from'>예약 시작일</label>
 			<input id='activate_from' type='datetime-local'
+						 value={(original?.activateFrom ?? '').replace('Z', '')}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 		<div class='form-group'>
 			<label for='activate_to'>예약 종료일</label>
 			<input id='activate_to' type='datetime-local'
+						 value={(original?.activateTo ?? '').replace('Z', '')}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 		<div class='form-group'>
 			<label for='contact'>학부 연락처</label>
 			<input id='contact' type='text'
+						 value={original?.contact ?? ''}
 						 class='form-input rounded-md bg-gray-100 border-transparent focus:bg-white' />
 		</div>
 	</div>
@@ -71,7 +76,7 @@
     }
 
     .form-group {
-        @apply my-2;
+        @apply my-2 flex flex-col items-start;
     }
 
     .form-group label {

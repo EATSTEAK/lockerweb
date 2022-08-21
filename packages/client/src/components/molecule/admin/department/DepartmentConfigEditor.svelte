@@ -5,34 +5,12 @@
 	import SelectScreen from '../../../atom/SelectScreen.svelte';
 	import DepartmentConfigSettings from './DepartmentConfigSettings.svelte';
 
-	export let configs: Config[] = [];
+	export let configs: DepartmentConfig[] = [];
 
-	let depthData: DepthData[] = [
-		{
-			id: 'E',
-			name: '전자정보공학부'
-		},
-		{
-			id: 'A',
-			name: 'AI융합학부'
-		},
-		{
-			id: 'C',
-			name: '컴퓨터학부'
-		},
-		{
-			id: 'S',
-			name: '소프트웨어학부'
-		},
-		{
-			id: 'G',
-			name: '글로벌미디어학부'
-		},
-		{
-			id: 'add',
-			name: '학부 추가...'
-		}
-	];
+	let depthData: DepthData[] = [...configs.map<DepthData>(department => ({
+		id: department.id,
+		name: department.name
+	})), { id: 'add', name: '학부 추가' }];
 	let selections: string[] = [];
 
 	$: selectedDepartmentConfig = selections[0] ? configs.find((v) => v.id === selections[0]) : undefined;
