@@ -1,8 +1,8 @@
 <script lang='ts'>
 
-	import Tag from '../atom/Tag.svelte';
-	import DepartmentSelectionGroup from '../atom/DepartmentSelectionGroup.svelte';
-	import DepartmentSelection from '../atom/DepartmentSelection.svelte';
+	import Tag from '../../atom/Tag.svelte';
+	import DepartmentSelectionGroup from '../../atom/DepartmentSelectionGroup.svelte';
+	import DepartmentSelection from '../../atom/DepartmentSelection.svelte';
 	import DepartmentLockerStatus from './DepartmentLockerStatus.svelte';
 
 	export let lockerCount;

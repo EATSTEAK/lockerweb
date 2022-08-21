@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import FloorStatus from '../atom/FloorStatus.svelte';
+    import FloorStatus from '../../atom/FloorStatus.svelte';
 
     export let departmentStatus;
 </script>

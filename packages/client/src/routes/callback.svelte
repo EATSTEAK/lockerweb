@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import Entry from '../components/molecule/Entry.svelte';
+	import Entry from '../components/molecule/login/Entry.svelte';
 	import ChevronDown from '../icons/ChevronDown.svelte';
 	import ArrowClockwise from '../icons/ArrowClockwise.svelte';
 	import Button from '../components/atom/Button.svelte';
