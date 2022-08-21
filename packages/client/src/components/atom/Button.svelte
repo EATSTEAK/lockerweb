@@ -32,7 +32,7 @@
     }
 
     a:hover {
-        @apply brightness-90 drop-shadow-lg;
+        @apply brightness-90 shadow-lg;
     }
 
     :global(.btn-icon path:not([fill="none"])) {
