@@ -10,6 +10,9 @@
 	import ServiceSettings from '../components/molecule/admin/service/ServiceSettings.svelte';
 	import { user } from '$lib/store';
 	import DepartmentSettings from '../components/molecule/admin/department/DepartmentSettings.svelte';
+	import PeopleSettings from '../icons/PeopleSettings.svelte';
+	import Settings from '../icons/Settings.svelte';
+	import ContentSettings from '../icons/ContentSettings.svelte';
 
 
 	let selectedTab;
@@ -28,14 +31,17 @@
 			<div class='flex flex-col gap-3'>
 				<h3>설정</h3>
 				<SelectionListItemGroup bind:selectedId={selectedTab}>
-					<SelectionListItem id='user'>
-						사용자 설정
+					<SelectionListItem class='flex justify-between items-center' id='user'>
+						<span>사용자 설정</span>
+						<PeopleSettings />
 					</SelectionListItem>
-					<SelectionListItem id='service'>
-						서비스 설정
+					<SelectionListItem class='flex justify-between items-center' id='service'>
+						<span>서비스 설정</span>
+						<Settings />
 					</SelectionListItem>
-					<SelectionListItem id='department'>
-						학부별 설정
+					<SelectionListItem class='flex justify-between items-center' id='department'>
+						<span>학부별 설정</span>
+						<ContentSettings />
 					</SelectionListItem>
 				</SelectionListItemGroup>
 			</div>
