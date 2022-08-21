@@ -1,0 +1,47 @@
+<script lang='ts'>
+	export let id: string;
+	export let label: string;
+	export let showLabel: boolean = false;
+	export let labelClass: string = '';
+	export let selectClass: string = '';
+	let clazz = '';
+	export { clazz as class };
+
+</script>
+
+<div class={clazz}>
+	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''}</label>
+	<select id={id} class={selectClass} {...$$restProps}>
+		<slot />
+	</select>
+</div>
+
+<style>
+    div {
+        @apply flex flex-col;
+    }
+
+    label {
+        @apply font-bold block mb-1;
+    }
+
+    label[hidden] {
+        @apply hidden;
+    }
+
+    select {
+        @apply transition-all rounded-md bg-gray-100 border-transparent;
+    }
+
+    select:hover {
+        @apply bg-gray-200;
+    }
+
+    select:focus {
+        @apply bg-white;
+    }
+
+    select:disabled {
+        @apply bg-gray-300 text-gray-400;
+    }
+</style>
