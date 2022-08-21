@@ -20,7 +20,7 @@
 
 <style>
     a {
-        @apply flex justify-between rounded-lg shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 m-1 transition-all ease-in;
+        @apply flex justify-between rounded-lg shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 transition-all ease-in;
     }
 
     a[disabled] {
