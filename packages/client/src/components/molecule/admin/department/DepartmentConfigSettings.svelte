@@ -46,7 +46,7 @@
 
 <style>
     .wrap {
-        @apply flex flex-col justify-between p-3;
+        @apply h-full flex flex-col justify-between p-3;
     }
 
     .editor :global(.reactive-input) {
