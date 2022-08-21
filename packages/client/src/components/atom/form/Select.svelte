@@ -1,6 +1,7 @@
 <script lang='ts'>
 	export let id: string;
 	export let label: string;
+	export let value: string;
 	export let showLabel: boolean = false;
 	export let labelClass: string = '';
 	export let selectClass: string = '';
@@ -11,7 +12,7 @@
 
 <div class={clazz}>
 	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''}</label>
-	<select id={id} class={selectClass} {...$$restProps}>
+	<select id={id} class={selectClass} {value} {...$$restProps}>
 		<slot />
 	</select>
 </div>
