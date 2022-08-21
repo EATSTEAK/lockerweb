@@ -4,7 +4,7 @@
 	export { clazz as class };
 </script>
 
-<a class={`${clazz || ''}`} {...$$restProps}>
+<a tabindex='0' class={`${clazz || ''}`} {...$$restProps}>
 	{#if !isIconRight}
 		{#if $$slots.icon}
 			<div class='btn-icon'>
