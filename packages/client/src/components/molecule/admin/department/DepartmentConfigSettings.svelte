@@ -1,12 +1,12 @@
 <script lang='ts'>
 	import Button from '../../../atom/Button.svelte';
 	import SaveEdit from '../../../../icons/SaveEdit.svelte';
-	import Delete from '../../../../icons/Delete.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
 	import DateTimeInput from '../../../atom/form/DateTimeInput.svelte';
 	import Add from '../../../../icons/Add.svelte';
 	import isEqual from 'lodash.isequal';
 	import { createEventDispatcher } from 'svelte';
+	import Delete from '../../../../icons/Delete.svelte';
 
 	export let original: DepartmentConfig;
 	export let isNew = false;
@@ -85,16 +85,19 @@
 					<Delete slot='icon' />
 				</Button>
 			{/if}
-			<Button disabled={isSaveDisabled} on:click={updateDepartment}
-							class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
-				{#if !isNew}
+			{#if !isNew}
+				<Button disabled={isSaveDisabled} on:click={updateDepartment}
+								class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
 					저장
 					<SaveEdit slot='icon' />
-				{:else}
+				</Button>
+			{:else}
+				<Button disabled={isSaveDisabled} on:click={updateDepartment}
+								class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
 					추가
 					<Add slot='icon' />
-				{/if}
-			</Button>
+				</Button>
+			{/if}
 		</div>
 	</div>
 </div>
