@@ -5,10 +5,15 @@
 	import DocumentTable from '../../../../icons/DocumentTable.svelte';
 	import TabGroup from '../../../atom/TabGroup.svelte';
 	import TabItem from '../../../atom/TabItem.svelte';
+	import { config } from '$lib/store';
 
 	export let users: Array<User>;
 
+	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
+
 	let selectedTab;
+
+	$: departmentUsers = selectedTab ? users.filter((user) => user.department === selectedTab) : [];
 </script>
 
 <div class='wrap'>
@@ -27,13 +32,11 @@
 	</div>
 	<div class='card table'>
 		<TabGroup bind:selectedId={selectedTab}>
-			<TabItem id='G' selected>글로벌미디어학부</TabItem>
-			<TabItem id='E'>전자정보공학부</TabItem>
-			<TabItem id='A'>AI융합학부</TabItem>
-			<TabItem id='C'>컴퓨터학부</TabItem>
-			<TabItem id='S'>소프트웨어학부</TabItem>
+			{#each departments as department}
+				<TabItem id={department.id}>{department.name}</TabItem>
+			{/each}
 		</TabGroup>
-		<UserDatatable {users} />
+		<UserDatatable users={departmentUsers} />
 	</div>
 </div>
 
