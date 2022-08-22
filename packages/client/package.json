@@ -12,9 +12,10 @@
     "format": "prettier --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "next",
+    "@sveltejs/adapter-auto": "1.0.0-next.64",
+    "@sveltejs/kit": "1.0.0-next.405",
     "@tailwindcss/forms": "^0.5.2",
+    "@types/lodash.isequal": "^4.5.6",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "autoprefixer": "^10.4.7",
@@ -38,5 +39,8 @@
     "typescript": "^4.7.4",
     "vite": "^3.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
+  }
 }
