@@ -36,5 +36,5 @@ export function getDepartmentLockerCountsByFloor(
 }
 
 export function getDepartmentNameById(configs: Config[], departmentId: string): string | undefined {
-	return configs.find((conf) => conf.id === departmentId)?.name;
+	return configs?.find((conf) => conf.id === departmentId)?.name;
 }
