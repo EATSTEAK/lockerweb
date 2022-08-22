@@ -14,9 +14,9 @@
 <div class={clazz}>
 	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''}</label>
 	<input id={id} type='checkbox'
-				 {disabled}
 				 class={inputClass}
-				 {checked}
+				 bind:checked
+				 {...$$restProps}
 	/>
 </div>
 
