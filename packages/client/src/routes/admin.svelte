@@ -13,9 +13,26 @@
 	import PeopleSettings from '../icons/PeopleSettings.svelte';
 	import Settings from '../icons/Settings.svelte';
 	import ContentSettings from '../icons/ContentSettings.svelte';
+	import { browser } from '$app/env';
+	import { fetchWithAuth } from '$lib/auth';
+	import { variables } from '$lib/variables';
 
 
 	let selectedTab;
+
+	let userPromise: Promise<Array<User>>;
+	if (browser) {
+		userPromise = fetchWithAuth(variables.baseUrl + '/api/v1/user/query').then((res) => res.json())
+			.then((res) => {
+				if (res.success) {
+					return res.result;
+				}
+				throw new Error(res.errorDescription);
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}
 </script>
 
 <div class='root'>
@@ -59,7 +76,13 @@
 	</div>
 	<div class='dashboard'>
 		{#if selectedTab === "user"}
-			<UserSettings />
+			{#await userPromise}
+				로드중
+			{:then users}
+				<UserSettings {users} />
+			{:catch err}
+				오류
+			{/await}
 		{:else if selectedTab === "service"}
 			<ServiceSettings />
 		{:else if selectedTab === "department"}

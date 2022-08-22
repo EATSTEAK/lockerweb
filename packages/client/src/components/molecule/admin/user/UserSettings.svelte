@@ -1,27 +1,12 @@
 <script lang='ts'>
 	import UserDatatable from './UserDatatable.svelte';
-	import { variables } from '$lib/variables';
-	import { browser } from '$app/env';
-	import { fetchWithAuth } from '$lib/auth';
 	import Button from '../../../atom/Button.svelte';
 	import Add from '../../../../icons/Add.svelte';
 	import DocumentTable from '../../../../icons/DocumentTable.svelte';
 	import TabGroup from '../../../atom/TabGroup.svelte';
 	import TabItem from '../../../atom/TabItem.svelte';
 
-	let userPromise: Promise<Array<User>>;
-	if (browser) {
-		userPromise = fetchWithAuth(variables.baseUrl + '/api/v1/user/query').then((res) => res.json())
-			.then((res) => {
-				if (res.success) {
-					return res.result;
-				}
-				throw new Error(res.errorDescription);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}
+	export let users: Array<User>;
 
 	let selectedTab;
 </script>
@@ -40,22 +25,16 @@
 			</Button>
 		</div>
 	</div>
-
-	{#await userPromise}
-		로드중
-	{:then users}
-		<div class='card table'>
-			<TabGroup bind:selectedId={selectedTab}>
-				<TabItem id='G' selected>글로벌미디어학부</TabItem>
-				<TabItem id='E'>전자정보공학부</TabItem>
-				<TabItem id='A'>AI융합학부</TabItem>
-				<TabItem id='C'>컴퓨터학부</TabItem>
-				<TabItem id='S'>소프트웨어학부</TabItem>
-			</TabGroup>
-			<UserDatatable {users} />
-		</div>
-	{:catch err}
-	{/await}
+	<div class='card table'>
+		<TabGroup bind:selectedId={selectedTab}>
+			<TabItem id='G' selected>글로벌미디어학부</TabItem>
+			<TabItem id='E'>전자정보공학부</TabItem>
+			<TabItem id='A'>AI융합학부</TabItem>
+			<TabItem id='C'>컴퓨터학부</TabItem>
+			<TabItem id='S'>소프트웨어학부</TabItem>
+		</TabGroup>
+		<UserDatatable {users} />
+	</div>
 </div>
 
 <style>
