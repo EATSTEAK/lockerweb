@@ -1,0 +1,26 @@
+<script lang='ts'>
+	import SubsectionEntry from './SubsectionEntry.svelte';
+	import Button from '../../../atom/Button.svelte';
+	import Add from '../../../../icons/Add.svelte';
+
+	export let subsections: LockerSubsection[];
+</script>
+
+<div class='wrap'>
+	<p class='text-xl font-bold'>세부 구역 설정</p>
+	{#each subsections as subsection, index}
+		<div class='my-1'>
+			<SubsectionEntry key={index} subsection={subsection} />
+		</div>
+	{/each}
+	<Button class='bg-white' isIconRight>
+		세부 구역 추가
+		<Add slot='icon' />
+	</Button>
+</div>
+
+<style>
+    .wrap {
+        @apply flex flex-col items-start;
+    }
+</style>

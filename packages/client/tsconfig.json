@@ -3,6 +3,7 @@
   "compilerOptions": {
     "lib": [
       "es5",
+      "ES2015.Core",
       "es2015",
       "ES2015.Collection",
       "es2016",
@@ -10,9 +11,11 @@
       "es2017.object",
       "es2020",
       "es2019.object",
-
+      "ES2019.Array",
       "DOM",
       "es2015.promise",
+      "ES2022.Array",
+      "ESNext.Array",
       "esnext"
     ],
     "baseUrl": ".",
@@ -23,7 +26,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true,
     "paths": {
       "$lib": [
         "src/lib"
