@@ -70,9 +70,9 @@
 		<TextInput class='my-2' inputClass='reactive-input' id='name' label='학부 이름' showLabel
 							 bind:value={name} required invalidClass='text-red-800' invalidText='이 값은 필수입니다.' />
 		<DateTimeInput class='my-2' inputClass='reactive-input' id='activate_from' label='예약 시작일' showLabel
-									 bind:value={activateFrom} />
+									 bind:value={activateFrom} invalidClass='text-red-800' />
 		<DateTimeInput class='my-2' inputClass='reactive-input' id='activate_to' label='예약 종료일' showLabel
-									 bind:value={activateTo} />
+									 bind:value={activateTo} invalidClass='text-red-800' />
 		<TextInput class='my-2' inputClass='reactive-input' id='contact' label='학부 연락처' showLabel
 							 bind:value={contact} />
 	</div>
