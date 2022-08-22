@@ -22,7 +22,7 @@
 		</Select>
 	</div>
 	<div class='current-page'>항목 <span class='font-bold'>{totalEntries}</span> 중 <span
-		class='font-bold'>{itemsPerPage * currentPage + 1}</span>-<span
+		class='font-bold'>{itemsPerPage * currentPage + 1 > totalEntries ? totalEntries : itemsPerPage * currentPage + 1}</span>-<span
 		class='font-bold'>{itemsPerPage * (currentPage + 1) >= totalEntries ? totalEntries : itemsPerPage * (currentPage + 1)}</span>
 	</div>
 	<div class='pagination'>
