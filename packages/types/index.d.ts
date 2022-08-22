@@ -106,13 +106,13 @@ type BuildingData = {
 
 type LockerSection = {
 	subsections: LockerSubsection[];
-	disabled: string[];
+	disabled: number[];
 	height: number;
 };
 
 type LockerSectionData = {
 	s: { L: { M: LockerSubsectionData }[] };
-	d: { L: { S: string }[] };
+	d: { NS: string[] };
 	h: { N: string };
 };
 
