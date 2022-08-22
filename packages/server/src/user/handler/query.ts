@@ -13,7 +13,6 @@ export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
 	try {
 		const id = (jwt.verify(token, JWT_SECRET) as JwtPayload).aud as string;
 		await assertAccessible(id, token, true);
-		console.log(event);
 		const result = await queryUser(startsWith);
 		return createResponse(200, {
 			success: true,
