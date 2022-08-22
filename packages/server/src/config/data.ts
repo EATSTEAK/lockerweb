@@ -35,7 +35,8 @@ function fromLockerSectionData(data: LockerSectionData): LockerSection {
 function toLockerSectionData(section: LockerSection): LockerSectionData {
 	return {
 		s: { L: section.subsections.map((ss) => ({ M: toLockerSubsectionData(ss) })) },
-		...(section.disabled && { d: { NS: section.disabled.map((d) => `${d}`) } }),
+		...(section.disabled &&
+			section.disabled.length && { d: { NS: section.disabled.map((d) => `${d}`) } }),
 		h: { N: `${section.height}` }
 	};
 }
