@@ -7,13 +7,17 @@
 	export let currentPage: number = 0;
 	export let itemsPerPage: number = 25;
 
+	let itemsPerPageStr = `${itemsPerPage}`;
+
+	$: if (itemsPerPageStr) itemsPerPage = parseInt(itemsPerPageStr);
+
 	$: totalPage = totalEntries / itemsPerPage;
 </script>
 
 <div class='wrap'>
 	<div class='item-per-page-wrap'>
 		<p class='font-bold'>페이지 별 항목 수:</p>
-		<Select id='items-per-page' label='페이지 별 항목 수'>
+		<Select bind:value={itemsPerPageStr} id='items-per-page' label='페이지 별 항목 수'>
 			<option id='25'>25</option>
 			<option id='50'>50</option>
 			<option id='100'>100</option>
