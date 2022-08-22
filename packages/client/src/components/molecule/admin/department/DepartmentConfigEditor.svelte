@@ -4,16 +4,22 @@
 	import AddSquare from '../../../../icons/AddSquare.svelte';
 	import SelectScreen from '../../../atom/SelectScreen.svelte';
 	import DepartmentConfigSettings from './DepartmentConfigSettings.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let configs: DepartmentConfig[] = [];
 
-	let depthData: DepthData[] = [...configs.map<DepthData>(department => ({
+	const dispatch = createEventDispatcher<{
+		delete: ConfigDeleteRequest,
+		update: DepartmentConfigUpdateRequest
+	}>();
+
+	$: depthData = [...configs.map<DepthData>(department => ({
 		id: department.id,
 		name: department.name
 	})), { id: 'add', name: '학부 추가' }];
 	let selections: string[] = [];
 
-	$: selectedDepartmentConfig = selections[0] ? configs.find((v) => v.id === selections[0]) : undefined;
+	$: selectedDepartmentConfig = selections && selections[0] ? configs.find((v) => v.id === selections[0]) : undefined;
 </script>
 
 <section class='wrap'>
@@ -32,7 +38,8 @@
 		{#if selections.length === 0}
 			<SelectScreen class='min-h-[540px]' />
 		{:else if selections.length === 1}
-			<DepartmentConfigSettings original={selectedDepartmentConfig} isNew={selections[0] === 'add'} />
+			<DepartmentConfigSettings on:delete on:update
+																original={selectedDepartmentConfig} isNew={selections[0] === 'add'} />
 		{/if}
 	</article>
 </section>
