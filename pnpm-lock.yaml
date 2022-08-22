@@ -7,9 +7,10 @@ importers:
 
   packages/client:
     specifiers:
-      '@sveltejs/adapter-auto': next
-      '@sveltejs/kit': next
+      '@sveltejs/adapter-auto': 1.0.0-next.64
+      '@sveltejs/kit': 1.0.0-next.405
       '@tailwindcss/forms': ^0.5.2
+      '@types/lodash.isequal': ^4.5.6
       '@typescript-eslint/eslint-plugin': ^5.27.0
       '@typescript-eslint/parser': ^5.27.0
       autoprefixer: ^10.4.7
@@ -20,6 +21,7 @@ importers:
       eslint-plugin-import: ^2.26.0
       eslint-plugin-svelte3: ^4.0.0
       eslint-plugin-tailwindcss: ^3.6.0
+      lodash.isequal: ^4.5.0
       postcss: ^8.4.14
       postcss-load-config: ^4.0.1
       prettier: ^2.6.2
@@ -32,10 +34,13 @@ importers:
       tslib: ^2.3.1
       typescript: ^4.7.4
       vite: ^3.0.0
+    dependencies:
+      lodash.isequal: 4.5.0
     devDependencies:
       '@sveltejs/adapter-auto': 1.0.0-next.64
       '@sveltejs/kit': 1.0.0-next.405_svelte@3.48.0+vite@3.0.4
       '@tailwindcss/forms': 0.5.2_tailwindcss@3.1.7
+      '@types/lodash.isequal': 4.5.6
       '@typescript-eslint/eslint-plugin': 5.30.0_5mtqsiui4sk53pmkx7i7ue45wm
       '@typescript-eslint/parser': 5.30.0_b5e7v2qnwxfo6hmiq56u52mz3e
       autoprefixer: 10.4.8_postcss@8.4.14
@@ -335,6 +340,16 @@ packages:
     resolution: {integrity: sha512-zm6xBQpFDIDM6o9r6HSgDeIcLy82TKWctCXEPbJJcXb5AKmi5BNNdLXneixK4lplX3PqIVcwLBCGE/kAGnlD4A==}
     dependencies:
       '@types/node': 18.0.0
+    dev: true
+
+  /@types/lodash.isequal/4.5.6:
+    resolution: {integrity: sha512-Ww4UGSe3DmtvLLJm2F16hDwEQSv7U0Rr8SujLUA2wHI2D2dm8kPu6Et+/y303LfjTIwSBKXB/YTUcAKpem/XEg==}
+    dependencies:
+      '@types/lodash': 4.14.184
+    dev: true
+
+  /@types/lodash/4.14.184:
+    resolution: {integrity: sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==}
     dev: true
 
   /@types/node/18.0.0:
@@ -2295,6 +2310,10 @@ packages:
   /lodash.isboolean/3.0.3:
     resolution: {integrity: sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==}
     dev: true
+
+  /lodash.isequal/4.5.0:
+    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    dev: false
 
   /lodash.isinteger/4.0.4:
     resolution: {integrity: sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==}
