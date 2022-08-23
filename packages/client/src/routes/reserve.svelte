@@ -10,6 +10,7 @@
     import UserReservedLocker from "../components/molecule/reserve/UserReservedLocker.svelte";
     import Logout from "../icons/Logout.svelte";
     import LockerRserveInfo from "../components/molecule/reserve/LockerReserveInfo.svelte";
+    import Modal from "../components/atom/Modal.svelte";
 
     let callbackUrl = undefined;
     let countData: LockerCountResponse;
@@ -44,19 +45,18 @@
     </div>
 </div>
 
-
 <style>
     .root {
-        @apply flex flex-col md:flex-row items-stretch;
+        @apply flex flex-col md:flex-row h-screen overflow-hidden;
     }
     .logo {
         @apply top-2;
     }
     .side-wrap {
-        @apply bg-gray-200 w-full md:min-w-[380px] md:w-[380px] flex flex-col justify-between min-h-screen px-10 pb-5 pt-10;
+        @apply bg-gray-200 md:min-w-[380px] md:w-[380px] flex flex-col justify-between min-h-screen px-10 pb-5 pt-10;
     }
     .locker-reserve-info-wrap {
-        @apply grow;
+        @apply w-full;
     }
     .profile-wrap {
         @apply flex flex-col gap-10;
