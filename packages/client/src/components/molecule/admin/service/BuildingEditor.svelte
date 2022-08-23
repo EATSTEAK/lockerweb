@@ -1,5 +1,11 @@
 <script lang='ts'>
-	import type { DepthData } from '$lib/types';
+	import type {
+		BuildingRemoveRequest,
+		BuildingUpdateRequest,
+		DepthData,
+		SectionRemoveRequest,
+		SectionUpdateRequest
+	} from '$lib/types';
 	import DepthExplorer from '../../DepthExplorer.svelte';
 	import AddSquare from '../../../../icons/AddSquare.svelte';
 	import SelectScreen from '../../../atom/SelectScreen.svelte';
@@ -12,21 +18,79 @@
 		return floor.length < 2 ? `${floor}F` : floor;
 	}
 
-	$: depthData = [...Object.entries(buildings).map<DepthData>(([buildingNum, building]) => ({
-		id: buildingNum,
-		name: building.name,
-		children: [...Object.entries(building.lockers).flatMap<DepthData>(([floor, sections]) => Object.keys(sections).map<DepthData>((sectionId) => ({
-			id: `${floor}-${sectionId}`,
-			name: `${formatFloor(floor ?? '')} 구역 ${sectionId}`
-		}))), { id: 'add', name: '구역 추가...' }]
-	})), { id: 'add', name: '건물 추가...' }];
-
 	let selections: string[] = [];
+	let depthData = constructDepthData(buildings);
 
 	$: selectedBuilding = buildings[selections[0]];
 	$: selectedFloor = selections[1] && selections[1] !== 'add' ? selections[1].split('-')[0] : undefined;
 	$: selectedSectionId = selections[1] && selections[1] !== 'add' ? selections[1].split('-')[1] : undefined;
-	$: selectedSection = selectedFloor ? selectedBuilding.lockers[selectedFloor][selectedSectionId] : undefined;
+	$: selectedSection = selectedFloor ? selectedBuilding.lockers[selectedFloor]?.[selectedSectionId] : undefined;
+
+	$: if (buildings) {
+		depthData = constructDepthData(buildings);
+	}
+
+	function constructDepthData(buildings: { [buildingNum: string]: Building }): DepthData[] {
+		if (selections.length) {
+			if (selections[0] !== 'add' && !buildings[selections[0]]) selections = [];
+			if (selections[1] && selections[1] !== 'add') {
+				const [floor, id] = selections[1].split('-');
+				const sect = buildings[selections[0]];
+				if (!sect[floor]?.[id]) selections = [];
+			}
+		}
+		return [...Object.entries(buildings).map<DepthData>(([buildingNum, building]) => ({
+			id: buildingNum,
+			name: building.name,
+			children: [...Object.entries(building.lockers).flatMap<DepthData>(([floor, sections]) => Object.keys(sections).map<DepthData>((sectionId) => ({
+				id: `${floor}-${sectionId}`,
+				name: `${formatFloor(floor ?? '')} 구역 ${sectionId}`
+			}))), { id: 'add', name: '구역 추가...' }]
+		})), { id: 'add', name: '건물 추가...' }];
+	}
+
+	function buildingUpdate(evt: CustomEvent<BuildingUpdateRequest>) {
+		if (!buildings[evt.detail.id]) {
+			buildings[evt.detail.id] = {
+				id: evt.detail.id,
+				name: evt.detail.name,
+				lockers: {}
+			};
+			selections = [evt.detail.id];
+			return;
+		}
+		buildings[evt.detail.id].name = evt.detail.name;
+		buildings = { ...buildings };
+	}
+
+	function buildingRemove(evt: CustomEvent<BuildingRemoveRequest>) {
+		delete buildings[evt.detail.id];
+		buildings = { ...buildings };
+		if (selections[0] === evt.detail.id) selections = [];
+	}
+
+	function sectionUpdate(evt: CustomEvent<SectionUpdateRequest>) {
+		console.log('update', selectedBuilding, evt.detail);
+		const { floor, id, height, disabled, subsections } = evt.detail;
+		if (!buildings[selections[0]].lockers) buildings[selections[0]].lockers = {};
+		if (!buildings[selections[0]].lockers[floor]) buildings[selections[0]].lockers[floor] = {};
+		buildings[selections[0]].lockers[floor][id] = {
+			subsections,
+			height,
+			disabled
+		};
+		buildings = { ...buildings };
+		console.log(buildings);
+	}
+
+	function sectionRemove(evt: CustomEvent<SectionRemoveRequest>) {
+		console.log('remove', selectedBuilding, evt.detail);
+		const { floor, id } = evt.detail;
+		delete buildings[selections[0]].lockers[floor][id];
+		if (Object.keys(buildings[selections[0]].lockers[floor]).length === 0) delete buildings[selections[0]].lockers[floor];
+		buildings = { ...buildings };
+		console.log(buildings);
+	}
 </script>
 
 <section class='wrap'>
@@ -47,9 +111,11 @@
 		{#if selections.length === 0}
 			<SelectScreen class='min-h-[540px]' />
 		{:else if selections.length === 1}
-			<BuildingSettings original={selectedBuilding} isNew={selections[0] === 'add'} />
+			<BuildingSettings on:update={buildingUpdate} on:remove={buildingRemove} original={selectedBuilding}
+												isNew={selections[0] === 'add'} />
 		{:else if selections.length === 2}
-			<SectionSettings floor={selectedFloor} originalId={selectedSectionId} original={selectedSection}
+			<SectionSettings on:update={sectionUpdate} on:remove={sectionRemove} floor={selectedFloor}
+											 originalId={selectedSectionId} original={selectedSection}
 											 isNew={selections[1] === 'add'} />
 		{/if}
 	</article>

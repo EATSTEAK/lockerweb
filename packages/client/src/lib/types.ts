@@ -26,3 +26,17 @@ export type DepthData = {
 	name: string;
 	children?: DepthData[];
 };
+
+/* ServiceSettings Editor Types */
+
+export type BuildingRemoveRequest = { id: string };
+export type BuildingUpdateRequest = { id: string; name: string };
+
+export type SectionRemoveRequest = { floor: string; id: string };
+export type SectionUpdateRequest = {
+	floor: string;
+	id: string;
+	height: number;
+	disabled: number[];
+	subsections: LockerSubsection[];
+};
