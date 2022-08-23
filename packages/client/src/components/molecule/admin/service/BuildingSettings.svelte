@@ -3,9 +3,32 @@
 	import Delete from '../../../../icons/Delete.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
 	import Add from '../../../../icons/Add.svelte';
+	import Checkmark from '../../../../icons/Checkmark.svelte';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	export let original: Building;
 	export let isNew = false;
+
+	let id = original?.id ?? '';
+	let name = original?.name ?? '';
+
+	const isNotDigit = new RegExp('\\D+');
+
+	$: isModified = original?.id !== id || original?.name !== name;
+	$: isAppliable = !!id && !!name && id.length == 2 && !isNotDigit.test(id);
+
+	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
+
+
+	function deleteBuilding() {
+		dispatch('delete', { id });
+	}
+
+	function updateBuilding() {
+		dispatch('update', { id, name });
+	}
 </script>
 
 <div class='wrap'>
@@ -16,9 +39,10 @@
 			<h4>{original.name} 수정</h4>
 		{/if}
 		<TextInput class='my-2' inputClass='reactive-input' id='id' label='건물 번호' showLabel disabled={!isNew}
-							 value={original?.id ?? ''} />
+							 bind:value={id} required={isNew} pattern={`\\d{2}`} invalidClass='text-red-800'
+							 invalidText={id ? '이 값은 2자리 숫자여야 합니다.' : '이 값은 필수입니다.'} />
 		<TextInput class='my-2' inputClass='reactive-input' id='name' label='건물 이름' showLabel
-							 value={original?.name ?? ''} />
+							 bind:value={name} required invalidClass='text-red-800' invalidText='이 값은 필수입니다.' />
 	</div>
 	<div class='actions-wrap'>
 		<hr />
@@ -28,8 +52,12 @@
 					삭제
 					<Delete slot='icon' />
 				</Button>
+				<Button disabled={isSaveDisabled} class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
+					적용
+					<Checkmark slot='icon' />
+				</Button>
 			{:else}
-				<Button class='bg-primary-800 text-white' isIconRight>
+				<Button disabled={isSaveDisabled} class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
 					추가
 					<Add slot='icon' />
 				</Button>
