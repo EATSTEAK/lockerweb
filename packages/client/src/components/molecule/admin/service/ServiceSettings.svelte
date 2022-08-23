@@ -10,8 +10,15 @@
 	import { variables } from '$lib/variables';
 	import { config } from '$lib/store';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
+	import Warning from '../../../../icons/Warning.svelte';
 
-	$: serviceConfig = $config ? $config.find(v => v.id === 'SERVICE') : undefined;
+	$: serviceConfig = $config ? $config.find(v => v.id === 'SERVICE') ?? {
+		id: 'SERVICE',
+		name: undefined,
+		buildings: {}
+	} : undefined;
+
+	$: isServiceReady = !!($config?.find(v => v.id === 'SERVICE'));
 
 	let updating = false;
 
@@ -85,6 +92,14 @@
 			</Button>
 		</div>
 	</div>
+	{#if serviceConfig && !isServiceReady}
+		<div class='bg-red-300 rounded-md p-6 flex gap-3'>
+			<Warning />
+			<div class='grow'>
+				<span class='font-bold'>주의:</span> 현재 서비스가 설정되지 않은 상태입니다. 서비스 이름을 포함한 설정을 저장하여 설정해 주세요.
+			</div>
+		</div>
+	{/if}
 	{#if updating}
 		<UpdateScreen class='min-h-[32rem] md:rounded-md' />
 	{:else}
