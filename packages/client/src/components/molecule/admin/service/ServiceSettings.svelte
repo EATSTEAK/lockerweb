@@ -46,11 +46,13 @@
 
 	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
 
+	$: isBuildingModified = !isEqual(serviceConfig?.buildings ?? {}, buildings);
+
 	function initializeValues() {
 		name = serviceConfig?.name ?? '';
-		activateFrom = serviceConfig?.activateFrom ? new Date(serviceConfig?.activateFrom) : undefined;
-		activateTo = serviceConfig?.activateTo ? new Date(serviceConfig?.activateTo) : undefined;
-		buildings = serviceConfig?.buildings ?? {};
+		activateFrom = serviceConfig?.activateFrom ? new Date(serviceConfig?.activateFrom) : null;
+		activateTo = serviceConfig?.activateTo ? new Date(serviceConfig?.activateTo) : null;
+		buildings = { ...(serviceConfig?.buildings ?? {}) };
 	}
 
 	function updateConfig() {
@@ -131,6 +133,15 @@
 		</section>
 		<section class='card'>
 			<h4>건물/사물함 수정</h4>
+			{#if serviceConfig && isBuildingModified}
+				<div class='bg-primary-200 rounded-md p-6 flex gap-3'>
+					<Warning />
+					<div class='grow'>
+						<span class='font-bold'>주의:</span> 변경된 건물 정보가 저장되지 않았습니다. 편집을 완료한 이후 우상단 <span class='font-bold'>저장</span>
+						버튼을 눌러 저장하였는지 확인하세요.
+					</div>
+				</div>
+			{/if}
 			{#if serviceConfig}
 				<BuildingEditor bind:buildings />
 			{:else}
