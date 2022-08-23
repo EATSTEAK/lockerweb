@@ -2,6 +2,12 @@
 import SelectionListItemGroup from "../../atom/SelectionListItemGroup.svelte";
 import SelectionListItem from "../../atom/SelectionListItem.svelte";
 import LockerItem from "./LockerItem.svelte";
+import Modal from "../../atom/Modal.svelte";
+// import {lockerCount} from "../login/LockerStatus.svelte";
+
+let LockerGirdHeight: number | undefined = 4;
+let LockerRangeCount: number | undefined = 20;
+let LockerGirdWidthScale: number | undefined = 14.5*(LockerRangeCount/LockerGirdHeight);
 </script>
 
 <div class="wrap">
@@ -25,22 +31,22 @@ import LockerItem from "./LockerItem.svelte";
             <img class="map-img" src="/floorMaps/1F.svg" alt="정보과학관 1층 이미지" aria-level="정보과학관 1층 이미지">
         </div>
     </div>
-    <div class="locker-grid">
-        <LockerItem />
-    </div>
+        <div class="locker-grid" style={`width:${LockerGirdWidthScale}rem;`}>
+            <LockerItem />
+        </div>
 </div>
 
 <style>
     .wrap{
-        @apply w-full h-full;
+        @apply w-full h-screen;
     }
 
     /* -------------- 영역 선택 및 지도 -------------- */
     .select-info {
-        @apply flex flex-row h-2/5 min-h-[370px];
+        @apply flex flex-row h-[370px] min-h-[370px];
     }
     .select-location {
-        @apply bg-slate-300 w-2/5 md:min-w-[480px];
+        @apply bg-[#d8dee5] w-2/5 md:min-w-[480px];
     }
     .locker-map {
         @apply bg-slate-200 w-3/5;
@@ -73,13 +79,29 @@ import LockerItem from "./LockerItem.svelte";
     }
     /* -------------- 사물함 그리드 영역 -------------- */
     .locker-grid {
-        @apply grow flex flex-row flex-wrap overflow-y-auto;
+        @apply h-3/5 flex flex-row flex-wrap overflow-y-scroll mt-14 pt-3 ml-auto mr-auto;
     }
-    .locker-grid::-webkit-scrollbar{
-        display:none;
+    .locker-grid{
+        scrollbar-color: #c2c2c2 #e0e0e0;
+        scrollbar-width: thin;
     }
-    .locker-grid {
-        -ms-overflow-style: none;  /* IE and 엣지 */
-        scrollbar-width: none;  /* 파이어폭스 */
-    }
+    /*.locker-grid::-webkit-scrollbar {*/
+    /*    width: 16px;*/
+    /*}*/
+
+    /*.locker-grid::-webkit-scrollbar-track {*/
+    /*    background-color: #e4e4e4;*/
+    /*    border-radius: 100px;*/
+    /*}*/
+    /*.locker-grid::-webkit-scrollbar-thumb {*/
+    /*    background-color: #d4aa70;*/
+    /*    border-radius: 100px;*/
+    /*}*/
+    /*.locker-grid::-webkit-scrollbar{*/
+    /*    display:none;*/
+    /*}*/
+    /*.locker-grid {*/
+    /*    -ms-overflow-style: none;  !* IE and 엣지 *!*/
+    /*    scrollbar-width: none;  !* 파이어폭스 *!*/
+    /*}*/
 </style>
