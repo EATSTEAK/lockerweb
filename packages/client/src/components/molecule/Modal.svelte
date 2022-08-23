@@ -1,6 +1,6 @@
 <script lang="ts">
     import Button from "../atom/Button.svelte";
-    import Dismiss from "../../icons/brands/Dismiss.svelte";
+    import Dismiss from "../../icons/Dismiss.svelte";
 </script>
 
 <dialog open class="modal-frame">
