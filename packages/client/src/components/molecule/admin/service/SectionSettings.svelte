@@ -5,17 +5,70 @@
 	import Tag from '../../../atom/Tag.svelte';
 	import Add from '../../../../icons/Add.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
+	import NumberInput from '../../../atom/form/NumberInput.svelte';
+	import Checkmark from '../../../../icons/Checkmark.svelte';
+	import type { SectionRemoveRequest, SectionUpdateRequest } from '$lib/types';
+	import { createEventDispatcher } from 'svelte';
+	import isEqual from 'lodash.isequal';
 
 	export let floor: string = '';
 	export let originalId: string;
 	export let original: LockerSection;
 	export let isNew = false;
 
+	const dispatch = createEventDispatcher<{
+		remove: SectionRemoveRequest,
+		update: SectionUpdateRequest
+	}>();
 
 	$: readableFloor = floor && floor.length < 2 ? `${floor}F` : floor;
 
-	$: subsections = original?.subsections ?? [];
-	console.log(subsections);
+	let floorInput: string = floor ?? '';
+	let id: string = originalId ?? '';
+	let height: number = original?.height ?? 0;
+	let disabledInput: number = null;
+	let disabledInputInvalid: string;
+	let disabled: number[] = original?.disabled ?? [];
+	let subsections: LockerSubsection[] = original?.subsections ?? [];
+
+	const isNotUppercaseAlphabet = new RegExp('[^A-Z]+');
+	const isNotNumeric = new RegExp('[^0-9]+');
+
+	$: isModified = floor !== floorInput || originalId !== id || original?.height !== height || !isEqual(disabled, original?.disabled ?? []);
+	$: isAppliable = !!floorInput && !!id && !!height &&
+		id.length === 1 && !isNotUppercaseAlphabet.test(id) &&
+		!isNotNumeric.test((floorInput.startsWith('B') && floorInput.length >= 2) ? floorInput.slice(1) : floorInput);
+
+	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
+
+	function isExistingLockerNum(num: number) {
+		return !!subsections.find(({ range }) => range[0] <= num && range[1] >= num);
+	}
+
+	function addDisabled() {
+		if (!disabledInput) {
+			disabledInputInvalid = '값을 입력한 후 추가하세요.';
+			return;
+		}
+		if (disabled.includes(disabledInput)) {
+			disabledInputInvalid = '이미 존재하는 값입니다.';
+			return;
+		}
+		if (!isExistingLockerNum(disabledInput)) {
+			disabledInputInvalid = '이 구역엔 해당 번호를 가진 사물함은 존재하지 않습니다.';
+			return;
+		}
+		disabled = [...disabled, disabledInput];
+	}
+
+	function removeSection() {
+		dispatch('remove', { floor: floorInput, id });
+	}
+
+	function updateSection() {
+		const req: SectionUpdateRequest = { floor: floorInput, id, disabled, height, subsections };
+		dispatch('update', req);
+	}
 </script>
 <div class='wrap'>
 	<div class='editor'>
@@ -25,37 +78,51 @@
 			<h4>{readableFloor} 구역 {originalId} 수정</h4>
 		{/if}
 		<TextInput class='my-2' inputClass='reactive-input' id='floor' label='층' showLabel disabled={!isNew}
-							 value={floor ?? ''} />
+							 bind:value={floorInput} pattern='B?\d+' required invalidClass='text-red-800'
+							 invalidText={floorInput ? '층의 형식은 (B)숫자 형태입니다.' : '이 값은 필수입니다.'} />
 		<TextInput class='my-2' inputClass='reactive-input' id='id' label='구역 이름' showLabel disabled={!isNew}
-							 value={originalId ?? ''} />
+							 bind:value={id} pattern={`[A-Z]{1}`} required invalidClass='text-red-800'
+							 invalidText={id ? '알파벳 대문자 1자만 허용됩니다.' : '이 값은 필수입니다.'} />
+		<NumberInput class='my-2' inputClass='reactive-input' id='height' label='사물함 세로 높이' showLabel
+								 bind:value={height} invalidClass='text-red-800' invalidText='이 값은 필수입니다.' required />
 		<div class='disabled-edit'>
 			<p class='font-bold'>사용 불가 사물함 목록</p>
 			<div class='disabled-input'>
-				<TextInput class='my-2' inputClass='reactive-input' id='disabled' label='사용 불가 사물함 목록' value='' />
-				<button class='disabled-add-btn'>
+				<NumberInput class='my-2' inputClass='reactive-input' id='disabled' label='사용 불가 사물함 목록'
+										 bind:value={disabledInput} invalidClass='hidden' />
+				<button on:click={addDisabled} class='disabled-add-btn'>
 					<Add />
 				</button>
 			</div>
+			{#if disabledInputInvalid}
+				<p class='text-red-800'>{disabledInputInvalid}</p>
+			{/if}
 			<div class='disabled-list'>
-				{#each original?.disabled ?? [] as disabledId}
-					<Tag class='disabled-id bg-gray-400'>{disabledId}</Tag>
+				{#each disabled as disabledId}
+					<Tag class='disabled-id bg-gray-300'>{disabledId}</Tag>
 				{/each}
 			</div>
 		</div>
 		<div class='my-2'>
-			<SubsectionSettings {subsections} />
+			<SubsectionSettings bind:subsections />
 		</div>
 	</div>
 	<div class='actions-wrap'>
 		<hr />
 		<div class='actions'>
 			{#if !isNew}
-				<Button class='bg-red-800 text-white' isIconRight>
+				<Button on:click={removeSection} class='bg-red-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
 					삭제
 					<Delete slot='icon' />
 				</Button>
+				<Button on:click={updateSection} disabled={isSaveDisabled}
+								class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
+					적용
+					<Checkmark slot='icon' />
+				</Button>
 			{:else}
-				<Button class='bg-primary-800 text-white' isIconRight>
+				<Button on:click={updateSection} disabled={isSaveDisabled}
+								class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
 					추가
 					<Add slot='icon' />
 				</Button>
@@ -83,7 +150,7 @@
     }
 
     .disabled-list {
-        @apply py-3 flex flex-wrap;
+        @apply py-3 flex flex-wrap gap-1;
     }
 
     .disabled-add-btn {
