@@ -12,7 +12,7 @@
 
 <style>
     .locker-item {
-        @apply w-44 h-44 border-4 ml-10 mt-7 mb-3 border-gray-300 rounded-3xl cursor-pointer transition-all;
+        @apply w-40 h-40 border-4 ml-14 mb-14 border-gray-300 rounded-3xl cursor-pointer transition-all;
     }
     .locker-item:hover{
         @apply scale-105;
@@ -40,12 +40,12 @@
 
 
     .location-title{
-        @apply font-extrabold text-gray-400 text-2xl text-center my-3;
+        @apply font-extrabold text-gray-400 text-2xl text-center my-3 select-none;
     }
     .divide-line {
         @apply w-4/5 h-[3px] bg-gray-300 ml-auto mr-auto;
     }
     .locker-number {
-        @apply text-7xl font-extrabold text-gray-500 text-center mt-2.5;
+        @apply text-7xl font-extrabold text-gray-500 text-center mt-2.5 select-none;
     }
 </style>
