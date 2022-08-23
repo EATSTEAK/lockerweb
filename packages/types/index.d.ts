@@ -143,6 +143,10 @@ type ServiceConfigUpdateRequest = ConfigUpdateRequest & {
 	};
 };
 
+type ConfigDeleteRequest = {
+	id: string;
+};
+
 type LockerCountResponse = {
 	[departmentId: string]: {
 		[floor: string]: number;

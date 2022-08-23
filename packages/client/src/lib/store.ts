@@ -27,6 +27,7 @@ export function refreshable<T>(
 		subscribe,
 		refresh: () => {
 			if (refresher === undefined) return;
+			set(undefined);
 			const result = refresher();
 			if (typeof result === 'object' && typeof (result as Promise<T>).then === 'function') {
 				(result as Promise<T>).then((v: T) => set(v));

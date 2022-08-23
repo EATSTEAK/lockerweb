@@ -5,16 +5,20 @@
 	export let showLabel: boolean = false;
 	export let labelClass: string = '';
 	export let selectClass: string = '';
+	export let invalidClass: string = '';
+	export let invalidText: string = '값을 입력하세요.';
 	let clazz = '';
 	export { clazz as class };
 
 </script>
 
 <div class={clazz}>
-	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''}</label>
-	<select id={id} class={selectClass} {value} {...$$restProps}>
+	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''} <span class:hidden={!$$props.required}
+																																						 className='text-red-800'>*</span></label>
+	<select id={id} class={selectClass} bind:value {...$$restProps}>
 		<slot />
 	</select>
+	<p class={invalidClass}>{invalidText}</p>
 </div>
 
 <style>
@@ -44,5 +48,13 @@
 
     select:disabled {
         @apply bg-gray-300 text-gray-400;
+    }
+
+    p {
+        @apply mt-1 hidden;
+    }
+
+    input:invalid ~ p {
+        @apply block;
     }
 </style>

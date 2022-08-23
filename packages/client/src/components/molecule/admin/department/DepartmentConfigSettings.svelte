@@ -1,13 +1,60 @@
 <script lang='ts'>
 	import Button from '../../../atom/Button.svelte';
 	import SaveEdit from '../../../../icons/SaveEdit.svelte';
-	import Delete from '../../../../icons/Delete.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
 	import DateTimeInput from '../../../atom/form/DateTimeInput.svelte';
 	import Add from '../../../../icons/Add.svelte';
+	import isEqual from 'lodash.isequal';
+	import { createEventDispatcher } from 'svelte';
+	import Delete from '../../../../icons/Delete.svelte';
 
 	export let original: DepartmentConfig;
 	export let isNew = false;
+
+	const dispatch = createEventDispatcher<{
+		delete: ConfigDeleteRequest,
+		update: DepartmentConfigUpdateRequest
+	}>();
+
+	let id: string;
+	let name: string;
+	let activateFrom: Date;
+	let activateTo: Date;
+	let contact: string;
+
+	function initializeValues() {
+		id = original?.id ?? '';
+		name = original?.name ?? '';
+		activateFrom = original?.activateFrom ? new Date(original?.activateFrom) : undefined;
+		activateTo = original?.activateTo ? new Date(original?.activateTo) : undefined;
+		contact = original?.contact ?? '';
+	}
+
+	$: if (original || isNew) initializeValues();
+
+	$: newConfig = {
+		id,
+		name,
+		...(activateFrom && { activateFrom: activateFrom.toISOString() }),
+		...(activateTo && { activateTo: activateTo.toISOString() }),
+		...(contact && { contact })
+	};
+
+	$: isModified = !isEqual(original, newConfig);
+
+	const isNotAlphabet = new RegExp('\\W+');
+	$: isAppliable = id && name && !isNotAlphabet.test(id);
+	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
+
+	function deleteDepartment() {
+		// TODO: Run this function after Confirmation modal.
+		dispatch('delete', { id });
+	}
+
+	function updateDepartment() {
+		// TODO: Run this function after Confirmation modal.
+		dispatch('update', newConfig);
+	}
 </script>
 
 <div class='wrap'>
@@ -18,35 +65,39 @@
 			<h4>{original.name} 수정</h4>
 		{/if}
 		<TextInput class='my-2' inputClass='reactive-input' id='id' label='학부 ID' showLabel disabled={!isNew}
-							 value={original?.id ?? ''} />
+							 bind:value={id} required={isNew} pattern='\w+' invalidClass='text-red-800'
+							 invalidText={id ? 'ID는 알파벳 혹은 _ 만 허용됩니다.' : '이 값은 필수입니다.'} />
 		<TextInput class='my-2' inputClass='reactive-input' id='name' label='학부 이름' showLabel
-							 value={original?.name ?? ''} />
+							 bind:value={name} required invalidClass='text-red-800' invalidText='이 값은 필수입니다.' />
 		<DateTimeInput class='my-2' inputClass='reactive-input' id='activate_from' label='예약 시작일' showLabel
-									 value={original?.activateFrom ? new Date(original?.activateFrom) : undefined} />
+									 bind:value={activateFrom} invalidClass='text-red-800' />
 		<DateTimeInput class='my-2' inputClass='reactive-input' id='activate_to' label='예약 종료일' showLabel
-									 value={original?.activateTo ? new Date(original?.activateTo) : undefined} />
+									 bind:value={activateTo} invalidClass='text-red-800' />
 		<TextInput class='my-2' inputClass='reactive-input' id='contact' label='학부 연락처' showLabel
-							 value={original?.contact ?? ''} />
+							 bind:value={contact} />
 	</div>
 	<div class='actions-wrap'>
 		<hr />
 		<div class='actions'>
 			{#if !isNew}
-				<Button class='bg-red-800 text-white' isIconRight>
+				<Button on:click={deleteDepartment} class='bg-red-800 text-white' isIconRight>
 					삭제
 					<Delete slot='icon' />
 				</Button>
-				<Button class='bg-primary-800 text-white' isIconRight>
+			{/if}
+			{#if !isNew}
+				<Button disabled={isSaveDisabled} on:click={updateDepartment}
+								class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
 					저장
 					<SaveEdit slot='icon' />
 				</Button>
 			{:else}
-				<Button class='bg-primary-800 text-white' isIconRight>
+				<Button disabled={isSaveDisabled} on:click={updateDepartment}
+								class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
 					추가
 					<Add slot='icon' />
 				</Button>
 			{/if}
-
 		</div>
 	</div>
 </div>
