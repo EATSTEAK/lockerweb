@@ -2,7 +2,7 @@
 import SelectionListItemGroup from "../../atom/SelectionListItemGroup.svelte";
 import SelectionListItem from "../../atom/SelectionListItem.svelte";
 import LockerItem from "./LockerItem.svelte";
-import Modal from "../../atom/Modal.svelte";
+import Modal from "../Modal.svelte";
 // import {lockerCount} from "../login/LockerStatus.svelte";
 
 let LockerGirdHeight: number | undefined = 4;

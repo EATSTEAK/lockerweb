@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Button from "./Button.svelte";
+    import Button from "../atom/Button.svelte";
     import Dismiss from "../../icons/brands/Dismiss.svelte";
 </script>
 

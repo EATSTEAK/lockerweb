@@ -10,7 +10,7 @@
     import UserReservedLocker from "../components/molecule/reserve/UserReservedLocker.svelte";
     import Logout from "../icons/Logout.svelte";
     import LockerRserveInfo from "../components/molecule/reserve/LockerReserveInfo.svelte";
-    import Modal from "../components/atom/Modal.svelte";
+    import Modal from "../components/molecule/Modal.svelte";
 
     let callbackUrl = undefined;
     let countData: LockerCountResponse;
