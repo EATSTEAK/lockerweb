@@ -5,8 +5,12 @@
 	import Add from '../../../../icons/Add.svelte';
 	import Checkmark from '../../../../icons/Checkmark.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import type { BuildingRemoveRequest, BuildingUpdateRequest } from '$lib/types';
 
-	const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher<{
+		remove: BuildingRemoveRequest,
+		update: BuildingUpdateRequest
+	}>();
 
 	export let original: Building;
 	export let isNew = false;
@@ -22,12 +26,13 @@
 	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
 
 
-	function deleteBuilding() {
-		dispatch('delete', { id });
+	function removeBuilding() {
+		dispatch('remove', { id });
 	}
 
 	function updateBuilding() {
-		dispatch('update', { id, name });
+		const req: BuildingUpdateRequest = { id, name };
+		dispatch('update', req);
 	}
 </script>
 
@@ -48,16 +53,18 @@
 		<hr />
 		<div class='actions'>
 			{#if !isNew}
-				<Button class='bg-red-800 text-white' isIconRight>
+				<Button on:click={removeBuilding} class='bg-red-800 text-white' isIconRight>
 					삭제
 					<Delete slot='icon' />
 				</Button>
-				<Button disabled={isSaveDisabled} class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
+				<Button on:click={updateBuilding} disabled={isSaveDisabled}
+								class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
 					적용
 					<Checkmark slot='icon' />
 				</Button>
 			{:else}
-				<Button disabled={isSaveDisabled} class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
+				<Button on:click={updateBuilding} disabled={isSaveDisabled}
+								class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
 					추가
 					<Add slot='icon' />
 				</Button>
