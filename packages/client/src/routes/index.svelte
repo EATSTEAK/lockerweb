@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Entry from '../components/molecule/Entry.svelte';
+    import Entry from '../components/molecule/login/Entry.svelte';
     import Button from '../components/atom/Button.svelte';
     import Soongsil from '../icons/Soongsil.svelte';
-    import DepartmentLockerInfo from '../components/molecule/LockerStatus.svelte';
+    import DepartmentLockerInfo from '../components/molecule/login/LockerStatus.svelte';
     import ChevronDown from '../icons/ChevronDown.svelte';
     import {browser} from '$app/env';
     import {getAuthorization} from '$lib/auth';

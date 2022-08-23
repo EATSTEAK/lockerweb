@@ -37,7 +37,7 @@
 
 <style>
     a {
-        @apply cursor-pointer flex justify-between rounded-lg shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 transition-all ease-in;
+        @apply cursor-pointer select-none flex justify-between rounded-[13px] shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 transition-all ease-in;
     }
 
     a[disabled] {
