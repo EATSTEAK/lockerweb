@@ -17,8 +17,12 @@
             <slot />
         </div>
         <div class="button-section">
-            <div class="cancel-btn">취소</div>
-            <div class="confirm-btn">확인</div>
+            <Button isIconRight="{false}" class="confirm-btn bg-[#7088DF] text-2xl text-white">
+                확인
+            </Button>
+            <Button isIconRight="{false}" class="cancel-btn bg-[#D8D8D8] text-2xl text-gray-600 px-3">
+                취소
+            </Button>
         </div>
 </dialog>
 <div class="background"></div>
@@ -35,7 +39,7 @@
         -translate-y-1/2
         top-1/2
 
-        rounded-[20px] fixed z-30
+        rounded-[19px] fixed z-30
         flex-col
         overflow-hidden
 
@@ -46,7 +50,7 @@
     }
 
     .title-section {
-        @apply w-full h-[16%] px-2 relative;
+        @apply w-full h-[16%] px-2 relative select-none;
     }
     .modal-title {
         @apply text-[3rem] text-gray-700 pt-1;
@@ -75,21 +79,14 @@
         @apply flex justify-end gap-3 pr-3;
     }
 
-    .confirm-btn {
-        @apply h-[52px] text-white text-center pt-3 w-fit px-6 bg-[#7088DF] rounded-[15px] cursor-pointer select-none text-2xl font-bold transition-all;
+    :global(.confirm-btn) {
+        @apply h-[53px] pt-[10px]
     }
-    .confirm-btn:hover{
-        @apply drop-shadow-xl bg-[#5874D6];
+    :global(.cancel-btn) {
+        @apply h-[53px] pt-[10px] px-6 bg-[#D8D8D8] border-[1px] border-[#CECECE] cursor-pointer text-2xl font-bold;
     }
-    .confirm-btn:active{
-        @apply scale-[0.97];
-    }
-
-    .cancel-btn {
-        @apply h-[53px] text-gray-600 text-center pt-[10px] w-fit px-6 bg-[#D8D8D8] border-[1px] border-[#CECECE] rounded-[15px] cursor-pointer select-none text-2xl font-bold transition-all;
-    }
-    .cancel-btn:hover{
-        @apply bg-[#CFCFCF];
+    :global(.cancel-btn:hover){
+        @apply bg-[#EDEDED];
     }
     .background {
         @apply w-screen h-screen z-10 fixed bg-black opacity-50;
