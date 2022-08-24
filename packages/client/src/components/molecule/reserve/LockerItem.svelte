@@ -1,13 +1,14 @@
 <script lang="ts">
-
+  export let lockerLocation: string;
+  export let lockerNumber: number;
 </script>
 
 <div class="locker-item">
-    <div class="location-title">
-        ·&nbsp&nbsp&nbsp A구역&nbsp&nbsp&nbsp·
-    </div>
-    <div class="divide-line"></div>
-    <div class="locker-number">01</div>
+  <div class="location-title">
+      <p>{lockerLocation}</p><p>구역</p>
+  </div>
+  <div class="divide-line"></div>
+  <div class="locker-number">{lockerNumber}</div>
 </div>
 
 <style>
