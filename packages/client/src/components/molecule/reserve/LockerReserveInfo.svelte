@@ -3,12 +3,10 @@
   import SelectionListItem from "../../atom/SelectionListItem.svelte";
   import LockerItem from "./LockerItem.svelte";
   import Modal from "../Modal.svelte";
-  // import {lockerCount} from "../login/LockerStatus.svelte";
 
   let lockerGridHeight: number | undefined = 5;
   let lockerRangeCount: number | undefined = 40;
-  let lockerGridWidthScale: number | undefined = 5.05 * (lockerRangeCount / lockerGridHeight);
-  console.log(lockerGridWidthScale);
+  let lockerGridWidthScale: number | undefined = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
   let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
 </script>
 
