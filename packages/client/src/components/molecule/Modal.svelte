@@ -99,15 +99,11 @@
     }
 
     .close-btn {
-        @apply w-[70px] h-[50px] bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center;
+        @apply w-14 h-10 bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center;
     }
 
     .close-btn:hover {
-        @apply bg-[#7088DF] text-white drop-shadow-2xl translate-x-[2px];
-    }
-
-    .close-btn:hover .dismiss-icon-wrap {
-        filter: none;
+        @apply bg-[#7088DF] text-white;
     }
 
 
