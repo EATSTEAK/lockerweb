@@ -10,6 +10,8 @@
 
 	export let primaryText: string = '확인';
 	export let secondaryText: string = '취소';
+	export let isPrimaryBtnIconRight = false;
+	export let isSecondaryBtnIconRight = false;
 
 	let clazz = '';
 	export { clazz as class };
@@ -21,7 +23,7 @@
 	$: if (open) {
 		if (!noBackdrop && dialog) dialog.showModal();
 	} else {
-		if(!noBackdrop && dialog) dialog.close();
+		if (!noBackdrop && dialog) dialog.close();
 	}
 
 	function closeModal() {
@@ -38,7 +40,7 @@
 
 	function outClick(event) {
 		const rect = dialog.getBoundingClientRect();
-		const isInDialog=(rect.top <= event.clientY && event.clientY <= rect.top + rect.height
+		const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
 			&& rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
 		if (!isInDialog) {
 			closeModal();
@@ -62,10 +64,22 @@
 		</div>
 		<div class='section-actions'>
 			<slot name='actions'>
-				<Button on:click={() => click('secondary')} class='secondary-btn bg-[#D8D8D8] text-gray-600'>
+				<Button on:click={() => click('secondary')} class='secondary-btn bg-[#D8D8D8] text-gray-600'
+								isIconRight={isSecondaryBtnIconRight}>
+					{#if $$slots.secondaryIcon}
+						<div slot='icon'>
+							<slot name='secondaryIcon' />
+						</div>
+					{/if}
 					{secondaryText}
 				</Button>
-				<Button on:click={() => click('primary')} class='primary-btn bg-[#7088DF] text-white'>
+				<Button on:click={() => click('primary')} class='primary-btn bg-[#7088DF] text-white'
+								isIconRight={isPrimaryBtnIconRight}>
+					{#if $$slots.primaryIcon}
+						<div slot='icon'>
+							<slot name='primaryIcon' />
+						</div>
+					{/if}
 					{primaryText}
 				</Button>
 			</slot>
@@ -83,7 +97,7 @@
         overflow-hidden
         transition-all
         shadow-xl
-				md:w-[480px];
+        md:w-[480px];
     }
 
     .wrap {
@@ -127,19 +141,19 @@
         @apply bg-black opacity-30;
     }
 
-		dialog[open] {
-			animation: show 0.1s ease normal;
-		}
+    dialog[open] {
+        animation: show 0.1s ease normal;
+    }
 
-		@keyframes show {
-				from {
-						transform: translateY(-5%);
-						opacity: 0;
-				}
+    @keyframes show {
+        from {
+            transform: translateY(-5%);
+            opacity: 0;
+        }
 
-				to {
-						transform: translateY(0%);
-						opacity: 1;
-				}
-		}
+        to {
+            transform: translateY(0%);
+            opacity: 1;
+        }
+    }
 </style>
