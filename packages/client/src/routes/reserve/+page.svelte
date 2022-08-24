@@ -47,16 +47,16 @@
 
 <style>
     .root {
-        @apply flex flex-col md:flex-row h-screen overflow-hidden;
+        @apply flex flex-col md:flex-row w-screen h-screen overflow-hidden;
     }
     .logo {
         @apply top-2;
     }
     .side-wrap {
-        @apply bg-gray-200 md:min-w-[380px] md:w-[380px] flex flex-col justify-between min-h-screen px-10 pb-5 pt-10;
+        @apply bg-gray-200 w-[380px] md:min-w-[380px] md:w-[380px] flex flex-col justify-between min-h-screen px-10 pb-5 pt-10;
     }
     .locker-reserve-info-wrap {
-        @apply w-full;
+        @apply grow overflow-scroll;
     }
     .profile-wrap {
         @apply flex flex-col gap-10;
