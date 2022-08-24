@@ -4,7 +4,7 @@
 	import Edit from '../../../../icons/Edit.svelte';
 	import TextInput from '../../../atom/form/TextInput.svelte';
 	import Checkbox from '../../../atom/form/Checkbox.svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import Pagination from '../../../atom/Pagination.svelte';
 	import BookmarkOff from '../../../../icons/BookmarkOff.svelte';
 	import Delete from '../../../../icons/Delete.svelte';
@@ -54,7 +54,7 @@
 		const start = currentPage * itemsPerPage;
 		if (filter) {
 			// 검색어가 존재할 경우,  id(학번), name(이름), lockerId(사물함 번호) 중에 검색어가 존재하는지 확인
-			const filteredUsers = users.filter(u => u.id.includes(filter) || u.name.includes(filter) || (u.lockerId && u.lockerId.includes(filter)));
+			const filteredUsers = users.filter(user => user.id.includes(filter) || user.name.includes(filter) || (user.lockerId && user.lockerId.includes(filter)));
 			return filteredUsers.slice(start, start + itemsPerPage);
 		}
 		return users.slice(start, start + itemsPerPage);
@@ -62,18 +62,27 @@
 </script>
 <div class='wrap'>
 	{#if selected.length}
-		<div in:fly={{ y: 10, duration: 100 }} out:fly={{ y: 10, duration: 100 }} on:outrostart={() => batchActionOut = false}
+		<div in:fly={{ y: 10, duration: 100 }} out:fly={{ y: 10, duration: 100 }}
+				 on:outrostart={() => batchActionOut = false}
 				 on:outroend={() => batchActionOut = true} class='batch'>
 			<div class='selections-text'>{selected.length}개 선택됨</div>
 			<div class='batch-actions'>
-				<button class='batch-btn'><BookmarkOff />예약 일괄 취소</button>
-				<button class='batch-btn'><Delete />삭제</button>
+				<button class='batch-btn'>
+					<BookmarkOff />
+					예약 일괄 취소
+				</button>
+				<button class='batch-btn'>
+					<Delete />
+					삭제
+				</button>
 			</div>
 		</div>
 	{:else if batchActionOut}
 		<div class='actions'>
 			<div class='search'>
-				<div class='flex justify-center items-center px-2 text-gray-500'><Search class='w-6 h-6' /></div>
+				<div class='flex justify-center items-center px-2 text-gray-500'>
+					<Search class='w-6 h-6' />
+				</div>
 				<TextInput id='search' label='검색' class='grow' bind:value={filter} placeholder='검색하기...' />
 			</div>
 		</div>
@@ -151,21 +160,21 @@
         @apply rounded-t-md bg-primary-800 text-white leading-6 py-2 px-3 border border-transparent flex justify-between;
     }
 
-		.batch-actions {
-				@apply flex -m-2;
-		}
+    .batch-actions {
+        @apply flex -m-2;
+    }
 
-		.batch-btn {
-				@apply rounded-xl bg-primary-800 flex gap-1 p-2;
-		}
+    .batch-btn {
+        @apply rounded-xl bg-primary-800 flex gap-1 p-2;
+    }
 
-		.batch-btn:hover {
-				@apply brightness-90;
-		}
+    .batch-btn:hover {
+        @apply brightness-90;
+    }
 
-		.batch-btn:active {
-				@apply brightness-75;
-		}
+    .batch-btn:active {
+        @apply brightness-75;
+    }
 
     .actions {
         @apply rounded-t-md bg-gray-100 flex w-full;

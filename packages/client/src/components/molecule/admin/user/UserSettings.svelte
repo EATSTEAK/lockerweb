@@ -16,10 +16,10 @@
 	$: departmentUsers = selectedTab ? getUsersByDepartment(selectedTab, users) : [];
 
 	function getUsersByDepartment(department: string, users: Array<User>) {
-		if(departments.map(d => d.id).includes(department)) {
-			return users.filter(u => u.department === department);
+		if (departments.map(dept => dept.id).includes(department)) {
+			return users.filter(user => user.department === department);
 		}
-		return users.filter(u => !departments.map(d => d.id).includes(u.department));
+		return users.filter(user => !departments.map(dept => dept.id).includes(user.department));
 	}
 </script>
 
@@ -43,7 +43,7 @@
 				<TabItem id={department.id}>{department.name}</TabItem>
 			{/each}
 			<!-- 존재하지 않는 학부를 가진 사용자가 있을 경우 -->
-			{#if users.filter(u => !departments.map(d => d.id).includes(u.department)).length}
+			{#if users.filter(user => !departments.map(dept => dept.id).includes(user.department)).length}
 				<TabItem id='unknown'>알 수 없음</TabItem>
 			{/if}
 		</TabGroup>
