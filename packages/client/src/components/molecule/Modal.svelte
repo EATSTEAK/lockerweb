@@ -66,20 +66,12 @@
 			<slot name='actions'>
 				<Button on:click={() => click('secondary')} class='secondary-btn bg-[#D8D8D8] text-gray-600'
 								isIconRight={isSecondaryBtnIconRight}>
-					{#if $$slots.secondaryIcon}
-						<div slot='icon'>
-							<slot name='secondaryIcon' />
-						</div>
-					{/if}
+					<slot slot='icon' name='secondaryIcon' />
 					{secondaryText}
 				</Button>
 				<Button on:click={() => click('primary')} class='primary-btn bg-[#7088DF] text-white'
 								isIconRight={isPrimaryBtnIconRight}>
-					{#if $$slots.primaryIcon}
-						<div slot='icon'>
-							<slot name='primaryIcon' />
-						</div>
-					{/if}
+					<slot slot='icon' name='primaryIcon' />
 					{primaryText}
 				</Button>
 			</slot>
