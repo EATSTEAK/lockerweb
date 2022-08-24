@@ -64,7 +64,7 @@
     }
 
     button:focus {
-        @apply brightness-75;
+        @apply outline-1 outline-primary-600;
     }
 
     .active {
