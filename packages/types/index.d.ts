@@ -13,7 +13,7 @@ type User = {
 	isAdmin: boolean;
 	department: string;
 	lockerId?: string;
-	claimedUntil?: string;
+	claimedUntil?: number;
 };
 
 type UserUpdateRequest = {
@@ -22,7 +22,7 @@ type UserUpdateRequest = {
 	isAdmin?: boolean;
 	department?: string;
 	lockerId?: string | null;
-	claimedUntil?: string | null;
+	claimedUntil?: number | null;
 };
 
 type UserDeleteRequest = {
@@ -34,7 +34,7 @@ type UserDao = DaoData & {
 	iA: { BOOL: boolean };
 	d: { S: string };
 	lockerId?: { S: string };
-	cU?: { S: string };
+	cU?: { N: string };
 };
 
 type AccessTokenInfo = {
