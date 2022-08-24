@@ -38,10 +38,14 @@
 		}
 	}
 
-	function outClick(event) {
+	function outClick(event: MouseEvent) {
 		const rect = dialog.getBoundingClientRect();
+		const doc = dialog.ownerDocument;
+		const win = doc.defaultView || doc.parentWindow;
+		if (event.view === win) return;
 		const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
 			&& rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+		console.log(isInDialog);
 		if (!isInDialog) {
 			closeModal();
 		}
