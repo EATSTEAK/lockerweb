@@ -13,7 +13,14 @@
 
 	let selectedTab;
 
-	$: departmentUsers = selectedTab ? users.filter((user) => user.department === selectedTab) : [];
+	$: departmentUsers = selectedTab ? getUsersByDepartment(selectedTab, users) : [];
+
+	function getUsersByDepartment(department: string, users: Array<User>) {
+		if(departments.map(d => d.id).includes(department)) {
+			return users.filter(u => u.department === department);
+		}
+		return users.filter(u => !departments.map(d => d.id).includes(u.department));
+	}
 </script>
 
 <div class='wrap'>
@@ -35,6 +42,10 @@
 			{#each departments as department}
 				<TabItem id={department.id}>{department.name}</TabItem>
 			{/each}
+			<!-- 존재하지 않는 학부를 가진 사용자가 있을 경우 -->
+			{#if users.filter(u => !departments.map(d => d.id).includes(u.department)).length}
+				<TabItem id='unknown'>알 수 없음</TabItem>
+			{/if}
 		</TabGroup>
 		<UserDatatable users={departmentUsers} />
 	</div>
