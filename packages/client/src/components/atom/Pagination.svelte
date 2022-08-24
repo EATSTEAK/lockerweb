@@ -3,7 +3,7 @@
 	import CaretLeft from '../../icons/CaretLeft.svelte';
 	import CaretRight from '../../icons/CaretRight.svelte';
 
-	export let totalEntries: number;
+	export let totalEntries: number = 0;
 	export let currentPage: number = 0;
 	export let itemsPerPage: number = 25;
 
@@ -12,6 +12,14 @@
 	$: if (itemsPerPageStr) itemsPerPage = parseInt(itemsPerPageStr);
 
 	$: totalPage = totalEntries / itemsPerPage;
+
+	function prevPage() {
+		currentPage = currentPage - 1;
+	}
+
+	function nextPage() {
+		currentPage = currentPage + 1;
+	}
 </script>
 
 <div class='wrap'>
@@ -30,11 +38,11 @@
 		class='font-bold'>{itemsPerPage * (currentPage + 1) >= totalEntries ? totalEntries : itemsPerPage * (currentPage + 1)}</span>
 	</div>
 	<div class='pagination'>
-		<button class='pagination-btn' disabled={currentPage < 1}>
+		<button on:click={prevPage} class='pagination-btn' disabled={currentPage < 1}>
 			<CaretLeft />
 		</button>
 		<div class='page-indicator'>{currentPage + 1}</div>
-		<button class='pagination-btn' disabled={currentPage + 1 >= totalPage}>
+		<button on:click={nextPage} class='pagination-btn' disabled={currentPage + 1 >= totalPage}>
 			<CaretRight />
 		</button>
 	</div>
