@@ -95,7 +95,7 @@
 
     .locker-grid {
         @apply flex flex-row flex-wrap mt-5 ml-auto mr-auto;
-        crollbar-color: #c2c2c2 #e0e0e0;
+        scrollbar-color: #c2c2c2 #e0e0e0;
         scrollbar-width: thin;
     }
 </style>
