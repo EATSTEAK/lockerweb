@@ -1,9 +1,8 @@
 <script lang='ts'>
 	export let id: string;
 	export let checked: boolean;
-	export let label: string;
+	export let label: string = null;
 	export let showLabel: boolean = false;
-	export let disabled: boolean = false;
 	export let labelClass: string = '';
 	export let inputClass: string = '';
 	let clazz = '';
@@ -14,6 +13,8 @@
 <div class={clazz}>
 	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''}</label>
 	<input id={id} type='checkbox'
+				 on:change
+				 on:input
 				 class={inputClass}
 				 bind:checked
 				 {...$$restProps}
