@@ -1,23 +1,23 @@
 <script lang='ts'>
-	import Soongsil from '../icons/Soongsil.svelte';
-	import Button from '../components/atom/Button.svelte';
-	import ArrowExportLtr from '../icons/ArrowExportLtr.svelte';
-	import MailInbox from '../icons/MailInbox.svelte';
-	import Profile from '../components/molecule/Profile.svelte';
-	import SelectionListItemGroup from '../components/atom/SelectionListItemGroup.svelte';
-	import SelectionListItem from '../components/atom/SelectionListItem.svelte';
-	import UserSettings from '../components/molecule/admin/user/UserSettings.svelte';
-	import ServiceSettings from '../components/molecule/admin/service/ServiceSettings.svelte';
+	import Soongsil from '../../icons/Soongsil.svelte';
+	import Button from '../../components/atom/Button.svelte';
+	import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
+	import MailInbox from '../../icons/MailInbox.svelte';
+	import Profile from '../../components/molecule/Profile.svelte';
+	import SelectionListItemGroup from '../../components/atom/SelectionListItemGroup.svelte';
+	import SelectionListItem from '../../components/atom/SelectionListItem.svelte';
+	import UserSettings from '../../components/molecule/admin/user/UserSettings.svelte';
+	import ServiceSettings from '../../components/molecule/admin/service/ServiceSettings.svelte';
 	import { user } from '$lib/store';
-	import DepartmentSettings from '../components/molecule/admin/department/DepartmentSettings.svelte';
-	import PeopleSettings from '../icons/PeopleSettings.svelte';
-	import Settings from '../icons/Settings.svelte';
-	import ContentSettings from '../icons/ContentSettings.svelte';
+	import DepartmentSettings from '../../components/molecule/admin/department/DepartmentSettings.svelte';
+	import PeopleSettings from '../../icons/PeopleSettings.svelte';
+	import Settings from '../../icons/Settings.svelte';
+	import ContentSettings from '../../icons/ContentSettings.svelte';
 	import { browser } from '$app/env';
 	import { fetchWithAuth } from '$lib/auth';
 	import { variables } from '$lib/variables';
-	import LoadingScreen from '../components/atom/LoadingScreen.svelte';
-	import ErrorScreen from '../components/atom/ErrorScreen.svelte';
+	import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
+	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 
 
 	let selectedTab;

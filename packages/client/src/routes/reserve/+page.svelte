@@ -1,16 +1,16 @@
 <script lang="ts">
-    import ChevronDown from '../icons/ChevronDown.svelte';
+    import ChevronDown from '../../icons/ChevronDown.svelte';
     import type { LockerCount} from "$lib/types";
-    import SelectionListItemGroup from "../components/atom/SelectionListItemGroup.svelte";
-    import SelectionListItem from "../components/atom/SelectionListItem.svelte";
-    import Profile from "../components/molecule/Profile.svelte";
+    import SelectionListItemGroup from "../../components/atom/SelectionListItemGroup.svelte";
+    import SelectionListItem from "../../components/atom/SelectionListItem.svelte";
+    import Profile from "../../components/molecule/Profile.svelte";
     import {user} from "$lib/store.js";
-    import Soongsil from "../icons/Soongsil.svelte";
-    import Button from "../components/atom/Button.svelte";
-    import UserReservedLocker from "../components/molecule/reserve/UserReservedLocker.svelte";
-    import Logout from "../icons/Logout.svelte";
-    import LockerRserveInfo from "../components/molecule/reserve/LockerReserveInfo.svelte";
-    import Modal from "../components/molecule/Modal.svelte";
+    import Soongsil from "../../icons/Soongsil.svelte";
+    import Button from "../../components/atom/Button.svelte";
+    import UserReservedLocker from "../../components/molecule/reserve/UserReservedLocker.svelte";
+    import Logout from "../../icons/Logout.svelte";
+    import LockerRserveInfo from "../../components/molecule/reserve/LockerReserveInfo.svelte";
+    import Modal from "../../components/molecule/Modal.svelte";
 
     let callbackUrl = undefined;
     let countData: LockerCountResponse;
