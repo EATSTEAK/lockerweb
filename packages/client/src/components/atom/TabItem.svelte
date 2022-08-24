@@ -52,7 +52,7 @@
 
 <style>
     button {
-        @apply bg-white text-gray-800 box-border rounded-md transition-all p-4 outline-0 outline-none;
+        @apply bg-white text-gray-800 box-border rounded-xl transition-all p-4 outline-0 outline-none;
     }
 
     button:hover {
