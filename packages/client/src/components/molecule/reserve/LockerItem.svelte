@@ -46,7 +46,7 @@
 
 
     .location-title {
-        @apply flex mr-auto ml-auto font-normal text-xs text-gray-400 mt-[4px] mx-1 text-center mb-auto select-none;
+        @apply flex mr-auto ml-auto font-normal text-xs text-gray-400 mt-1 mx-1 text-center mb-auto select-none;
     }
 
     .divide-line {
