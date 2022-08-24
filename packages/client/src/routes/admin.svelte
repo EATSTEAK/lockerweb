@@ -16,6 +16,8 @@
 	import { browser } from '$app/env';
 	import { fetchWithAuth } from '$lib/auth';
 	import { variables } from '$lib/variables';
+	import LoadingScreen from '../components/atom/LoadingScreen.svelte';
+	import ErrorScreen from '../components/atom/ErrorScreen.svelte';
 
 
 	let selectedTab;
@@ -77,11 +79,21 @@
 	<div class='dashboard'>
 		{#if selectedTab === "user"}
 			{#await userPromise}
-				로드중
+				<div class='user-screen-wrap'>
+					<div class='title'>
+						<h3>사용자 설정</h3>
+					</div>
+					<LoadingScreen class='min-h-[32rem] md:rounded-md' />
+				</div>
 			{:then users}
 				<UserSettings {users} />
 			{:catch err}
-				오류
+				<div class='user-screen-wrap'>
+					<div class='title'>
+						<h3>사용자 설정</h3>
+					</div>
+					<ErrorScreen class='min-h-[32rem] md:rounded-md' />
+				</div>
 			{/await}
 		{:else if selectedTab === "service"}
 			<ServiceSettings />
@@ -110,6 +122,14 @@
 
     .dashboard {
         @apply grow h-screen md:overflow-y-scroll bg-gray-100;
+    }
+
+    .user-screen-wrap {
+        @apply my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch;
+    }
+
+    .user-screen-wrap .title {
+        @apply mx-6 md:mx-0 flex flex-wrap w-full;
     }
 
     .logo {
