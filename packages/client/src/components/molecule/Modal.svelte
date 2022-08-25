@@ -70,13 +70,13 @@
 		<div class='section-actions'>
 			<slot name='actions'>
 				<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
-								class='secondary-btn bg-[#D8D8D8] text-gray-600'
+								class='secondary-btn bg-[#D8D8D8] text-gray-600 [&[disabled]]:opacity-50'
 								isIconRight={isSecondaryBtnIconRight}>
 					<slot slot='icon' name='secondaryIcon' />
 					{secondaryText}
 				</Button>
 				<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
-								class='primary-btn bg-[#7088DF] text-white'
+								class='primary-btn bg-[#7088DF] text-white [&[disabled]]:opacity-50'
 								isIconRight={isPrimaryBtnIconRight}>
 					<slot slot='icon' name='primaryIcon' />
 					{primaryText}
