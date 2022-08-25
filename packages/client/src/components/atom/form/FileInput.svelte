@@ -1,9 +1,10 @@
 <script lang='ts'>
 	import Button from '../Button.svelte';
 	import ArrowUpload from '../../../icons/ArrowUpload.svelte';
+	import Document from '../../../icons/Document.svelte';
 
 	export let id: string;
-	export let files;
+	export let files: FileList;
 	export let label: string;
 	export let multiple = false;
 	export let showLabel: boolean = false;
@@ -25,7 +26,7 @@
 																																		class='text-red-800'>*</span></p>
 			<Button class='bg-primary-800 text-white' isIconRight>
 				<ArrowUpload slot='icon' />
-				{#if !multiple && files.length}
+				{#if !multiple && files && files.length}
 					다시 업로드
 				{:else}
 					파일 업로드
@@ -39,11 +40,14 @@
 				 bind:value
 				 {...$$restProps}
 	/>
-	{#each files as file}
-		<div>
-			{file.name}
-		</div>
-	{/each}
+	{#if files}
+		{#each files ?? [] as file, index}
+			<div class='file-item'>
+				<Document class='w-5 h-5' />
+				<div>{file.name}</div>
+			</div>
+		{/each}
+	{/if}
 	<p class={`invalid ${invalidClass}`}>{invalidText}</p>
 </div>
 
@@ -86,6 +90,14 @@
 
     label ~ input:disabled {
         @apply bg-gray-300 text-gray-400;
+    }
+
+    .file-item {
+        @apply flex flex-row gap-1 p-1 rounded-xl bg-gray-300 text-sm select-none text-gray-700 items-center;
+    }
+
+    .file-item > div {
+        @apply grow;
     }
 
     p.invalid {
