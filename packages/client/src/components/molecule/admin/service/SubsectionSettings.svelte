@@ -11,6 +11,10 @@
 
 	let newSubsections: LockerSubsection[] = [...subsections];
 
+	$: if (subsections) {
+		newSubsections = [...subsections];
+	}
+
 	function addSubsection() {
 		newSubsections = [...newSubsections, { range: [0, 0], department: '' }];
 	}

@@ -31,6 +31,10 @@
 	let disabled: number[] = original?.disabled ?? [];
 	let subsections: LockerSubsection[] = original?.subsections ?? [];
 
+	$: if ((floor && originalId) || isNew) {
+		initializeValues();
+	}
+
 	const isNotUppercaseAlphabet = new RegExp('[^A-Z]+');
 	const isNotNumeric = new RegExp('[^0-9]+');
 
@@ -40,6 +44,16 @@
 		!isNotNumeric.test((floorInput.startsWith('B') && floorInput.length >= 2) ? floorInput.slice(1) : floorInput);
 
 	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
+
+	function initializeValues() {
+		floorInput = floor ?? '';
+		id = originalId ?? '';
+		height = original?.height ?? 0;
+		disabledInput = null;
+		disabledInputInvalid = undefined;
+		disabled = original?.disabled ?? [];
+		subsections = original?.subsections ?? [];
+	}
 
 	function isExistingLockerNum(num: number) {
 		return !!subsections.find(({ range }) => range[0] <= num && range[1] >= num);
