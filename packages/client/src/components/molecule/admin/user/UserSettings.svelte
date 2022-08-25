@@ -118,7 +118,6 @@
 	function exportUser(evt: CustomEvent<{ department: string; reservedOnly: boolean; }>) {
 		const { department, reservedOnly } = evt.detail;
 		userExportModalOpen = false;
-		console.log(department, reservedOnly);
 		const readableUsers: ReadableUser[] = (users ?? []).filter((u: User) => {
 			return (department === 'all' || department === u.department) &&
 				(reservedOnly === false || u.lockerId);
