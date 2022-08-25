@@ -43,7 +43,7 @@
 <style>
     .wrap {
         /* width: auto; 가 아닌 width: 100%; 라면 overflow 된 자식 요소의 크기를 따라간다?? */
-        @apply w-auto;
+        @apply w-auto h-screen flex flex-col;
     }
 
     /* -------------- 영역 선택 및 지도 -------------- */
@@ -90,7 +90,7 @@
 
     /* -------------- 사물함 그리드 영역 -------------- */
     .locker-grid-wrap {
-        @apply overflow-scroll;
+        @apply grow flex items-center overflow-scroll;
     }
 
     .locker-grid {
