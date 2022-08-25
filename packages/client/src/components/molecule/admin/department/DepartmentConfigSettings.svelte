@@ -47,12 +47,10 @@
 	$: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
 
 	function deleteDepartment() {
-		// TODO: Run this function after Confirmation modal.
 		dispatch('delete', { id });
 	}
 
 	function updateDepartment() {
-		// TODO: Run this function after Confirmation modal.
 		dispatch('update', newConfig);
 	}
 </script>
