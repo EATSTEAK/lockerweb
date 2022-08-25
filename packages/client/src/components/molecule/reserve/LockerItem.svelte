@@ -25,19 +25,17 @@
     }
 
     .selected {
-        @apply border-8 border-blue-400;
+        @apply border-[3px] border-blue-400;
     }
-
     .selected > div {
         @apply text-blue-400;
     }
-
     .selected > .divide-line {
         @apply bg-blue-300;
     }
 
     .disabled {
-        @apply opacity-60 transition-all;
+        @apply opacity-60 bg-gray-100 transition-all;
     }
 
     .disabled:hover {
