@@ -1,6 +1,7 @@
 <script lang='ts'>
 	import Button from '../Button.svelte';
 	import ArrowUpload from '../../../icons/ArrowUpload.svelte';
+	import Document from '../../../icons/Document.svelte';
 
 	export let id: string;
 	export let files;
@@ -39,9 +40,10 @@
 				 bind:value
 				 {...$$restProps}
 	/>
-	{#each files as file}
-		<div>
-			{file.name}
+	{#each files as file, index}
+		<div class='file-item'>
+			<Document class='w-5 h-5' />
+			<div>{file.name}</div>
 		</div>
 	{/each}
 	<p class={`invalid ${invalidClass}`}>{invalidText}</p>
@@ -86,6 +88,14 @@
 
     label ~ input:disabled {
         @apply bg-gray-300 text-gray-400;
+    }
+
+    .file-item {
+        @apply flex flex-row gap-1 p-1 rounded-xl bg-gray-300 text-sm select-none text-gray-700 items-center;
+    }
+
+    .file-item > div {
+        @apply grow;
     }
 
     p.invalid {
