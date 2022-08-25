@@ -4,6 +4,7 @@
 	import { variables } from '$lib/variables';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import DepartmentConfigEditor from './DepartmentConfigEditor.svelte';
+	import Skeleton from "../../../atom/Skeleton.svelte";
 
 	$: configs = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
 
@@ -60,7 +61,7 @@
 	{:else if updating}
 		<UpdateScreen class='min-h-[32rem] md:rounded-md' />
 	{:else}
-		<div class='card-placeholder'></div>
+		<Skeleton class='card-placeholder'></Skeleton>
 	{/if}
 </div>
 
@@ -77,7 +78,7 @@
         @apply md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
     }
 
-    .card-placeholder {
-        @apply w-full h-[32rem] grow md:rounded-md bg-gray-300 animate-pulse;
+    :global(.card-placeholder) {
+        @apply w-full h-[32rem] grow md:rounded-md bg-gray-200;
     }
 </style>
