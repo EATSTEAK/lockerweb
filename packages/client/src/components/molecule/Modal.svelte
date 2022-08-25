@@ -12,6 +12,8 @@
 	export let secondaryText: string = '취소';
 	export let isPrimaryBtnIconRight = false;
 	export let isSecondaryBtnIconRight = false;
+	export let primaryDisabled = false;
+	export let secondaryDisabled = false;
 
 	let clazz = '';
 	export { clazz as class };
@@ -38,8 +40,11 @@
 		}
 	}
 
-	function outClick(event) {
+	function outClick(event: MouseEvent) {
 		const rect = dialog.getBoundingClientRect();
+		const doc = dialog.ownerDocument;
+		const win = doc.defaultView || doc.parentWindow;
+		if (event.view === win) return;
 		const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
 			&& rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
 		if (!isInDialog) {
@@ -64,12 +69,14 @@
 		</div>
 		<div class='section-actions'>
 			<slot name='actions'>
-				<Button on:click={() => click('secondary')} class='secondary-btn bg-[#D8D8D8] text-gray-600'
+				<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
+								class='secondary-btn bg-[#D8D8D8] text-gray-600'
 								isIconRight={isSecondaryBtnIconRight}>
 					<slot slot='icon' name='secondaryIcon' />
 					{secondaryText}
 				</Button>
-				<Button on:click={() => click('primary')} class='primary-btn bg-[#7088DF] text-white'
+				<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
+								class='primary-btn bg-[#7088DF] text-white'
 								isIconRight={isPrimaryBtnIconRight}>
 					<slot slot='icon' name='primaryIcon' />
 					{primaryText}

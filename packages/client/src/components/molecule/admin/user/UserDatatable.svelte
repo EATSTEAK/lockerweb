@@ -9,6 +9,13 @@
 	import BookmarkOff from '../../../../icons/BookmarkOff.svelte';
 	import Delete from '../../../../icons/Delete.svelte';
 	import Search from '../../../../icons/Search.svelte';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher<{
+		edit: User,
+		batchDelete: {}
+		batchUnclaim: {}
+	}>();
 
 	export let users: Array<User>;
 
@@ -17,7 +24,7 @@
 	let currentPage = 0;
 	let itemsPerPage = 25;
 	let selectAll = false;
-	let selected = [];
+	export let selected = [];
 	let batchActionOut = true;
 
 	$: shownUsers = users ? getShownUsers(currentPage, itemsPerPage, filter, users) : [];
@@ -33,6 +40,10 @@
 	}
 
 	$: if (selected.length >= 0) updateSelectAll();
+
+	function editUser(user: User) {
+		dispatch('edit', user);
+	}
 
 	function updateSelectAll() {
 		if (shownUsers.length && selected.length === shownUsers.length && !selectAll) {
@@ -67,11 +78,11 @@
 				 on:outroend={() => batchActionOut = true} class='batch'>
 			<div class='selections-text'>{selected.length}개 선택됨</div>
 			<div class='batch-actions'>
-				<button class='batch-btn'>
+				<button on:click={() => dispatch('batchUnclaim', {})} class='batch-btn'>
 					<BookmarkOff />
 					예약 일괄 취소
 				</button>
-				<button class='batch-btn'>
+				<button on:click={() => dispatch('batchDelete', {})} class='batch-btn'>
 					<Delete />
 					삭제
 				</button>
@@ -125,6 +136,7 @@
 						</td>
 						<td>
 							<button
+								on:click={() => editUser(user)}
 								class='bg-gray-100 p-2 rounded-md hover:brightness-90 active:brightness-75 focus:brightness-75 focus:outline-0'>
 								<Edit class='w-4 h-4' slot='icon' />
 							</button>

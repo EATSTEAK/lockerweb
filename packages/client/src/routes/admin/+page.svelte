@@ -22,8 +22,15 @@
 
 	let selectedTab;
 
+	let userUpdating = false;
+	let userRequestError = null;
+
 	let userPromise: Promise<Array<User>>;
 	if (browser) {
+		queryUser();
+	}
+
+	function queryUser() {
 		userPromise = fetchWithAuth(variables.baseUrl + '/api/v1/user/query').then((res) => res.json())
 			.then((res) => {
 				if (res.success) {
@@ -33,6 +40,66 @@
 			})
 			.catch((err) => {
 				console.error(err);
+			});
+	}
+
+	function updateUser(evt: CustomEvent<UserUpdateRequest>) {
+		userUpdating = true;
+		fetchWithAuth(variables.baseUrl + '/api/v1/user/update', {
+			method: 'POST',
+			body: JSON.stringify(evt.detail)
+		}).then(res => res.json())
+			.then(res => {
+				userUpdating = false;
+				if (res.success) {
+					queryUser();
+				} else {
+					userRequestError = res.errorDescription;
+				}
+			})
+			.catch(err => {
+				userUpdating = false;
+				userRequestError = err;
+			});
+	}
+
+	function batchPutUser(evt: CustomEvent<User[]>) {
+		userUpdating = true;
+		fetchWithAuth(variables.baseUrl + '/api/v1/user/batch/put', {
+			method: 'POST',
+			body: JSON.stringify(evt.detail)
+		}).then(res => res.json())
+			.then(res => {
+				userUpdating = false;
+				if (res.success) {
+					queryUser();
+				} else {
+					userRequestError = res.errorDescription;
+				}
+			})
+			.catch(err => {
+				userUpdating = false;
+				userRequestError = err;
+			});
+	}
+
+	function batchDeleteUser(evt: CustomEvent<string[]>) {
+		userUpdating = true;
+		fetchWithAuth(variables.baseUrl + '/api/v1/user/batch/delete', {
+			method: 'POST',
+			body: JSON.stringify(evt.detail)
+		}).then(res => res.json())
+			.then(res => {
+				userUpdating = false;
+				if (res.success) {
+					queryUser();
+				} else {
+					userRequestError = res.errorDescription;
+				}
+			})
+			.catch(err => {
+				userUpdating = false;
+				userRequestError = err;
 			});
 	}
 </script>
@@ -86,7 +153,8 @@
 					<LoadingScreen class='min-h-[32rem] md:rounded-md' />
 				</div>
 			{:then users}
-				<UserSettings {users} />
+				<UserSettings on:user:update={updateUser} on:user:batchPut={batchPutUser} on:user:batchDelete={batchDeleteUser}
+											updating={userUpdating} error={userRequestError} {users} />
 			{:catch err}
 				<div class='user-screen-wrap'>
 					<div class='title'>
