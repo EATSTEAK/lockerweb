@@ -19,7 +19,7 @@
 
 	export let users: Array<User>;
 
-	let filter: string = null;
+	let filter: string = '';
 
 	let currentPage = 0;
 	let itemsPerPage = 25;
@@ -27,7 +27,13 @@
 	export let selected = [];
 	let batchActionOut = true;
 
-	$: shownUsers = users ? getShownUsers(currentPage, itemsPerPage, filter, users) : [];
+	$: filteredUsers = users ? getFilteredUsers(filter, users) : [];
+
+	$: shownUsers = users ? getShownUsers(currentPage, itemsPerPage, filteredUsers) : [];
+
+	$: if (itemsPerPage && filteredUsers) {
+		if (currentPage * itemsPerPage > filteredUsers.length) currentPage = 0;
+	}
 
 	$: if (selected.every(id => shownUsers.includes(id))) {
 		selected = [];
@@ -61,13 +67,13 @@
 		}
 	}
 
-	function getShownUsers(currentPage: number, itemsPerPage: number, filter: string, users: Array<User>) {
+	function getFilteredUsers(filter: string, users: User[]) {
+		if (!filter) users;
+		return users.filter(user => user.id.includes(filter) || user.name.includes(filter) || (user.lockerId && user.lockerId.includes(filter)));
+	}
+
+	function getShownUsers(currentPage: number, itemsPerPage: number, users: Array<User>) {
 		const start = currentPage * itemsPerPage;
-		if (filter) {
-			// 검색어가 존재할 경우,  id(학번), name(이름), lockerId(사물함 번호) 중에 검색어가 존재하는지 확인
-			const filteredUsers = users.filter(user => user.id.includes(filter) || user.name.includes(filter) || (user.lockerId && user.lockerId.includes(filter)));
-			return filteredUsers.slice(start, start + itemsPerPage);
-		}
 		return users.slice(start, start + itemsPerPage);
 	}
 </script>
@@ -147,7 +153,7 @@
 			</tbody>
 		</table>
 	</div>
-	<Pagination totalEntries={users.length} bind:currentPage bind:itemsPerPage />
+	<Pagination totalEntries={filteredUsers.length} bind:currentPage bind:itemsPerPage />
 </div>
 
 
