@@ -21,6 +21,10 @@
 	let department = subsection?.department;
 	let invalidText: string;
 
+	$: if (subsection) {
+		initializeValues();
+	}
+
 	$: if (rangeStart && rangeEnd && department) {
 		if (rangeStart <= 0) {
 			invalidText = '값 무시됨: 구역 시작은 1보다 커야함';
@@ -38,6 +42,13 @@
 		}
 	} else {
 		invalidText = '값 무시됨: 모든 값이 입력되지 않음';
+	}
+
+	function initializeValues() {
+		rangeStart = subsection?.range?.[0] ?? 0;
+		rangeEnd = subsection?.range?.[1] ?? 0;
+		department = subsection?.department;
+		invalidText = undefined;
 	}
 
 	function removeSubsection() {
