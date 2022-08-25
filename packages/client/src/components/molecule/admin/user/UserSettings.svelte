@@ -17,6 +17,7 @@
 	import PeopleTeamDelete from '../../../../icons/PeopleTeamDelete.svelte';
 	import Dismiss from '../../../../icons/Dismiss.svelte';
 	import DocumentHeaderRemove from '../../../../icons/DocumentHeaderRemove.svelte';
+	import { utils, writeXLSX } from 'xlsx';
 
 	const dispatch = createEventDispatcher<{
 		'user:update': UserUpdateRequest,
@@ -99,10 +100,52 @@
 		dispatch('user:batchPut', unclaimedTargetUsers);
 	}
 
+	type ReadableUser = {
+		'학번': string,
+		'성명': string,
+		'학과(부)': string,
+		'관리자 여부': '예' | '아니오',
+		'예약한 사물함'?: string,
+		'사용 기한'?: string
+	}
+
+	const dateFormatter = new Intl.DateTimeFormat('ko-KR', {
+		dateStyle: 'short',
+		timeStyle: 'short',
+		hour12: false
+	});
+
 	function exportUser(evt: CustomEvent<{ department: string; reservedOnly: boolean; }>) {
+		const { department, reservedOnly } = evt.detail;
 		userExportModalOpen = false;
-		console.log('Export user');
-		// TODO: Export user to excel file.
+		console.log(department, reservedOnly);
+		const readableUsers: ReadableUser[] = (users ?? []).filter((u: User) => {
+			return (department === 'all' || department === u.department) &&
+				(reservedOnly === false || u.lockerId);
+		}).map((u: User) => ({
+			'학번': u.id,
+			'성명': u.name,
+			'학과(부)': departments.find(dept => u.department === dept)?.name ?? '알 수 없음',
+			'관리자 여부': u.isAdmin ? '예' : '아니오',
+			...(u.lockerId && { '예약한 사물함': (u.lockerId ?? '없음') }),
+			...(u.claimedUntil && { '사용 기한': (dateFormatter.format(new Date(u.claimedUntil))) })
+		}));
+		generate(readableUsers);
+	}
+
+	function generate(readableUsers: ReadableUser[]) {
+		const workBook = utils.book_new();
+		const workSheet = utils.json_to_sheet(readableUsers);
+		utils.book_append_sheet(workBook, workSheet, '예약자 목록');
+		const xlsx = writeXLSX(workBook, {
+			type: 'array',
+			bookType: 'xlsx'
+		});
+		const blob = URL.createObjectURL(new Blob([xlsx], { type: 'application/octet-stream' }));
+		const link = document.createElement('a');
+		link.href = blob;
+		link.download = `예약자_목록_${dateFormatter.format(new Date())}.xlsx`.replace(' ', '_');
+		link.click();
 	}
 </script>
 
