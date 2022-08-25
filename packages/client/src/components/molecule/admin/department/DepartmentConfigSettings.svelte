@@ -25,8 +25,8 @@
 	function initializeValues() {
 		id = original?.id ?? '';
 		name = original?.name ?? '';
-		activateFrom = original?.activateFrom ? new Date(original?.activateFrom) : undefined;
-		activateTo = original?.activateTo ? new Date(original?.activateTo) : undefined;
+		activateFrom = original?.activateFrom ? new Date(original?.activateFrom) : null;
+		activateTo = original?.activateTo ? new Date(original?.activateTo) : null;
 		contact = original?.contact ?? '';
 	}
 
