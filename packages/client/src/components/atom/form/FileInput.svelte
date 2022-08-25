@@ -4,7 +4,7 @@
 	import Document from '../../../icons/Document.svelte';
 
 	export let id: string;
-	export let files;
+	export let files: FileList;
 	export let label: string;
 	export let multiple = false;
 	export let showLabel: boolean = false;
@@ -26,7 +26,7 @@
 																																		class='text-red-800'>*</span></p>
 			<Button class='bg-primary-800 text-white' isIconRight>
 				<ArrowUpload slot='icon' />
-				{#if !multiple && files.length}
+				{#if !multiple && files && files.length}
 					다시 업로드
 				{:else}
 					파일 업로드
@@ -40,12 +40,14 @@
 				 bind:value
 				 {...$$restProps}
 	/>
-	{#each files as file, index}
-		<div class='file-item'>
-			<Document class='w-5 h-5' />
-			<div>{file.name}</div>
-		</div>
-	{/each}
+	{#if files}
+		{#each files ?? [] as file, index}
+			<div class='file-item'>
+				<Document class='w-5 h-5' />
+				<div>{file.name}</div>
+			</div>
+		{/each}
+	{/if}
 	<p class={`invalid ${invalidClass}`}>{invalidText}</p>
 </div>
 
