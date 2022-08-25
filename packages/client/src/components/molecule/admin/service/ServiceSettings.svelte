@@ -11,6 +11,7 @@
 	import { config } from '$lib/store';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import Warning from '../../../../icons/Warning.svelte';
+	import Skeleton from "../../../atom/Skeleton.svelte";
 
 	$: serviceConfig = $config ? $config.find(v => v.id === 'SERVICE') ?? {
 		id: 'SERVICE',
@@ -117,16 +118,16 @@
 												 bind:value={activateTo} invalidClass='text-red-800' />
 				{:else}
 					<div class='flex flex-col gap-1 my-2'>
-						<div class='card-placeholder h-4 w-24'></div>
-						<div class='card-placeholder h-8 w-96'></div>
+						<Skeleton class='card-placeholder h-4 w-24'></Skeleton>
+						<Skeleton class='card-placeholder h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<div class='card-placeholder h-4 w-24'></div>
-						<div class='card-placeholder h-8 w-96'></div>
+						<Skeleton class='card-placeholder h-4 w-24'></Skeleton>
+						<Skeleton class='card-placeholder h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<div class='card-placeholder h-4 w-24'></div>
-						<div class='card-placeholder h-8 w-96'></div>
+						<Skeleton class='card-placeholder h-4 w-24'></Skeleton>
+						<Skeleton class='card-placeholder h-8 w-96'></Skeleton>
 					</div>
 				{/if}
 			</div>
@@ -145,7 +146,7 @@
 			{#if serviceConfig}
 				<BuildingEditor bind:buildings />
 			{:else}
-				<div class='card-placeholder w-full min-h-[32rem]'></div>
+				<Skeleton class='card-placeholder w-full min-h-[32rem]'></Skeleton>
 			{/if}
 		</section>
 	{/if}
@@ -172,7 +173,7 @@
         @apply md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
     }
 
-    .card-placeholder {
-        @apply md:rounded-md bg-gray-400 animate-pulse;
+    :global(.card-placeholder) {
+        @apply md:rounded-md bg-gray-200;
     }
 </style>
