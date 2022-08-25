@@ -14,14 +14,13 @@
 
 <style>
   .skeleton {
-    @apply bg-gray-200 cursor-progress overflow-hidden;
+    @apply cursor-progress overflow-hidden;
 
   }
   .skeleton-inner-animation {
-      @apply bg-gray-200;
       width: var(--widthSize);
       height: var(--heightSize);
-      background: linear-gradient(100deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+      background: linear-gradient(100deg, rgba(0, 0, 0, 0.01) 12%, rgba(255, 255, 255, 0.3) 18%, rgba(0, 0, 0, 0.01) 22%);
       background-size: 110% 80%;
       animation: loading 1.3s infinite;
   }
