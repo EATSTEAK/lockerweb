@@ -78,9 +78,12 @@
 		userExportModalOpen = true;
 	}
 
-	function importUser(evt: CustomEvent<User[]>) {
+	function importUser(evt: CustomEvent<{ overwrite: boolean; users: User[] }>) {
 		uploadUserModalOpen = false;
-		dispatch('user:batchPut', evt.detail);
+		const data = evt.detail;
+		const userKeys = users.map((u: User) => u.id);
+		const putUsers = data.overwrite ? data.users.filter((u: User) => !userKeys.includes(u.id)) : data.users;
+		dispatch('user:batchPut', putUsers);
 	}
 
 	function batchDeleteUser(ids: string[]) {
