@@ -73,14 +73,14 @@
 	function closeModal() {
 		open = false;
 	}
-
-	// TODO: Disable submit button when users are not ready
+	
 	function submitUsers() {
 		if (users) dispatch('submit', { overwrite, users });
 	}
 </script>
 
 <Modal on:close on:click:secondary={closeModal} on:click={submitUsers} {title} bind:open primaryText='업로드'
+			 primaryDisabled={!users}
 			 isPrimaryBtnIconRight isSecondaryBtnIconRight {...$$restProps}>
 	<div class='wrap'>
 		<Select id='department' label='업로드 대상 학부' showLabel bind:value={department} required invalidText='이 값은 필수입니다.'
