@@ -3,13 +3,13 @@
   export let lockerNumber: number;
 </script>
 
-<div class="locker-item">
+<button class="locker-item">
   <div class="location-title">
       <p>{lockerLocation}</p><p>구역</p>
   </div>
   <div class="divide-line"></div>
   <div class="locker-number">{lockerNumber}</div>
-</div>
+</button>
 
 <style>
     .locker-item {
