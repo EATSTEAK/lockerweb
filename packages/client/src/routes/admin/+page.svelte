@@ -14,10 +14,11 @@
 	import Settings from '../../icons/Settings.svelte';
 	import ContentSettings from '../../icons/ContentSettings.svelte';
 	import { browser } from '$app/env';
-	import { fetchWithAuth } from '$lib/auth';
+	import { deleteAuthorization, fetchWithAuth } from '$lib/auth';
 	import { variables } from '$lib/variables';
 	import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
+	import Skeleton from '../../components/atom/Skeleton.svelte';
 
 
 	let selectedTab;
@@ -28,6 +29,12 @@
 	let userPromise: Promise<Array<User>>;
 	if (browser) {
 		queryUser();
+	}
+
+	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
+	$: if ($user === null && browser) {
+		deleteAuthorization();
+		window.location.href = '/';
 	}
 
 	function queryUser() {
@@ -115,21 +122,26 @@
 				<hr />
 			</div>
 			<div class='flex flex-col gap-3'>
-				<h3>설정</h3>
-				<SelectionListItemGroup bind:selectedId={selectedTab}>
-					<SelectionListItem class='flex justify-between items-center' id='user'>
-						<span>사용자 설정</span>
-						<PeopleSettings />
-					</SelectionListItem>
-					<SelectionListItem class='flex justify-between items-center' id='service'>
-						<span>서비스 설정</span>
-						<Settings />
-					</SelectionListItem>
-					<SelectionListItem class='flex justify-between items-center' id='department'>
-						<span>학부별 설정</span>
-						<ContentSettings />
-					</SelectionListItem>
-				</SelectionListItemGroup>
+				{#if $user}
+					<h3>설정</h3>
+					<SelectionListItemGroup bind:selectedId={selectedTab}>
+						<SelectionListItem class='flex justify-between items-center' id='user'>
+							<span>사용자 설정</span>
+							<PeopleSettings />
+						</SelectionListItem>
+						<SelectionListItem class='flex justify-between items-center' id='service'>
+							<span>서비스 설정</span>
+							<Settings />
+						</SelectionListItem>
+						<SelectionListItem class='flex justify-between items-center' id='department'>
+							<span>학부별 설정</span>
+							<ContentSettings />
+						</SelectionListItem>
+					</SelectionListItemGroup>
+				{:else if $user === undefined}
+					<Skeleton class='w-32 h-12 bg-gray-300 rounded-lg' />
+					<Skeleton class='w-72 h-36 bg-gray-300 rounded-xl' />
+				{/if}
 			</div>
 		</div>
 		<div class='footer'>
@@ -144,29 +156,36 @@
 		</div>
 	</div>
 	<div class='dashboard'>
-		{#if selectedTab === "user"}
-			{#await userPromise}
-				<div class='user-screen-wrap'>
-					<div class='title'>
-						<h3>사용자 설정</h3>
+		{#if $user && (!$user.department || $user.isAdmin)}
+			{#if selectedTab === "user"}
+				{#await userPromise}
+					<div class='user-screen-wrap'>
+						<div class='title'>
+							<h3>사용자 설정</h3>
+						</div>
+						<LoadingScreen class='min-h-[32rem] md:rounded-md' />
 					</div>
-					<LoadingScreen class='min-h-[32rem] md:rounded-md' />
-				</div>
-			{:then users}
-				<UserSettings on:user:update={updateUser} on:user:batchPut={batchPutUser} on:user:batchDelete={batchDeleteUser}
-											updating={userUpdating} error={userRequestError} {users} />
-			{:catch err}
-				<div class='user-screen-wrap'>
-					<div class='title'>
-						<h3>사용자 설정</h3>
+				{:then users}
+					<UserSettings on:user:update={updateUser} on:user:batchPut={batchPutUser}
+												on:user:batchDelete={batchDeleteUser}
+												updating={userUpdating} error={userRequestError} {users} />
+				{:catch err}
+					<div class='user-screen-wrap'>
+						<div class='title'>
+							<h3>사용자 설정</h3>
+						</div>
+						<ErrorScreen class='min-h-[32rem] md:rounded-md' />
 					</div>
-					<ErrorScreen class='min-h-[32rem] md:rounded-md' />
-				</div>
-			{/await}
-		{:else if selectedTab === "service"}
-			<ServiceSettings />
-		{:else if selectedTab === "department"}
-			<DepartmentSettings />
+				{/await}
+			{:else if selectedTab === "service"}
+				<ServiceSettings />
+			{:else if selectedTab === "department"}
+				<DepartmentSettings />
+			{/if}
+		{:else if !$user}
+			<LoadingScreen class='min-h-[480px]' />
+		{:else}
+			<ErrorScreen class='min-h-[480px]' errorMessage='권한이 부족하여 접근하실 수 없습니다.' />
 		{/if}
 	</div>
 </div>
