@@ -8,7 +8,7 @@
     import Soongsil from "../../icons/Soongsil.svelte";
     import Button from "../../components/atom/Button.svelte";
     import UserReservedLocker from "../../components/molecule/reserve/UserReservedLocker.svelte";
-    import LockerRserveInfo from "../../components/molecule/reserve/LockerReserveInfo.svelte";
+    import LockerReserveInfo from "../../components/molecule/reserve/LockerReserveInfo.svelte";
     import Skeleton from "../../components/atom/Skeleton.svelte";
 
     let callbackUrl = undefined;
@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class='locker-reserve-info-wrap'>
-        <LockerRserveInfo/>
+        <LockerReserveInfo/>
     </div>
 </div>
 
