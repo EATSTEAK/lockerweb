@@ -4,7 +4,7 @@
 	export { clazz as class };
 </script>
 
-<div class={`tag ${clazz || ''}`} style={`${style || ''}`}>
+<div on:click class={`tag ${clazz || ''}`} style={`${style || ''}`}>
 	<slot />
 </div>
 
