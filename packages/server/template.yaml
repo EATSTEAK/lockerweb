@@ -13,6 +13,9 @@ Parameters:
   AwsSamLocal:
     Type: String
     Default: ''
+  AdminId:
+    Type: String
+    Default: '20211561'
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -21,9 +24,7 @@ Globals:
       Variables:
         TABLE_NAME: !Ref TableName
         AWS_SAM_LOCAL: !Ref AwsSamLocal
-        ADMIN_ID:
-          Type: String
-          Default: '20211561'
+        ADMIN_ID: !Ref AdminId
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
