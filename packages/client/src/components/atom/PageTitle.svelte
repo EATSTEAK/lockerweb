@@ -3,7 +3,7 @@
 
 	export let name: string;
 
-	$: serviceName = $config?.find((c: Config) => c.id === 'SERVICE').name ?? '사물함 시스템';
+	$: serviceName = ($config ?? []).find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 시스템';
 </script>
 
 <svelte:head>
