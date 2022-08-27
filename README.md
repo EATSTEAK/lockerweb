@@ -13,9 +13,9 @@
 
 시스템을 단순히 이용하기 위한 가이드는 [이용자 가이드](https://github.com/EATSTEAK/lockerweb/wiki/%EC%9D%B4%EC%9A%A9%EC%9E%90-%EA%B0%80%EC%9D%B4%EB%93%9C)를 참고하세요.
 
-## 서비스 설정 및 배포
+## 서비스 배포 및 설정
 
-서비스를 설정하고 배포하려는 운영자라면 [서비스 설정 및 배포](https://github.com/EATSTEAK/lockerweb/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EC%A0%95-%EB%B0%8F-%EB%B0%B0%ED%8F%AC)를 참고하세요.
+서비스를 설정하고 배포하려는 운영자라면 [서비스 배포 및 설정]([https://github.com/EATSTEAK/lockerweb/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EC%A0%95-%EB%B0%8F-%EB%B0%B0%ED%8F%AC](https://github.com/EATSTEAK/lockerweb/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B0%B0%ED%8F%AC-%EB%B0%8F-%EC%84%A4%EC%A0%95))를 참고하세요.
 
 ## 개발하기
 
