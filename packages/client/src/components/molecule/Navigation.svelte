@@ -63,7 +63,7 @@
 				 class:fixed={collapsable && !isOnTop}>
 		{#if !collapsable || !collapsed}
 			<nav transition:fly={{ y: -100, duration: 500 }}
-					 class='{navClass} px-10 flex flex-col bg-gray-200 grow overflow-y-scroll md:overflow-y-visible shadow-md'
+					 class='{navClass} px-10 flex flex-col bg-gray-200 grow overflow-y-auto shadow-md'
 					 class:mb-2={collapsable}>
 				<slot />
 			</nav>
