@@ -65,7 +65,7 @@
         shadow-xl
         md:w-[480px]
 				backdrop:bg-black backdrop:opacity-30' {...$$restProps}>
-	<div class='flex flex-col items-stretch gap-3 w-full h-full max-h-screen'>
+	<div class='flex flex-col items-stretch gap-3 w-full h-auto max-h-screen'>
 		<div class='flex justify-between select-none'>
 			<div class='pl-4 pt-3 text-gray-700'>
 				<h4>{title}</h4>
