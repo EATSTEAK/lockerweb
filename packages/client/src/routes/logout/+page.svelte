@@ -11,7 +11,6 @@
 	import NavigationContent from '../../components/atom/NavigationContent.svelte';
 	import PageTitle from '../../components/atom/PageTitle.svelte';
 	import { fetchWithAuth } from '$lib/auth';
-	import { goto } from '$app/navigation';
 
 	let result;
 	let id;
@@ -21,7 +20,7 @@
 		id = fetchWithAuth(variables.baseUrl + '/api/v1/auth/logout').then((res) => res.json());
 		id.then((data) => {
 			document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
-			goto(`/`);
+			window.location.href = '/';
 		});
 	}
 </script>

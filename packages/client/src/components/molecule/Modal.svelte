@@ -7,6 +7,7 @@
 	export let title: string;
 	export let subtitle: string = '';
 	export let noBackdrop: boolean = false;
+	export let preventOutclick = false;
 
 	export let primaryClass = '';
 	export let secondaryClass = '';
@@ -46,16 +47,16 @@
 		const rect = dialog.getBoundingClientRect();
 		const doc = dialog.ownerDocument;
 		const win = doc.defaultView || doc.parentWindow;
-		if (event.view === win) return;
+		if (event.view !== win || (event.clientX === 0 && event.clientY === 0)) return;
 		const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
 			&& rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
-		if (!isInDialog) {
-			closeModal();
+		if (!isInDialog && !preventOutclick) {
+			// closeModal();
 		}
 	}
 </script>
 
-<dialog on:click={outClick} bind:this={dialog} {open} class='{clazz} grow bg-gray-200
+<dialog on:click={outClick} on:cancel on:cancel|preventDefault bind:this={dialog} {open} class='{clazz} grow bg-gray-200
         rounded-xl
         fixed
         p-0
@@ -76,7 +77,7 @@
 				<Dismiss />
 			</button>
 		</div>
-		<div class='mx-4 grow overflow-y-scroll'>
+		<div class='mx-4 grow overflow-y-auto'>
 			<slot />
 		</div>
 		<div class='mx-4 pb-4 flex justify-end gap-3'>
