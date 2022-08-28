@@ -18,6 +18,7 @@
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 	import Skeleton from '../../components/atom/Skeleton.svelte';
 	import NavigationShell from '../../components/molecule/NavigationShell.svelte';
+	import PageTitle from '../../components/atom/PageTitle.svelte';
 
 	const ids = ['user', 'service', 'department'];
 	let selectedTabIndex = 0;
@@ -117,6 +118,8 @@
 			});
 	}
 </script>
+
+<PageTitle name='서비스 관리' />
 
 <svelte:window bind:innerWidth />
 
