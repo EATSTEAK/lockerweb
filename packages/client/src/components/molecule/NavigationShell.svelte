@@ -19,7 +19,7 @@
 
 	export let navigationClass = '';
 	export let mainClass = '';
-	
+
 	export let navigationCollapsed = true;
 
 	export let collapsable = true;
@@ -44,7 +44,6 @@
 		</NavigationHeader>
 		<p transition:fly={{ y: -20, duration: 200 }} class='font-semibold shrink'>{serviceName}</p>
 		<NavigationProfile>
-
 			<slot name='navigation_profile'>
 				<Profile user={$user} />
 			</slot>
