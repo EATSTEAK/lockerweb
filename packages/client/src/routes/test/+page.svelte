@@ -2,6 +2,7 @@
 	import Button from '../../components/atom/Button.svelte';
 	import Modal from '../../components/molecule/Modal.svelte';
 	import NavigationShell from '../../components/molecule/NavigationShell.svelte';
+	import PageTitle from '../../components/atom/PageTitle.svelte';
 
 	let open = false;
 
@@ -12,6 +13,7 @@
 	}
 </script>
 
+<PageTitle name='This is test!' />
 
 <svelte:window bind:innerWidth />
 
