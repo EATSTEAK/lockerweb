@@ -43,7 +43,10 @@ export const issueToken = async function (
 		blockedDepartments.map((d) => [`:${d}`, { S: d }])
 	);
 	conditionValues[':true'] = { BOOL: true };
-	const condition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
+	const blockDeptCondition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
+	const condition = blockDeptCondition
+		? `attribute_exists(d) AND ${blockDeptCondition}`
+		: 'attribute_exists(d)';
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
@@ -51,14 +54,13 @@ export const issueToken = async function (
 		ExpressionAttributeNames: {
 			'#aT': 'aT'
 		},
-		...(id !== adminId &&
-			condition && {
-				ConditionExpression: `iA = :true OR (${condition})`
-			}),
+		...(id !== adminId && {
+			ConditionExpression: `iA = :true OR (${condition})`
+		}),
 		ExpressionAttributeValues: {
 			':token': { S: token },
 			':expiresOn': { N: `${expires}` },
-			...(id !== adminId && condition && conditionValues)
+			...(id !== adminId && blockDeptCondition && conditionValues)
 		},
 		ReturnValues: 'UPDATED_NEW'
 	};
