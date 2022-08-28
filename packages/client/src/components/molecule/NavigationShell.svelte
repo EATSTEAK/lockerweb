@@ -14,6 +14,12 @@
 	import Shell from './Shell.svelte';
 	import { fly } from 'svelte/transition';
 
+	let clazz = '';
+	export { clazz as class };
+
+	export let navigationClass = '';
+	export let mainClass = '';
+	
 	export let navigationCollapsed = true;
 
 	export let collapsable = true;
@@ -21,7 +27,7 @@
 	$: serviceName = ($config ?? []).find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 시스템';
 </script>
 
-<Shell bind:navigationCollapsed bind:collapsable>
+<Shell class={clazz} {navigationClass} {mainClass} bind:navigationCollapsed bind:collapsable>
 	<Navigation slot='navigation' class='flex-row w-full h-full'
 							{collapsable} bind:collapsed={navigationCollapsed}>
 		<NavigationHeader class='md:pt-10' slot='header'>

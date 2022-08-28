@@ -7,10 +7,16 @@
 	import Divider from '../../components/atom/Divider.svelte';
 	import Button from '../atom/Button.svelte';
 	import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
+
+	let clazz = '';
+	export { clazz as class };
+
+	export let navigationClass = '';
+	export let mainClass = '';
 </script>
 
-<main class='flex flex-col md:flex-row items-stretch'>
-	<div class='flex flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
+<main class='{clazz} flex flex-col md:flex-row items-stretch'>
+	<section class='{navigationClass} flex flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
 		<slot name='navigation'>
 			<Navigation class='flex-row w-full h-full'>
 				<NavigationHeader class='md:py-10' slot='header'>
@@ -27,8 +33,8 @@
 				</NavigationFooter>
 			</Navigation>
 		</slot>
-	</div>
-	<section class='grow md:max-h-screen overflow-x-scroll md:overflow-y-scroll'>
+	</section>
+	<section class='{mainClass} grow md:max-h-screen overflow-x-scroll md:overflow-y-scroll'>
 		<slot />
 	</section>
 </main>
