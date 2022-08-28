@@ -16,7 +16,7 @@
 </script>
 
 <main class='{clazz} flex flex-col md:flex-row items-stretch'>
-	<section class='{navigationClass} flex flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
+	<section class='{navigationClass} flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
 		<slot name='navigation'>
 			<Navigation class='flex-row w-full h-full'>
 				<NavigationHeader class='md:py-10' slot='header'>
