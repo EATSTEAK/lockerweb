@@ -153,6 +153,24 @@ type LockerCountResponse = {
 	};
 };
 
+/* Response Definition */
+
+type Response = {
+	success: boolean;
+};
+
+type SuccessResponse = {
+	success: true;
+	result?: unknown;
+};
+
+type ErrorResponse = {
+	success: false;
+	error: number;
+	errorType: string;
+	errorDescription: string;
+};
+
 /* Error Definition */
 
 type ResponsibleError = {
