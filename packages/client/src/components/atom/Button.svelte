@@ -1,6 +1,6 @@
 <script lang='ts'>
 	export let isIconRight: boolean = false;
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 </script>
 
@@ -17,7 +17,14 @@
 	 on:keypress
 	 on:keyup
 	 on:focus
-	 tabindex='0' class={`${clazz || ''}`} {...$$restProps}>
+	 tabindex='0'
+	 class='{clazz} cursor-pointer select-none
+	 flex justify-between items-center px-4 py-3 flex-shrink-0 gap-x-3
+	 rounded-xl shadow-md font-bold transition-all ease-in
+	 [&[disabled]]:opacity-50 [&[disabled]]:shadow-none [&[disabled]]:pointer-events-none
+	 hover:brightness-90 hover:shadow-lg
+	 active:brightness-75 active:shadow-md'
+	 {...$$restProps}>
 	{#if !isIconRight}
 		{#if $$slots.icon}
 			<div class='btn-icon'>
@@ -36,22 +43,6 @@
 </a>
 
 <style>
-    a {
-        @apply cursor-pointer select-none flex justify-between rounded-xl shadow-md px-4 py-3 font-bold flex-shrink-0 items-center gap-x-3 transition-all ease-in;
-    }
-
-    a[disabled] {
-        @apply backdrop-brightness-75 shadow-none pointer-events-none;
-    }
-
-    a:hover {
-        @apply brightness-90 shadow-lg;
-    }
-
-    a:active {
-        @apply brightness-75 shadow-md;
-    }
-
     :global(.btn-icon path:not([fill="none"])) {
         fill: currentColor;
     }
