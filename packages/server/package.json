@@ -11,7 +11,8 @@
     "test": "mocha tests/unit",
     "integ-test": "mocha tests/integration",
     "delete": "sam delete --no-prompts",
-    "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset"
+    "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset",
+    "dryrun": "sam deploy --guided --no-execute-changeset"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.101",
