@@ -5,27 +5,16 @@
 	import NavigationContent from '../atom/NavigationContent.svelte';
 	import NavigationFooter from '../atom/NavigationFooter.svelte';
 	import Divider from '../../components/atom/Divider.svelte';
-	import NavigationCollapseButton from '../atom/NavigationCollapseButton.svelte';
 	import Button from '../atom/Button.svelte';
 	import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
-
-	export let navigationCollapsed = true;
-
-	export let collapsable = true;
 </script>
 
 <main class='flex flex-col md:flex-row items-stretch'>
 	<div class='flex flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
 		<slot name='navigation'>
-			<Navigation class='flex-row w-full h-full'
-									{collapsable} bind:collapsed={navigationCollapsed}>
+			<Navigation class='flex-row w-full h-full'>
 				<NavigationHeader class='md:py-10' slot='header'>
 					<Soongsil class='w-20 h-20' />
-					{#if collapsable}
-						<div class='flex justify-center items-center'>
-							<NavigationCollapseButton />
-						</div>
-					{/if}
 				</NavigationHeader>
 				<Divider class='my-6' />
 				<NavigationContent>
