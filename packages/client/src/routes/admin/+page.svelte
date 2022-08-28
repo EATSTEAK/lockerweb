@@ -1,9 +1,7 @@
 <script lang='ts'>
-	import Soongsil from '../../icons/Soongsil.svelte';
 	import Button from '../../components/atom/Button.svelte';
 	import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
 	import MailInbox from '../../icons/MailInbox.svelte';
-	import Profile from '../../components/molecule/Profile.svelte';
 	import SelectionListItemGroup from '../../components/atom/SelectionListItemGroup.svelte';
 	import SelectionListItem from '../../components/atom/SelectionListItem.svelte';
 	import UserSettings from '../../components/molecule/admin/user/UserSettings.svelte';
@@ -19,9 +17,11 @@
 	import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 	import Skeleton from '../../components/atom/Skeleton.svelte';
+	import NavigationShell from '../../components/molecule/NavigationShell.svelte';
 
-
-	let selectedTab;
+	const ids = ['user', 'service', 'department'];
+	let selectedTabIndex = 0;
+	$: selectedTab = ids[selectedTabIndex];
 
 	let userUpdating = false;
 	let userRequestError = null;
@@ -31,10 +31,17 @@
 		queryUser();
 	}
 
+	let sidebarCollapsed = true;
+	let innerWidth = 0;
+
 	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
 	$: if ($user === null && browser) {
 		deleteAuthorization();
 		window.location.href = '/';
+	}
+
+	function closeSidebarMenu() {
+		sidebarCollapsed = true;
 	}
 
 	function queryUser() {
@@ -111,51 +118,42 @@
 	}
 </script>
 
-<div class='root'>
-	<div class='side-wrap'>
-		<div class='logo'>
-			<Soongsil class='w-20 h-20' />
-		</div>
-		<div class='content'>
-			<div class='flex flex-col gap-4'>
-				<Profile user={$user} />
-				<hr />
-			</div>
-			<div class='flex flex-col gap-3'>
-				{#if $user}
-					<h3>설정</h3>
-					<SelectionListItemGroup bind:selectedId={selectedTab}>
-						<SelectionListItem class='flex justify-between items-center' id='user'>
-							<span>사용자 설정</span>
-							<PeopleSettings />
-						</SelectionListItem>
-						<SelectionListItem class='flex justify-between items-center' id='service'>
-							<span>서비스 설정</span>
-							<Settings />
-						</SelectionListItem>
-						<SelectionListItem class='flex justify-between items-center' id='department'>
-							<span>학부별 설정</span>
-							<ContentSettings />
-						</SelectionListItem>
-					</SelectionListItemGroup>
-				{:else if $user === undefined}
-					<Skeleton class='w-32 h-12 bg-gray-300 rounded-lg' />
-					<Skeleton class='w-72 h-36 bg-gray-300 rounded-xl' />
-				{/if}
-			</div>
-		</div>
-		<div class='footer'>
-			<Button class='bg-primary-900 text-white' isIconRight={true}>
-				<ArrowExportLtr slot='icon' />
-				로그아웃
-			</Button>
-			<Button class='bg-green-200 text-black' isIconRight={true} href='/reserve'>
-				<MailInbox slot='icon' />
-				예약 페이지로
-			</Button>
-		</div>
-	</div>
-	<div class='dashboard'>
+<svelte:window bind:innerWidth />
+
+<NavigationShell bind:sidebarCollapsed collapsable={innerWidth && innerWidth <= 768}>
+	<section class='flex flex-col gap-1' slot='navigation_content'>
+		{#if $user}
+			<h3>설정</h3>
+			<SelectionListItemGroup bind:selectedIndex={selectedTabIndex}>
+				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='user'>
+					<span>사용자 설정</span>
+					<PeopleSettings />
+				</SelectionListItem>
+				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='service'>
+					<span>서비스 설정</span>
+					<Settings />
+				</SelectionListItem>
+				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='department'>
+					<span>학부별 설정</span>
+					<ContentSettings />
+				</SelectionListItem>
+			</SelectionListItemGroup>
+		{:else if $user === undefined}
+			<Skeleton class='w-32 h-12 bg-gray-300 rounded-lg' />
+			<Skeleton class='w-full h-36 bg-gray-300 rounded-xl' />
+		{/if}
+	</section>
+	<section class='flex gap-3 items-center w-full' slot='navigation_footer'>
+		<Button class='bg-primary-800 text-white' isIconRight={true} href='/logout'>
+			<ArrowExportLtr slot='icon' />
+			로그아웃
+		</Button>
+		<Button class='bg-green-200 text-black' isIconRight={true} href='/reserve'>
+			<MailInbox slot='icon' />
+			예약 페이지로
+		</Button>
+	</section>
+	<div class='h-screen'>
 		{#if $user && (!$user.department || $user.isAdmin)}
 			{#if selectedTab === "user"}
 				{#await userPromise}
@@ -172,7 +170,7 @@
 				{:catch err}
 					<div class='user-screen-wrap'>
 						<div class='title'>
-							<h3>사용자 설정</h3>
+							<h3 class='mb-1'>사용자 설정</h3>
 						</div>
 						<ErrorScreen class='min-h-[32rem] md:rounded-md' />
 					</div>
@@ -188,7 +186,7 @@
 			<ErrorScreen class='min-h-[480px]' errorMessage='권한이 부족하여 접근하실 수 없습니다.' />
 		{/if}
 	</div>
-</div>
+</NavigationShell>
 
 <style>
     .root {
