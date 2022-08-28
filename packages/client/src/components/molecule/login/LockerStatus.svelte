@@ -12,12 +12,11 @@
 	$: availableDates = [];
 
 
-
-	function availableCalc(availableFrom: Date, availableTo: Date): string {
-		const fromDate = availableFrom ? `${availableFrom.getMonth() + 1}/${availableFrom.getDate()}` : '';
-		const toDate = availableTo ? `${availableTo.getMonth() + 1}/${availableTo.getDate()}` : '';
-		const fromTime = availableFrom ? `${availableFrom.getHours()}:${availableFrom.getMinutes()}` : '';
-		const toTime = availableTo ? `${availableTo.getHours()}:${availableTo.getMinutes()}` : '';
+	function availableCalc(activateFrom: Date, activateTo: Date): string {
+		const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
+		const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
+		const fromTime = activateFrom ? `${activateFrom.getHours()}:${activateFrom.getMinutes()}` : '';
+		const toTime = activateTo ? `${activateTo.getHours()}:${activateTo.getMinutes()}` : '';
 		const isToDateDifferent = toDate && toDate !== fromDate;
 		return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
 	}
@@ -34,7 +33,7 @@
 				{#each Object.entries(lockerCount ?? {}) as [key, value], index(key)}
 					<DepartmentSelection id={key} departmentText={value.departmentName} lockerLeft={value.lockerLeft}
 															 totalLocker={value.totalLocker}
-															 availableTime={availableCalc(value.availableFrom, value.availableTo)} />
+															 availableTime={availableCalc(value.activateFrom, value.activateTo)} />
 				{/each}
 			</DepartmentSelectionGroup>
 		</div>

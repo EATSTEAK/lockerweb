@@ -1,88 +1,88 @@
-<script lang="ts">
-    import Entry from '../components/molecule/login/Entry.svelte';
-    import Button from '../components/atom/Button.svelte';
-    import Soongsil from '../icons/Soongsil.svelte';
-    import DepartmentLockerInfo from '../components/molecule/login/LockerStatus.svelte';
-    import ChevronDown from '../icons/ChevronDown.svelte';
-    import {browser} from '$app/env';
-    import {getAuthorization} from '$lib/auth';
-    import {config} from "$lib/store";
-    import type {DepartmentLockerCount, LockerCount} from "$lib/types";
-    import {variables} from "$lib/variables";
-    import {getDepartmentLockerCountsByFloor} from "$lib/utils";
+<script lang='ts'>
+	import Entry from '../components/molecule/login/Entry.svelte';
+	import Button from '../components/atom/Button.svelte';
+	import Soongsil from '../icons/Soongsil.svelte';
+	import DepartmentLockerInfo from '../components/molecule/login/LockerStatus.svelte';
+	import { browser } from '$app/env';
+	import { getAuthorization } from '$lib/auth';
+	import { config } from '$lib/store';
+	import type { DepartmentLockerCount, LockerCount } from '$lib/types';
+	import { variables } from '$lib/variables';
+	import { getDepartmentLockerCountsByFloor } from '$lib/utils';
+	import Shell from '../components/molecule/Shell.svelte';
 
-    let callbackUrl = undefined;
+	let callbackUrl = undefined;
 
-    let countData: LockerCountResponse;
+	let countData: LockerCountResponse;
 
-    let lockerCount: LockerCount;
+	let lockerCount: LockerCount;
 
-    $: callbackNotLoaded = true;
-    $: mappedConfigsData = {};
+	$: callbackNotLoaded = true;
+	$: mappedConfigsData = {};
 
-    if (browser) {
-        if (getAuthorization()) {
-            window.location.href = '/reserve';
-        }
-        callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
-        callbackNotLoaded = false;
-        fetch(variables.baseUrl + '/api/v1/locker/count')
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    countData = data.result;
-                    console.log(countData);
-                } else {
-                    console.error(data.errorDescription);
-                }
-            })
-            .catch((error) => console.error(error))
-    }
+	if (browser) {
+		if (getAuthorization()) {
+			window.location.href = '/reserve';
+		}
+		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
+		callbackNotLoaded = false;
+		fetch(variables.baseUrl + '/api/v1/locker/count')
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.success) {
+					countData = data.result;
+					console.log(countData);
+				} else {
+					console.error(data.errorDescription);
+				}
+			})
+			.catch((error) => console.error(error));
+	}
 
 
-    $: if ($config && countData) {
-        // console.log('Data received');
-        const mappedConfig: Record<string, Config> = Object.fromEntries($config.map<[string, Config]>((value) => [value.id, value]));
-        lockerCount = updateLockerCount(mappedConfig, countData);
-    }
+	$: if ($config && countData) {
+		// console.log('Data received');
+		const mappedConfig: Record<string, Config> = Object.fromEntries($config.map<[string, Config]>((value) => [value.id, value]));
+		lockerCount = updateLockerCount(mappedConfig, countData);
+	}
 
-    function updateLockerCount(configs: Record<string, Config>, countInfo: LockerCountResponse): LockerCount {
-        const departmentConfigs = {...configs};
-        delete departmentConfigs['SERVICE'];
+	function updateLockerCount(configs: Record<string, Config>, countInfo: LockerCountResponse): LockerCount {
+		const departmentConfigs = { ...configs };
+		delete departmentConfigs['SERVICE'];
 
-        function transformLockerCount(
-            serviceConfig: ServiceConfig,
-            departmentConfig: DepartmentConfig,
-            departmentCount?: { [floor: string]: number }
-        ): DepartmentLockerCount {
-            const floorLockers = getDepartmentLockerCountsByFloor(serviceConfig, departmentConfig.id);
-            const totalLocker = Object.values(floorLockers).reduce<number>((a: number, v: number) => a + v, 0);
-            const totalReserved = departmentCount ? Object.values(departmentCount).reduce<number>((a: number, v: number) => a + v, 0) : 0;
-            const floors = Object.fromEntries(
-                Object.entries(floorLockers).map(([floor, count]) => ([floor,
-                    {
-                        canReserve: count >= (departmentCount?.[floor] ?? 0),
-                        percentage: Math.round(((departmentCount?.[floor] ?? 0) / count) * 100),
-                        totalLocker: count,
-                        lockerLeft: count - (departmentCount?.[floor] ?? 0)
-                    }
-                ]))
-            )
-            // console.log(departmentConfig.id, floorLockers);
-            return {
-                departmentName: departmentConfig.name,
-                canReserve: (totalLocker > totalReserved),
-                lockerLeft: (totalLocker - totalReserved),
-                totalLocker,
-                ...(departmentConfig.activateFrom && {availableFrom: departmentConfig.activateFrom}),
-                ...(departmentConfig.activateTo && {availableFrom: departmentConfig.activateTo}),
-                contact: departmentConfig.contact ?? '',
-                floors
-            };
-        }
+		function transformLockerCount(
+			serviceConfig: ServiceConfig,
+			departmentConfig: DepartmentConfig,
+			departmentCount?: { [floor: string]: number }
+		): DepartmentLockerCount {
+			const floorLockers = getDepartmentLockerCountsByFloor(serviceConfig, departmentConfig.id);
+			const totalLocker = Object.values(floorLockers).reduce<number>((a: number, v: number) => a + v, 0);
+			const totalReserved = departmentCount ? Object.values(departmentCount).reduce<number>((a: number, v: number) => a + v, 0) : 0;
+			const floors = Object.fromEntries(
+				Object.entries(floorLockers).map(([floor, count]) => ([floor,
+					{
+						canReserve: count >= (departmentCount?.[floor] ?? 0),
+						percentage: Math.round(((departmentCount?.[floor] ?? 0) / count) * 100),
+						totalLocker: count,
+						lockerLeft: count - (departmentCount?.[floor] ?? 0)
+					}
+				]))
+			);
+			// console.log(departmentConfig.id, floorLockers);
+			return {
+				departmentName: departmentConfig.name,
+				canReserve: (totalLocker > totalReserved),
+				lockerLeft: (totalLocker - totalReserved),
+				totalLocker,
+				...(departmentConfig.activateFrom && { activateFrom: new Date(departmentConfig.activateFrom) }),
+				...(departmentConfig.activateTo && { activateTo: new Date(departmentConfig.activateTo) }),
+				contact: departmentConfig.contact ?? '',
+				floors
+			};
+		}
 
-        return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(configs.SERVICE as ServiceConfig, value, countInfo?.[key])]));
-    }
+		return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(configs.SERVICE as ServiceConfig, value, countInfo?.[key])]));
+	}
 
 </script>
 <div class='root'>
