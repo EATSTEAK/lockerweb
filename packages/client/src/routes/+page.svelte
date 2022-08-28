@@ -15,6 +15,7 @@
 	import NavigationFooter from '../components/atom/NavigationFooter.svelte';
 	import Credit from '../components/molecule/Credit.svelte';
 	import ChevronDown from '../icons/ChevronDown.svelte';
+	import PageTitle from '../components/atom/PageTitle.svelte';
 
 	let callbackUrl = undefined;
 
@@ -90,6 +91,8 @@
 	}
 
 </script>
+
+<PageTitle />
 
 <Shell mainClass='p-10'>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
