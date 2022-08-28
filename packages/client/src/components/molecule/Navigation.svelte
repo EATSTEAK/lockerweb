@@ -21,10 +21,8 @@
 	let yDirection: number = 0;
 	let hideNavbar = false;
 
-	$: {
-		if (collapsed !== $collapsedState) {
-			collapsedState.set(collapsed);
-		}
+	$: if (collapsed !== $collapsedState) {
+		collapsedState.set(collapsed);
 	}
 
 	$: {
