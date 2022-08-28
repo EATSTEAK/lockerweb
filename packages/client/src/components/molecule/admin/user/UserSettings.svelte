@@ -161,11 +161,11 @@
 					<Add slot='icon' />
 				</Button>
 				<Button on:click={openImportUserModal} class='bg-primary-800 text-white' isIconRight>
-					사용자 불러오기
+					가져오기
 					<PeopleTeamAdd slot='icon' />
 				</Button>
 				<Button on:click={openExportUserModal} class='bg-green-800 text-white' isIconRight>
-					XLSX로 내보내기
+					내보내기
 					<DocumentTable slot='icon' />
 				</Button>
 			</div>
