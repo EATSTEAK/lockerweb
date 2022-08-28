@@ -16,12 +16,16 @@
 	import Credit from '../components/molecule/Credit.svelte';
 	import ChevronDown from '../icons/ChevronDown.svelte';
 	import PageTitle from '../components/atom/PageTitle.svelte';
+	import Modal from '../components/molecule/Modal.svelte';
+	import Dismiss from '../icons/Dismiss.svelte';
 
 	let callbackUrl = undefined;
 
 	let countData: LockerCountResponse;
 
 	let lockerCount: LockerCount;
+
+	let contactModalOpen = false;
 
 	$: callbackNotLoaded = true;
 	$: mappedConfigsData = {};
@@ -108,8 +112,8 @@
 				</Button>
 				<div class='flex flex-row justify-between my-3'>
 					<Credit />
-					<Button
-						class='px-0 py-0 shadow-none text-primary-800 underline hover:shadow-none hover:text-primary-900 active:shadow-none active:drop-shadow-md'>
+					<Button on:click={() => contactModalOpen = true}
+									class='px-0 py-0 shadow-none text-primary-800 underline hover:shadow-none hover:text-primary-900 active:shadow-none active:drop-shadow-md'>
 						도움이 필요하신가요?
 					</Button>
 				</div>
@@ -123,3 +127,19 @@
 	</Navigation>
 	<DepartmentLockerInfo bind:lockerCount />
 </Shell>
+
+<Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
+			 on:close={() => contactModalOpen = false}
+			 on:click={() => contactModalOpen = false}>
+	{#each ($config ?? []) as config}
+		{#if config?.contact}
+			<div class='my-2 leading-10'>
+				<h5>{config.name} 연락처</h5>
+				<p class='text-gray-700'>{config.contact}</p>
+			</div>
+		{/if}
+	{:else}
+		입력된 연락처가 없습니다.
+	{/each}
+	<Dismiss slot='primaryIcon' />
+</Modal>
