@@ -7,8 +7,8 @@ export type DepartmentLockerCount = {
 	canReserve: boolean;
 	lockerLeft: number;
 	totalLocker: number;
-	availableFrom?: Date;
-	availableTo?: Date;
+	activateFrom?: Date;
+	activateTo?: Date;
 	contact: string;
 	floors: {
 		// TODO: Make buildings distinguishable
