@@ -10,6 +10,11 @@
 	import { variables } from '$lib/variables';
 	import { getDepartmentLockerCountsByFloor } from '$lib/utils';
 	import Shell from '../components/molecule/Shell.svelte';
+	import Navigation from '../components/molecule/Navigation.svelte';
+	import NavigationContent from '../components/atom/NavigationContent.svelte';
+	import NavigationFooter from '../components/atom/NavigationFooter.svelte';
+	import Credit from '../components/molecule/Credit.svelte';
+	import ChevronDown from '../icons/ChevronDown.svelte';
 
 	let callbackUrl = undefined;
 
@@ -85,51 +90,33 @@
 	}
 
 </script>
-<div class='root'>
-    <div class='entry-wrap'>
-        <div class='entry'>
-            <Entry name='SOONGSIL UNIV. IT'>
-                <Button
-                        bind:disabled={callbackNotLoaded}
-                        href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
-                        class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
-                    통합 로그인
-                    <Soongsil class='w-8 h-8' slot='icon'/>
-                </Button>
-            </Entry>
-        </div>
-        <div class='arrow'>
-            <ChevronDown class='text-gray-700 w-8 h-8'/>
-        </div>
-    </div>
-    <div class='info'>
-        <DepartmentLockerInfo bind:lockerCount={lockerCount} />
-    </div>
-</div>
 
-
-<style>
-    .root {
-        @apply flex flex-col md:flex-row items-stretch;
-    }
-
-    .arrow {
-        @apply block md:hidden flex justify-center items-center -mt-10 pb-4;
-    }
-
-    .arrow {
-        @apply animate-bounce ease-in-out;
-    }
-
-    .entry-wrap {
-        @apply bg-gray-200 w-full md:min-w-[380px] md:w-[380px] flex flex-col justify-between;
-    }
-
-    .entry {
-        @apply flex flex-col justify-center min-h-screen;
-    }
-
-    .info {
-        @apply p-8 grow;
-    }
-</style>
+<Shell mainClass='p-10'>
+	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
+		<NavigationContent>
+			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
+				<Button
+					disabled={callbackUrl ? undefined : true}
+					href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
+					rel='external'
+					class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight>
+					통합 로그인
+					<Soongsil class='w-8 h-8' slot='icon' />
+				</Button>
+				<div class='flex flex-row justify-between my-3'>
+					<Credit />
+					<Button
+						class='px-0 py-0 shadow-none text-primary-800 underline hover:shadow-none hover:text-primary-900 active:shadow-none active:drop-shadow-md'>
+						도움이 필요하신가요?
+					</Button>
+				</div>
+			</Entry>
+		</NavigationContent>
+		<NavigationFooter class='block md:hidden'>
+			<div class='w-full flex justify-center items-center'>
+				<ChevronDown class='animate-bounce ease-in-out text-gray-700 w-8 h-8' />
+			</div>
+		</NavigationFooter>
+	</Navigation>
+	<DepartmentLockerInfo bind:lockerCount />
+</Shell>
