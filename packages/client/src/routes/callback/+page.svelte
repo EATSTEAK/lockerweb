@@ -9,6 +9,7 @@
 	import Shell from '../../components/molecule/Shell.svelte';
 	import Navigation from '../../components/molecule/Navigation.svelte';
 	import NavigationContent from '../../components/atom/NavigationContent.svelte';
+	import PageTitle from '../../components/atom/PageTitle.svelte';
 
 	let result;
 	let id;
@@ -23,6 +24,9 @@
 		});
 	}
 </script>
+
+<PageTitle name='로그인 중...' />
+
 <Shell mainClass='p-10'>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
