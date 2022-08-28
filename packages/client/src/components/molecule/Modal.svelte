@@ -53,93 +53,66 @@
 	}
 </script>
 
-<dialog on:click={outClick} bind:this={dialog} {open} class={`modal-frame ${clazz}`} {...$$restProps}>
-	<div class='wrap'>
-		<div class='section-title'>
-			<div class='text'>
+<dialog on:click={outClick} bind:this={dialog} {open} class='{clazz} grow bg-gray-200
+        rounded-xl
+        fixed
+        p-0
+        z-50
+        overflow-hidden
+        transition-all
+        shadow-xl
+        md:w-[480px]
+				backdrop:bg-black backdrop:opacity-30' {...$$restProps}>
+	<div class='flex flex-col items-stretch gap-3 w-full h-full max-h-screen'>
+		<div class='flex justify-between select-none'>
+			<div class='pl-4 pt-3 text-gray-700'>
 				<h4>{title}</h4>
 				{#if subtitle}<h5>{subtitle}</h5>{/if}
 			</div>
-			<button on:click={closeModal} class='close-btn'>
+			<button on:click={closeModal}
+							class='w-14 h-10 bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'>
 				<Dismiss />
 			</button>
 		</div>
-		<div class='section-contents'>
+		<div class='mx-4 grow overflow-y-scroll'>
 			<slot />
 		</div>
-		<div class='section-actions'>
+		<div class='mx-4 pb-4 flex justify-end gap-3'>
 			<slot name='actions'>
-				<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
-								class='secondary-btn bg-[#D8D8D8] text-gray-600 [&[disabled]]:opacity-50'
-								isIconRight={isSecondaryBtnIconRight}>
-					<slot slot='icon' name='secondaryIcon' />
-					{secondaryText}
-				</Button>
-				<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
-								class='primary-btn bg-[#7088DF] text-white [&[disabled]]:opacity-50'
-								isIconRight={isPrimaryBtnIconRight}>
-					<slot slot='icon' name='primaryIcon' />
-					{primaryText}
-				</Button>
+				{#if $$slots.secondaryIcon}
+					<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
+									class='bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+									isIconRight={isSecondaryBtnIconRight}>
+						<slot slot='icon' name='secondaryIcon' />
+						{secondaryText}
+					</Button>
+				{:else}
+					<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
+									class='bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+									isIconRight={isSecondaryBtnIconRight}>
+						{secondaryText}
+					</Button>
+				{/if}
+				{#if $$slots.primaryIcon}
+					<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
+									class='bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+									isIconRight={isPrimaryBtnIconRight}>
+						<slot slot='icon' name='primaryIcon' />
+						{primaryText}
+					</Button>
+				{:else}
+					<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
+									class='bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+									isIconRight={isPrimaryBtnIconRight}>
+						{primaryText}
+					</Button>
+				{/if}
 			</slot>
 		</div>
 	</div>
 </dialog>
 
 <style>
-    .modal-frame {
-        @apply grow bg-gray-200
-        rounded-xl
-        fixed
-        p-4
-        z-50
-        overflow-hidden
-        transition-all
-        shadow-xl
-        md:w-[480px];
-    }
-
-    .wrap {
-        @apply flex flex-col items-stretch gap-3 w-full h-full;
-    }
-
-    .section-title {
-        @apply -mx-4 -mt-4 flex justify-between select-none;
-    }
-
-    .text {
-        @apply pl-4 pt-3 text-gray-700;
-    }
-
-    .close-btn {
-        @apply w-14 h-10 bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center;
-    }
-
-    .close-btn:hover {
-        @apply bg-[#7088DF] text-white;
-    }
-
-
-    .section-contents {
-        @apply grow;
-    }
-
-    .section-actions {
-        @apply flex justify-end gap-3;
-    }
-
-    .section-actions :global(.secondary-btn) {
-        @apply bg-[#D8D8D8] border-[1px] border-[#CECECE];
-    }
-
-    .section-actions :global(.secondary-btn:hover) {
-        @apply bg-[#EDEDED];
-    }
-
-    dialog::backdrop {
-        @apply bg-black opacity-30;
-    }
-
     dialog[open] {
         animation: show 0.1s ease normal;
     }
