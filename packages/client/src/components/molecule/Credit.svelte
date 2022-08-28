@@ -12,6 +12,7 @@
 	import AmazonS3 from '../../icons/brands/AmazonS3.svelte';
 	import Dismiss from '../../icons/Dismiss.svelte';
 	import Eatsteak from '../../icons/creator/Eatsteak.svelte';
+	import Twince from '../../icons/creator/Twince.svelte';
 
 	let open = false;
 </script>
@@ -48,6 +49,10 @@
 			<Button href='https://github.com/EATSTEAK' rel='external' target='_blank'
 							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#FF8C00] active:shadow-none active:brightness-95'>
 				<Eatsteak />
+			</Button>
+			<Button href='https://github.com/Twince' rel='external' target='_blank'
+							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#F38630] active:shadow-none active:brightness-95'>
+				<Twince />
 			</Button>
 		</div>
 	</div>
