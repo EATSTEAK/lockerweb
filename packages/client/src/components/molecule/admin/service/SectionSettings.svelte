@@ -10,6 +10,7 @@
 	import type { SectionRemoveRequest, SectionUpdateRequest } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import isEqual from 'lodash.isequal';
+	import Dismiss from '../../../../icons/Dismiss.svelte';
 
 	export let floor: string = '';
 	export let originalId: string;
@@ -75,6 +76,10 @@
 		disabled = [...disabled, disabledInput];
 	}
 
+	function removeDisabled(id: number) {
+		disabled = disabled.filter(disabledId => disabledId !== id);
+	}
+
 	function removeSection() {
 		dispatch('remove', { floor: floorInput, id });
 	}
@@ -113,7 +118,13 @@
 			{/if}
 			<div class='disabled-list'>
 				{#each disabled as disabledId}
-					<Tag class='disabled-id bg-gray-300'>{disabledId}</Tag>
+					<Tag on:click={() => removeDisabled(disabledId)}
+							 class='disabled-id bg-gray-300 select-none cursor-pointer hover:brightness-95 active:brightness-75'>
+						<div class='flex items-center gap-1'>{disabledId}
+							<Dismiss class='w-4 h-4 text-gray-500' />
+						</div>
+
+					</Tag>
 				{/each}
 			</div>
 		</div>
