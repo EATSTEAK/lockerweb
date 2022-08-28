@@ -85,7 +85,7 @@ export const updateUser = async function (info: UserUpdateRequest): Promise<User
 		attributes[':name'] = { S: info.name };
 		updateExp = 'SET n = :name';
 	}
-	if (info.isAdmin) {
+	if (info.isAdmin !== undefined) {
 		attributes[':isAdmin'] = { BOOL: info.isAdmin };
 		updateExp += `${updateExp ? ',' : 'SET'} iA = :isAdmin`;
 	}
