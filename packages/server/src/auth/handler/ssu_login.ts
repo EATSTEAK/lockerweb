@@ -52,10 +52,8 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 					const activateFrom = new Date(c.activateFrom);
 					const activateTo = new Date(c.activateTo);
 					return (
-						c.activateFrom &&
-						activateFrom.getTime() >= Date.now() &&
-						c.activateTo &&
-						activateTo.getTime() <= Date.now()
+						(c.activateFrom && activateFrom.getTime() > Date.now()) ||
+						(c.activateTo && activateTo.getTime() < Date.now())
 					);
 				})
 				.map((c) => c.id);

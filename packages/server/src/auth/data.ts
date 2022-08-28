@@ -60,7 +60,7 @@ export const issueToken = async function (
 		ExpressionAttributeValues: {
 			':token': { S: token },
 			':expiresOn': { N: `${expires}` },
-			...(id !== adminId && blockDeptCondition && conditionValues)
+			...(id !== adminId && conditionValues)
 		},
 		ReturnValues: 'UPDATED_NEW'
 	};
