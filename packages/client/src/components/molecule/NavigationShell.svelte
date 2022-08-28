@@ -22,7 +22,7 @@
 </script>
 
 <Shell bind:navigationCollapsed bind:collapsable>
-	<Navigation slot='navigation' class='flex-row w-full md:min-w-[380px] md:w-[380px] md:basis-[380px] md:h-screen'
+	<Navigation slot='navigation' class='flex-row w-full h-full'
 							{collapsable} bind:collapsed={navigationCollapsed}>
 		<NavigationHeader class='md:pt-10' slot='header'>
 			<slot name='navigation_header'>
