@@ -8,6 +8,8 @@
 	export let subtitle: string = '';
 	export let noBackdrop: boolean = false;
 
+	export let primaryClass = '';
+	export let secondaryClass = '';
 	export let primaryText: string = '확인';
 	export let secondaryText: string = '취소';
 	export let isPrimaryBtnIconRight = false;
@@ -81,28 +83,28 @@
 			<slot name='actions'>
 				{#if $$slots.secondaryIcon}
 					<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
-									class='bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+									class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
 									isIconRight={isSecondaryBtnIconRight}>
 						<slot slot='icon' name='secondaryIcon' />
 						{secondaryText}
 					</Button>
 				{:else}
 					<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
-									class='bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+									class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
 									isIconRight={isSecondaryBtnIconRight}>
 						{secondaryText}
 					</Button>
 				{/if}
 				{#if $$slots.primaryIcon}
 					<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
-									class='bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+									class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
 									isIconRight={isPrimaryBtnIconRight}>
 						<slot slot='icon' name='primaryIcon' />
 						{primaryText}
 					</Button>
 				{:else}
 					<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
-									class='bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+									class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
 									isIconRight={isPrimaryBtnIconRight}>
 						{primaryText}
 					</Button>
