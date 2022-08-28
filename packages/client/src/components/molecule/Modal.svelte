@@ -46,7 +46,7 @@
 		const rect = dialog.getBoundingClientRect();
 		const doc = dialog.ownerDocument;
 		const win = doc.defaultView || doc.parentWindow;
-		if (event.view === win) return;
+		if (event.view !== win || (event.clientX === 0 && event.clientY === 0)) return;
 		const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
 			&& rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
 		if (!isInDialog) {
