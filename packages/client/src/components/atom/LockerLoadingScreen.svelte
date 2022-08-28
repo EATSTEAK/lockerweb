@@ -1,5 +1,4 @@
 <script lang="ts">
-  import LockerLoadingScreen from "./LockerLoadingScreen.svelte";
   export let message: string = "사물함 불러오는 중...";
   let clazz;
   export { clazz as class };
