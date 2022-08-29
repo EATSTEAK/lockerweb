@@ -1,34 +1,32 @@
-<script lang="ts">
-  import Skeleton from "../../atom/Skeleton.svelte";
+<script lang='ts'>
+	import Skeleton from '../../atom/Skeleton.svelte';
 
-  export let reservedSection;
-  export let reservedNumber;
-  export let tillTime;
-
-  export let userReservedLockerInfo: Object;
+	export let reservedSection;
+	export let reservedNumber;
+	export let tillTime;
 </script>
-{#if userReservedLockerInfo}
-  <div class="wrap">
-    <h4 class="text-4xl">내 정보</h4>
-    <h5 class="text-xl text-blue-500 mt-3">예약한 사물함</h5>
-    <div class="reserve-box flex">
-      <div class="location-info">
-        <div class="text-2xl font-extrabold align-middle">구역</div>
-        <div class="location text-7xl font-extrabold">{reservedSection}</div>
-      </div>
-      <div class="number text-primary-800 text-7xl font-extrabold ml-4">{reservedNumber}</div>
-    </div>
-    <div class="till ml-3 mt-1">·&nbsp{tillTime}</div>
-  </div>
+{#if reservedSection !== undefined}
+	<div class='wrap'>
+		<h4 class='text-4xl'>내 정보</h4>
+		<h5 class='text-xl text-blue-500 mt-3'>예약한 사물함</h5>
+		<div class='reserve-box flex'>
+			<div class='location-info'>
+				<div class='text-2xl font-extrabold align-middle'>구역</div>
+				<div class='location text-7xl font-extrabold'>{reservedSection}</div>
+			</div>
+			<div class='number text-primary-800 text-7xl font-extrabold ml-4'>{reservedNumber}</div>
+		</div>
+		<div class='till ml-3 mt-1'>·&nbsp{tillTime}</div>
+	</div>
 {:else}
-  <div class="wrap">
-    <Skeleton class="w-52 h-10 mt-9 bg-gray-300 rounded-lg"></Skeleton>
-    <div class="flex flex-row mt-6">
-      <Skeleton class="w-16 h-32 bg-gray-300 rounded-lg mr-2"></Skeleton>
-      <Skeleton class="w-36 h-32 bg-gray-300 rounded-lg"></Skeleton>
-    </div>
-    <Skeleton class="w-24 h-6 mt-2 bg-gray-300 rounded-lg"></Skeleton>
-  </div>
+	<div class='wrap'>
+		<Skeleton class='w-52 h-10 mt-9 bg-gray-300 rounded-lg'></Skeleton>
+		<div class='flex flex-row mt-6'>
+			<Skeleton class='w-16 h-32 bg-gray-300 rounded-lg mr-2'></Skeleton>
+			<Skeleton class='w-36 h-32 bg-gray-300 rounded-lg'></Skeleton>
+		</div>
+		<Skeleton class='w-24 h-6 mt-2 bg-gray-300 rounded-lg'></Skeleton>
+	</div>
 {/if}
 
 <style>
