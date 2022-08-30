@@ -53,8 +53,8 @@
 		{/if}
 	</div>
 	{#if selectedLocationDataFetchStatus}
-		<div class='locker-grid-wrap'>
-			<div class='locker-grid' style={`width:${lockerGridWidthScale}rem; height:${lockerGridHeightScale}rem;`}>
+		<div class='grow flex items-center overflow-scroll'>
+			<div class='locker-grid flex flex-col flex-wrap mt-5 ml-auto mr-auto' style={`width:${lockerGridWidthScale}rem; height:${lockerGridHeightScale}rem;`}>
 				{#each { length: lockerRangeCount } as _, i}
 					<LockerItem lockerLocation='A' lockerNumber={i+1} />
 				{/each}
@@ -118,12 +118,7 @@
     }
 
     /* -------------- 사물함 그리드 영역 -------------- */
-    :global(.locker-grid-wrap) {
-        @apply grow flex items-center overflow-scroll;
-    }
-
-    .locker-grid {
-        @apply flex flex-row flex-wrap mt-5 ml-auto mr-auto;
+	.locker-grid {
         scrollbar-color: #c2c2c2 #e0e0e0;
         scrollbar-width: thin;
     }
