@@ -3,7 +3,7 @@
   export let lockerNumber: number;
 </script>
 
-<button class="flex flex-col w-16 h-16 flex ml-4 mb-2 mt-2 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 active:scale-100">
+<button class="locker-item">
   <div class="location-title">
       <p>{lockerLocation}</p><p>구역</p>
   </div>
@@ -12,6 +12,18 @@
 </button>
 
 <style>
+    .locker-item {
+        @apply flex flex-col w-16 h-16 flex ml-4 mb-2 border-2 rounded-xl cursor-pointer transition-all;
+    }
+
+    .locker-item:hover {
+        @apply scale-105;
+    }
+
+    .locker-item:active {
+        @apply scale-100;
+    }
+
     .selected {
         @apply border-[3px] border-blue-400;
     }
