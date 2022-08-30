@@ -58,15 +58,15 @@
 			<ArrowExportLtr slot='icon' />
 			로그아웃
 		</Button>
-		{#if contact}
-			<div class='contact-text text-right'>
+		{#if contactDepartment}
+			<div class='contact-text text-right text-sm text-gray-600'>
 				<p>{contactDepartment}</p>
-				<p>{contact}</p>
+				<p>{contact == undefined ? "오류, 관리자에게 문의하세요" : contact}</p>
 			</div>
 		{:else}
 			<div class='flex flex-col'>
-				<Skeleton class='contact-text-skeleton min-w-2/5'></Skeleton>
-				<Skeleton class='contact-number-skeleton'></Skeleton>
+				<Skeleton class='w-16 h-4 rounded-sm bg-gray-300'></Skeleton>
+				<Skeleton class='w-20 h-4 mt-1 rounded-sm bg-gray-300 min-w-2/5'></Skeleton>
 			</div>
 		{/if}
 	</div>
@@ -75,13 +75,3 @@
 	</div>
 
 </NavigationShell>
-
-<style>
-    :global(.contact-text-skeleton) {
-        @apply w-20 h-4 rounded-sm bg-gray-300;
-    }
-
-    :global(.contact-number-skeleton) {
-        @apply w-16 h-4 mt-1 rounded-sm bg-gray-300;
-    }
-</style>
