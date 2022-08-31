@@ -1,68 +1,91 @@
 <script lang='ts'>
-  import SelectionListItemGroup from '../../atom/SelectionListItemGroup.svelte';
-  import SelectionListItem from '../../atom/SelectionListItem.svelte';
-  import LockerItem from './LockerItem.svelte';
-  import Skeleton from '../../atom/Skeleton.svelte';
-  import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
+    import SelectionListItemGroup from '../../atom/SelectionListItemGroup.svelte';
+    import SelectionListItem from '../../atom/SelectionListItem.svelte';
+    import LockerItem from './LockerItem.svelte';
+    import Skeleton from '../../atom/Skeleton.svelte';
+    import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
 
-  export let selectedLocationDataFetchStatus: boolean = true;
+    export let buildingConfig: Building;
+    export let userDepartmentId: stirng;
+    let menuConfig: Object = {};
 
-	let lockerGridHeight: number | undefined = 5;
-	let lockerRangeCount: number | undefined = 40;
-	let lockerGridWidthScale: number | undefined = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
-	let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
+    $: if(buildingConfig && userDepartmentId) {
+        const allLockers = buildingConfig.buildings[selectedBuildingId].lockers;
+        console.log(allLockers)
+        const floors: Object = Object.entries(allLockers).map(data => data[1]); // 선택한 건물의 층별 사물함 데이터
+        // console.log("-- floors --")
+        // console.log(floors);
+        // console.log(Object.entries(floors).map(x => Object.entries(x)))
+        // console.log(Object.entries(allLockers).map(data => data[1]))
+        // console.log(Object.entries(allLockers).map(data => Object.entries(data[1]).map(section => section[1].subsections)));
+    }
+
+    let Floors: [];
+    let section: string;
+
+    let selectedBuildingId: number = 21;
+    let selectedFloors: number = undefined;
+    let selectedSection: string = undefined;
+
+    export let selectedLocationDataFetchStatus: boolean = true;
+
+    let lockerGridHeight: number | undefined = 5;
+    let lockerRangeCount: number | undefined = 40;
+    let lockerGridWidthScale: number | undefined = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
+    let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
 </script>
 
 <div class='wrap'>
-	<div class='select-info'>
-		<div class='select-location'>
-			{#if selectedLocationDataFetchStatus}
-				<h4 class='text-3xl my-2 mt-8 ml-8'>구역 선택</h4>
-				<div class='location-depths'>
-					<div class='select-floor'>
-						<SelectionListItemGroup class='location-select-group'>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
-						</SelectionListItemGroup>
-					</div>
-					<div class='select-area'>
-						<SelectionListItemGroup>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
-						</SelectionListItemGroup>
-					</div>
-				</div>
-			{:else}
-				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300'>구역 선택</Skeleton>
-				<div class='location-depths'>
-					<div class='select-floor'>
-						<Skeleton class='location-select-group h-64 rounded-xl bg-gray-300' />
-					</div>
-					<div class='select-area'>
-						<Skeleton class='h-64 rounded-xl bg-gray-300' />
-					</div>
-				</div>
-			{/if}
-		</div>
-		{#if selectedLocationDataFetchStatus}
-			<div class='locker-map'>
-				<img class='map-img' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지' aria-level='정보과학관 1층 이미지'>
-			</div>
-		{:else}
-			<Skeleton class='locker-map-skeleton bg-gray-300' />
-		{/if}
-	</div>
-	{#if selectedLocationDataFetchStatus}
-		<div class='grow flex items-center overflow-scroll'>
-			<div class='locker-grid flex flex-col flex-wrap mt-5 ml-auto mr-auto' style={`width:${lockerGridWidthScale}rem; height:${lockerGridHeightScale}rem;`}>
-				{#each { length: lockerRangeCount } as _, i}
-					<LockerItem lockerLocation='A' lockerNumber={i+1} />
-				{/each}
-			</div>
-		</div>
-	{:else}
-		<LockerLoadingScreen />
-	{/if}
+    <div class='select-info'>
+        <div class='select-location'>
+            {#if buildingConfig}
+                <h4 class='text-3xl my-2 mt-8 ml-8'>구역 선택</h4>
+                <div class='location-depths'>
+                    <div class='select-floor'>
+                        <SelectionListItemGroup class='location-select-group'>
+                            <SelectionListItem class='location-select-item'></SelectionListItem>
+                            <SelectionListItem class='location-select-item'></SelectionListItem>
+                            <SelectionListItem class='location-select-item'></SelectionListItem>
+                        </SelectionListItemGroup>
+                    </div>
+                    <div class='select-area'>
+                        <SelectionListItemGroup>
+                            <SelectionListItem class='location-select-item'></SelectionListItem>
+                        </SelectionListItemGroup>
+                    </div>
+                </div>
+            {:else}
+                <Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300'>구역 선택</Skeleton>
+                <div class='location-depths'>
+                    <div class='select-floor'>
+                        <Skeleton class='location-select-group h-64 rounded-xl bg-gray-300'/>
+                    </div>
+                    <div class='select-area'>
+                        <Skeleton class='h-64 rounded-xl bg-gray-300'/>
+                    </div>
+                </div>
+            {/if}
+        </div>
+        {#if buildingConfig}
+            <div class='locker-map'>
+                <img class='map-img' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지' aria-level='정보과학관 1층 이미지'>
+            </div>
+        {:else}
+            <Skeleton class='locker-map-skeleton bg-gray-300'/>
+        {/if}
+    </div>
+    {#if buildingConfig}
+        <div class='grow flex items-center overflow-scroll'>
+            <div class='locker-grid flex flex-col flex-wrap mt-5 ml-auto mr-auto'
+                 style={`width:${lockerGridWidthScale}rem; height:${lockerGridHeightScale}rem;`}>
+                {#each {length: lockerRangeCount} as _, i}
+                    <LockerItem lockerLocation='A' lockerNumber={i+1}/>
+                {/each}
+            </div>
+        </div>
+    {:else}
+        <LockerLoadingScreen/>
+    {/if}
 </div>
 
 <style>
@@ -118,7 +141,7 @@
     }
 
     /* -------------- 사물함 그리드 영역 -------------- */
-	.locker-grid {
+    .locker-grid {
         scrollbar-color: #c2c2c2 #e0e0e0;
         scrollbar-width: thin;
     }
