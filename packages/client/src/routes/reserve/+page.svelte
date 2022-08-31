@@ -19,8 +19,14 @@
 	let lockerSection: string;
 	let lockerNumber: number;
 	let contact: string;
+	let userDepartmentId: string;
 	let contactDepartment: string;
 
+	$: buildingConfig = $config ? $config.find(c => c.id === 'SERVICE') ?? {
+		id: 'SERVICE',
+		name: undefined,
+		buildings: {}
+	} : undefined;
 
 	$:if ($user) {
 		userReserveLockerConverter($user);
@@ -41,6 +47,7 @@
 		console.log(config);
 		if (userInfo?.department) {
 			const isDepartmentSame = config.find(config => config.id === userInfo.department);
+			userDepartmentId = userInfo.department;
 			contact = isDepartmentSame.contact;
 			contactDepartment = isDepartmentSame.name;
 		}
@@ -61,17 +68,17 @@
 		{#if contactDepartment}
 			<div class='contact-text text-right text-sm text-gray-600'>
 				<p>{contactDepartment}</p>
-				<p>{contact == undefined ? "오류, 관리자에게 문의하세요" : contact}</p>
+				<p>{contact == undefined ? "연락처를 찾을 수 없습니다" : contact}</p>
 			</div>
 		{:else}
-			<div class='flex flex-col'>
+			<div class='flex flex-col items-end'>
 				<Skeleton class='w-16 h-4 rounded-sm bg-gray-300'></Skeleton>
 				<Skeleton class='w-20 h-4 mt-1 rounded-sm bg-gray-300 min-w-2/5'></Skeleton>
 			</div>
 		{/if}
 	</div>
 	<div class='grow overflow-scroll'>
-		<LockerReserveInfo />
+		<LockerReserveInfo userDepartmentId={userDepartmentId} buildingConfig={buildingConfig}/>
 	</div>
 
 </NavigationShell>
