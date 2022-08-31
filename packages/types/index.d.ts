@@ -153,6 +153,14 @@ type LockerCountResponse = {
 	};
 };
 
+type MenuConfig = {
+	[floors: string]: {
+		[section: string]: {
+			[lockerRange]: number
+		}
+	}
+}
+
 /* Error Definition */
 
 type ResponsibleError = {
