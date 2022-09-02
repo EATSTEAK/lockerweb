@@ -5,6 +5,7 @@ import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import {
 	errorResponse,
+	ForbiddenError,
 	isResponsibleError,
 	ResponsibleError,
 	UnauthorizedError
@@ -35,7 +36,7 @@ function requestBody(result: string): Promise<string> {
 async function obtainId(result: string) {
 	const body = await requestBody(encodeURIComponent(result));
 	if (body.indexOf('pseudonym_session_unique_id') < 0) {
-		throw new UnauthorizedError('Unauthorized');
+		throw new UnauthorizedError("Can't find pseudonym_session_unique_id");
 	}
 	return body.substring(body.indexOf('pseudonym_session_unique_id') + 36).split('"')[0];
 }
@@ -58,11 +59,7 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 				})
 				.map((c) => c.id);
 			if (adminId !== id && blockedDepartments.includes('SERVICE')) {
-				return createResponse(403, {
-					success: false,
-					error: 403,
-					errorDescription: 'Forbidden'
-				});
+				return errorResponse(new ForbiddenError());
 			}
 			const accessToken = jwt.sign({ aud: id }, JWT_SECRET, {
 				expiresIn: 3600 * 1000
@@ -83,13 +80,7 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 		return errorResponse(new UnauthorizedError('Unauthorized'));
 	} catch (e) {
 		if (!isResponsibleError(e)) {
-			console.error(e);
-			const res = {
-				success: false,
-				error: 500,
-				errorDescription: 'Internal error'
-			};
-			return createResponse(500, res);
+			return errorResponse(new ResponsibleError(500, 'InternalError'));
 		}
 		return errorResponse(e as ResponsibleError);
 	}

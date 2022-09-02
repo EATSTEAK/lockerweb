@@ -4,7 +4,12 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { assertAccessible, revokeToken } from '../data';
 import { createResponse } from '../../common';
-import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
+import {
+	errorResponse,
+	isResponsibleError,
+	ResponsibleError,
+	UnauthorizedError
+} from '../../util/error';
 
 export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -12,17 +17,11 @@ export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 		const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
 		await assertAccessible(payload.aud as string, token);
 		const res = await revokeToken(payload.aud as string, token);
-		return createResponse(200, { success: true, ...res });
+		return createResponse(200, { success: true, result: res });
 	} catch (err) {
 		if (isResponsibleError(err)) {
 			return errorResponse(err as ResponsibleError);
 		}
-		const res = {
-			success: false,
-			token,
-			error: 401,
-			errorDescription: 'Unauthorized'
-		};
-		return createResponse(401, res);
+		return errorResponse(new UnauthorizedError("Can't logout when not logged in", { token }));
 	}
 };
