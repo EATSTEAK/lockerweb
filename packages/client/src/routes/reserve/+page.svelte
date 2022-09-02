@@ -44,7 +44,6 @@
 	}
 
 	function loadContact(userInfo: User, config: Array<Config>) {
-		console.log(config);
 		if (userInfo?.department) {
 			const isDepartmentSame = config.find(config => config.id === userInfo.department);
 			userDepartmentId = userInfo.department;
@@ -78,7 +77,7 @@
 		{/if}
 	</div>
 	<div class='grow overflow-scroll'>
-		<LockerReserveInfo userDepartmentId={userDepartmentId} buildingConfig={buildingConfig}/>
+		<LockerReserveInfo userDepartmentId={userDepartmentId} buildingConfig={buildingConfig} />
 	</div>
 
 </NavigationShell>
