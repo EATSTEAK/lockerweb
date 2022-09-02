@@ -641,14 +641,22 @@ components:
       required:
         - success
         - error
-        - errorDescription
       properties:
         success:
           type: boolean
           default: false
         error:
-          type: integer
-          format: int32
+          type: object
+          required:
+            - code
+            - name
+          properties:
+            code:
+              type: number
+            name:
+              type: string
+            description:
+              type: string
         errorDescription:
           type: string
     AccessTokenInfo:

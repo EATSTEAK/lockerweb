@@ -166,15 +166,17 @@ type SuccessResponse = {
 
 type ErrorResponse = {
 	success: false;
-	error: number;
-	errorType: string;
-	errorDescription: string;
+	error: {
+		code: number;
+		name: string;
+		description?: string;
+	};
 };
 
 /* Error Definition */
 
 type ResponsibleError = {
-	errorType: string;
+	errorName: string;
 	message?: string;
 	additionalInfo?: Record<string, unknown>;
 };

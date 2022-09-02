@@ -8,17 +8,17 @@ export class ResponsibleError extends Error {
 
 	additionalInfo: Record<string, unknown>;
 
-	errorType: string;
+	errorName: string;
 
 	constructor(
 		errorCode: number,
-		errorType: string,
+		errorName: string,
 		message?: string,
 		additionalInfo?: Record<string, unknown>
 	) {
 		super(message);
 		this.errorCode = errorCode;
-		this.errorType = errorType;
+		this.errorName = errorName;
 		this.message = message;
 		this.additionalInfo = additionalInfo;
 	}
@@ -27,6 +27,12 @@ export class ResponsibleError extends Error {
 export class UnauthorizedError extends ResponsibleError {
 	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
 		super(401, 'UnauthorizedError', message, additionalInfo);
+	}
+}
+
+export class ForbiddenError extends ResponsibleError {
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(403, 'ForbiddenError', message, additionalInfo);
 	}
 }
 
@@ -43,7 +49,7 @@ export class CantClaimError extends ResponsibleError {
 }
 
 export function isResponsibleError(error: unknown) {
-	return typeof error === 'object' && Object.keys(error).includes('errorType');
+	return typeof error === 'object' && Object.keys(error).includes('errorName');
 }
 
 export function errorResponse(
@@ -52,8 +58,11 @@ export function errorResponse(
 ): APIGatewayProxyResult {
 	return createResponse(error.errorCode, {
 		success: false,
-		error: error.errorCode,
-		errorDescription: overrideDescription ?? error.message,
-		...error.additionalInfo
+		error: {
+			code: error.errorCode,
+			name: error.errorName,
+			description: overrideDescription ?? error.message,
+			...error.additionalInfo
+		}
 	});
 }
