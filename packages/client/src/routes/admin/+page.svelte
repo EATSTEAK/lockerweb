@@ -37,8 +37,11 @@
 
 	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
 	$: if ($user && !$user.success && browser) {
-		deleteAuthorization();
-		window.location.href = '/';
+		const error = ($user as ErrorResponse<LockerError>).error;
+		if(error.code === 401 || error.code === 403) {
+			deleteAuthorization();
+			window.location.href = '/';
+		}
 	}
 
 	function closeSidebarMenu() {
@@ -53,9 +56,6 @@
 				}
 				throw (res as ErrorResponse<LockerError>).error;
 			})
-			.catch((err) => {
-				console.error(err);
-			});
 	}
 
 	function updateUser(evt: CustomEvent<UserUpdateRequest>) {
@@ -119,7 +119,7 @@
 
 <NavigationShell bind:sidebarCollapsed collapsable={innerWidth && innerWidth <= 768}>
 	<section class='flex flex-col gap-1' slot='navigation_content'>
-		{#if $user?.success}
+		{#if $user && $user.success}
 			<h3>설정</h3>
 			<SelectionListItemGroup bind:selectedIndex={selectedTabIndex}>
 				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='user'>
@@ -151,7 +151,7 @@
 		</Button>
 	</section>
 	<div class='h-screen'>
-		{#if $user?.success && (!$user.result.department || $user.result.isAdmin)}
+		{#if $user && $user.success && (!$user.result.department || $user.result.isAdmin)}
 			{#if selectedTab === "user"}
 				{#await userPromise}
 					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
