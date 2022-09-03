@@ -147,7 +147,7 @@ export function toConfigResponse(config: Config): ConfigResponse {
 	return {
 		...config,
 		...(config.activateFrom && { activateFrom: config.activateFrom.toISOString() }),
-		...(config.activateTo && { activateTo: config.activateTo })
+		...(config.activateTo && { activateTo: config.activateTo.toISOString() })
 	};
 }
 
