@@ -6,7 +6,7 @@
 	import SaveEdit from '../../../../icons/SaveEdit.svelte';
 	import ArrowUndo from '../../../../icons/ArrowUndo.svelte';
 	import isEqual from 'lodash.isequal';
-	import { getServiceConfig, updateConfig as updateConfigToApi } from '$lib/api/config';
+	import { getServiceConfig, apiUpdateConfig } from '$lib/api/config';
 	import { config } from '$lib/store';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import Warning from '../../../../icons/Warning.svelte';
@@ -53,7 +53,7 @@
 
 	function updateConfig() {
 		updating = true;
-		updateConfigToApi(newConfig)
+		apiUpdateConfig(newConfig)
 			.then(res => {
 				updating = false;
 				if (res.success) {

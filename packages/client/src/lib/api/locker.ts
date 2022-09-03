@@ -28,7 +28,7 @@ const UnclaimLockerResponseSchema = z.object({
 
 const LockerCountResponseSchema = z.record(z.record(z.number()));
 
-export async function queryLocker(
+export async function apiQueryLocker(
 	showId = false
 ): Promise<SuccessResponse<ReservedLocker[]> | ErrorResponse<ForbiddenError | NotFoundError>> {
 	const response = await apiRequest<ReservedLockerResponse[]>(
@@ -51,7 +51,7 @@ export async function queryLocker(
 	throw other.error;
 }
 
-export async function countLocker(): Promise<
+export async function apiCountLocker(): Promise<
 	SuccessResponse<LockerCountResponse> | ErrorResponse<NotFoundError>
 > {
 	const response = await apiRequest<LockerCountResponse>('/locker/count');
@@ -67,7 +67,7 @@ export async function countLocker(): Promise<
 	throw other.error;
 }
 
-export async function claimLocker(
+export async function apiClaimLocker(
 	lockerId: string,
 	claimedUntil?: Date
 ): Promise<
@@ -106,7 +106,7 @@ export async function claimLocker(
 	throw other.error;
 }
 
-export async function unclaimLocker(): Promise<
+export async function apiUnclaimLocker(): Promise<
 	| SuccessResponse<UnclaimLockerResponse>
 	| ErrorResponse<BlockedError | ForbiddenError | CantClaimError>
 > {

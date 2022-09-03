@@ -6,8 +6,8 @@ import { writable } from 'svelte/store';
 // @ts-ignore
 import { browser } from '$app/env';
 import { getAuthorization } from '$lib/auth';
-import { getConfig } from '$lib/api/config';
-import { getUser } from '$lib/api/user';
+import { apiGetConfig } from '$lib/api/config';
+import { apiGetUser } from '$lib/api/user';
 
 type ConfigStore = {
 	lastUpdated: string;
@@ -54,7 +54,7 @@ async function refreshConfig(
 			}
 		}
 		try {
-			return await getConfig().then((data) => {
+			return await apiGetConfig().then((data) => {
 				if (data.success) {
 					const result: Config[] = data.result;
 					localStorage.setItem(
@@ -88,7 +88,7 @@ async function refreshConfig(
 async function refreshUser(): Promise<SuccessResponse<User> | ErrorResponse<LockerError>> {
 	if (getAuthorization()) {
 		try {
-			return await getUser().then((res) => {
+			return await apiGetUser().then((res) => {
 				if (res.success) {
 					return res;
 				} else {

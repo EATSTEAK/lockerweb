@@ -13,7 +13,7 @@
 	import ContentSettings from '../../icons/ContentSettings.svelte';
 	import { browser } from '$app/env';
 	import { deleteAuthorization } from '$lib/auth';
-	import { queryUser as queryUserFromApi, updateUser as updateUserFromApi, batchPutUser as batchPutUserFromApi, batchDeleteUser as batchDeleteUserFromApi } from '$lib/api/user';
+	import { apiQueryUser, apiUpdateUser, apiBatchPutUser, apiBatchDeleteUser } from '$lib/api/user';
 	import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 	import Skeleton from '../../components/atom/Skeleton.svelte';
@@ -46,7 +46,7 @@
 	}
 
 	function queryUser() {
-		userPromise = queryUserFromApi()
+		userPromise = apiQueryUser()
 			.then((res) => {
 				if (res.success) {
 					return res.result;
@@ -60,7 +60,7 @@
 
 	function updateUser(evt: CustomEvent<UserUpdateRequest>) {
 		userUpdating = true;
-		updateUserFromApi(evt.detail)
+		apiUpdateUser(evt.detail)
 			.then(res => {
 				userUpdating = false;
 				if (res.success) {
@@ -78,7 +78,7 @@
 
 	function batchPutUser(evt: CustomEvent<User[]>) {
 		userUpdating = true;
-		batchPutUserFromApi(evt.detail)
+		apiBatchPutUser(evt.detail)
 			.then(res => {
 				userUpdating = false;
 				if (res.success) {
@@ -96,7 +96,7 @@
 
 	function batchDeleteUser(evt: CustomEvent<string[]>) {
 		userUpdating = true;
-		batchDeleteUserFromApi(evt.detail)
+		apiBatchDeleteUser(evt.detail)
 			.then(res => {
 				userUpdating = false;
 				if (res.success) {

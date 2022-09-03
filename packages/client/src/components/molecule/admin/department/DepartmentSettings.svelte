@@ -3,7 +3,7 @@
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import DepartmentConfigEditor from './DepartmentConfigEditor.svelte';
 	import Skeleton from "../../../atom/Skeleton.svelte";
-	import { deleteConfig, updateConfig } from '$lib/api/config';
+	import { apiDeleteConfig, apiUpdateConfig } from '$lib/api/config';
 
 	$: configs = $config.success ? $config.result.filter((v) => v.id !== 'SERVICE') : [];
 
@@ -12,7 +12,7 @@
 
 	function deleteDepartment(event: CustomEvent<ConfigDeleteRequest>) {
 		updating = true;
-		deleteConfig(event.detail)
+		apiDeleteConfig(event.detail)
 			.then(res => {
 				updating = false;
 				if (res.success) {
@@ -29,7 +29,7 @@
 
 	function updateDepartment(event: CustomEvent<ConfigUpdateRequest>) {
 		updating = true;
-		updateConfig(event.detail)
+		apiUpdateConfig(event.detail)
 			.then(res => {
 				updating = false;
 				if (res.success) {

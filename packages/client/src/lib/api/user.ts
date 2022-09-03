@@ -44,7 +44,7 @@ const BatchUserPutRequestSchema = z.array(
 
 const UserDeleteRequestSchema = z.object({ id: z.string() });
 
-export async function getUser(
+export async function apiGetUser(
 	id?: string
 ): Promise<SuccessResponse<User> | ErrorResponse<ForbiddenError | NotFoundError>> {
 	const response = await apiRequest<UserResponse>(
@@ -67,7 +67,7 @@ export async function getUser(
 	throw other.error;
 }
 
-export async function updateUser(
+export async function apiUpdateUser(
 	userUpdateRequest: UserUpdateRequest
 ): Promise<SuccessResponse<UserUpdateRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	const response = await apiRequest<UserUpdateRequest>('/user/update', true, userUpdateRequest);
@@ -87,7 +87,7 @@ export async function updateUser(
 	throw other.error;
 }
 
-export async function deleteUser(
+export async function apiDeleteUser(
 	userDeleteRequest: UserDeleteRequest
 ): Promise<SuccessResponse<UserDeleteRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	const response = await apiRequest<UserDeleteRequest>('/user/delete', true, userDeleteRequest);
@@ -105,7 +105,7 @@ export async function deleteUser(
 	}
 }
 
-export async function queryUser(
+export async function apiQueryUser(
 	starts?: string
 ): Promise<SuccessResponse<User[]> | ErrorResponse<ForbiddenError | NotFoundError>> {
 	const response = await apiRequest<UserResponse[]>(
@@ -127,7 +127,7 @@ export async function queryUser(
 	throw other.error;
 }
 
-export async function batchPutUser(
+export async function apiBatchPutUser(
 	users: User[]
 ): Promise<SuccessResponse<BatchUserPutRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	function toUserResponse(user: User) {
@@ -157,7 +157,7 @@ export async function batchPutUser(
 	throw other.error;
 }
 
-export async function batchDeleteUser(
+export async function apiBatchDeleteUser(
 	batchUserDeleteRequest: string[]
 ): Promise<SuccessResponse<string[]> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	const response = await apiRequest<string[]>('/user/batch/delete', true, batchUserDeleteRequest);

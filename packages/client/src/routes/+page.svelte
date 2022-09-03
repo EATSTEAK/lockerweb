@@ -17,7 +17,7 @@
 	import PageTitle from '../components/atom/PageTitle.svelte';
 	import Modal from '../components/molecule/Modal.svelte';
 	import Dismiss from '../icons/Dismiss.svelte';
-	import { countLocker } from '$lib/api/locker';
+	import { apiCountLocker } from '$lib/api/locker';
 
 	let callbackUrl = undefined;
 
@@ -36,7 +36,7 @@
 		}
 		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
 		callbackNotLoaded = false;
-		countLocker()
+		apiCountLocker()
 			.then((data) => {
 				if (data.success) {
 					countData = data.result;

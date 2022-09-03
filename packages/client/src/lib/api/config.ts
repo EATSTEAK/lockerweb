@@ -51,7 +51,7 @@ const ConfigUpdateRequestSchema = z.object({
 	buildings: BuildingSchema.optional()
 });
 
-export async function getConfig(): Promise<
+export async function apiGetConfig(): Promise<
 	SuccessResponse<Config[]> | ErrorResponse<NotFoundError>
 > {
 	const response = await apiRequest<ConfigResponse[]>('/config');
@@ -81,7 +81,7 @@ export function getDepartmentConfig(configs: Config[], departmentId: string): De
 	return configs.find((c: Config) => c.id === departmentId) as DepartmentConfig;
 }
 
-export async function updateConfig(
+export async function apiUpdateConfig(
 	updateRequest: ConfigUpdateRequest
 ): Promise<SuccessResponse<ConfigUpdateRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	const response = await apiRequest<ConfigUpdateRequest>('/config/update', true, updateRequest);
@@ -101,7 +101,7 @@ export async function updateConfig(
 	throw other.error;
 }
 
-export async function deleteConfig(
+export async function apiDeleteConfig(
 	configDeleteRequest: ConfigDeleteRequest
 ): Promise<SuccessResponse<ConfigDeleteRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	const response = await apiRequest<string>('/config/delete', true, configDeleteRequest);
