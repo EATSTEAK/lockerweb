@@ -12,8 +12,8 @@
 	import Settings from '../../icons/Settings.svelte';
 	import ContentSettings from '../../icons/ContentSettings.svelte';
 	import { browser } from '$app/env';
-	import { deleteAuthorization, fetchWithAuth } from '$lib/auth';
-	import { variables } from '$lib/variables';
+	import { deleteAuthorization } from '$lib/auth';
+	import { queryUser as queryUserFromApi, updateUser as updateUserFromApi, batchPutUser as batchPutUserFromApi, batchDeleteUser as batchDeleteUserFromApi } from '$lib/api/user';
 	import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 	import Skeleton from '../../components/atom/Skeleton.svelte';
@@ -46,12 +46,12 @@
 	}
 
 	function queryUser() {
-		userPromise = fetchWithAuth(variables.baseUrl + '/api/v1/user/query').then((res) => res.json())
+		userPromise = queryUserFromApi()
 			.then((res) => {
 				if (res.success) {
 					return res.result;
 				}
-				throw new Error(res.errorDescription);
+				throw (res as ErrorResponse<LockerError>).error;
 			})
 			.catch((err) => {
 				console.error(err);
@@ -60,16 +60,14 @@
 
 	function updateUser(evt: CustomEvent<UserUpdateRequest>) {
 		userUpdating = true;
-		fetchWithAuth(variables.baseUrl + '/api/v1/user/update', {
-			method: 'POST',
-			body: JSON.stringify(evt.detail)
-		}).then(res => res.json())
+		updateUserFromApi(evt.detail)
 			.then(res => {
 				userUpdating = false;
 				if (res.success) {
 					queryUser();
 				} else {
-					userRequestError = res.errorDescription;
+					userRequestError = (res as ErrorResponse<LockerError>).error.name;
+					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
 			.catch(err => {
@@ -80,16 +78,14 @@
 
 	function batchPutUser(evt: CustomEvent<User[]>) {
 		userUpdating = true;
-		fetchWithAuth(variables.baseUrl + '/api/v1/user/batch/put', {
-			method: 'POST',
-			body: JSON.stringify(evt.detail)
-		}).then(res => res.json())
+		batchPutUserFromApi(evt.detail)
 			.then(res => {
 				userUpdating = false;
 				if (res.success) {
 					queryUser();
 				} else {
-					userRequestError = res.errorDescription;
+					userRequestError = (res as ErrorResponse<LockerError>).error.name;
+					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
 			.catch(err => {
@@ -100,16 +96,14 @@
 
 	function batchDeleteUser(evt: CustomEvent<string[]>) {
 		userUpdating = true;
-		fetchWithAuth(variables.baseUrl + '/api/v1/user/batch/delete', {
-			method: 'POST',
-			body: JSON.stringify(evt.detail)
-		}).then(res => res.json())
+		batchDeleteUserFromApi(evt.detail)
 			.then(res => {
 				userUpdating = false;
 				if (res.success) {
 					queryUser();
 				} else {
-					userRequestError = res.errorDescription;
+					userRequestError = (res as ErrorResponse<LockerError>).error.name;
+					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
 			.catch(err => {
@@ -160,8 +154,8 @@
 		{#if $user && (!$user.department || $user.isAdmin)}
 			{#if selectedTab === "user"}
 				{#await userPromise}
-					<div class='user-screen-wrap'>
-						<div class='title'>
+					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
 							<h3>사용자 설정</h3>
 						</div>
 						<LoadingScreen class='min-h-[32rem] md:rounded-md' />
@@ -171,8 +165,8 @@
 												on:user:batchDelete={batchDeleteUser}
 												updating={userUpdating} error={userRequestError} {users} />
 				{:catch err}
-					<div class='user-screen-wrap'>
-						<div class='title'>
+					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
 							<h3 class='mb-1'>사용자 설정</h3>
 						</div>
 						<ErrorScreen class='min-h-[32rem] md:rounded-md' />
@@ -190,41 +184,3 @@
 		{/if}
 	</div>
 </NavigationShell>
-
-<style>
-    .root {
-        @apply flex flex-col md:flex-row items-stretch;
-    }
-
-    .side-wrap {
-        @apply bg-gray-200 w-full md:min-w-[380px] md:w-[380px] flex flex-col justify-between min-h-screen px-10;
-    }
-
-    .content {
-        @apply flex flex-col justify-evenly grow;
-    }
-
-    hr {
-        @apply h-0.5 mx-8 bg-gray-400;
-    }
-
-    .dashboard {
-        @apply grow h-screen md:overflow-y-scroll bg-gray-100;
-    }
-
-    .user-screen-wrap {
-        @apply my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch;
-    }
-
-    .user-screen-wrap .title {
-        @apply mx-6 md:mx-0 flex flex-wrap w-full;
-    }
-
-    .logo {
-        @apply pt-8;
-    }
-
-    .footer {
-        @apply pb-4 flex flex-wrap justify-between;
-    }
-</style>
