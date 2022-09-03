@@ -51,7 +51,7 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		const lockerId = data.lockerId;
 		const until = data?.until;
-		let res: { id: string; lockerId: string; claimedUntil: number };
+		let res: ClaimLockerResponse;
 		if (until) {
 			res = await claimLocker(id, token, blockedDepartments, lockerId, until);
 		} else {

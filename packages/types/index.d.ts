@@ -26,6 +26,7 @@ type UserResponse = {
 };
 
 type UserPutRequest = UserResponse;
+type BatchUserPutRequest = UserPutRequest[];
 
 type UserUpdateRequest = {
 	id: string;
@@ -53,6 +54,26 @@ type AccessTokenInfo = {
 	accessToken: string;
 	tokenType: 'Bearer';
 	expiresIn: number;
+};
+
+/* Locker Definition */
+
+type ReservedLocker = {
+	id?: string;
+	lockerId: string;
+	claimedUntil?: Date;
+};
+
+type ReservedLockerResponse = {
+	id?: string;
+	lockerId: string;
+	claimedUntil?: string;
+};
+type ClaimLockerResponse = ReservedLockerResponse;
+
+type UnclaimLockerResponse = {
+	id: string;
+	lockerId: string;
 };
 
 /* Config Definition */
