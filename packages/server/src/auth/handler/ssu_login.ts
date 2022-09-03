@@ -4,15 +4,15 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 import { createResponse } from '../../common';
 import {
+	BlockedError,
 	errorResponse,
-	ForbiddenError,
-	isResponsibleError,
-	ResponsibleError,
+	responseAsResponsibleError,
 	UnauthorizedError
 } from '../../util/error';
 import { issueToken } from '../data';
 import { queryConfig } from '../../config/data';
 import { adminId } from '../../util/database';
+import { getBlockedDepartments } from '../../util/access';
 
 function requestBody(result: string): Promise<string> {
 	return new Promise((resolve, reject) => {
@@ -47,19 +47,10 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 		if (result) {
 			console.log(result);
 			const id = await obtainId(result);
-			const config = await queryConfig();
-			const blockedDepartments = config
-				.filter((c) => {
-					const activateFrom = new Date(c.activateFrom);
-					const activateTo = new Date(c.activateTo);
-					return (
-						(c.activateFrom && activateFrom.getTime() > Date.now()) ||
-						(c.activateTo && activateTo.getTime() < Date.now())
-					);
-				})
-				.map((c) => c.id);
+			const configs = await queryConfig();
+			const blockedDepartments = getBlockedDepartments(configs);
 			if (adminId !== id && blockedDepartments.includes('SERVICE')) {
-				return errorResponse(new ForbiddenError());
+				return errorResponse(new BlockedError('Service unavailable'));
 			}
 			const accessToken = jwt.sign({ aud: id }, JWT_SECRET, {
 				expiresIn: 3600 * 1000
@@ -77,11 +68,8 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			};
 			return createResponse(200, { success: true, ...res });
 		}
-		return errorResponse(new UnauthorizedError('Unauthorized'));
+		return errorResponse(new UnauthorizedError('No result parameter provided'));
 	} catch (e) {
-		if (!isResponsibleError(e)) {
-			return errorResponse(new ResponsibleError(500, 'InternalError'));
-		}
-		return errorResponse(e as ResponsibleError);
+		responseAsResponsibleError(e);
 	}
 };
