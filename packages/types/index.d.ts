@@ -153,10 +153,62 @@ type LockerCountResponse = {
 	};
 };
 
+/* Response Definition */
+
+type Response = {
+	success: boolean;
+};
+
+type SuccessResponse = {
+	success: true;
+	result?: unknown;
+};
+
+type ErrorResponse = {
+	success: false;
+	error: LockerError;
+};
+
+type BadRequestError = LockerError & {
+	code: 400;
+	name: 'BadRequest';
+};
+
+type UnauthorizedError = LockerError & {
+	code: 401;
+	name: 'Unauthorized';
+};
+
+type ForbiddenError = LockerError & {
+	code: 403;
+	name: 'Forbidden';
+};
+
+type BlockedError = LockerError & {
+	code: 403;
+	name: 'Blocked';
+};
+
+type NotFoundError = LockerError & {
+	code: 404;
+	name: 'NotFound';
+};
+
+type CantClaimError = LockerError & {
+	code: 403;
+	name: 'CantClaim';
+};
+
+type InternalError = LockerError & {
+	code: 500;
+	name: 'InternalError';
+};
+
 /* Error Definition */
 
-type ResponsibleError = {
-	errorType: string;
+type LockerError = {
+	code: string;
+	name: string;
 	message?: string;
 	additionalInfo?: Record<string, unknown>;
 };

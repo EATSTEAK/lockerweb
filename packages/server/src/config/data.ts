@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// noinspection JSUnusedLocalSymbols
+
 import type {
 	DeleteItemInput,
 	ExpressionAttributeNameMap,
 	ExpressionAttributeValueMap,
 	GetItemInput,
+	GetItemOutput,
 	QueryInput,
 	QueryOutput,
 	UpdateItemInput
 } from 'aws-sdk/clients/dynamodb';
 import { dynamoDB, TableName } from '../util/database';
 import { NotFoundError } from '../util/error';
+import type { AWSError } from 'aws-sdk';
 
 function fromLockerSubsectionData(data: LockerSubsectionData): LockerSubsection {
 	return {
@@ -154,12 +159,19 @@ export const queryConfig = async function (startsWith = ''): Promise<Array<Confi
 	};
 	let res: QueryOutput;
 	do {
-		res = await dynamoDB
-			.query({
-				...req,
-				...(res && res.LastEvaluatedKey && { ExclusiveStartKey: res.LastEvaluatedKey })
-			})
-			.promise();
+		try {
+			res = await dynamoDB
+				.query({
+					...req,
+					...(res && res.LastEvaluatedKey && { ExclusiveStartKey: res.LastEvaluatedKey })
+				})
+				.promise();
+		} catch (e) {
+			if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+				throw new NotFoundError('Cannot find config');
+			}
+			throw e;
+		}
 		composedRes = [
 			...composedRes,
 			...res.Items.map<Config>((v) =>
@@ -180,7 +192,15 @@ export const getConfig = async function (id: string): Promise<Config> {
 			id: { S: `${id}` }
 		}
 	};
-	const res = await dynamoDB.getItem(req).promise();
+	let res: GetItemOutput;
+	try {
+		res = await dynamoDB.getItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new NotFoundError(`Cannot find config of id ${id}`);
+		}
+		throw e;
+	}
 	if (res.Item === undefined) {
 		throw new NotFoundError(`Cannot find config of id ${id}`);
 	}

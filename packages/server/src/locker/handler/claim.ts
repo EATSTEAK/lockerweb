@@ -1,14 +1,18 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
-import type { JwtPayload } from 'jsonwebtoken';
-import * as jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../../env';
 import { claimLocker } from '../data';
 import { getUser } from '../../user/data';
 import { isValidLocker } from '../../util/locker';
 import { queryConfig } from '../../config/data';
-import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
+import {
+	BadRequestError,
+	errorResponse,
+	ForbiddenError,
+	InternalError,
+	responseAsLockerError
+} from '../../util/error';
 import { adminId } from '../../util/database';
+import { getBlockedDepartments, verifyPayload } from '../../util/access';
 
 export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -19,79 +23,42 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	try {
 		data = JSON.parse(event.body) as { lockerId: string; until?: number };
 	} catch {
-		return createResponse(500, {
-			success: false,
-			error: 500,
-			errorDescription: 'Data body is malformed JSON'
-		});
+		return errorResponse(new BadRequestError('Request body is malformed JSON'));
 	}
-	let payload: JwtPayload;
 	if (!data.lockerId) {
-		return createResponse(500, {
-			success: false,
-			error: 500,
-			errorDescription: 'Key "locker_id" is must be given'
-		});
+		return errorResponse(new BadRequestError('Key "locker_id" is must be given'));
 	}
-
 	try {
-		payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+		const payload = verifyPayload(token);
 		const id = payload.aud as string;
 		const user = await getUser(id);
-		const config = await queryConfig();
-		const blockedDepartments = config
-			.filter((c) => {
-				const activateFrom = new Date(c.activateFrom);
-				const activateTo = new Date(c.activateTo);
-				return (
-					(c.activateFrom && activateFrom.getTime() > Date.now()) ||
-					(c.activateTo && activateTo.getTime() < Date.now())
-				);
-			})
-			.map((c) => c.id);
-		if (adminId !== id && blockedDepartments.includes('SERVICE')) {
-			return createResponse(403, {
-				success: false,
-				error: 403,
-				errorDescription: 'Forbidden'
-			});
+		const configs = await queryConfig();
+		const serviceConfig: ServiceConfig = configs.find(
+			(c: Config) => c.id === 'SERVICE'
+		) as ServiceConfig;
+		if (!serviceConfig) {
+			return errorResponse(new InternalError('Cannot find available lockers'));
 		}
-		if (
-			!isValidLocker(
-				config.find((v) => v.id === 'SERVICE') as ServiceConfig,
-				data.lockerId,
-				user.department
-			)
-		) {
-			return createResponse(500, {
-				success: false,
-				error: 500,
-				errorDescription: 'Unknown locker data'
-			});
+		const blockedDepartments = getBlockedDepartments(configs);
+		if (adminId !== id && blockedDepartments.includes('SERVICE')) {
+			return errorResponse(new ForbiddenError());
+		}
+		if (!isValidLocker(serviceConfig, data.lockerId, user.department)) {
+			return errorResponse(new InternalError('Unknown locker data'));
 		}
 		if (data.until !== undefined && typeof data.until !== 'number') {
-			return createResponse(500, {
-				success: false,
-				error: 500,
-				errorDescription: 'Key "until" is must be number'
-			});
+			return errorResponse(new BadRequestError('Key "until" is must be an number'));
 		}
 		const lockerId = data.lockerId;
 		const until = data?.until;
-		const res = until
-			? await claimLocker(id, token, blockedDepartments, lockerId, until)
-			: await claimLocker(id, token, blockedDepartments, lockerId);
+		let res: { id: string; lockerId: string; claimedUntil: number };
+		if (until) {
+			res = await claimLocker(id, token, blockedDepartments, lockerId, until);
+		} else {
+			res = await claimLocker(id, token, blockedDepartments, lockerId);
+		}
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		if (!isResponsibleError(e)) {
-			console.error(e);
-			const res = {
-				success: false,
-				error: 500,
-				errorDescription: 'Internal error'
-			};
-			return createResponse(500, res);
-		}
-		return errorResponse(e as ResponsibleError);
+		responseAsLockerError(e);
 	}
 };

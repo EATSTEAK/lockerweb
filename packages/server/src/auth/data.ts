@@ -1,10 +1,12 @@
 import type {
 	ExpressionAttributeValueMap,
 	GetItemInput,
-	UpdateItemInput
+	UpdateItemInput,
+	UpdateItemOutput
 } from 'aws-sdk/clients/dynamodb';
-import { UnauthorizedError } from '../util/error';
+import { ForbiddenError, UnauthorizedError } from '../util/error';
 import { adminId, dynamoDB, TableName } from '../util/database';
+import type { AWSError } from 'aws-sdk';
 
 /* ISSUE/REVOKE TOKEN */
 
@@ -25,7 +27,15 @@ export const revokeToken = async function (
 		},
 		ReturnValues: 'UPDATED_OLD'
 	};
-	const res = await dynamoDB.updateItem(req).promise();
+	let res: UpdateItemOutput;
+	try {
+		res = await dynamoDB.updateItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new ForbiddenError('Cannot logout when token is invalid');
+		}
+		throw e;
+	}
 	if (res.Attributes.hasOwnProperty('aT')) {
 		return { accessToken: token };
 	} else {
@@ -62,13 +72,21 @@ export const issueToken = async function (
 			':expiresOn': { N: `${expires}` },
 			...(id !== adminId && conditionValues)
 		},
-		ReturnValues: 'UPDATED_NEW'
+		ReturnValues: 'ALL_NEW'
 	};
-	const res = await dynamoDB.updateItem(req).promise();
-	if (res.Attributes.hasOwnProperty('aT')) {
+	let res: UpdateItemOutput;
+	try {
+		res = await dynamoDB.updateItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new ForbiddenError('This user cannot login to service');
+		}
+		throw e;
+	}
+	if (res.Attributes.hasOwnProperty('aT') && res.Attributes.aT.S === token) {
 		return { id, expires };
 	} else {
-		throw new UnauthorizedError('Unauthorized', { id, expires });
+		throw new ForbiddenError('Cannot issue token', { id, expires });
 	}
 };
 
@@ -92,7 +110,7 @@ export async function assertAccessible(
 		authRes.Item.aT?.S !== token ||
 		(adminOnly && authRes.Item.iA?.BOOL !== true && id !== adminId)
 	) {
-		throw new UnauthorizedError('Unauthorized');
+		throw new ForbiddenError('Sufficient permission');
 	}
 	return true;
 }

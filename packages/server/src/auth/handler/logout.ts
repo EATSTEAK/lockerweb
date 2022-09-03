@@ -1,28 +1,17 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import type { JwtPayload } from 'jsonwebtoken';
-import * as jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../../env';
 import { assertAccessible, revokeToken } from '../data';
 import { createResponse } from '../../common';
-import { errorResponse, isResponsibleError, ResponsibleError } from '../../util/error';
+import { responseAsLockerError, UnauthorizedError } from '../../util/error';
+import { verifyPayload } from '../../util/access';
 
 export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
 	try {
-		const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+		const payload = verifyPayload(token);
 		await assertAccessible(payload.aud as string, token);
 		const res = await revokeToken(payload.aud as string, token);
-		return createResponse(200, { success: true, ...res });
-	} catch (err) {
-		if (isResponsibleError(err)) {
-			return errorResponse(err as ResponsibleError);
-		}
-		const res = {
-			success: false,
-			token,
-			error: 401,
-			errorDescription: 'Unauthorized'
-		};
-		return createResponse(401, res);
+		return createResponse(200, { success: true, result: res });
+	} catch (e) {
+		responseAsLockerError(e, new UnauthorizedError("Can't logout when not logged in", { token }));
 	}
 };

@@ -16,6 +16,9 @@ Parameters:
   AdminId:
     Type: String
     Default: '20211561'
+  JwtSecret:
+    Type: String
+    Default: 'this-is-sample-secret-key'
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -25,6 +28,7 @@ Globals:
         TABLE_NAME: !Ref TableName
         AWS_SAM_LOCAL: !Ref AwsSamLocal
         ADMIN_ID: !Ref AdminId
+        JWT_SECRET: !Ref JWT_SECRET
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
