@@ -14,7 +14,7 @@ export async function apiRequest<T>(
 				...(postBody && { body: JSON.stringify(postBody) })
 			}).then((res) => res.json());
 		} else {
-			response = await fetch(variables.baseUrl + endpoint, {
+			response = await fetch(variables.baseUrl + '/api/v1' + endpoint, {
 				method: postBody ? 'POST' : 'GET',
 				...(postBody && { body: JSON.stringify(postBody) })
 			}).then((res) => res.json());
