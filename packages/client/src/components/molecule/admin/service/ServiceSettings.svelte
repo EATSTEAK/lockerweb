@@ -6,20 +6,15 @@
 	import SaveEdit from '../../../../icons/SaveEdit.svelte';
 	import ArrowUndo from '../../../../icons/ArrowUndo.svelte';
 	import isEqual from 'lodash.isequal';
-	import { fetchWithAuth } from '$lib/auth';
-	import { variables } from '$lib/variables';
+	import { getServiceConfig, updateConfig as updateConfigToApi } from '$lib/api/config';
 	import { config } from '$lib/store';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import Warning from '../../../../icons/Warning.svelte';
 	import Skeleton from "../../../atom/Skeleton.svelte";
 
-	$: serviceConfig = $config ? $config.find(v => v.id === 'SERVICE') ?? {
-		id: 'SERVICE',
-		name: undefined,
-		buildings: {}
-	} : undefined;
+	$: serviceConfig = $config.success ? getServiceConfig($config.result) : undefined;
 
-	$: isServiceReady = !!($config?.find(v => v.id === 'SERVICE'));
+	$: isServiceReady = !!($config.success && $config.result.find(v => v.id === 'SERVICE'));
 
 	let updating = false;
 
@@ -51,23 +46,20 @@
 
 	function initializeValues() {
 		name = serviceConfig?.name ?? '';
-		activateFrom = serviceConfig?.activateFrom ? new Date(serviceConfig?.activateFrom) : null;
-		activateTo = serviceConfig?.activateTo ? new Date(serviceConfig?.activateTo) : null;
+		activateFrom = serviceConfig?.activateFrom ?? null;
+		activateTo = serviceConfig?.activateTo ?? null;
 		buildings = { ...(serviceConfig?.buildings ?? {}) };
 	}
 
 	function updateConfig() {
 		updating = true;
-		fetchWithAuth(variables.baseUrl + '/api/v1/config/update', {
-			method: 'POST',
-			body: JSON.stringify(newConfig)
-		}).then(res => res.json())
+		updateConfigToApi(newConfig)
 			.then(res => {
 				updating = false;
 				if (res.success) {
 					config.refresh();
 				} else {
-					console.error(res.errorDescription);
+					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
 			.catch(err => {
@@ -78,10 +70,10 @@
 
 </script>
 
-<div class='wrap'>
-	<div class='title'>
+<div class='my-8 md:mx-8 flex flex-col gap-3'>
+	<div class='mx-6 md:mx-0 flex flex-wrap items-start'>
 		<h3>서비스 설정</h3>
-		<div class='service-control'>
+		<div class='grow flex justify-end gap-1'>
 			<Button on:click={initializeValues} disabled={!isModified ? true : undefined}
 							class='bg-white text-gray-700 [&[disabled]]:opacity-[0.5]'
 							isIconRight>
@@ -106,28 +98,28 @@
 	{#if updating}
 		<UpdateScreen class='min-h-[32rem] md:rounded-md' />
 	{:else}
-		<section class='card'>
+		<section class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
 			<h4>전체 서비스 설정</h4>
 			<div class='service'>
 				{#if serviceConfig}
-					<TextInput class='my-2' inputClass='reactive-input' id='name' label='서비스 이름' showLabel
+					<TextInput class='my-2' inputClass='w-full max-w-sm' id='name' label='서비스 이름' showLabel
 										 bind:value={name} required invalidClass='text-red-800' invalidText='이 값은 필수입니다.' />
-					<DateTimeInput class='my-2' inputClass='reactive-input' id='activate_from' label='예약 시작일' showLabel
+					<DateTimeInput class='my-2' inputClass='w-full max-w-sm' id='activate_from' label='예약 시작일' showLabel
 												 bind:value={activateFrom} invalidClass='text-red-800' />
-					<DateTimeInput class='my-2' inputClass='reactive-input' id='activate_to' label='예약 종료일' showLabel
+					<DateTimeInput class='my-2' inputClass='w-full max-w-sm' id='activate_to' label='예약 종료일' showLabel
 												 bind:value={activateTo} invalidClass='text-red-800' />
 				{:else}
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='card-placeholder h-4 w-24'></Skeleton>
-						<Skeleton class='card-placeholder h-8 w-96'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='card-placeholder h-4 w-24'></Skeleton>
-						<Skeleton class='card-placeholder h-8 w-96'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='card-placeholder h-4 w-24'></Skeleton>
-						<Skeleton class='card-placeholder h-8 w-96'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 				{/if}
 			</div>
@@ -146,34 +138,8 @@
 			{#if serviceConfig}
 				<BuildingEditor bind:buildings />
 			{:else}
-				<Skeleton class='card-placeholder w-full min-h-[32rem]'></Skeleton>
+				<Skeleton class='md:rounded-md bg-gray-200 w-full min-h-[32rem]'></Skeleton>
 			{/if}
 		</section>
 	{/if}
 </div>
-
-<style>
-    .service :global(.reactive-input) {
-        @apply w-full max-w-sm;
-    }
-
-    .wrap {
-        @apply my-8 md:mx-8 flex flex-col gap-3;
-    }
-
-    .title {
-        @apply mx-6 md:mx-0 flex flex-wrap items-start;
-    }
-
-    .service-control {
-        @apply grow flex justify-end gap-1;
-    }
-
-    .card {
-        @apply md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
-    }
-
-    :global(.card-placeholder) {
-        @apply md:rounded-md bg-gray-200;
-    }
-</style>
