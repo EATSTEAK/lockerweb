@@ -81,6 +81,10 @@ export function getDepartmentConfig(configs: Config[], departmentId: string): De
 	return configs.find((c: Config) => c.id === departmentId) as DepartmentConfig;
 }
 
+export function getDepartmentConfigs(configs: Config[]): DepartmentConfig[] {
+	return configs.filter((c: Config) => c.id !== 'SERVICE') as DepartmentConfig[];
+}
+
 export async function apiUpdateConfig(
 	updateRequest: ConfigUpdateRequest
 ): Promise<SuccessResponse<ConfigUpdateRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
