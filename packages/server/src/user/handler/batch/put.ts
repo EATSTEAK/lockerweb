@@ -7,9 +7,7 @@ import {
 	BadRequestError,
 	errorResponse,
 	InternalError,
-	isResponsibleError,
-	responseAsResponsibleError,
-	ResponsibleError
+	responseAsResponsibleError
 } from '../../../util/error';
 import { verifyPayload } from '../../../util/access';
 
@@ -40,15 +38,8 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return createResponse(200, { success: true });
 	} catch (e) {
-		if (isResponsibleError(e)) {
-			(e as ResponsibleError).additionalInfo.failedData = data.slice(i, data.length);
-			return errorResponse(e as ResponsibleError);
-		}
-		console.error(e);
-		return errorResponse(
-			new InternalError('Internal error', {
-				failedData: JSON.stringify(data.slice(i, data.length))
-			})
-		);
+		responseAsResponsibleError(e, new InternalError('Internal error'), {
+			failedData: JSON.stringify(data.slice(i, data.length))
+		});
 	}
 };

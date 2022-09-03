@@ -3,7 +3,7 @@ import { createResponse } from '../../common';
 import { queryConfig } from '../data';
 import { responseAsResponsibleError } from '../../util/error';
 
-export const getConfigHandler: APIGatewayProxyHandler = async (event) => {
+export const getConfigHandler: APIGatewayProxyHandler = async () => {
 	try {
 		const configs = await queryConfig();
 		return createResponse(200, {

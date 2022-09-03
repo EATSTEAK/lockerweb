@@ -162,7 +162,7 @@ export const batchPutUser = async function (infos: Array<User>): Promise<Array<U
 		RequestItems: {}
 	};
 	req.RequestItems[TableName] = requests;
-	const res = await dynamoDB.batchWriteItem(req).promise();
+	await dynamoDB.batchWriteItem(req).promise();
 	return infos;
 };
 
@@ -185,6 +185,6 @@ export const batchDeleteUser = async function (ids: Array<string>): Promise<Arra
 		RequestItems: {}
 	};
 	req.RequestItems[TableName] = requests;
-	const res = await dynamoDB.batchWriteItem(req).promise();
+	await dynamoDB.batchWriteItem(req).promise();
 	return ids;
 };

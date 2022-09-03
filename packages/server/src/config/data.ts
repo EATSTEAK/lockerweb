@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// noinspection JSUnusedLocalSymbols
+
 import type {
 	DeleteItemInput,
 	ExpressionAttributeNameMap,
