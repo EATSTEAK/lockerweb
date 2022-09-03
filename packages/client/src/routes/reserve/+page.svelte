@@ -15,6 +15,7 @@
 
 	let fetchStatus: boolean = false;
 
+	let innerWidth: number = 0;
 
 	let lockerSection: string;
 	let lockerNumber: number;
@@ -55,7 +56,9 @@
 
 <PageTitle name='예약하기' />
 
-<NavigationShell>
+<svelte:window bind:innerWidth />
+
+<NavigationShell collapsable={innerWidth && innerWidth <= 768}>
 	<div class='w-full h-96' slot='navigation_content'>
 		<UserReservedLocker reservedSection={lockerSection} reservedNumber={lockerNumber} tillTime='00:00 ~ 14:00' />
 	</div>
