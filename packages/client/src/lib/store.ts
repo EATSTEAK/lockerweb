@@ -39,7 +39,9 @@ export function refreshable<T>(
 	};
 }
 
-async function refreshConfig(forceFetch = false): Promise<Config[] | LockerError> {
+async function refreshConfig(
+	forceFetch = false
+): Promise<SuccessResponse<Config[]> | ErrorResponse<LockerError>> {
 	if (browser) {
 		if (localStorage.getItem('config') && !forceFetch) {
 			const item = localStorage.getItem('config');
@@ -47,7 +49,7 @@ async function refreshConfig(forceFetch = false): Promise<Config[] | LockerError
 				const configStore: ConfigStore = JSON.parse(item);
 				const lastUpdated = new Date(configStore.lastUpdated);
 				if (Date.now() - lastUpdated.getTime() <= 1000 * 60) {
-					return configStore.configs;
+					return { success: true, result: configStore.configs };
 				}
 			}
 		}
@@ -62,53 +64,62 @@ async function refreshConfig(forceFetch = false): Promise<Config[] | LockerError
 							configs: result
 						})
 					);
-					return result;
+					return data;
 				} else {
-					return (data as ErrorResponse<NotFoundError>).error;
+					return data as ErrorResponse<NotFoundError>;
 				}
 			});
 		} catch (e) {
-			if (e.code && e.name) return e;
+			if (e.code && e.name) return { success: false, error: e };
 			console.error(e);
 			return {
-				code: 500,
-				name: 'UnknownError',
-				additionalInfo: e
+				success: false,
+				error: {
+					code: 500,
+					name: 'UnknownError',
+					additionalInfo: e
+				}
 			};
 		}
 	}
 	throw new Error('This function must be ran in browser');
 }
 
-async function refreshUser(): Promise<User | LockerError> {
+async function refreshUser(): Promise<SuccessResponse<User> | ErrorResponse<LockerError>> {
 	if (getAuthorization()) {
 		try {
 			return await getUser().then((res) => {
 				if (res.success) {
-					return res.result;
+					return res;
 				} else {
-					return (res as ErrorResponse<LockerError>).error;
+					return res as ErrorResponse<LockerError>;
 				}
 			});
 		} catch (e) {
-			if (e.code && e.name) return e;
+			if (e.code && e.name) return { success: false, error: e };
 			console.error(e);
 			return {
-				code: 500,
-				name: 'UnknownError',
-				additionalInfo: e
+				success: false,
+				error: {
+					code: 500,
+					name: 'UnknownError',
+					additionalInfo: e
+				}
 			};
 		}
 	}
 	return {
-		code: 401,
-		name: 'Unauthorized'
+		success: false,
+		error: {
+			code: 401,
+			name: 'Unauthorized'
+		}
 	};
 }
 
-export const config: Refreshable<Config[] | undefined | LockerError> = refreshable<
-	Config[] | undefined | LockerError
->(
+export const config: Refreshable<
+	SuccessResponse<Config[]> | undefined | ErrorResponse<LockerError>
+> = refreshable<SuccessResponse<Config[]> | undefined | ErrorResponse<LockerError>>(
 	undefined,
 	(set) => {
 		set(undefined);
@@ -120,18 +131,17 @@ export const config: Refreshable<Config[] | undefined | LockerError> = refreshab
 	() => refreshConfig(true)
 );
 
-export const user: Refreshable<User | undefined | LockerError> = refreshable<
-	User | undefined | LockerError
->(
-	undefined,
-	(set) => {
-		if (browser) {
-			set(undefined);
-			refreshUser().then((value) => set(value));
-		}
-		return function stop() {
-			set(undefined);
-		};
-	},
-	refreshUser
-);
+export const user: Refreshable<SuccessResponse<User> | undefined | ErrorResponse<LockerError>> =
+	refreshable<SuccessResponse<User> | undefined | ErrorResponse<LockerError>>(
+		undefined,
+		(set) => {
+			if (browser) {
+				set(undefined);
+				refreshUser().then((value) => set(value));
+			}
+			return function stop() {
+				set(undefined);
+			};
+		},
+		refreshUser
+	);
