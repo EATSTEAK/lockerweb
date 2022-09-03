@@ -84,19 +84,19 @@
 		console.log(menuConfig);
 	}
 
-	let Floors: [];
-	let section: string;
-
-	let selectedBuildingId: number = 21;
-	let selectedFloors: number = undefined;
-	let selectedSection: string = undefined;
-
-	export let selectedLocationDataFetchStatus: boolean = true;
-
-	let lockerGridHeight: number | undefined = 5;
-	let lockerRangeCount: number | undefined = 40;
-	let lockerGridWidthScale: number | undefined = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
-	let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
+	$: {
+		selectedForSections = menuConfig?.[selectedFloors];
+		filteredSectionList = filteredUserLockerSections?.filter(s => s?.floor === selectedForSections);
+		selectedSections = filteredSectionList?.[selectedSectionIndex?.[selectedFloors]]?.sectionName;
+		console.log('선택된 구역 인덱스: ', selectedSectionIndex[selectedFloors]);
+		console.log('----');
+		console.log(selectedFloors);
+		console.log('filteredSectonList', filteredSectionList);
+		console.log('selectedInedx', selectedSectionIndex);
+		console.log('selectedSection', selectedSections);
+		console.log('selectedForSection', selectedForSections);
+	}
+	// $: filteredUserLockerSections = filteredUserLockerSections?.filter(s => s?.floor === selectedForSections);
 </script>
 
 <div class='wrap'>
