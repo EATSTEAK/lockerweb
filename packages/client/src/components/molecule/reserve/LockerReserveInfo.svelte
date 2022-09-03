@@ -7,8 +7,12 @@
 
 	export let buildingConfig: ServiceConfig;
 	export let userDepartmentId: string;
+	export let selectedLocationDataFetchStatus: boolean = true;
 
-	let menuConfig: Lockers = {};
+	// let menuConfig: string[];
+	// let menuConfig: Lockers = {};
+	let menuConfig: string[];
+	let isMenuConfigConverted: boolean = false;
 
 	let selections: string[] = [];
 
