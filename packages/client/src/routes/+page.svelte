@@ -113,7 +113,7 @@
 				<div class='flex flex-row justify-between my-3'>
 					<Credit />
 					<Button on:click={() => contactModalOpen = true}
-									class='px-0 py-0 shadow-none text-primary-800 underline hover:shadow-none hover:text-primary-900 active:shadow-none active:drop-shadow-md'>
+									class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'>
 						도움이 필요하신가요?
 					</Button>
 				</div>
