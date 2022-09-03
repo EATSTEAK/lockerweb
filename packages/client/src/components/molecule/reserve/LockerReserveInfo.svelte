@@ -16,6 +16,53 @@
 
 	let selections: string[] = [];
 
+	let Floors: [];
+	let section: string;
+
+	let filteredUserLockerSections: Object[];
+	let filteredSectionList: [];
+
+	let selectedBuildingId: number = 21;
+	let selectedFloors: number = undefined;
+	let selectedForSections: string | undefined;
+
+	let selectedSectionIndex: number[] = new Array(menuConfig?.length).fill(0);
+	let selectedSections: string = undefined;
+
+	$: if (filteredSectionList) {
+		let selectedSectionLockerRange = filteredSectionList.map(areaConfigOBJ => {
+			if (areaConfigOBJ?.sectionName === selectedSections) {
+				return areaConfigOBJ.section.subsections[0].range;
+			}
+		});
+		selectedSectionLockerRange = selectedSectionLockerRange.filter(Array => Array !== undefined)[0];
+		lockerBeginNumber = selectedSectionLockerRange?.[0];
+		lockerEndNumber = selectedSectionLockerRange?.[1];
+		lockerRangeCount = lockerEndNumber - lockerBeginNumber;
+		console.log('test', selectedSectionLockerRange);
+		console.log('사물함 전체 갯수', lockerRangeCount);
+	}
+
+	let lockerGridHeight: number | undefined = 5;
+	let lockerBeginNumber: number | undefined;
+	let lockerEndNumber: number | undefined;
+	let lockerRangeCount: number | undefined;
+	let lockerGridWidthScale: number | undefined = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
+	let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
+
+	function floorSortingCondition(a, b) {
+		if (a < b) return -1;
+		if (a > b) return 1;
+		if (a === b) return 0;
+		else return -1;
+	}
+
+	$: {
+
+		// console.log(menuConfig);
+		// console.log(filteredUserLockerSections?.filter(s => s?.floor === selectedForSections));
+	}
+
 	$: if (buildingConfig && userDepartmentId) {
 		const allLockers = buildingConfig.buildings[selectedBuildingId].lockers;
 		console.log('AllLockers');
@@ -55,17 +102,22 @@
 <div class='wrap'>
 	<div class='select-info'>
 		<div class='select-location'>
-			{#if buildingConfig}
+			{#if isMenuConfigConverted}
 				<h4 class='text-3xl my-2 mt-8 ml-8'>구역 선택</h4>
 				<div class='location-depths'>
 					<div class='select-floor'>
-						<SelectionListItemGroup class='location-select-group'>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
+						<SelectionListItemGroup bind:selectedIndex={selectedFloors} class='location-select-group'>
+							{#each menuConfig as item, index}
+								<SelectionListItem id={index} class='location-select-item'>{item}</SelectionListItem>
+							{/each}
 						</SelectionListItemGroup>
 					</div>
 					<div class='select-area'>
-						<SelectionListItemGroup>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
+						<SelectionListItemGroup bind:selectedIndex={selectedSectionIndex[selectedFloors]}>
+							{#each filteredSectionList as section, index}
+								<SelectionListItem id={index}
+																	 class='location-select-item'>{section.sectionName}</SelectionListItem>
+							{/each}
 						</SelectionListItemGroup>
 					</div>
 				</div>
