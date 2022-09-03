@@ -444,12 +444,9 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/UserUpdateRequest'
         '400':
           description: 요청 형식이 잘못되었을 때
           content:
@@ -602,12 +599,9 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/UserBatchPutRequest'
         '400':
           description: 요청 형식이 잘못되었을 때
           content:
@@ -654,12 +648,9 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/UserBatchDeleteRequest'
         '400':
           description: 요청 형식이 잘못되었을 때
           content:
