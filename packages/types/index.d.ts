@@ -187,14 +187,14 @@ type Response = {
 	success: boolean;
 };
 
-type SuccessResponse = {
+type SuccessResponse<T> = {
 	success: true;
-	result?: unknown;
+	result?: T;
 };
 
-type ErrorResponse = {
+type ErrorResponse<E extends LockerError> = {
 	success: false;
-	error: LockerError;
+	error: E;
 };
 
 type BadRequestError = LockerError & {
