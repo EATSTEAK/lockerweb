@@ -84,7 +84,7 @@
 		uploadUserModalOpen = false;
 		const data = evt.detail;
 		const userKeys = users.map((u: User) => u.id);
-		const putUsers = data.overwrite ? data.users.filter((u: User) => !userKeys.includes(u.id)) : data.users;
+		const putUsers = data.overwrite ? data.users : data.users.filter((u: User) => !userKeys.includes(u.id));
 		dispatch('user:batchPut', putUsers);
 	}
 
