@@ -32,7 +32,7 @@
 		queryUser();
 	}
 
-	let sidebarCollapsed = true;
+	let navigationCollapsed = true;
 	let innerWidth = 0;
 
 	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
@@ -42,7 +42,7 @@
 	}
 
 	function closeSidebarMenu() {
-		sidebarCollapsed = true;
+		navigationCollapsed = true;
 	}
 
 	function queryUser() {
@@ -123,7 +123,7 @@
 
 <svelte:window bind:innerWidth />
 
-<NavigationShell bind:sidebarCollapsed collapsable={innerWidth && innerWidth <= 768}>
+<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 768}>
 	<section class='flex flex-col gap-1' slot='navigation_content'>
 		{#if $user}
 			<h3>설정</h3>

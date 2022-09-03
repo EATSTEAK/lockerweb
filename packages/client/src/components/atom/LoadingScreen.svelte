@@ -1,7 +1,7 @@
 <script>
 	import ArrowClockwise from '../../icons/ArrowClockwise.svelte';
 
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 </script>
 

@@ -1,7 +1,7 @@
 <script>
 	import ArrowUpload from '../../icons/ArrowUpload.svelte';
 
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 </script>
 
