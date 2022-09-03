@@ -1,10 +1,13 @@
 import type {
 	ExpressionAttributeValueMap,
 	QueryInput,
-	UpdateItemInput
+	QueryOutput,
+	UpdateItemInput,
+	UpdateItemOutput
 } from 'aws-sdk/clients/dynamodb';
 import { adminId, dynamoDB, TableName } from '../util/database';
-import { CantClaimError, UnauthorizedError } from '../util/error';
+import { CantClaimError, ForbiddenError, NotFoundError, UnauthorizedError } from '../util/error';
+import type { AWSError } from 'aws-sdk';
 
 export const claimLocker = async function (
 	id: string,
@@ -54,8 +57,15 @@ export const claimLocker = async function (
 		},
 		ReturnValues: 'ALL_NEW'
 	};
-	const res = await dynamoDB.updateItem(req).promise();
-	console.debug(res);
+	let res: UpdateItemOutput;
+	try {
+		res = await dynamoDB.updateItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new ForbiddenError();
+		}
+		throw e;
+	}
 	if (res.Attributes.hasOwnProperty('lockerId') && res.Attributes.lockerId?.S === lockerId) {
 		return {
 			id,
@@ -63,9 +73,6 @@ export const claimLocker = async function (
 			lockerId
 		};
 	} else {
-		if (res.Attributes?.accessToken?.S !== token) {
-			throw new UnauthorizedError('Unauthorized', { id, lockerId, claimedUntil });
-		}
 		throw new CantClaimError("Can't claim requested locker", { id, lockerId, claimedUntil });
 	}
 };
@@ -97,17 +104,21 @@ export const unclaimLocker = async function (
 		},
 		ReturnValues: 'UPDATED_OLD'
 	};
-	const res = await dynamoDB.updateItem(req).promise();
-	console.debug(res);
+	let res: UpdateItemOutput;
+	try {
+		res = await dynamoDB.updateItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new ForbiddenError();
+		}
+		throw e;
+	}
 	if (res.Attributes.hasOwnProperty('lockerId')) {
 		return {
 			id: id,
 			lockerId: res.Attributes.lockerId.S
 		};
 	} else {
-		if (res.Attributes?.accessToken?.S !== token) {
-			throw new UnauthorizedError('Unauthorized', { id });
-		}
 		throw new CantClaimError('This user is not claimed an locker yet', { id });
 	}
 };
@@ -133,7 +144,15 @@ export const queryLockers = async function (
 		},
 		ProjectionExpression: `lockerId, claimedUntil${showId ? ', id' : ''}`
 	};
-	const res = await dynamoDB.query(req).promise();
+	let res: QueryOutput;
+	try {
+		res = await dynamoDB.query(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new NotFoundError('Cannot find lockers');
+		}
+		throw e;
+	}
 	return res.Items.map((item) => {
 		const ret: { lockerId: string; claimedUntil: number; id?: string } = {
 			lockerId: item.lockerId?.S,
