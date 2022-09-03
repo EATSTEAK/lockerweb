@@ -6,7 +6,7 @@ import type {
 	UpdateItemOutput
 } from 'aws-sdk/clients/dynamodb';
 import { adminId, dynamoDB, TableName } from '../util/database';
-import { CantClaimError, ForbiddenError, NotFoundError, UnauthorizedError } from '../util/error';
+import { CantClaimError, ForbiddenError, NotFoundError } from '../util/error';
 import type { AWSError } from 'aws-sdk';
 
 export const claimLocker = async function (

@@ -16,4 +16,3 @@ if (process.env.AWS_SAM_LOCAL) {
 }
 
 export const dynamoDB = new AWS.DynamoDB(options);
-

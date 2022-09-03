@@ -2,13 +2,7 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
 import { updateUser } from '../data';
 import { assertAccessible } from '../../auth/data';
-import {
-	BadRequestError,
-	errorResponse,
-	isResponsibleError,
-	responseAsResponsibleError,
-	ResponsibleError
-} from '../../util/error';
+import { BadRequestError, errorResponse, responseAsResponsibleError } from '../../util/error';
 import { verifyPayload } from '../../util/access';
 
 export const updateUserHandler: APIGatewayProxyHandler = async (event) => {
