@@ -166,47 +166,47 @@ type SuccessResponse = {
 
 type ErrorResponse = {
 	success: false;
-	error: ResponsibleError;
+	error: LockerError;
 };
 
-type BadRequestError = ResponsibleError & {
+type BadRequestError = LockerError & {
 	code: 400;
 	name: 'BadRequest';
 };
 
-type UnauthorizedError = ResponsibleError & {
+type UnauthorizedError = LockerError & {
 	code: 401;
 	name: 'Unauthorized';
 };
 
-type ForbiddenError = ResponsibleError & {
+type ForbiddenError = LockerError & {
 	code: 403;
 	name: 'Forbidden';
 };
 
-type BlockedError = ResponsibleError & {
+type BlockedError = LockerError & {
 	code: 403;
 	name: 'Blocked';
 };
 
-type NotFoundError = ResponsibleError & {
+type NotFoundError = LockerError & {
 	code: 404;
 	name: 'NotFound';
 };
 
-type CantClaimError = ResponsibleError & {
+type CantClaimError = LockerError & {
 	code: 403;
 	name: 'CantClaim';
 };
 
-type InternalError = ResponsibleError & {
+type InternalError = LockerError & {
 	code: 500;
 	name: 'InternalError';
 };
 
 /* Error Definition */
 
-type ResponsibleError = {
+type LockerError = {
 	code: string;
 	name: string;
 	message?: string;
