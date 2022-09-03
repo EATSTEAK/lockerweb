@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
 import { assertAccessible } from '../../auth/data';
-import { queryUser } from '../data';
+import { queryUser, toUserResponse } from '../data';
 import { responseAsLockerError } from '../../util/error';
 import { verifyPayload } from '../../util/access';
 
@@ -11,7 +11,7 @@ export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
 	try {
 		const id = verifyPayload(token).aud as string;
 		await assertAccessible(id, token, true);
-		const result = await queryUser(startsWith);
+		const result = (await queryUser(startsWith)).map(toUserResponse);
 		return createResponse(200, {
 			success: true,
 			result

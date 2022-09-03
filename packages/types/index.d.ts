@@ -13,8 +13,19 @@ type User = {
 	isAdmin: boolean;
 	department: string;
 	lockerId?: string;
-	claimedUntil?: number;
+	claimedUntil?: Date;
 };
+
+type UserResponse = {
+	id: string;
+	name: string;
+	isAdmin: boolean;
+	department: string;
+	lockerId?: string;
+	claimedUntil?: string;
+};
+
+type UserPutRequest = UserResponse;
 
 type UserUpdateRequest = {
 	id: string;
@@ -49,6 +60,13 @@ type AccessTokenInfo = {
 type Config = {
 	id: string;
 	name: string;
+	activateFrom?: Date;
+	activateTo?: Date;
+};
+
+type ConfigResponse = {
+	id: string;
+	name: string;
 	activateFrom?: string;
 	activateTo?: string;
 };
@@ -63,12 +81,22 @@ type DepartmentConfig = Config & {
 	contact?: string;
 };
 
+type DepartmentConfigResponse = ConfigResponse & {
+	contact?: string;
+};
+
 type DepartmentConfigDao = DaoData &
 	ConfigDao & {
 		c?: { S: string };
 	};
 
 type ServiceConfig = Config & {
+	buildings: {
+		[buildingId: string]: Building;
+	};
+};
+
+type ServiceConfigResponse = ConfigResponse & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
@@ -206,9 +234,9 @@ type InternalError = LockerError & {
 
 /* Error Definition */
 
-type LockerError = {
-	code: string;
+interface LockerError {
+	code: number;
 	name: string;
 	message?: string;
 	additionalInfo?: Record<string, unknown>;
-};
+}
