@@ -5,43 +5,24 @@
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
 
-	export let buildingConfig: Building;
-	export let userDepartmentId: stirng;
+	export let buildingConfig: ServiceConfig;
+	export let userDepartmentId: string;
 
 	let menuConfig: Lockers = {};
 
 	let selections: string[] = [];
-	let areas: string[] = ["A", "B", "C", "H", "E", "F", "I", "J"];
 
 	$: if (buildingConfig && userDepartmentId) {
 		const allLockers = buildingConfig.buildings[selectedBuildingId].lockers;
-
-		const A = Object.entries(allLockers).map(x => x[1].A)
-		const AObject = Object.entries(A);
-		console.log(Object.entries(AObject.map(x => x[1])).map(id => id[1]?.subsections[0].department))
-
-		console.log("전체 락커")
-		console.log(allLockers);
-		const sections = Object.entries(allLockers).map(x => x[1]);
-		const aSectionsByFloors = Object.entries(sections).filter(x => x[0] && x[1]?.subsections.department);
-		console.log(aSectionsByFloors)
-		console.log("---------------------------------")
-		console.log(areas.map(S => Object.entries(sections).filter(x => x[0] && x[1][S]?.subsections[0].department === "G")))
-		// Object.entries(sections).filter(x => x[0] && x[1].A)
-		// console.log(convertedSectionsArr.map(x => x))
-		// const AObject = Object.entries(A);
-		// // const B = Object.entries(allLockers).map(x => x[1].B);
-		// // const C = Object.entries(allLockers).map(x => x[1].C);
-		// console.log('--- test --- ');
-		// console.log(A.filter(x => x != undefined));
-		// console.log(Object.entries(AObject.map(x => x[1])).map(id => id[1]?.subsections[0].department))
-		// console.log(AObject.map(x => x[1].subsections[0]));
-		// console.log(Object.entries(allLockers).map(x => x[1].A[0]));
-		// console.log(Object.entries(allLockers).map(x => x[1]));
-
-		// console.log(Object.entries(allLockers).find(x => x));
-		// const floors: Object = Object.entries(allLockers).map(x => x[1]); // 선택한 건물의 층별 사물함 데이터
-		// const sectionsByFloors: Object = Object.entries(allLockers).map(x => x[1]);
+		console.log('AllLockers');
+		console.log(Object.entries(allLockers));
+		const allSections: Array<{ floor: string, sectionName: string, section: LockerSection }> = Object.entries(allLockers).flatMap(([floor, sections]) => {
+			return Object.entries(sections).map(([sectionName, section]) => ({ floor, sectionName, section }));
+		});
+		const departmentSections: Array<{ floor: string, sectionName: string, section: LockerSection }> = allSections.filter((sectionData) => {
+			return sectionData.section.subsections.some((subsection: LockerSubsection) => subsection.department === userDepartmentId);
+		});
+		console.log(departmentSections);
 	}
 
 	let Floors: [];
@@ -67,8 +48,6 @@
 				<div class='location-depths'>
 					<div class='select-floor'>
 						<SelectionListItemGroup class='location-select-group'>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
-							<SelectionListItem class='location-select-item'></SelectionListItem>
 							<SelectionListItem class='location-select-item'></SelectionListItem>
 						</SelectionListItemGroup>
 					</div>
