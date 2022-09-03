@@ -11,6 +11,6 @@ export const getConfigHandler: APIGatewayProxyHandler = async () => {
 			result: configs
 		});
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

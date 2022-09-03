@@ -25,6 +25,6 @@ export const deleteConfigHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await deleteConfig(data.id);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

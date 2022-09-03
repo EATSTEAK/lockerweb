@@ -69,6 +69,6 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return errorResponse(new UnauthorizedError('No result parameter provided'));
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

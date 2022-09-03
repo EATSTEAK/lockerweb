@@ -17,6 +17,6 @@ export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
 			result
 		});
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

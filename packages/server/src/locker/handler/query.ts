@@ -21,6 +21,6 @@ export const queryClaimedLockersHandler: APIGatewayProxyHandler = async (event) 
 			result
 		});
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

@@ -59,6 +59,6 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

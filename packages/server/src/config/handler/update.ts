@@ -23,6 +23,6 @@ export const updateConfigHandler: APIGatewayProxyHandler = async (event) => {
 		await updateConfig(data);
 		return createResponse(200, { success: true });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };
