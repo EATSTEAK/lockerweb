@@ -55,7 +55,9 @@ export async function apiGetConfig(): Promise<
 	SuccessResponse<Config[]> | ErrorResponse<NotFoundError>
 > {
 	const response = await apiRequest<ConfigResponse[]>('/config');
-	const get = createSuccessResponse(z.array(ConfigSchema)).safeParse(response);
+	const get = createSuccessResponse(z.array(ConfigSchema.passthrough()))
+		.passthrough()
+		.safeParse(response);
 	if (get.success) {
 		return get.data as SuccessResponse<Config[]>;
 	}
@@ -87,11 +89,11 @@ export function getDepartmentConfigs(configs: Config[]): DepartmentConfig[] {
 
 export async function apiUpdateConfig(
 	updateRequest: ConfigUpdateRequest
-): Promise<SuccessResponse<ConfigUpdateRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<ConfigUpdateRequest>('/config/update', true, updateRequest);
-	const update = createSuccessResponse(ConfigUpdateRequestSchema).safeParse(response);
+): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
+	const response = await apiRequest<never>('/config/update', true, updateRequest);
+	const update = createSuccessResponse().safeParse(response);
 	if (update.success) {
-		return update.data as SuccessResponse<ConfigUpdateRequest>;
+		return update.data as SuccessResponse<never>;
 	}
 	const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
 	if (badRequest.success) {
@@ -107,11 +109,11 @@ export async function apiUpdateConfig(
 
 export async function apiDeleteConfig(
 	configDeleteRequest: ConfigDeleteRequest
-): Promise<SuccessResponse<ConfigDeleteRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
+): Promise<SuccessResponse<string> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	const response = await apiRequest<string>('/config/delete', true, configDeleteRequest);
-	const deleteValidation = createSuccessResponse(z.object({ id: z.string() })).safeParse(response);
+	const deleteValidation = createSuccessResponse(z.string()).safeParse(response);
 	if (deleteValidation.success) {
-		return deleteValidation.data as SuccessResponse<ConfigDeleteRequest>;
+		return deleteValidation.data as SuccessResponse<string>;
 	}
 	const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
 	if (badRequest.success) {
@@ -121,4 +123,6 @@ export async function apiDeleteConfig(
 	if (forbidden.success) {
 		return forbidden.data as ErrorResponse<ForbiddenError>;
 	}
+	const other = createErrorResponse().parse(response);
+	throw other.error;
 }
