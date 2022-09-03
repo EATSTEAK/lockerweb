@@ -6,7 +6,10 @@
 	export let departmentText: string;
 	export let lockerLeft: number;
 	export let totalLocker: number;
-	export let availableTime: string;
+	export let activateFrom: Date;
+	export let activateTo: Date;
+
+	$: activateTime = activateFrom && activateTo && timeCalc(activateFrom, activateTo);
 
 	let ref = null;
 
@@ -27,6 +30,17 @@
 	onMount(() => {
 		return () => unsubscribe();
 	});
+
+	function timeCalc(activateFrom: Date, activateTo: Date): string {
+		const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
+		const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
+		const fromMinutes = `${activateFrom.getMinutes()}`.padStart(2, '0');
+		const fromTime = activateFrom ? `${activateFrom.getHours()}:${fromMinutes}` : '';
+		const toMinutes = `${activateTo.getMinutes()}`.padStart(2, '0');
+		const toTime = activateTo ? `${activateTo.getHours()}:${toMinutes}` : '';
+		const isToDateDifferent = toDate && toDate !== fromDate;
+		return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
+	}
 </script>
 
 <button
@@ -58,7 +72,7 @@
 			<div class='locker-left text-primary-800 text-6xl grow text-center -mb-3'>{lockerLeft}</div>
 			<div class='text-xl text-right mx-5'>/{totalLocker}</div>
 		</div>
-		<div class='available-time text-sm'>{availableTime}</div>
+		<div class='available-time text-sm'>{activateTime}</div>
 	</div>
 
 </button>
