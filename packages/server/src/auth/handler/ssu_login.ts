@@ -5,7 +5,7 @@ import { createResponse, JWT_SECRET } from '../../common';
 import {
 	BlockedError,
 	errorResponse,
-	responseAsResponsibleError,
+	responseAsLockerError,
 	UnauthorizedError
 } from '../../util/error';
 import { issueToken } from '../data';
@@ -69,6 +69,6 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return errorResponse(new UnauthorizedError('No result parameter provided'));
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };

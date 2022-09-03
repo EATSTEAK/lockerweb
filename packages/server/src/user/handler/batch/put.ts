@@ -7,7 +7,7 @@ import {
 	BadRequestError,
 	errorResponse,
 	InternalError,
-	responseAsResponsibleError
+	responseAsLockerError
 } from '../../../util/error';
 import { verifyPayload } from '../../../util/access';
 
@@ -26,7 +26,7 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 	try {
 		payload = verifyPayload(token);
 	} catch (e) {
-		return responseAsResponsibleError(e);
+		return responseAsLockerError(e);
 	}
 	let i = 0;
 	try {
@@ -38,7 +38,7 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return createResponse(200, { success: true });
 	} catch (e) {
-		responseAsResponsibleError(e, new InternalError('Internal error'), {
+		responseAsLockerError(e, new InternalError('Internal error'), {
 			failedData: JSON.stringify(data.slice(i, data.length))
 		});
 	}

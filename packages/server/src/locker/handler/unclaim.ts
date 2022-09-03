@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
 import { unclaimLocker } from '../data';
-import { BlockedError, errorResponse, responseAsResponsibleError } from '../../util/error';
+import { BlockedError, errorResponse, responseAsLockerError } from '../../util/error';
 import { queryConfig } from '../../config/data';
 import { adminId } from '../../util/database';
 import { getBlockedDepartments, verifyPayload } from '../../util/access';
@@ -19,6 +19,6 @@ export const unclaimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await unclaimLocker(id, token, blockedDepartments);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };

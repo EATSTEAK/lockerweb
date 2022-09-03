@@ -3,7 +3,7 @@ import { createResponse } from '../../common';
 import { queryLockers } from '../data';
 import { assertAccessible } from '../../auth/data';
 import { verifyPayload } from '../../util/access';
-import { responseAsResponsibleError } from '../../util/error';
+import { responseAsLockerError } from '../../util/error';
 
 export const queryClaimedLockersHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -18,6 +18,6 @@ export const queryClaimedLockersHandler: APIGatewayProxyHandler = async (event) 
 			result
 		});
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };

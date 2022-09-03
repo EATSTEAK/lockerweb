@@ -9,7 +9,7 @@ import {
 	errorResponse,
 	ForbiddenError,
 	InternalError,
-	responseAsResponsibleError
+	responseAsLockerError
 } from '../../util/error';
 import { adminId } from '../../util/database';
 import { getBlockedDepartments, verifyPayload } from '../../util/access';
@@ -59,6 +59,6 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };

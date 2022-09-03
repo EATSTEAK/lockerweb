@@ -2,7 +2,7 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
 import { assertAccessible } from '../../auth/data';
 import { queryUser } from '../data';
-import { responseAsResponsibleError } from '../../util/error';
+import { responseAsLockerError } from '../../util/error';
 import { verifyPayload } from '../../util/access';
 
 export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
@@ -17,6 +17,6 @@ export const queryUserHandler: APIGatewayProxyHandler = async (event) => {
 			result
 		});
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };

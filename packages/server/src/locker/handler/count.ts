@@ -3,7 +3,7 @@ import { queryLockers } from '../data';
 import { createResponse } from '../../common';
 import { getLockerDepartment } from '../../util/locker';
 import { getConfig } from '../../config/data';
-import { responseAsResponsibleError } from '../../util/error';
+import { responseAsLockerError } from '../../util/error';
 
 export const getClaimedLockerCountHandler: APIGatewayProxyHandler = async () => {
 	try {
@@ -23,6 +23,6 @@ export const getClaimedLockerCountHandler: APIGatewayProxyHandler = async () => 
 			result
 		});
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };

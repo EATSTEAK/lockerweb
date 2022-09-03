@@ -166,73 +166,49 @@ type SuccessResponse = {
 
 type ErrorResponse = {
 	success: false;
-	error: {
-		code: number;
-		name: string;
-		description?: string;
-	};
+	error: ResponsibleError;
 };
 
-type BadRequestErrorResponse = ErrorResponse & {
-	error: {
-		code: 400;
-		name: 'BadRequest';
-		description?: string;
-	};
+type BadRequestError = ResponsibleError & {
+	code: 400;
+	name: 'BadRequest';
 };
 
-type UnauthorizedErrorResponse = ErrorResponse & {
-	error: {
-		code: 401;
-		name: 'Unauthorized';
-		description?: string;
-	};
+type UnauthorizedError = ResponsibleError & {
+	code: 401;
+	name: 'Unauthorized';
 };
 
-type ForbiddenErrorResponse = ErrorResponse & {
-	error: {
-		code: 403;
-		name: 'Forbidden';
-		description?: string;
-	};
+type ForbiddenError = ResponsibleError & {
+	code: 403;
+	name: 'Forbidden';
 };
 
-type BlockedErrorResponse = ErrorResponse & {
-	error: {
-		code: 403;
-		name: 'Blocked';
-		description?: string;
-	};
+type BlockedError = ResponsibleError & {
+	code: 403;
+	name: 'Blocked';
 };
 
-type NotFoundErrorResponse = ErrorResponse & {
-	error: {
-		code: 404;
-		name: 'NotFound';
-		description?: string;
-	};
+type NotFoundError = ResponsibleError & {
+	code: 404;
+	name: 'NotFound';
 };
 
-type CantClaimErrorResponse = ErrorResponse & {
-	error: {
-		code: 403;
-		name: 'CantClaim';
-		description?: string;
-	};
+type CantClaimError = ResponsibleError & {
+	code: 403;
+	name: 'CantClaim';
 };
 
-type InternalErrorResponse = ErrorResponse & {
-	error: {
-		code: 500;
-		name: 'InternalError';
-		description?: string;
-	};
+type InternalError = ResponsibleError & {
+	code: 500;
+	name: 'InternalError';
 };
 
 /* Error Definition */
 
 type ResponsibleError = {
-	errorName: string;
+	code: string;
+	name: string;
 	message?: string;
 	additionalInfo?: Record<string, unknown>;
 };

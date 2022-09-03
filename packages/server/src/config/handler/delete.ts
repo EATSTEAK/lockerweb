@@ -2,7 +2,7 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import { createResponse } from '../../common';
 import { assertAccessible } from '../../auth/data';
 import { deleteConfig } from '../data';
-import { BadRequestError, errorResponse, responseAsResponsibleError } from '../../util/error';
+import { BadRequestError, errorResponse, responseAsLockerError } from '../../util/error';
 import { verifyPayload } from '../../util/access';
 
 export const deleteConfigHandler: APIGatewayProxyHandler = async (event) => {
@@ -25,6 +25,6 @@ export const deleteConfigHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await deleteConfig(data.id);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsResponsibleError(e);
+		responseAsLockerError(e);
 	}
 };
