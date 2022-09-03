@@ -22,6 +22,10 @@
 		const departmentSections: Array<{ floor: string, sectionName: string, section: LockerSection }> = allSections.filter((sectionData) => {
 			return sectionData.section.subsections.some((subsection: LockerSubsection) => subsection.department === userDepartmentId);
 		});
+		filteredUserLockerSections = departmentSections;
+		const filteredConfig: Set<string> = departmentSections.map(department => department.floor)
+			.reduce((set, floor) => set.add(floor), new Set<string>());
+		menuConfig = Array.from<string>(filteredConfig as ArrayLike<string>);
 		console.log(departmentSections);
 	}
 
