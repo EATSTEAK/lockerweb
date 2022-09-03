@@ -7,19 +7,12 @@
 
 	export let lockerCount;
 
-	let selectedDept = lockerCount ? Object.keys(lockerCount)[0] : undefined;
+	let selectedDept;
+	$: if (lockerCount) {
+		selectedDept = Object.keys(lockerCount)[0];
+	}
 	$: departmentStatus = selectedDept ? lockerCount[selectedDept] : undefined;
 	$: availableDates = [];
-
-
-	function availableCalc(activateFrom: Date, activateTo: Date): string {
-		const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
-		const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
-		const fromTime = activateFrom ? `${activateFrom.getHours()}:${activateFrom.getMinutes()}` : '';
-		const toTime = activateTo ? `${activateTo.getHours()}:${activateTo.getMinutes()}` : '';
-		const isToDateDifferent = toDate && toDate !== fromDate;
-		return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
-	}
 </script>
 
 <div class='wrap'>
@@ -33,7 +26,8 @@
 				{#each Object.entries(lockerCount ?? {}) as [key, value], index(key)}
 					<DepartmentSelection id={key} departmentText={value.departmentName} lockerLeft={value.lockerLeft}
 															 totalLocker={value.totalLocker}
-															 availableTime={availableCalc(value.activateFrom, value.activateTo)} />
+															 activateFrom={value.activateFrom}
+															 activateTo={value.activateTo} />
 				{/each}
 			</DepartmentSelectionGroup>
 		</div>
