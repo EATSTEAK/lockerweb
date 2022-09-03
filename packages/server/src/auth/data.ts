@@ -110,7 +110,7 @@ export async function assertAccessible(
 		authRes.Item.aT?.S !== token ||
 		(adminOnly && authRes.Item.iA?.BOOL !== true && id !== adminId)
 	) {
-		throw new UnauthorizedError('Sufficient permission');
+		throw new ForbiddenError('Sufficient permission');
 	}
 	return true;
 }
