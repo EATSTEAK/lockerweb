@@ -102,12 +102,12 @@ export async function updateConfig(
 }
 
 export async function deleteConfig(
-	ids: string[]
-): Promise<SuccessResponse<string[]> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<string[]>('/config/delete', true, ids);
-	const deleteValidation = createSuccessResponse(z.array(z.string())).safeParse(response);
+	configDeleteRequest: ConfigDeleteRequest
+): Promise<SuccessResponse<ConfigDeleteRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
+	const response = await apiRequest<string>('/config/delete', true, configDeleteRequest);
+	const deleteValidation = createSuccessResponse(z.object({ id: z.string() })).safeParse(response);
 	if (deleteValidation.success) {
-		return deleteValidation.data as SuccessResponse<string[]>;
+		return deleteValidation.data as SuccessResponse<ConfigDeleteRequest>;
 	}
 	const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
 	if (badRequest.success) {
