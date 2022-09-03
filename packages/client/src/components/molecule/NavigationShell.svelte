@@ -49,7 +49,7 @@
 		<p transition:fly={{ y: -20, duration: 200 }} class='font-semibold shrink'>{serviceName}</p>
 		<NavigationProfile>
 			<slot name='navigation_profile'>
-				<Profile user={$user} />
+				<Profile user={$user?.success ? $user.result : undefined} />
 			</slot>
 		</NavigationProfile>
 		<Divider class='my-6' />

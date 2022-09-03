@@ -36,7 +36,7 @@
 	let innerWidth = 0;
 
 	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
-	$: if ($user === null && browser) {
+	$: if ($user && !$user.success && browser) {
 		deleteAuthorization();
 		window.location.href = '/';
 	}
@@ -119,7 +119,7 @@
 
 <NavigationShell bind:sidebarCollapsed collapsable={innerWidth && innerWidth <= 768}>
 	<section class='flex flex-col gap-1' slot='navigation_content'>
-		{#if $user}
+		{#if $user?.success}
 			<h3>설정</h3>
 			<SelectionListItemGroup bind:selectedIndex={selectedTabIndex}>
 				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='user'>
@@ -151,7 +151,7 @@
 		</Button>
 	</section>
 	<div class='h-screen'>
-		{#if $user && (!$user.department || $user.isAdmin)}
+		{#if $user?.success && (!$user.result.department || $user.result.isAdmin)}
 			{#if selectedTab === "user"}
 				{#await userPromise}
 					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
@@ -177,7 +177,7 @@
 			{:else if selectedTab === "department"}
 				<DepartmentSettings />
 			{/if}
-		{:else if !$user}
+		{:else if $user === undefined}
 			<LoadingScreen class='min-h-[480px]' />
 		{:else}
 			<ErrorScreen class='min-h-[480px]' errorMessage='권한이 부족하여 접근하실 수 없습니다.' />
