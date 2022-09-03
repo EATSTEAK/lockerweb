@@ -1,11 +1,17 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import type { JwtPayload } from 'jsonwebtoken';
-import * as jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../../../env';
 import { createResponse } from '../../../common';
 import { assertAccessible } from '../../../auth/data';
 import { batchPutUser } from '../../data';
-import { errorResponse, isResponsibleError, ResponsibleError } from '../../../util/error';
+import {
+	BadRequestError,
+	errorResponse,
+	InternalError,
+	isResponsibleError,
+	responseAsResponsibleError,
+	ResponsibleError
+} from '../../../util/error';
+import { verifyPayload } from '../../../util/access';
 
 export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
@@ -13,29 +19,16 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 	try {
 		data = JSON.parse(event.body) as User[];
 	} catch {
-		return createResponse(500, {
-			success: false,
-			error: 500,
-			errorDescription: 'Data body is malformed JSON'
-		});
+		return errorResponse(new BadRequestError('Request body is malformed JSON'));
 	}
 	if (!data || !Array.isArray(data)) {
-		return createResponse(500, {
-			success: false,
-			error: 500,
-			errorDescription: 'Internal error'
-		});
+		return errorResponse(new BadRequestError('Request body is not an array'));
 	}
 	let payload: JwtPayload;
 	try {
-		payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
-	} catch {
-		console.debug('malformed token');
-		return createResponse(401, {
-			success: false,
-			error: 401,
-			errorDescription: 'Unauthorized'
-		});
+		payload = verifyPayload(token);
+	} catch (e) {
+		return responseAsResponsibleError(e);
 	}
 	let i = 0;
 	try {
@@ -48,16 +41,14 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		return createResponse(200, { success: true });
 	} catch (e) {
 		if (isResponsibleError(e)) {
-			(e as ResponsibleError).additionalInfo.failed_data = data.slice(i, data.length);
+			(e as ResponsibleError).additionalInfo.failedData = data.slice(i, data.length);
 			return errorResponse(e as ResponsibleError);
 		}
 		console.error(e);
-		const res = {
-			success: false,
-			error: 500,
-			errorDescription: 'Internal error',
-			failed_data: JSON.stringify(data.slice(i, data.length))
-		};
-		return createResponse(500, res);
+		return errorResponse(
+			new InternalError('Internal error', {
+				failedData: JSON.stringify(data.slice(i, data.length))
+			})
+		);
 	}
 };
