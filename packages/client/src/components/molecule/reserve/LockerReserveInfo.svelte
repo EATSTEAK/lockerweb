@@ -141,7 +141,7 @@
 			<Skeleton class='locker-map-skeleton bg-gray-300' />
 		{/if}
 	</div>
-	{#if buildingConfig}
+	{#if selectedSections !== undefined }
 		<div class='grow flex items-center overflow-scroll'>
 			<div class='locker-grid flex flex-col flex-wrap mt-5 ml-auto mr-auto'
 					 style={`width:${lockerGridWidthScale}rem; height:${lockerGridHeightScale}rem;`}>
@@ -151,7 +151,7 @@
 			</div>
 		</div>
 	{:else}
-		<LockerLoadingScreen />
+		<LockerLoadingScreen message={selectedSections === undefined && selectedForSections ? "구역을 선택하세요": "로딩 중" } />
 	{/if}
 </div>
 
