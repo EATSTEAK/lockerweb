@@ -24,27 +24,45 @@ export class ResponsibleError extends Error {
 	}
 }
 
+export class BadRequestError extends ResponsibleError {
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(400, 'BadRequest', message, additionalInfo);
+	}
+}
+
 export class UnauthorizedError extends ResponsibleError {
 	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
-		super(401, 'UnauthorizedError', message, additionalInfo);
+		super(401, 'Unauthorized', message, additionalInfo);
 	}
 }
 
 export class ForbiddenError extends ResponsibleError {
 	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
-		super(403, 'ForbiddenError', message, additionalInfo);
+		super(403, 'Forbidden', message, additionalInfo);
+	}
+}
+
+export class BlockedError extends ResponsibleError {
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(403, 'Blocked', message, additionalInfo);
 	}
 }
 
 export class NotFoundError extends ResponsibleError {
 	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
-		super(404, 'NotFoundError', message, additionalInfo);
+		super(404, 'NotFound', message, additionalInfo);
 	}
 }
 
 export class CantClaimError extends ResponsibleError {
 	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
-		super(403, 'CantClaimError', message, additionalInfo);
+		super(403, 'CantClaim', message, additionalInfo);
+	}
+}
+
+export class InternalError extends ResponsibleError {
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(500, 'InternalError', message, additionalInfo);
 	}
 }
 
@@ -65,4 +83,13 @@ export function errorResponse(
 			...error.additionalInfo
 		}
 	});
+}
+
+export function responseAsResponsibleError(
+	error: unknown,
+	fallback: ResponsibleError = new InternalError()
+) {
+	if (isResponsibleError(error)) return errorResponse(error as ResponsibleError);
+	console.error(error);
+	return errorResponse(fallback);
 }
