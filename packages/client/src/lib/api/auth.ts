@@ -16,7 +16,9 @@ const LoginSuccessResponseSchema = z.object({
 	expiresIn: z.number()
 });
 
-const LogoutSuccessResponseSchema = z.string();
+const LogoutSuccessResponseSchema = z.object({
+	accessToken: z.string()
+});
 
 type LoginSuccessResponse = z.infer<typeof LoginSuccessResponseSchema>;
 
