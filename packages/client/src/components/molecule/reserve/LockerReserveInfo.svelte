@@ -31,6 +31,10 @@
 			.reduce((set, floor) => set.add(floor), new Set<string>());
 		menuConfig = Array.from<string>(filteredConfig as ArrayLike<string>);
 		console.log(departmentSections);
+		menuConfig = menuConfig.map(x => x.includes('B') ? x.replace('B', '-') : x).sort();
+		menuConfig = menuConfig.map(x => x.includes('-') ? x.replace('-', 'B') : x).reverse();
+		isMenuConfigConverted = true;
+		console.log(menuConfig);
 	}
 
 	let Floors: [];
