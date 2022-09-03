@@ -94,7 +94,12 @@ paths:
                   success:
                     type: boolean
                   result:
-                    type: string
+                    type: object
+                    required:
+                      - accessToken
+                    properties:
+                      accessToken:
+                        type: string
         '401':
           description: 로그인 상태가 아닐 경우
           content:
@@ -735,12 +740,9 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/ConfigUpdateRequest'
         '400':
           description: 요청 형식이 잘못되었을 때
           content:
@@ -792,7 +794,7 @@ paths:
                   success:
                     type: boolean
                   result:
-                    $ref: '#/components/schemas/ConfigDeleteRequest'
+                    type: string
         '400':
           description: 요청 형식이 잘못되었을 때
           content:
