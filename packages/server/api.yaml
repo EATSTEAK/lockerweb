@@ -59,7 +59,7 @@ paths:
                 error:
                   code: 401
                   name: 'Unauthorized'
-                  description: 'No result parameter provided'
+                  message: 'No result parameter provided'
         '403':
           description: 현재 로그인 불가할 경우
           content:
@@ -71,7 +71,7 @@ paths:
                 error:
                   code: 403
                   name: 'Blocked'
-                  description: 'Service unavailable'
+                  message: 'Service unavailable'
   /auth/logout:
     get:
       tags:
@@ -106,7 +106,7 @@ paths:
                 error:
                   code: 401
                   name: 'Unauthorized'
-                  description: 'Can''t logout when not logged in'
+                  message: 'Can''t logout when not logged in'
   /locker/query:
     get:
       tags:
@@ -149,7 +149,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
         '404':
           description: 사물함을 찾을 수 없을 경우
           content:
@@ -161,7 +161,7 @@ paths:
                 error:
                   code: 404
                   name: 'NotFound'
-                  description: 'Cannot find lockers'
+                  message: 'Cannot find lockers'
   /locker/count:
     get:
       tags:
@@ -194,7 +194,7 @@ paths:
                 error:
                   code: 404
                   name: 'NotFound'
-                  description: 'Cannot find lockers'
+                  message: 'Cannot find lockers'
   /locker/claim:
     post:
       tags:
@@ -239,7 +239,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Key "until" is must be an number'
+                  message: 'Key "until" is must be an number'
         '403':
           description: '현재 대여가 불가능하거나 사물함이 이미 대여된 경우'
           content:
@@ -254,7 +254,7 @@ paths:
                     error:
                       code: 403
                       name: 'Blocked'
-                      description: ''
+                      message: ''
                 Forbidden:
                   description: '현재 대여가 불가능할 경우'
                   value:
@@ -262,7 +262,7 @@ paths:
                     error:
                       code: 403
                       name: 'Forbidden'
-                      description: ''
+                      message: ''
                 Permission:
                   description: '권한 부족'
                   value:
@@ -270,7 +270,7 @@ paths:
                       error:
                         code: 403
                         name: 'Forbidden'
-                        description: 'Sufficient permission'
+                        message: 'Sufficient permission'
                 CantClaim:
                   description: '대여가 불가능한 사물함일 경우'
                   value:
@@ -278,7 +278,7 @@ paths:
                     error:
                       code: 403
                       name: 'CantClaim'
-                      description: 'Requested locker is already claimed'
+                      message: 'Requested locker is already claimed'
         '500':
           description: 사물함 정보를 찾을 수 없을 경우
           content:
@@ -290,7 +290,7 @@ paths:
                 error:
                   code: 500
                   name: 'InternalError'
-                  description: 'Unknown locker data'
+                  message: 'Unknown locker data'
   /locker/unclaim:
     post:
       tags:
@@ -331,7 +331,7 @@ paths:
                     error:
                       code: 403
                       name: 'Blocked'
-                      description: ''
+                      message: ''
                 Permission:
                   description: '권한 부족'
                   value:
@@ -339,7 +339,7 @@ paths:
                       error:
                         code: 403
                         name: 'Forbidden'
-                        description: 'Sufficient permission'
+                        message: 'Sufficient permission'
                 Forbidden:
                   description: '현재 대여가 불가능할 경우'
                   value:
@@ -347,7 +347,7 @@ paths:
                     error:
                       code: 403
                       name: 'Forbidden'
-                      description: ''
+                      message: ''
                 CantClaim:
                   description: '점유한 사물함이 없을 경우'
                   value:
@@ -355,7 +355,7 @@ paths:
                     error:
                       code: 403
                       name: 'CantClaim'
-                      description: 'This user is not claimed an locker yet'
+                      message: 'This user is not claimed an locker yet'
   /user:
     get:
       tags:
@@ -396,7 +396,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
         '404':
           description: 사용자를 찾을 수 없을 경우
           content:
@@ -408,7 +408,7 @@ paths:
                 error:
                   code: 404
                   name: 'NotFound'
-                  description: 'Cannot find user info of id 20220000'
+                  message: 'Cannot find user info of id 20220000'
   /user/update:
     post:
       tags:
@@ -448,7 +448,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Request body is malformed JSON'
+                  message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
             content:
@@ -460,7 +460,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
   /user/delete:
     post:
       tags:
@@ -500,7 +500,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Request body is malformed JSON'
+                  message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
             content:
@@ -512,7 +512,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
   /user/query:
     get:
       tags:
@@ -554,7 +554,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
         '404':
           description: 사용자를 찾을 수 없을 경우
           content:
@@ -566,7 +566,7 @@ paths:
                 error:
                   code: 404
                   name: 'NotFound'
-                  description: 'Cannot find user'
+                  message: 'Cannot find user'
   /user/batch/put:
     post:
       tags:
@@ -606,7 +606,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Request body is malformed JSON'
+                  message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
             content:
@@ -618,7 +618,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
   /user/batch/delete:
     post:
       tags:
@@ -658,7 +658,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Request body is malformed JSON'
+                  message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
             content:
@@ -670,7 +670,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
   /config:
     get:
       tags:
@@ -708,7 +708,7 @@ paths:
                 error:
                   code: 404
                   name: 'NotFound'
-                  description: 'Cannot find user'
+                  message: 'Cannot find user'
   /config/update:
     post:
       tags:
@@ -748,7 +748,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Request body is malformed JSON'
+                  message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
             content:
@@ -760,7 +760,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
   /config/delete:
     post:
       tags:
@@ -800,7 +800,7 @@ paths:
                 error:
                   code: 400
                   name: 'BadRequest'
-                  description: 'Request body is malformed JSON'
+                  message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
             content:
@@ -812,7 +812,7 @@ paths:
                   error:
                     code: 403
                     name: 'Forbidden'
-                    description: 'Sufficient permission'
+                    message: 'Sufficient permission'
 components:
   securitySchemes:
     UserLoginAuth:
@@ -853,7 +853,7 @@ components:
               type: number
             name:
               type: string
-            description:
+            message:
               type: string
     AccessTokenInfo:
       title: AccessTokenInfo
