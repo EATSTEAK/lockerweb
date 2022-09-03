@@ -87,9 +87,18 @@ export function errorResponse(
 
 export function responseAsResponsibleError(
 	error: unknown,
-	fallback: ResponsibleError = new InternalError()
+	fallback: ResponsibleError = new InternalError(),
+	additionalInfo: Record<string, unknown> = {}
 ) {
-	if (isResponsibleError(error)) return errorResponse(error as ResponsibleError);
+	if (isResponsibleError(error)) {
+		if (additionalInfo)
+			(error as ResponsibleError).additionalInfo = {
+				...(error as ResponsibleError).additionalInfo,
+				...additionalInfo
+			};
+		return errorResponse(error as ResponsibleError);
+	}
 	console.error(error);
+	if (additionalInfo) fallback.additionalInfo = { ...fallback.additionalInfo, ...additionalInfo };
 	return errorResponse(fallback);
 }
