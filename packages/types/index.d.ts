@@ -173,6 +173,62 @@ type ErrorResponse = {
 	};
 };
 
+type BadRequestErrorResponse = ErrorResponse & {
+	error: {
+		code: 400;
+		name: 'BadRequest';
+		description?: string;
+	};
+};
+
+type UnauthorizedErrorResponse = ErrorResponse & {
+	error: {
+		code: 401;
+		name: 'Unauthorized';
+		description?: string;
+	};
+};
+
+type ForbiddenErrorResponse = ErrorResponse & {
+	error: {
+		code: 403;
+		name: 'Forbidden';
+		description?: string;
+	};
+};
+
+type BlockedErrorResponse = ErrorResponse & {
+	error: {
+		code: 403;
+		name: 'Blocked';
+		description?: string;
+	};
+};
+
+type NotFoundErrorResponse = ErrorResponse & {
+	error: {
+		code: 404;
+		name: 'NotFound';
+		description?: string;
+	};
+};
+
+type CantClaimErrorResponse = ErrorResponse & {
+	error: {
+		code: 403;
+		name: 'CantClaim';
+		description?: string;
+	};
+};
+
+type InternalErrorResponse = ErrorResponse & {
+	error: {
+		code: 500;
+		name: 'InternalError';
+		description?: string;
+	};
+};
+
 /* Error Definition */
 
 type ResponsibleError = {
