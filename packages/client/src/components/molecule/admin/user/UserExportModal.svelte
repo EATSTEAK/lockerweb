@@ -7,10 +7,11 @@
 	import Checkbox from '../../../atom/form/Checkbox.svelte';
 	import DocumentArrowLeft from '../../../../icons/DocumentArrowLeft.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { getDepartmentConfigs } from '$lib/api/config';
 
 	const dispatch = createEventDispatcher<{ submit: { department: string; reservedOnly: boolean; } }>();
 
-	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
+	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
 
 	export let open = false;
 	export let users: User[];
@@ -30,7 +31,7 @@
 
 <Modal on:close on:click:secondary={closeModal} on:click={exportUsers} {title} bind:open primaryText='내보내기'
 			 isPrimaryBtnIconRight isSecondaryBtnIconRight {...$$restProps}>
-	<div class='wrap'>
+	<div class='flex flex-col gap-3'>
 		<Select id='department' label='대상 학부' showLabel bind:value={department} required invalidText='이 값은 필수입니다.'
 						invalidClass='text-red-800'>
 			<option value='all'>전체</option>
@@ -43,9 +44,3 @@
 	<DocumentArrowLeft slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />
 </Modal>
-
-<style>
-    .wrap {
-        @apply flex flex-col gap-3;
-    }
-</style>

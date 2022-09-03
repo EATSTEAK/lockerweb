@@ -18,6 +18,7 @@
 	import Dismiss from '../../../../icons/Dismiss.svelte';
 	import DocumentHeaderRemove from '../../../../icons/DocumentHeaderRemove.svelte';
 	import { utils, writeXLSX } from 'xlsx';
+	import { getDepartmentConfigs } from '$lib/api/config';
 
 	const dispatch = createEventDispatcher<{
 		'user:update': UserUpdateRequest,
@@ -27,7 +28,7 @@
 
 	export let users: Array<User>;
 
-	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
+	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
 
 	let selectedTab;
 
@@ -103,6 +104,7 @@
 		dispatch('user:batchPut', unclaimedTargetUsers);
 	}
 
+	// noinspection NonAsciiCharacters
 	type ReadableUser = {
 		'학번': string,
 		'성명': string,
@@ -121,6 +123,7 @@
 	function exportUser(evt: CustomEvent<{ department: string; reservedOnly: boolean; }>) {
 		const { department, reservedOnly } = evt.detail;
 		userExportModalOpen = false;
+		// noinspection NonAsciiCharacters
 		const readableUsers: ReadableUser[] = (users ?? []).filter((u: User) => {
 			return (department === 'all' || department === u.department) &&
 				(reservedOnly === false || u.lockerId);
@@ -130,7 +133,7 @@
 			'학과(부)': departments.find(dept => u.department === dept)?.name ?? '알 수 없음',
 			'관리자 여부': u.isAdmin ? '예' : '아니오',
 			...(u.lockerId && { '예약한 사물함': (u.lockerId ?? '없음') }),
-			...(u.claimedUntil && { '사용 기한': (dateFormatter.format(new Date(u.claimedUntil))) })
+			...(u.claimedUntil && { '사용 기한': (dateFormatter.format(u.claimedUntil as Date)) })
 		}));
 		generate(readableUsers);
 	}
@@ -151,11 +154,11 @@
 	}
 </script>
 
-<div class='wrap'>
-	<div class='title'>
+<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+	<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
 		<h3>사용자 설정</h3>
 		{#if !updating && !error}
-			<div class='user-control'>
+			<div class='grow flex justify-end items-center gap-1'>
 				<Button on:click={addUser} class='bg-primary-800 text-white' isIconRight>
 					사용자 추가
 					<Add slot='icon' />
@@ -172,7 +175,7 @@
 		{/if}
 	</div>
 	{#if !updating && !error}
-		<div class='card table'>
+		<div class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3 basis-[640px] min-w-[640px]'>
 			<TabGroup bind:selectedId={selectedTab}>
 				{#each departments as department}
 					<TabItem id={department.id}>{department.name}</TabItem>
@@ -219,24 +222,3 @@
 	<DocumentHeaderRemove slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />
 </Modal>
-<style>
-    .wrap {
-        @apply my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch;
-    }
-
-    .title {
-        @apply mx-6 md:mx-0 flex flex-wrap w-full;
-    }
-
-    .user-control {
-        @apply grow flex justify-end items-center gap-1;
-    }
-
-    .card {
-        @apply md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3;
-    }
-
-    .table {
-        @apply basis-[640px] min-w-[640px];
-    }
-</style>

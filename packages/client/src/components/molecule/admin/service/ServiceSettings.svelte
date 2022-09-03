@@ -12,9 +12,9 @@
 	import Warning from '../../../../icons/Warning.svelte';
 	import Skeleton from "../../../atom/Skeleton.svelte";
 
-	$: serviceConfig = $config.success ? getServiceConfig($config.result) : undefined;
+	$: serviceConfig = $config?.success ? getServiceConfig($config.result) : undefined;
 
-	$: isServiceReady = !!($config.success && $config.result.find(v => v.id === 'SERVICE'));
+	$: isServiceReady = !!($config?.success && $config.result.find(v => v.id === 'SERVICE'));
 
 	let updating = false;
 

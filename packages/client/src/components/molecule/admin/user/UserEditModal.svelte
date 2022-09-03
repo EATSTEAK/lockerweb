@@ -8,6 +8,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import Select from '../../../atom/form/Select.svelte';
 	import { config } from '$lib/store';
+	import { getDepartmentConfigs } from '$lib/api/config';
 
 	const dispatch = createEventDispatcher<{ submit: User }>();
 
@@ -19,9 +20,9 @@
 	let department = targetUser?.department ?? null;
 	let isAdmin = targetUser?.isAdmin ?? false;
 	let lockerId = targetUser?.lockerId ?? null;
-	let claimedUntil = targetUser?.claimedUntil ? new Date(targetUser?.claimedUntil) : null;
+	let claimedUntil = targetUser?.claimedUntil ?? null;
 
-	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
+	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
 
 	$: initializeValues(targetUser);
 
@@ -33,7 +34,7 @@
 		department = targetUser?.department ?? null;
 		isAdmin = targetUser?.isAdmin ?? false;
 		lockerId = targetUser?.lockerId ?? null;
-		claimedUntil = targetUser?.claimedUntil ? new Date(targetUser?.claimedUntil) : null;
+		claimedUntil = targetUser?.claimedUntil ?? null;
 	}
 
 	function closeModal() {
@@ -55,7 +56,7 @@
 
 <Modal on:close on:click:secondary={closeModal} on:click={submitUser} {title} bind:open primaryText='저장'
 			 isPrimaryBtnIconRight isSecondaryBtnIconRight {...$$restProps}>
-	<div class='wrap'>
+	<div class='flex flex-col gap-1'>
 		<TextInput id='id' bind:value={id} label='학번' showLabel disabled={!!targetUser ? true : undefined}
 							 required={!targetUser} invalidClass='text-red-800'
 							 invalidText={id ? '학번은 숫자로만 이루어져야 합니다.' : '이 값은 필수입니다.'} pattern='\d+' />
@@ -77,9 +78,3 @@
 	<SaveEdit slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />
 </Modal>
-
-<style>
-    .wrap {
-        @apply flex flex-col gap-1;
-    }
-</style>

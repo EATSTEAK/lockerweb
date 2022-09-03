@@ -29,7 +29,7 @@
 		}
 	});
 
-	$: if (!disableBlock && !isReservable($config, $user, currentTime)) {
+	$: if ($config?.success && $user?.success && !disableBlock && !isReservable($config.result, $user.result, currentTime)) {
 		blockedModalOpen = true;
 	}
 
@@ -40,12 +40,12 @@
 		const serviceConfig: ServiceConfig = (config ?? []).find((c: Config) => c.id === 'SERVICE') as ServiceConfig;
 		const userDeptConfig: DepartmentConfig = (config ?? []).find((c: Config) => c.id === user.department) as DepartmentConfig;
 		if (serviceConfig) {
-			if (serviceConfig.activateFrom && new Date(serviceConfig.activateFrom).getTime() > time.getTime()) return false;
-			if (serviceConfig.activateTo && new Date(serviceConfig.activateTo).getTime() < time.getTime()) return false;
+			if (serviceConfig.activateFrom && serviceConfig.activateFrom.getTime() > time.getTime()) return false;
+			if (serviceConfig.activateTo && serviceConfig.activateTo.getTime() < time.getTime()) return false;
 		}
 		if (userDeptConfig) {
-			if (userDeptConfig.activateFrom && new Date(userDeptConfig.activateFrom).getTime() > time.getTime()) return false;
-			if (userDeptConfig.activateTo && new Date(userDeptConfig.activateTo).getTime() < time.getTime()) return false;
+			if (userDeptConfig.activateFrom && userDeptConfig.activateFrom.getTime() > time.getTime()) return false;
+			if (userDeptConfig.activateTo && userDeptConfig.activateTo.getTime() < time.getTime()) return false;
 		}
 		return true;
 	}

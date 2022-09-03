@@ -123,7 +123,9 @@ export const config: Refreshable<
 	undefined,
 	(set) => {
 		set(undefined);
-		refreshConfig().then((value) => set(value));
+		refreshConfig()
+			.then((value) => set(value))
+			.catch((e) => console.error(e));
 		return function stop() {
 			set(undefined);
 		};
@@ -137,7 +139,9 @@ export const user: Refreshable<SuccessResponse<User> | undefined | ErrorResponse
 		(set) => {
 			if (browser) {
 				set(undefined);
-				refreshUser().then((value) => set(value));
+				refreshUser()
+					.then((value) => set(value))
+					.catch((e) => console.error(e));
 			}
 			return function stop() {
 				set(undefined);

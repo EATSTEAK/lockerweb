@@ -11,10 +11,11 @@
 	import { read, utils } from 'xlsx';
 	import Checkbox from '../../../atom/form/Checkbox.svelte';
 	import isEqual from 'lodash.isequal';
+	import { getDepartmentConfigs } from '$lib/api/config';
 
 	const dispatch = createEventDispatcher<{ submit: { overwrite: boolean, users: User[] } }>();
 
-	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
+	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
 
 	export let open = false;
 
@@ -82,7 +83,7 @@
 <Modal on:close on:click:secondary={closeModal} on:click={submitUsers} {title} bind:open primaryText='업로드'
 			 primaryDisabled={!users}
 			 isPrimaryBtnIconRight isSecondaryBtnIconRight {...$$restProps}>
-	<div class='wrap'>
+	<div class='flex flex-col gap-3'>
 		<Select id='department' label='업로드 대상 학부' showLabel bind:value={department} required invalidText='이 값은 필수입니다.'
 						invalidClass='text-red-800'>
 			{#each departments as department}
@@ -111,9 +112,3 @@
 	<PeopleTeamAdd slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />
 </Modal>
-
-<style>
-    .wrap {
-        @apply flex flex-col gap-3;
-    }
-</style>

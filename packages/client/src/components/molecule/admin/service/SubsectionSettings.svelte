@@ -3,9 +3,10 @@
 	import Button from '../../../atom/Button.svelte';
 	import Add from '../../../../icons/Add.svelte';
 	import { config } from '$lib/store';
+	import { getDepartmentConfigs } from '$lib/api/config';
 
 
-	$: departmentIds = $config ? $config.filter(v => v.id !== 'SERVICE').map(v => v.id) : [];
+	$: departmentIds = $config?.success ? getDepartmentConfigs($config.result).map(v => v.id) : [];
 
 	export let subsections: LockerSubsection[];
 
@@ -37,7 +38,7 @@
 	}
 </script>
 
-<div class='wrap'>
+<div class='flex flex-col items-start'>
 	<p class='text-xl font-bold'>세부 구역 설정</p>
 	{#each newSubsections as subsection, index}
 		<div class='my-1'>
@@ -50,9 +51,3 @@
 		<Add slot='icon' />
 	</Button>
 </div>
-
-<style>
-    .wrap {
-        @apply flex flex-col items-start;
-    }
-</style>

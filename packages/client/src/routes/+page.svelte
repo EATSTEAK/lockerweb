@@ -128,8 +128,8 @@
 <Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
 			 on:close={() => contactModalOpen = false}
 			 on:click={() => contactModalOpen = false}>
-	{#each ($config ?? []) as config}
-		{#if config?.contact}
+	{#each ($config?.result ?? []) as config}
+		{#if config.contact}
 			<div class='my-2 leading-10'>
 				<h5>{config.name} 연락처</h5>
 				<p class='text-gray-700'>{config.contact}</p>
