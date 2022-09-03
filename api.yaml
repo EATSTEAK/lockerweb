@@ -140,16 +140,16 @@ paths:
                       $ref: '#/components/schemas/Locker'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
         '404':
           description: 사물함을 찾을 수 없을 경우
           content:
@@ -267,10 +267,10 @@ paths:
                   description: '권한 부족'
                   value:
                     success: false
-                      error:
-                        code: 403
-                        name: 'Forbidden'
-                        message: 'Sufficient permission'
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: 'Sufficient permission'
                 CantClaim:
                   description: '대여가 불가능한 사물함일 경우'
                   value:
@@ -336,10 +336,10 @@ paths:
                   description: '권한 부족'
                   value:
                     success: false
-                      error:
-                        code: 403
-                        name: 'Forbidden'
-                        message: 'Sufficient permission'
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: 'Sufficient permission'
                 Forbidden:
                   description: '현재 대여가 불가능할 경우'
                   value:
@@ -387,16 +387,16 @@ paths:
                     $ref: '#/components/schemas/User'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
         '404':
           description: 사용자를 찾을 수 없을 경우
           content:
@@ -451,16 +451,16 @@ paths:
                   message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /user/delete:
     post:
       tags:
@@ -503,16 +503,16 @@ paths:
                   message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /user/query:
     get:
       tags:
@@ -545,16 +545,16 @@ paths:
                       $ref: '#/components/schemas/User'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
         '404':
           description: 사용자를 찾을 수 없을 경우
           content:
@@ -609,16 +609,16 @@ paths:
                   message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /user/batch/delete:
     post:
       tags:
@@ -661,16 +661,16 @@ paths:
                   message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /config:
     get:
       tags:
@@ -751,16 +751,16 @@ paths:
                   message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /config/delete:
     post:
       tags:
@@ -803,16 +803,16 @@ paths:
                   message: 'Request body is malformed JSON'
         '403':
           description: 권한 부족
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  success: false
-                  error:
-                    code: 403
-                    name: 'Forbidden'
-                    message: 'Sufficient permission'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
 components:
   securitySchemes:
     UserLoginAuth:
