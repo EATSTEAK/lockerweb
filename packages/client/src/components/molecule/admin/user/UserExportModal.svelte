@@ -11,7 +11,7 @@
 
 	const dispatch = createEventDispatcher<{ submit: { department: string; reservedOnly: boolean; } }>();
 
-	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
+	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	export let open = false;
 	export let users: User[];

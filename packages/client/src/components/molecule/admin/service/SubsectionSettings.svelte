@@ -6,7 +6,7 @@
 	import { getDepartmentConfigs } from '$lib/api/config';
 
 
-	$: departmentIds = $config?.success ? getDepartmentConfigs($config.result).map(v => v.id) : [];
+	$: departmentIds = $config && $config.success ? getDepartmentConfigs($config.result).map(v => v.id) : [];
 
 	export let subsections: LockerSubsection[];
 

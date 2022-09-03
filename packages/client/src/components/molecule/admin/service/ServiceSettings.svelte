@@ -12,9 +12,9 @@
 	import Warning from '../../../../icons/Warning.svelte';
 	import Skeleton from "../../../atom/Skeleton.svelte";
 
-	$: serviceConfig = $config?.success ? getServiceConfig($config.result) : undefined;
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
-	$: isServiceReady = !!($config?.success && $config.result.find(v => v.id === 'SERVICE'));
+	$: isServiceReady = !!($config && $config.success && $config.result.find(v => v.id === 'SERVICE'));
 
 	let updating = false;
 
@@ -124,7 +124,7 @@
 				{/if}
 			</div>
 		</section>
-		<section class='card'>
+		<section class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
 			<h4>건물/사물함 수정</h4>
 			{#if serviceConfig && isBuildingModified}
 				<div class='bg-primary-200 rounded-md p-6 flex gap-3'>

@@ -5,7 +5,7 @@
 	import Skeleton from "../../../atom/Skeleton.svelte";
 	import { apiDeleteConfig, apiUpdateConfig, getDepartmentConfigs } from '$lib/api/config';
 
-	$: configs = $config?.success ? getDepartmentConfigs($config.result) : [];
+	$: configs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	let updating = false;
 	$: if ($config) updating = false;
@@ -47,7 +47,7 @@
 
 <div class='my-8 md:mx-8 flex flex-col gap-3'>
 	<h3 class='mx-6 md:mx-0'>학부별 설정</h3>
-	{#if $config?.success && !updating}
+	{#if $config && $config.success && !updating}
 		<div class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
 			<DepartmentConfigEditor on:delete={deleteDepartment} on:update={updateDepartment} {configs} />
 		</div>

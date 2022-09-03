@@ -18,6 +18,7 @@
 	import Modal from '../components/molecule/Modal.svelte';
 	import Dismiss from '../icons/Dismiss.svelte';
 	import { apiCountLocker } from '$lib/api/locker';
+	import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
 
 	let callbackUrl = undefined;
 
@@ -48,14 +49,13 @@
 	}
 
 
-	$: if ($config?.success && countData) {
-		const mappedConfig: Record<string, Config> = Object.fromEntries($config.result.map<[string, Config]>((value) => [value.id, value]));
-		lockerCount = updateLockerCount(mappedConfig, countData);
+	$: if ($config && $config.success && countData) {
+		lockerCount = updateLockerCount($config.result, countData);
 	}
 
-	function updateLockerCount(configs: Record<string, Config>, countInfo: LockerCountResponse): LockerCount {
-		const departmentConfigs = { ...configs };
-		delete departmentConfigs['SERVICE'];
+	function updateLockerCount(configs: Config[], countInfo: LockerCountResponse): LockerCount {
+		const departmentConfigs = getDepartmentConfigs(configs);
+		const serviceConfig = getServiceConfig(configs)
 
 		function transformLockerCount(
 			serviceConfig: ServiceConfig,
@@ -88,7 +88,7 @@
 			};
 		}
 
-		return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(configs.SERVICE as ServiceConfig, value, countInfo?.[key])]));
+		return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(serviceConfig, value, countInfo?.[key])]));
 	}
 
 </script>
@@ -128,7 +128,7 @@
 <Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
 			 on:close={() => contactModalOpen = false}
 			 on:click={() => contactModalOpen = false}>
-	{#each ($config?.result ?? []) as config}
+	{#each (($config && $config.success) ? $config.result : []) as config}
 		{#if config.contact}
 			<div class='my-2 leading-10'>
 				<h5>{config.name} 연락처</h5>

@@ -22,7 +22,7 @@
 	let lockerId = targetUser?.lockerId ?? null;
 	let claimedUntil = targetUser?.claimedUntil ?? null;
 
-	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
+	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	$: initializeValues(targetUser);
 

@@ -26,7 +26,7 @@
 
 	let serviceName = '사물함 예약 시스템';
 
-	$: if ($config?.success) {
+	$: if ($config && $config.success) {
 		serviceName = $config.result.find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 예약 시스템';
 	}
 </script>
@@ -49,7 +49,7 @@
 		<p transition:fly={{ y: -20, duration: 200 }} class='font-semibold shrink'>{serviceName}</p>
 		<NavigationProfile>
 			<slot name='navigation_profile'>
-				<Profile user={$user?.success ? $user.result : undefined} />
+				<Profile user={$user && $user.success ? $user.result : undefined} />
 			</slot>
 		</NavigationProfile>
 		<Divider class='my-6' />

@@ -15,7 +15,7 @@
 
 	const dispatch = createEventDispatcher<{ submit: { overwrite: boolean, users: User[] } }>();
 
-	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
+	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	export let open = false;
 

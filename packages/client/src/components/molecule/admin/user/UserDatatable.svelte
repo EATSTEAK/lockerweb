@@ -130,7 +130,7 @@
 													on:change={(evt) => { selectionChange(user.id, evt.target.checked) }} />
 							</div>
 						</td>
-						<td>{getDepartmentNameById($config?.result ?? [], user.department) ?? '알 수 없음'}</td>
+						<td>{$config && $config.success ? getDepartmentNameById($config.result, user.department) : '알 수 없음'}</td>
 						<td>{user.id}</td>
 						<td>{user.name}</td>
 						<td>

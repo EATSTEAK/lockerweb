@@ -28,7 +28,7 @@
 
 	export let users: Array<User>;
 
-	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
+	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	let selectedTab;
 

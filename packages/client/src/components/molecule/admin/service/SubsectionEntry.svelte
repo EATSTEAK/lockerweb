@@ -15,7 +15,7 @@
 		change: LockerSubsection
 	}>();
 
-	$: departments = $config?.success ? getDepartmentConfigs($config.result) : [];
+	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	let rangeStart = subsection?.range?.[0] ?? 0;
 	let rangeEnd = subsection?.range?.[1] ?? 0;

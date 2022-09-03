@@ -11,6 +11,7 @@
 	import Modal from './Modal.svelte';
 	import { goto } from '$app/navigation';
 	import { config, user } from '$lib/store';
+	import { getDepartmentConfig, getServiceConfig } from '$lib/api/config';
 
 	let clazz = '';
 	export { clazz as class };
@@ -29,7 +30,7 @@
 		}
 	});
 
-	$: if ($config?.success && $user?.success && !disableBlock && !isReservable($config.result, $user.result, currentTime)) {
+	$: if ($config && $config.success && $user && $user.success && !disableBlock && !isReservable($config.result, $user.result, currentTime)) {
 		blockedModalOpen = true;
 	}
 
@@ -37,13 +38,14 @@
 
 	function isReservable(config: Config[], user: User, time: Date): boolean {
 		if (!user || user.isAdmin) return true;
-		const serviceConfig: ServiceConfig = (config ?? []).find((c: Config) => c.id === 'SERVICE') as ServiceConfig;
-		const userDeptConfig: DepartmentConfig = (config ?? []).find((c: Config) => c.id === user.department) as DepartmentConfig;
+		const serviceConfig: ServiceConfig = getServiceConfig(config) as ServiceConfig;
+		const userDeptConfig: DepartmentConfig = getDepartmentConfig(config, user.department) as DepartmentConfig;
 		if (serviceConfig) {
 			if (serviceConfig.activateFrom && serviceConfig.activateFrom.getTime() > time.getTime()) return false;
 			if (serviceConfig.activateTo && serviceConfig.activateTo.getTime() < time.getTime()) return false;
 		}
 		if (userDeptConfig) {
+			console.log(userDeptConfig);
 			if (userDeptConfig.activateFrom && userDeptConfig.activateFrom.getTime() > time.getTime()) return false;
 			if (userDeptConfig.activateTo && userDeptConfig.activateTo.getTime() < time.getTime()) return false;
 		}
