@@ -153,14 +153,6 @@ type LockerCountResponse = {
 	};
 };
 
-type MenuConfig = {
-	[floors: string]: {
-		[section: string]: {
-			[lockerRange]: number
-		}
-	}
-}
-
 /* Error Definition */
 
 type ResponsibleError = {
@@ -168,3 +160,24 @@ type ResponsibleError = {
 	message?: string;
 	additionalInfo?: Record<string, unknown>;
 };
+
+
+/* MenuConfig */
+
+interface Subsection {
+	department: string;
+	range: [number, number];
+}
+
+interface Area {
+	subsections: Subsection[];
+	height: number;
+}
+
+interface Floor {
+	[area: string]: Area;
+}
+
+interface Lockers {
+	[floor: string]: Floor;
+}
