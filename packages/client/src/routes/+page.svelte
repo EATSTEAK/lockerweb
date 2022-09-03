@@ -7,7 +7,6 @@
 	import { getAuthorization } from '$lib/auth';
 	import { config } from '$lib/store';
 	import type { DepartmentLockerCount, LockerCount } from '$lib/types';
-	import { variables } from '$lib/variables';
 	import { getDepartmentLockerCountsByFloor } from '$lib/utils';
 	import Shell from '../components/molecule/Shell.svelte';
 	import Navigation from '../components/molecule/Navigation.svelte';
@@ -18,6 +17,7 @@
 	import PageTitle from '../components/atom/PageTitle.svelte';
 	import Modal from '../components/molecule/Modal.svelte';
 	import Dismiss from '../icons/Dismiss.svelte';
+	import { countLocker } from '$lib/api/locker';
 
 	let callbackUrl = undefined;
 
@@ -36,23 +36,20 @@
 		}
 		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
 		callbackNotLoaded = false;
-		fetch(variables.baseUrl + '/api/v1/locker/count')
-			.then((res) => res.json())
+		countLocker()
 			.then((data) => {
 				if (data.success) {
 					countData = data.result;
-					console.log(countData);
 				} else {
-					console.error(data.errorDescription);
+					console.error((data as ErrorResponse<LockerError>).error);
 				}
 			})
 			.catch((error) => console.error(error));
 	}
 
 
-	$: if ($config && countData) {
-		// console.log('Data received');
-		const mappedConfig: Record<string, Config> = Object.fromEntries($config.map<[string, Config]>((value) => [value.id, value]));
+	$: if ($config?.success && countData) {
+		const mappedConfig: Record<string, Config> = Object.fromEntries($config.result.map<[string, Config]>((value) => [value.id, value]));
 		lockerCount = updateLockerCount(mappedConfig, countData);
 	}
 
@@ -84,8 +81,8 @@
 				canReserve: (totalLocker > totalReserved),
 				lockerLeft: (totalLocker - totalReserved),
 				totalLocker,
-				...(departmentConfig.activateFrom && { activateFrom: new Date(departmentConfig.activateFrom) }),
-				...(departmentConfig.activateTo && { activateTo: new Date(departmentConfig.activateTo) }),
+				...(departmentConfig.activateFrom && { activateFrom: departmentConfig.activateFrom as Date }),
+				...(departmentConfig.activateTo && { activateTo: departmentConfig.activateTo as Date }),
 				contact: departmentConfig.contact ?? '',
 				floors
 			};
