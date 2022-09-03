@@ -12,14 +12,16 @@ import {
 
 const UserSchema = z.object({
 	id: z.string().regex(/\d+/),
-	name: z.string().default(''),
+	name: z.string().nullable().default(null),
 	isAdmin: z.boolean().default(false),
-	department: z.string().default(null),
+	department: z.string().nullable().default(null),
 	lockerId: z.string().optional(),
-	claimedUntil: z.preprocess(
-		(num: number) => (typeof num === 'number' && num >= 0 ? new Date(num) : null),
-		z.date().nullable().optional()
-	)
+	claimedUntil: z
+		.preprocess(
+			(num: number) => (typeof num === 'number' && num >= 0 ? new Date(num) : null),
+			z.date().nullable().optional()
+		)
+		.optional()
 });
 
 const UserUpdateRequestSchema = z.object({
@@ -69,11 +71,11 @@ export async function apiGetUser(
 
 export async function apiUpdateUser(
 	userUpdateRequest: UserUpdateRequest
-): Promise<SuccessResponse<UserUpdateRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<UserUpdateRequest>('/user/update', true, userUpdateRequest);
-	const update = createSuccessResponse(UserUpdateRequestSchema).safeParse(response);
+): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
+	const response = await apiRequest<never>('/user/update', true, userUpdateRequest);
+	const update = createSuccessResponse().safeParse(response);
 	if (update.success) {
-		return update.data as SuccessResponse<UserUpdateRequest>;
+		return update.data as SuccessResponse<never>;
 	}
 	const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
 	if (badRequest.success) {
@@ -109,7 +111,8 @@ export async function apiQueryUser(
 	starts?: string
 ): Promise<SuccessResponse<User[]> | ErrorResponse<ForbiddenError | NotFoundError>> {
 	const response = await apiRequest<UserResponse[]>(
-		`/user/query${starts ? '?starts=' + encodeURIComponent(starts) : ''}`
+		`/user/query${starts ? '?starts=' + encodeURIComponent(starts) : ''}`,
+		true
 	);
 	const query = createSuccessResponse(z.array(UserSchema)).safeParse(response);
 	if (query.success) {
@@ -129,21 +132,17 @@ export async function apiQueryUser(
 
 export async function apiBatchPutUser(
 	users: User[]
-): Promise<SuccessResponse<BatchUserPutRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
+): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
 	function toUserResponse(user: User) {
 		return {
 			...user,
 			...(user.claimedUntil && { claimedUntil: user.claimedUntil.toISOString() })
 		};
 	}
-	const response = await apiRequest<BatchUserPutRequest>(
-		'/user/batch/put',
-		true,
-		users.map(toUserResponse)
-	);
-	const batchPut = createSuccessResponse(BatchUserPutRequestSchema).safeParse(response);
+	const response = await apiRequest<never>('/user/batch/put', true, users.map(toUserResponse));
+	const batchPut = createSuccessResponse().safeParse(response);
 	if (batchPut.success) {
-		return batchPut.data as SuccessResponse<BatchUserPutRequest>;
+		return batchPut.data as SuccessResponse<never>;
 	}
 	const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
 	if (badRequest.success) {
@@ -159,11 +158,11 @@ export async function apiBatchPutUser(
 
 export async function apiBatchDeleteUser(
 	batchUserDeleteRequest: string[]
-): Promise<SuccessResponse<string[]> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<string[]>('/user/batch/delete', true, batchUserDeleteRequest);
-	const batchDelete = createSuccessResponse(z.array(z.string())).safeParse(response);
+): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
+	const response = await apiRequest<never>('/user/batch/delete', true, batchUserDeleteRequest);
+	const batchDelete = createSuccessResponse().safeParse(response);
 	if (batchDelete.success) {
-		return batchDelete.data as SuccessResponse<string[]>;
+		return batchDelete.data as SuccessResponse<never>;
 	}
 	const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
 	if (badRequest.success) {
