@@ -1,7 +1,7 @@
 import type { JwtPayload } from 'jsonwebtoken';
 import * as jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../env';
 import { UnauthorizedError } from './error';
+import { JWT_SECRET } from '../common';
 
 export const getBlockedDepartments = (configs: Config[]): Array<string> => {
 	return configs

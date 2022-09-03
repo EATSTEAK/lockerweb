@@ -1,8 +1,7 @@
 import https from 'https';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../../env';
-import { createResponse } from '../../common';
+import { createResponse, JWT_SECRET } from '../../common';
 import {
 	BlockedError,
 	errorResponse,
