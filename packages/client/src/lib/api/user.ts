@@ -128,9 +128,19 @@ export async function queryUser(
 }
 
 export async function batchPutUser(
-	users: BatchUserPutRequest
+	users: User[]
 ): Promise<SuccessResponse<BatchUserPutRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<BatchUserPutRequest>('/user/batch/put', true, users);
+	function toUserResponse(user: User) {
+		return {
+			...user,
+			...(user.claimedUntil && { claimedUntil: user.claimedUntil.toISOString() })
+		};
+	}
+	const response = await apiRequest<BatchUserPutRequest>(
+		'/user/batch/put',
+		true,
+		users.map(toUserResponse)
+	);
 	const batchPut = createSuccessResponse(BatchUserPutRequestSchema).safeParse(response);
 	if (batchPut.success) {
 		return batchPut.data as SuccessResponse<BatchUserPutRequest>;
