@@ -21,8 +21,10 @@ export const fromUserDao = (dao: UserDao): User => ({
 	isAdmin: dao.iA?.BOOL ?? false,
 	department: dao.d?.S,
 	...(dao.lockerId?.S && { lockerId: dao.lockerId?.S }),
-	...(dao.cU?.N && { claimedUntil: parseInt(dao.cU?.N) })
+	...(dao.cU?.N &&
+		parseInt(dao.cU?.N ?? '-1') >= 0 && { claimedUntil: new Date(parseInt(dao.cU?.N)) })
 });
+
 export const toUserDao = (user: User): UserDao => ({
 	type: { S: 'user' },
 	id: { S: `${user.id}` },
@@ -30,8 +32,15 @@ export const toUserDao = (user: User): UserDao => ({
 	iA: { BOOL: user.isAdmin },
 	d: { S: user.department },
 	...(user.lockerId && { lockerId: { S: user.lockerId } }),
-	...(user.claimedUntil && { cU: { N: `${user.claimedUntil}` } })
+	...(user.claimedUntil && { cU: { N: `${user.claimedUntil.getTime()}` } })
 });
+
+export function toUserResponse(user: User): UserResponse {
+	return {
+		...user,
+		...(user.claimedUntil && { claimedUntil: user.claimedUntil.toISOString() })
+	};
+}
 
 export const getUser = async function (id: string): Promise<User> {
 	const req: GetItemInput = {

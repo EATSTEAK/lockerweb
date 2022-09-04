@@ -24,7 +24,11 @@
 
 	export let collapsable = true;
 
-	$: serviceName = ($config ?? []).find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 시스템';
+	let serviceName = '사물함 예약 시스템';
+
+	$: if ($config && $config.success) {
+		serviceName = $config.result.find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 예약 시스템';
+	}
 </script>
 
 <Shell class={clazz} {navigationClass} {mainClass} bind:navigationCollapsed bind:collapsable>
@@ -45,7 +49,7 @@
 		<p transition:fly={{ y: -20, duration: 200 }} class='font-semibold shrink'>{serviceName}</p>
 		<NavigationProfile>
 			<slot name='navigation_profile'>
-				<Profile user={$user} />
+				<Profile user={$user && $user.success ? $user.result : undefined} />
 			</slot>
 		</NavigationProfile>
 		<Divider class='my-6' />

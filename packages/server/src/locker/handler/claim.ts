@@ -18,10 +18,10 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 	const token = (event.headers.Authorization ?? '').replace('Bearer ', '');
 	let data: {
 		lockerId: string;
-		until?: number;
+		until?: string;
 	};
 	try {
-		data = JSON.parse(event.body) as { lockerId: string; until?: number };
+		data = JSON.parse(event.body) as { lockerId: string; until?: string };
 	} catch {
 		return errorResponse(new BadRequestError('Request body is malformed JSON'));
 	}
@@ -51,14 +51,14 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		const lockerId = data.lockerId;
 		const until = data?.until;
-		let res: { id: string; lockerId: string; claimedUntil: number };
+		let res: ClaimLockerResponse;
 		if (until) {
-			res = await claimLocker(id, token, blockedDepartments, lockerId, until);
+			res = await claimLocker(id, token, blockedDepartments, lockerId, new Date(until).getTime());
 		} else {
 			res = await claimLocker(id, token, blockedDepartments, lockerId);
 		}
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

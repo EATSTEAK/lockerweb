@@ -1,3 +1,4 @@
+<!--suppress HtmlUnknownTag -->
 <script lang='ts'>
 	import { getDepartmentNameById } from '$lib/utils';
 	import { config } from '$lib/store';
@@ -77,26 +78,26 @@
 		return users.slice(start, start + itemsPerPage);
 	}
 </script>
-<div class='wrap'>
+<div class='flex flex-col h-full'>
 	{#if selected.length}
 		<div in:fly={{ y: 10, duration: 100 }} out:fly={{ y: 10, duration: 100 }}
 				 on:outrostart={() => batchActionOut = false}
-				 on:outroend={() => batchActionOut = true} class='batch'>
+				 on:outroend={() => batchActionOut = true} class='rounded-t-md bg-primary-800 text-white leading-6 py-2 px-3 border border-transparent flex justify-between'>
 			<div class='selections-text'>{selected.length}개 선택됨</div>
-			<div class='batch-actions'>
-				<button on:click={() => dispatch('batchUnclaim', {})} class='batch-btn'>
+			<div class='flex -m-2'>
+				<button on:click={() => dispatch('batchUnclaim', {})} class='rounded-xl bg-primary-800 flex gap-1 p-2 hover:brightness-90 active:brightness-75'>
 					<BookmarkOff />
 					예약 일괄 취소
 				</button>
-				<button on:click={() => dispatch('batchDelete', {})} class='batch-btn'>
+				<button on:click={() => dispatch('batchDelete', {})} class='rounded-xl bg-primary-800 flex gap-1 p-2 hover:brightness-90 active:brightness-75'>
 					<Delete />
 					삭제
 				</button>
 			</div>
 		</div>
 	{:else if batchActionOut}
-		<div class='actions'>
-			<div class='search'>
+		<div class='rounded-t-md bg-gray-100 flex w-full'>
+			<div class='flex w-full'>
 				<div class='flex justify-center items-center px-2 text-gray-500'>
 					<Search class='w-6 h-6' />
 				</div>
@@ -104,11 +105,11 @@
 			</div>
 		</div>
 	{/if}
-	<div class='table-wrap'>
+	<div class='grow'>
 		<table>
 			<thead>
 			<th class='w-6'>
-				<div class='checkbox-cell'>
+				<div class='flex justify-center items-center'>
 					<Checkbox id='select_all' bind:checked={selectAll} />
 				</div>
 			</th>
@@ -124,16 +125,16 @@
 				{#each shownUsers as user}
 					<tr>
 						<td>
-							<div class='checkbox-cell'>
+							<div class='flex justify-center items-center'>
 								<Checkbox id={`${user.id}`} checked={selected.includes(user.id)}
 													on:change={(evt) => { selectionChange(user.id, evt.target.checked) }} />
 							</div>
 						</td>
-						<td>{getDepartmentNameById($config, user.department) ?? '알 수 없음'}</td>
+						<td>{$config && $config.success ? getDepartmentNameById($config.result, user.department) : '알 수 없음'}</td>
 						<td>{user.id}</td>
 						<td>{user.name}</td>
 						<td>
-							<div class='checkbox-cell'>
+							<div class='flex justify-center items-center'>
 								<Checkbox id={`${user.id}_isAdmin`} checked={user.isAdmin} disabled />
 							</div>
 						</td>
@@ -158,48 +159,12 @@
 
 
 <style>
-    .wrap {
-        @apply flex flex-col h-full;
-    }
-
-    .table-wrap {
-        @apply grow;
-    }
-
-    table {
+		table {
         @apply table-auto min-w-[560px] w-full;
     }
 
     thead {
         @apply relative bg-gray-100;
-    }
-
-    .batch {
-        @apply rounded-t-md bg-primary-800 text-white leading-6 py-2 px-3 border border-transparent flex justify-between;
-    }
-
-    .batch-actions {
-        @apply flex -m-2;
-    }
-
-    .batch-btn {
-        @apply rounded-xl bg-primary-800 flex gap-1 p-2;
-    }
-
-    .batch-btn:hover {
-        @apply brightness-90;
-    }
-
-    .batch-btn:active {
-        @apply brightness-75;
-    }
-
-    .actions {
-        @apply rounded-t-md bg-gray-100 flex w-full;
-    }
-
-    .search {
-        @apply flex w-full;
     }
 
     th, td {
@@ -216,9 +181,5 @@
 
     tr:hover {
         @apply brightness-90;
-    }
-
-    .checkbox-cell {
-        @apply flex justify-center items-center;
     }
 </style>

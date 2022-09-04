@@ -19,6 +19,6 @@ export const unclaimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await unclaimLocker(id, token, blockedDepartments);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

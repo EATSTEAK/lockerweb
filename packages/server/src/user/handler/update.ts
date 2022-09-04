@@ -23,6 +23,6 @@ export const updateUserHandler: APIGatewayProxyHandler = async (event) => {
 		await updateUser(data);
 		return createResponse(200, { success: true });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

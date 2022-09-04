@@ -95,8 +95,8 @@ function toConfigDao(data: Config): ConfigDao {
 		type: { S: 'config' },
 		id: { S: data.id },
 		n: { S: data.name },
-		...(data.activateFrom && { aF: { S: data.activateFrom } }),
-		...(data.activateTo && { aT: { S: data.activateTo } })
+		...(data.activateFrom && { aF: { S: data.activateFrom.toISOString() } }),
+		...(data.activateTo && { aT: { S: data.activateTo.toISOString() } })
 	};
 }
 
@@ -104,8 +104,8 @@ function fromConfigDao(dao: ConfigDao): Config {
 	return {
 		id: dao.id?.S ?? 'SERVICE',
 		name: dao.n?.S ?? 'IT대학 사물함 시스템',
-		...(dao.aF && { activateFrom: dao.aF.S }),
-		...(dao.aT && { activateTo: dao.aT.S })
+		...(dao.aF && { activateFrom: new Date(dao.aF.S) }),
+		...(dao.aT && { activateTo: new Date(dao.aT.S) })
 	};
 }
 
@@ -140,6 +140,14 @@ function fromDepartmentConfigDao(dao: DepartmentConfigDao): DepartmentConfig {
 	return {
 		...fromConfigDao(dao),
 		...(dao.c && { contact: dao.c.S })
+	};
+}
+
+export function toConfigResponse(config: Config): ConfigResponse {
+	return {
+		...config,
+		...(config.activateFrom && { activateFrom: config.activateFrom.toISOString() }),
+		...(config.activateTo && { activateTo: config.activateTo.toISOString() })
 	};
 }
 

@@ -7,7 +7,6 @@
 	import { getAuthorization } from '$lib/auth';
 	import { config } from '$lib/store';
 	import type { DepartmentLockerCount, LockerCount } from '$lib/types';
-	import { variables } from '$lib/variables';
 	import { getDepartmentLockerCountsByFloor } from '$lib/utils';
 	import Shell from '../components/molecule/Shell.svelte';
 	import Navigation from '../components/molecule/Navigation.svelte';
@@ -18,6 +17,8 @@
 	import PageTitle from '../components/atom/PageTitle.svelte';
 	import Modal from '../components/molecule/Modal.svelte';
 	import Dismiss from '../icons/Dismiss.svelte';
+	import { apiCountLocker } from '$lib/api/locker';
+	import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
 
 	let callbackUrl = undefined;
 
@@ -36,29 +37,25 @@
 		}
 		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
 		callbackNotLoaded = false;
-		fetch(variables.baseUrl + '/api/v1/locker/count')
-			.then((res) => res.json())
+		apiCountLocker()
 			.then((data) => {
 				if (data.success) {
 					countData = data.result;
-					console.log(countData);
 				} else {
-					console.error(data.errorDescription);
+					console.error((data as ErrorResponse<LockerError>).error);
 				}
 			})
 			.catch((error) => console.error(error));
 	}
 
 
-	$: if ($config && countData) {
-		// console.log('Data received');
-		const mappedConfig: Record<string, Config> = Object.fromEntries($config.map<[string, Config]>((value) => [value.id, value]));
-		lockerCount = updateLockerCount(mappedConfig, countData);
+	$: if ($config && $config.success && countData) {
+		lockerCount = updateLockerCount($config.result, countData);
 	}
 
-	function updateLockerCount(configs: Record<string, Config>, countInfo: LockerCountResponse): LockerCount {
-		const departmentConfigs = { ...configs };
-		delete departmentConfigs['SERVICE'];
+	function updateLockerCount(configs: Config[], countInfo: LockerCountResponse): LockerCount {
+		const departmentConfigs = getDepartmentConfigs(configs);
+		const serviceConfig = getServiceConfig(configs)
 
 		function transformLockerCount(
 			serviceConfig: ServiceConfig,
@@ -84,14 +81,14 @@
 				canReserve: (totalLocker > totalReserved),
 				lockerLeft: (totalLocker - totalReserved),
 				totalLocker,
-				...(departmentConfig.activateFrom && { activateFrom: new Date(departmentConfig.activateFrom) }),
-				...(departmentConfig.activateTo && { activateTo: new Date(departmentConfig.activateTo) }),
+				...(departmentConfig.activateFrom && { activateFrom: departmentConfig.activateFrom as Date }),
+				...(departmentConfig.activateTo && { activateTo: departmentConfig.activateTo as Date }),
 				contact: departmentConfig.contact ?? '',
 				floors
 			};
 		}
 
-		return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(configs.SERVICE as ServiceConfig, value, countInfo?.[key])]));
+		return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(serviceConfig, value, countInfo?.[key])]));
 	}
 
 </script>
@@ -131,8 +128,8 @@
 <Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
 			 on:close={() => contactModalOpen = false}
 			 on:click={() => contactModalOpen = false}>
-	{#each ($config ?? []) as config}
-		{#if config?.contact}
+	{#each (($config && $config.success) ? $config.result : []) as config}
+		{#if config.contact}
 			<div class='my-2 leading-10'>
 				<h5>{config.name} 연락처</h5>
 				<p class='text-gray-700'>{config.contact}</p>

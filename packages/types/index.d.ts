@@ -13,8 +13,20 @@ type User = {
 	isAdmin: boolean;
 	department: string;
 	lockerId?: string;
-	claimedUntil?: number;
+	claimedUntil?: Date;
 };
+
+type UserResponse = {
+	id: string;
+	name: string;
+	isAdmin: boolean;
+	department: string;
+	lockerId?: string;
+	claimedUntil?: string;
+};
+
+type UserPutRequest = UserResponse;
+type BatchUserPutRequest = UserPutRequest[];
 
 type UserUpdateRequest = {
 	id: string;
@@ -44,9 +56,36 @@ type AccessTokenInfo = {
 	expiresIn: number;
 };
 
+/* Locker Definition */
+
+type ReservedLocker = {
+	id?: string;
+	lockerId: string;
+	claimedUntil?: Date;
+};
+
+type ReservedLockerResponse = {
+	id?: string;
+	lockerId: string;
+	claimedUntil?: string;
+};
+type ClaimLockerResponse = ReservedLockerResponse;
+
+type UnclaimLockerResponse = {
+	id: string;
+	lockerId: string;
+};
+
 /* Config Definition */
 
 type Config = {
+	id: string;
+	name: string;
+	activateFrom?: Date;
+	activateTo?: Date;
+};
+
+type ConfigResponse = {
 	id: string;
 	name: string;
 	activateFrom?: string;
@@ -63,12 +102,22 @@ type DepartmentConfig = Config & {
 	contact?: string;
 };
 
+type DepartmentConfigResponse = ConfigResponse & {
+	contact?: string;
+};
+
 type DepartmentConfigDao = DaoData &
 	ConfigDao & {
 		c?: { S: string };
 	};
 
 type ServiceConfig = Config & {
+	buildings: {
+		[buildingId: string]: Building;
+	};
+};
+
+type ServiceConfigResponse = ConfigResponse & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
@@ -159,14 +208,14 @@ type Response = {
 	success: boolean;
 };
 
-type SuccessResponse = {
+type SuccessResponse<T> = {
 	success: true;
-	result?: unknown;
+	result?: T;
 };
 
-type ErrorResponse = {
+type ErrorResponse<E extends LockerError> = {
 	success: false;
-	error: LockerError;
+	error: E;
 };
 
 type BadRequestError = LockerError & {
@@ -206,9 +255,9 @@ type InternalError = LockerError & {
 
 /* Error Definition */
 
-type LockerError = {
-	code: string;
+interface LockerError {
+	code: number;
 	name: string;
 	message?: string;
 	additionalInfo?: Record<string, unknown>;
-};
+}

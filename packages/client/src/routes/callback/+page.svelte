@@ -10,13 +10,14 @@
 	import Navigation from '../../components/molecule/Navigation.svelte';
 	import NavigationContent from '../../components/atom/NavigationContent.svelte';
 	import PageTitle from '../../components/atom/PageTitle.svelte';
+	import { apiSsuLogin } from '$lib/api/auth';
 
 	let result;
 	let id;
 
 	if (browser) {
 		result = new URLSearchParams(window.location.search).get('result');
-		id = fetch(variables.baseUrl + '/api/v1/auth/ssu_login?result=' + encodeURIComponent(result)).then((res) => res.json());
+		id = apiSsuLogin(result);
 		id.then((data) => {
 			const result: AccessTokenInfo = data.result;
 			document.cookie = `locker_session=${encodeURIComponent(result.accessToken)}; path=/; domain=${window.location.hostname}; max-age=${result.expiresIn}; samesite=lax`;

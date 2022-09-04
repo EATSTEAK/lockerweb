@@ -23,6 +23,6 @@ export const getClaimedLockerCountHandler: APIGatewayProxyHandler = async () => 
 			result
 		});
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };

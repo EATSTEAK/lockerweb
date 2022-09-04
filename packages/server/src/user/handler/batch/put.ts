@@ -38,7 +38,7 @@ export const batchPutUserHandler: APIGatewayProxyHandler = async (event) => {
 		}
 		return createResponse(200, { success: true });
 	} catch (e) {
-		responseAsLockerError(e, new InternalError('Internal error'), {
+		return responseAsLockerError(e, new InternalError('Internal error'), {
 			failedData: JSON.stringify(data.slice(i, data.length))
 		});
 	}

@@ -15,7 +15,7 @@ export const claimLocker = async function (
 	blockedDepartments: Array<string>,
 	lockerId: string,
 	claimedUntil?: number
-): Promise<{ id: string; lockerId: string; claimedUntil: number }> {
+): Promise<ClaimLockerResponse> {
 	if (!claimedUntil) claimedUntil = -1;
 	const checkReq: QueryInput = {
 		TableName,
@@ -69,8 +69,8 @@ export const claimLocker = async function (
 	if (res.Attributes.hasOwnProperty('lockerId') && res.Attributes.lockerId?.S === lockerId) {
 		return {
 			id,
-			claimedUntil,
-			lockerId
+			lockerId,
+			claimedUntil: new Date(claimedUntil).toISOString()
 		};
 	} else {
 		throw new CantClaimError("Can't claim requested locker", { id, lockerId, claimedUntil });
@@ -81,7 +81,7 @@ export const unclaimLocker = async function (
 	id: string,
 	token: string,
 	blockedDepartments: Array<string>
-): Promise<{ id: string; lockerId: string }> {
+): Promise<UnclaimLockerResponse> {
 	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(
 		blockedDepartments.map((d) => [`:${d}`, { S: d }])
 	);
@@ -126,7 +126,7 @@ export const unclaimLocker = async function (
 export const queryLockers = async function (
 	starts = '',
 	showId?: boolean
-): Promise<Array<{ lockerId: string; claimedUntil: number; id?: string }>> {
+): Promise<Array<ReservedLocker>> {
 	const req: QueryInput = {
 		TableName,
 		IndexName: 'lockerIdIndex',
@@ -154,9 +154,9 @@ export const queryLockers = async function (
 		throw e;
 	}
 	return res.Items.map((item) => {
-		const ret: { lockerId: string; claimedUntil: number; id?: string } = {
+		const ret: ReservedLocker = {
 			lockerId: item.lockerId?.S,
-			claimedUntil: parseInt(item.cU?.N)
+			claimedUntil: new Date(parseInt(item.cU?.N))
 		};
 		if (showId) ret.id = item.id.S;
 		return ret;

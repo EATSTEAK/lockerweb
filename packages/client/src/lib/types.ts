@@ -1,3 +1,16 @@
+/* API Call types */
+
+export type FetchError = LockerError & {
+	code: 500;
+	name: 'FetchError';
+};
+export type UnknownError = LockerError & {
+	code: 500;
+	name: 'UnknownError';
+};
+
+/* LockerCount Types */
+
 export type LockerCount = {
 	[department: string]: DepartmentLockerCount;
 };

@@ -5,6 +5,7 @@
 	import Select from '../../../atom/form/Select.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import isEqual from 'lodash.isequal';
+	import { getDepartmentConfigs } from '$lib/api/config';
 
 	export let key: string;
 	export let subsection: LockerSubsection;
@@ -14,7 +15,7 @@
 		change: LockerSubsection
 	}>();
 
-	$: departments = $config ? $config.filter((v) => v.id !== 'SERVICE') : [];
+	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	let rangeStart = subsection?.range?.[0] ?? 0;
 	let rangeEnd = subsection?.range?.[1] ?? 0;
@@ -56,23 +57,23 @@
 	}
 </script>
 
-<div class='wrap'>
-	<div class='entry'>
-		<div class='remove'>
-			<button on:click={removeSubsection} class='remove-btn'>
+<div class='transition-all bg-white rounded-md flex flex-col gap-1 hover:brightness-95'>
+	<div class='transition-all flex items-center gap-3 overflow-hidden p-1'>
+		<div class='flex items-center'>
+			<button on:click={removeSubsection} class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'>
 				<Subtract />
 			</button>
 		</div>
-		<div class='inputs-wrap'>
-			<div class='range'>
+		<div class='flex flex-wrap items-center gap-3'>
+			<div class='rounded-md overflow-hidden flex items-center flex-wrap'>
 				<label>세부 구역 범위</label>
-				<div class='range-input'>
+				<div class='flex items-center'>
 					<NumberInput id='range-start' class='w-24' label='세부 구역 시작' bind:value={rangeStart} />
 					<div class='p-2'>~</div>
 					<NumberInput id='range-end' class='w-24' label='세부 구역 끝' bind:value={rangeEnd} />
 				</div>
 			</div>
-			<div class='department'>
+			<div class='flex items-center flex-wrap'>
 				<label>대상 학부</label>
 				<Select id={`subsection_${key}_department`} label='대상 학부' bind:value={department} required>
 					{#each departments as department}
@@ -89,47 +90,7 @@
 
 
 <style>
-    .wrap {
-        @apply transition-all bg-white rounded-md flex flex-col gap-1;
-    }
-
-    .wrap:hover {
-        @apply brightness-95;
-    }
-
-    label {
+		label {
         @apply font-bold mr-2;
-    }
-
-    .entry {
-        @apply transition-all flex items-center gap-3 overflow-hidden p-1;
-    }
-
-    .inputs-wrap {
-        @apply flex flex-wrap items-center gap-3;
-    }
-
-    .range {
-        @apply rounded-md overflow-hidden flex items-center flex-wrap;
-    }
-
-    .department {
-        @apply flex items-center flex-wrap;
-    }
-
-    .range-input {
-        @apply flex items-center;
-    }
-
-    .remove {
-        @apply flex items-center;
-    }
-
-    .remove-btn {
-        @apply transition-all rounded-md bg-gray-200 text-gray-500;
-    }
-
-    .remove-btn:hover {
-        @apply brightness-90;
     }
 </style>

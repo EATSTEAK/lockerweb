@@ -12,6 +12,9 @@ export const logoutHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await revokeToken(payload.aud as string, token);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsLockerError(e, new UnauthorizedError("Can't logout when not logged in", { token }));
+		return responseAsLockerError(
+			e,
+			new UnauthorizedError("Can't logout when not logged in", { token })
+		);
 	}
 };

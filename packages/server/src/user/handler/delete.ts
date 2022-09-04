@@ -23,6 +23,6 @@ export const deleteUserHandler: APIGatewayProxyHandler = async (event) => {
 		const res = await deleteUser(data.id);
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
-		responseAsLockerError(e);
+		return responseAsLockerError(e);
 	}
 };
