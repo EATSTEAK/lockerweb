@@ -10,6 +10,7 @@
 	import NavigationContent from '../../components/atom/NavigationContent.svelte';
 	import PageTitle from '../../components/atom/PageTitle.svelte';
 	import { apiLogout } from '$lib/api/auth';
+	import { goto } from '$app/navigation';
 
 	let result;
 	let id;
@@ -19,7 +20,7 @@
 		id = apiLogout();
 		document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
 		id.then((data) => {
-			window.location.href = '/';
+			goto('/');
 		});
 	}
 </script>

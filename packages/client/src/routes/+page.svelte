@@ -19,6 +19,7 @@
 	import Dismiss from '../icons/Dismiss.svelte';
 	import { apiCountLocker } from '$lib/api/locker';
 	import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
+	import { goto } from '$app/navigation';
 	import ErrorScreen from '../components/atom/ErrorScreen.svelte';
 	import { fade } from 'svelte/transition';
 	import { isActivated } from '$lib/utils.js';
@@ -37,7 +38,7 @@
 
 	if (browser) {
 		if (getAuthorization()) {
-			window.location.href = '/reserve';
+			goto('/reserve');
 		}
 		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
 		callbackNotLoaded = false;
