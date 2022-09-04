@@ -4,6 +4,7 @@
 	import LockerItem from './LockerItem.svelte';
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
+	import LockerItemGroup from './LockerItemGroup.svelte';
 
 	export let buildingConfig: ServiceConfig;
 	export let userDepartmentId: string;
