@@ -14,7 +14,7 @@
 
 <div class={clazz}>
 	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''} <span class:hidden={!$$props.required}
-																																						 className='text-red-800'>*</span></label>
+																																						 class='text-red-800'>*</span></label>
 	<input id={id} type='number'
 				 class={inputClass}
 				 bind:value

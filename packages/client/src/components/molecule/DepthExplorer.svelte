@@ -31,12 +31,12 @@
 <slot name='breadcrumb' {selectedDepth}>
 	<header class={`breadcrumb ${breadcrumbClass ?? ''}`}>
 		{#if selections.length}
-			<a on:click={() => deselect(0)}>{rootText}</a>
+			<button on:click={() => deselect(0)}>{rootText}</button>
 			{#each selections as selection, index}
 				{#if index + 1 < selections.length}
-					<a on:click={() => select(index, selection)}>
+					<button on:click={() => select(index, selection)}>
 						{selectedDepth[index].name}
-					</a>
+					</button>
 				{:else}
 					<span>{selectedDepth[index].name}</span>
 				{/if}
@@ -60,7 +60,7 @@
         @apply flex;
     }
 
-    .breadcrumb > a {
+    .breadcrumb > button {
         @apply text-primary-800 cursor-pointer;
 
     }
@@ -70,7 +70,7 @@
 
     }
 
-    .breadcrumb > a:after {
+    .breadcrumb > button:after {
         content: '>';
         @apply mx-1 text-gray-500;
     }

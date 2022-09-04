@@ -2,29 +2,34 @@
 	export let isIconRight: boolean = false;
 	let clazz = '';
 	export { clazz as class };
+	export let href;
 </script>
 
-<a on:click
-	 on:dblclick
-	 on:mousedown
-	 on:mousemove
-	 on:mouseout
-	 on:mouseover
-	 on:mouseup
-	 on:mouseenter
-	 on:mouseleave
-	 on:keydown
-	 on:keypress
-	 on:keyup
-	 on:focus
-	 tabindex='0'
-	 class='{clazz} cursor-pointer select-none
+
+<!--suppress RequiredAttributes -->
+<svelte:element this='{href ? "a" : "button"}' on:click
+								on:dblclick
+								on:mousedown
+								on:mousemove
+								on:blur
+								on:mouseout
+								on:focus
+								on:mouseover
+								on:mouseup
+								on:mouseenter
+								on:mouseleave
+								on:keydown
+								on:keypress
+								on:keyup
+								{href}
+								tabindex='0'
+								class='{clazz} cursor-pointer select-none
 	 flex justify-between items-center px-4 py-3 flex-shrink-0 gap-x-3
 	 rounded-xl shadow-md font-bold transition-all ease-in
 	 [&[disabled]]:opacity-50 [&[disabled]]:shadow-none [&[disabled]]:pointer-events-none
 	 hover:brightness-90 hover:shadow-lg
 	 active:brightness-75 active:shadow-md'
-	 {...$$restProps}>
+								{...$$restProps}>
 	{#if !isIconRight}
 		{#if $$slots.icon}
 			<div class='btn-icon'>
@@ -40,7 +45,7 @@
 			</div>
 		{/if}
 	{/if}
-</a>
+</svelte:element>
 
 <style>
     :global(.btn-icon path:not([fill="none"])) {
