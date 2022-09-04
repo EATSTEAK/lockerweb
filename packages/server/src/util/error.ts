@@ -23,6 +23,7 @@ export class LockerError extends Error {
 		this.name = name;
 		this.message = message;
 		this.additionalInfo = additionalInfo;
+		this.isLockerError = true;
 	}
 }
 
@@ -69,6 +70,7 @@ export class InternalError extends LockerError {
 }
 
 export function isLockerError(error: unknown) {
+	console.log(typeof error, (error as LockerError).isLockerError);
 	return typeof error === 'object' && (error as LockerError)?.isLockerError;
 }
 
