@@ -63,7 +63,7 @@
 		<TextInput id='name' bind:value={name} label='이름' showLabel
 							 invalidClass='text-red-800' invalidText='이 값은 필수입니다.' required />
 		<div class='department'>
-			<label>대상 학부</label>
+			<p>대상 학부</p>
 			<Select id={`department`} label='대상 학부' bind:value={department} required>
 				{#each departments as department}
 					<option value={department.id}>{department.name}</option>
