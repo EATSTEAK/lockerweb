@@ -27,7 +27,7 @@ const BuildingSchema = z.object({
 	lockers: z.record(z.record(LockerSectionSchema).default({})).default({})
 });
 
-const ConfigSchema = z.object({
+export const ConfigSchema = z.object({
 	id: z.string().min(1),
 	name: z.string(),
 	activateFrom: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),

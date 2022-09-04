@@ -18,8 +18,8 @@
 	if (browser) {
 		result = new URLSearchParams(window.location.search).get('result');
 		id = apiLogout();
+		document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
 		id.then((data) => {
-			document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
 			goto('/');
 		});
 	}

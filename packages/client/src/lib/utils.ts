@@ -4,28 +4,29 @@ export const getCookieValue = (name: string) =>
 export function getDepartmentLockerCountsByFloor(
 	config: ServiceConfig,
 	departmentId: string
-): { [floor: string]: number } {
+): { [buildingNum: string]: { [floor: string]: number } } {
 	function countLockers([from, to]: [number, number]): number {
 		return to - from + 1;
 	}
 
-	const deptLockerSubsections: [string, LockerSubsection[]][] = Object.values(
+	const deptLockerSubsections: [string, string, LockerSubsection[]][] = Object.values(
 		config.buildings
 	).flatMap((building) => {
 		return Object.entries(building.lockers)
-			.map<[string, LockerSubsection[]]>(([floor, sections]) => {
+			.map<[string, string, LockerSubsection[]]>(([floor, sections]) => {
 				const subsections: LockerSubsection[] = Object.values(sections).flatMap<LockerSubsection>(
 					(section: LockerSection) =>
 						section.subsections.filter((subsection) => subsection.department === departmentId)
 				);
-				return [floor, subsections];
+				return [building.id, floor, subsections];
 			})
-			.filter(([floor, subsections]) => subsections.length);
+			.filter(([buildingNum, floor, subsections]) => subsections.length);
 	});
-	return deptLockerSubsections.reduce<{ [floor: string]: number }>(
-		(result, [floor, subsections]) => {
-			if (typeof result[floor] !== 'number') result[floor] = 0;
-			result[floor] += subsections.reduce<number>(
+	return deptLockerSubsections.reduce<{ [buildingNum: string]: { [floor: string]: number } }>(
+		(result, [buildingNum, floor, subsections]) => {
+			if (typeof result[buildingNum] !== 'object') result[buildingNum] = {};
+			if (typeof result[buildingNum][floor] !== 'number') result[buildingNum][floor] = 0;
+			result[buildingNum][floor] += subsections.reduce<number>(
 				(a, subsection) => a + countLockers(subsection.range),
 				0
 			);
@@ -37,4 +38,15 @@ export function getDepartmentLockerCountsByFloor(
 
 export function getDepartmentNameById(configs: Config[], departmentId: string): string | undefined {
 	return configs?.find((conf) => conf.id === departmentId)?.name;
+}
+
+export function isActivated(activateFrom: Date, activateTo: Date): boolean {
+	if (activateFrom && activateTo) {
+		return activateFrom.getTime() <= Date.now() && activateTo.getTime() > Date.now();
+	} else if (activateFrom) {
+		return activateFrom.getTime() <= Date.now();
+	} else if (activateTo) {
+		return activateTo.getTime() > Date.now();
+	}
+	return true;
 }
