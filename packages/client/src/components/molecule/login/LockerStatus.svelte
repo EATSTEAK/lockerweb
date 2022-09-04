@@ -37,11 +37,11 @@
 			</div>
 		{:else}
 			<div class='flex gap-2 py-2 overflow-x-scroll overflow-y-hidden'>
-				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-300 rounded-2xl' />
-				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-300 rounded-2xl' />
-				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-300 rounded-2xl' />
-				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-300 rounded-2xl' />
-				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-300 rounded-2xl' />
+				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
+				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
+				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
+				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
+				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
 			</div>
 		{/if}
 	</div>
@@ -52,13 +52,13 @@
 			</div>
 		{:else if !lockerCount}
 			<div class='flex flex-col gap-1'>
-				<Skeleton class='h-12 w-96 bg-gray-300 rounded-md' />
-				<Skeleton class='h-6 w-56 bg-gray-300 rounded-md' />
+				<Skeleton class='h-12 w-96 bg-gray-200 rounded-md' />
+				<Skeleton class='h-6 w-56 bg-gray-200 rounded-md' />
 			</div>
 			<div class='mt-5'>
-				<Skeleton class='h-12 w-full bg-gray-300 rounded-2xl my-2' />
-				<Skeleton class='h-12 w-full bg-gray-300 rounded-2xl my-2' />
-				<Skeleton class='h-12 w-full bg-gray-300 rounded-2xl my-2' />
+				<Skeleton class='h-12 w-full bg-gray-200 rounded-2xl my-2' />
+				<Skeleton class='h-12 w-full bg-gray-200 rounded-2xl my-2' />
+				<Skeleton class='h-12 w-full bg-gray-200 rounded-2xl my-2' />
 			</div>
 		{:else}
 			<div transition:fade
