@@ -5,13 +5,15 @@ import type {
 	DeleteItemInput,
 	ExpressionAttributeValueMap,
 	GetItemInput,
+	GetItemOutput,
 	QueryInput,
 	QueryOutput,
 	UpdateItemInput,
 	WriteRequest
 } from 'aws-sdk/clients/dynamodb';
 import { dynamoDB, TableName } from '../util/database';
-import { NotFoundError, ResponsibleError } from '../util/error';
+import { InternalError, NotFoundError } from '../util/error';
+import type { AWSError } from 'aws-sdk';
 
 export const fromUserDao = (dao: UserDao): User => ({
 	id: dao.id.S,
@@ -19,8 +21,10 @@ export const fromUserDao = (dao: UserDao): User => ({
 	isAdmin: dao.iA?.BOOL ?? false,
 	department: dao.d?.S,
 	...(dao.lockerId?.S && { lockerId: dao.lockerId?.S }),
-	...(dao.cU?.N && { claimedUntil: parseInt(dao.cU?.N) })
+	...(dao.cU?.N &&
+		parseInt(dao.cU?.N ?? '-1') >= 0 && { claimedUntil: new Date(parseInt(dao.cU?.N)) })
 });
+
 export const toUserDao = (user: User): UserDao => ({
 	type: { S: 'user' },
 	id: { S: `${user.id}` },
@@ -28,8 +32,15 @@ export const toUserDao = (user: User): UserDao => ({
 	iA: { BOOL: user.isAdmin },
 	d: { S: user.department },
 	...(user.lockerId && { lockerId: { S: user.lockerId } }),
-	...(user.claimedUntil && { cU: { N: `${user.claimedUntil}` } })
+	...(user.claimedUntil && { cU: { N: `${user.claimedUntil.getTime()}` } })
 });
+
+export function toUserResponse(user: User): UserResponse {
+	return {
+		...user,
+		...(user.claimedUntil && { claimedUntil: user.claimedUntil.toISOString() })
+	};
+}
 
 export const getUser = async function (id: string): Promise<User> {
 	const req: GetItemInput = {
@@ -39,8 +50,16 @@ export const getUser = async function (id: string): Promise<User> {
 			id: { S: `${id}` }
 		}
 	};
-	const res = await dynamoDB.getItem(req).promise();
-	if (res.Item === undefined) {
+	let res: GetItemOutput;
+	try {
+		res = await dynamoDB.getItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new NotFoundError(`Cannot find user info of id ${id}`);
+		}
+		throw e;
+	}
+	if (!res.Item) {
 		throw new NotFoundError(`Cannot find user info of id ${id}`);
 	}
 	const dao: UserDao = res.Item as unknown as UserDao;
@@ -63,12 +82,19 @@ export const queryUser = async function (startsWith: string): Promise<Array<User
 	};
 	let res: QueryOutput;
 	do {
-		res = await dynamoDB
-			.query({
-				...req,
-				...(res && res.LastEvaluatedKey && { ExclusiveStartKey: res.LastEvaluatedKey })
-			})
-			.promise();
+		try {
+			res = await dynamoDB
+				.query({
+					...req,
+					...(res && res.LastEvaluatedKey && { ExclusiveStartKey: res.LastEvaluatedKey })
+				})
+				.promise();
+		} catch (e) {
+			if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+				throw new NotFoundError(`Cannot find user info`);
+			}
+			throw e;
+		}
 		composedRes = [
 			...composedRes,
 			...res.Items.map<User>((v) => fromUserDao(v as unknown as UserDao))
@@ -133,7 +159,7 @@ export const deleteUser = async function (id: string): Promise<string> {
 };
 export const batchPutUser = async function (infos: Array<User>): Promise<Array<User>> {
 	if (infos.length === 0) return infos;
-	if (infos.length > 25) throw new ResponsibleError(500, 'Maximum amount of batch creation is 25');
+	if (infos.length > 25) throw new InternalError('Maximum amount of batch creation is 25');
 	const requests: WriteRequest[] = infos.map((v: User) => ({
 		PutRequest: {
 			Item: {
@@ -145,14 +171,13 @@ export const batchPutUser = async function (infos: Array<User>): Promise<Array<U
 		RequestItems: {}
 	};
 	req.RequestItems[TableName] = requests;
-	const res = await dynamoDB.batchWriteItem(req).promise();
-	console.log(res);
+	await dynamoDB.batchWriteItem(req).promise();
 	return infos;
 };
 
 export const batchDeleteUser = async function (ids: Array<string>): Promise<Array<string>> {
 	if (ids.length === 0) return ids;
-	if (ids.length > 25) throw new ResponsibleError(500, 'Maximum amount of batch creation is 25');
+	if (ids.length > 25) throw new InternalError('Maximum amount of batch creation is 25');
 	const requests: WriteRequest[] = ids.map((v: string) => ({
 		DeleteRequest: {
 			Key: {
@@ -169,7 +194,6 @@ export const batchDeleteUser = async function (ids: Array<string>): Promise<Arra
 		RequestItems: {}
 	};
 	req.RequestItems[TableName] = requests;
-	const res = await dynamoDB.batchWriteItem(req).promise();
-	console.log(res);
+	await dynamoDB.batchWriteItem(req).promise();
 	return ids;
 };

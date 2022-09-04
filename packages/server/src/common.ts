@@ -1,5 +1,6 @@
 import type { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 
+export const JWT_SECRET = process.env.JWT_SECRET ?? 'this-is-sample-secret-key';
 
 export function createResponse(statusCode: number, body: string | object): APIGatewayProxyResult {
 	const stringifyBody = typeof body === 'string' ? body : JSON.stringify(body);
@@ -15,7 +16,6 @@ export function createResponse(statusCode: number, body: string | object): APIGa
 	}
 	return res;
 }
-
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const localCorsHandler: APIGatewayProxyHandler = async () => {

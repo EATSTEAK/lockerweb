@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// noinspection JSUnusedLocalSymbols
+
 import type {
 	DeleteItemInput,
 	ExpressionAttributeNameMap,
 	ExpressionAttributeValueMap,
 	GetItemInput,
+	GetItemOutput,
 	QueryInput,
 	QueryOutput,
 	UpdateItemInput
 } from 'aws-sdk/clients/dynamodb';
 import { dynamoDB, TableName } from '../util/database';
 import { NotFoundError } from '../util/error';
+import type { AWSError } from 'aws-sdk';
 
 function fromLockerSubsectionData(data: LockerSubsectionData): LockerSubsection {
 	return {
@@ -90,8 +95,8 @@ function toConfigDao(data: Config): ConfigDao {
 		type: { S: 'config' },
 		id: { S: data.id },
 		n: { S: data.name },
-		...(data.activateFrom && { aF: { S: data.activateFrom } }),
-		...(data.activateTo && { aT: { S: data.activateTo } })
+		...(data.activateFrom && { aF: { S: data.activateFrom.toISOString() } }),
+		...(data.activateTo && { aT: { S: data.activateTo.toISOString() } })
 	};
 }
 
@@ -99,8 +104,8 @@ function fromConfigDao(dao: ConfigDao): Config {
 	return {
 		id: dao.id?.S ?? 'SERVICE',
 		name: dao.n?.S ?? 'IT대학 사물함 시스템',
-		...(dao.aF && { activateFrom: dao.aF.S }),
-		...(dao.aT && { activateTo: dao.aT.S })
+		...(dao.aF && { activateFrom: new Date(dao.aF.S) }),
+		...(dao.aT && { activateTo: new Date(dao.aT.S) })
 	};
 }
 
@@ -138,6 +143,14 @@ function fromDepartmentConfigDao(dao: DepartmentConfigDao): DepartmentConfig {
 	};
 }
 
+export function toConfigResponse(config: Config): ConfigResponse {
+	return {
+		...config,
+		...(config.activateFrom && { activateFrom: config.activateFrom.toISOString() }),
+		...(config.activateTo && { activateTo: config.activateTo.toISOString() })
+	};
+}
+
 export const queryConfig = async function (startsWith = ''): Promise<Array<Config>> {
 	let composedRes: Array<Config> = [];
 	const req: QueryInput = {
@@ -154,12 +167,19 @@ export const queryConfig = async function (startsWith = ''): Promise<Array<Confi
 	};
 	let res: QueryOutput;
 	do {
-		res = await dynamoDB
-			.query({
-				...req,
-				...(res && res.LastEvaluatedKey && { ExclusiveStartKey: res.LastEvaluatedKey })
-			})
-			.promise();
+		try {
+			res = await dynamoDB
+				.query({
+					...req,
+					...(res && res.LastEvaluatedKey && { ExclusiveStartKey: res.LastEvaluatedKey })
+				})
+				.promise();
+		} catch (e) {
+			if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+				throw new NotFoundError('Cannot find config');
+			}
+			throw e;
+		}
 		composedRes = [
 			...composedRes,
 			...res.Items.map<Config>((v) =>
@@ -180,7 +200,15 @@ export const getConfig = async function (id: string): Promise<Config> {
 			id: { S: `${id}` }
 		}
 	};
-	const res = await dynamoDB.getItem(req).promise();
+	let res: GetItemOutput;
+	try {
+		res = await dynamoDB.getItem(req).promise();
+	} catch (e) {
+		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+			throw new NotFoundError(`Cannot find config of id ${id}`);
+		}
+		throw e;
+	}
 	if (res.Item === undefined) {
 		throw new NotFoundError(`Cannot find config of id ${id}`);
 	}

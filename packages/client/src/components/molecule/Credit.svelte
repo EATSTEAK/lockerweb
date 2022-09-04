@@ -23,7 +23,7 @@
 		<GitHub />
 	</a>
 	<Button on:click={() => open = true}
-					class='shadow-none text-gray-500 hover:shadow-none hover:text-gray-800 active:shadow-none active:drop-shadow-md'>
+					class='!shadow-none text-gray-500 hover:!shadow-none hover:text-gray-800 active:!shadow-none active:drop-shadow-md'>
 		정보
 	</Button>
 </section>
@@ -47,11 +47,11 @@
 		<p class='text-gray-500 text-center'>Made by</p>
 		<div class='flex flex-row justify-center items-center gap-2 text-gray-500'>
 			<Button href='https://github.com/EATSTEAK' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#FF8C00] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF8C00] active:!shadow-none active:brightness-95'>
 				<Eatsteak />
 			</Button>
 			<Button href='https://github.com/Twince' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#F38630] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#F38630] active:!shadow-none active:brightness-95'>
 				<Twince />
 			</Button>
 		</div>
@@ -60,7 +60,7 @@
 		<p class='text-gray-500 text-center'>Special Thanks</p>
 		<div class='flex flex-row justify-center items-center gap-2 text-gray-500'>
 			<Button href='https://github.com/TEAM-MAT' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-gray-700 active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-gray-700 active:!shadow-none active:brightness-95'>
 				TEAM-MAT
 			</Button>
 		</div>
@@ -69,27 +69,27 @@
 		<p class='text-gray-500 text-center'>Made with</p>
 		<div class='flex flex-row justify-center items-center gap-2 text-gray-500'>
 			<Button href='https://svelte.dev' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#FF3E00] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF3E00] active:!shadow-none active:brightness-95'>
 				<Svelte />
 			</Button>
 			<Button href='https://tailwindcss.com' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#38BDF8] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#38BDF8] active:!shadow-none active:brightness-95'>
 				<TailwindCss />
 			</Button>
 			<Button href='https://aws.amazon.com/lambda/' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#FF9900] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF9900] active:!shadow-none active:brightness-95'>
 				<AwsLambda />
 			</Button>
 			<Button href='https://aws.amazon.com/dynamodb/' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#4053D6] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#4053D6] active:!shadow-none active:brightness-95'>
 				<AmazonDynamoDB />
 			</Button>
 			<Button href='https://aws.amazon.com/api-gateway/' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#FF4F8B] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF4F8B] active:!shadow-none active:brightness-95'>
 				<AmazonAPIGateway />
 			</Button>
 			<Button href='https://aws.amazon.com/s3/' rel='external' target='_blank'
-							class='px-0 py-0 shadow-none hover:shadow-none hover:text-[#569A31] active:shadow-none active:brightness-95'>
+							class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#569A31] active:!shadow-none active:brightness-95'>
 				<AmazonS3 />
 			</Button>
 		</div>
@@ -98,7 +98,7 @@
 		<p class='text-gray-500 text-center'>and...</p>
 		<div class='flex flex-row justify-center items-center gap-1 text-gray-500'>
 			<Button
-				class='px-0 py-0 shadow-none hover:shadow-none hover:text-rose-600 active:shadow-none active:brightness-95'>
+				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-rose-600 active:!shadow-none active:brightness-95'>
 				<Heart />
 			</Button>
 		</div>

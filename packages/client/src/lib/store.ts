@@ -5,8 +5,9 @@ import { writable } from 'svelte/store';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { browser } from '$app/env';
-import { variables } from '$lib/variables';
-import { fetchWithAuth, getAuthorization } from '$lib/auth';
+import { getAuthorization } from '$lib/auth';
+import { apiGetConfig } from '$lib/api/config';
+import { apiGetUser } from '$lib/api/user';
 
 type ConfigStore = {
 	lastUpdated: string;
@@ -38,7 +39,9 @@ export function refreshable<T>(
 	};
 }
 
-async function refreshConfig(forceFetch = false): Promise<Config[]> {
+async function refreshConfig(
+	forceFetch = false
+): Promise<SuccessResponse<Config[]> | ErrorResponse<LockerError>> {
 	if (browser) {
 		if (localStorage.getItem('config') && !forceFetch) {
 			const item = localStorage.getItem('config');
@@ -46,13 +49,12 @@ async function refreshConfig(forceFetch = false): Promise<Config[]> {
 				const configStore: ConfigStore = JSON.parse(item);
 				const lastUpdated = new Date(configStore.lastUpdated);
 				if (Date.now() - lastUpdated.getTime() <= 1000 * 60) {
-					return configStore.configs;
+					return { success: true, result: configStore.configs };
 				}
 			}
 		}
-		const configs = await fetch(variables.baseUrl + '/api/v1/config')
-			.then((res) => res.json())
-			.then((data) => {
+		try {
+			return await apiGetConfig().then((data) => {
 				if (data.success) {
 					const result: Config[] = data.result;
 					localStorage.setItem(
@@ -62,41 +64,69 @@ async function refreshConfig(forceFetch = false): Promise<Config[]> {
 							configs: result
 						})
 					);
-					return result;
+					return data;
 				} else {
-					throw new Error(`Request error ${data.error}: ${data.errorDescription}`);
+					return data as ErrorResponse<NotFoundError>;
 				}
 			});
-		return configs;
+		} catch (e) {
+			if (e.code && e.name) return { success: false, error: e };
+			console.error(e);
+			return {
+				success: false,
+				error: {
+					code: 500,
+					name: 'UnknownError',
+					additionalInfo: e
+				}
+			};
+		}
 	}
 	throw new Error('This function must be ran in browser');
 }
 
-async function refreshUser(): Promise<User> {
+async function refreshUser(): Promise<SuccessResponse<User> | ErrorResponse<LockerError>> {
 	if (getAuthorization()) {
-		const result = await fetchWithAuth(`${variables.baseUrl as string}/api/v1/user`)
-			.then((res) => res.json())
-			.then((res) => {
+		try {
+			return await apiGetUser().then((res) => {
 				if (res.success) {
-					return res.result as User;
+					return res;
+				} else {
+					return res as ErrorResponse<LockerError>;
 				}
-				throw new Error(`Request error ${res.error}: ${res.errorDescription}`);
 			});
-		return result;
+		} catch (e) {
+			if (e.code && e.name) return { success: false, error: e };
+			console.error(e);
+			return {
+				success: false,
+				error: {
+					code: 500,
+					name: 'UnknownError',
+					additionalInfo: e
+				}
+			};
+		}
 	}
-	throw new Error('Unauthorized');
+	return {
+		success: false,
+		error: {
+			code: 401,
+			name: 'Unauthorized'
+		}
+	};
 }
 
-export const config: Refreshable<Config[] | undefined | null> = refreshable<
-	Config[] | undefined | null
->(
+export const config: Refreshable<
+	SuccessResponse<Config[]> | undefined | ErrorResponse<LockerError>
+> = refreshable<SuccessResponse<Config[]> | undefined | ErrorResponse<LockerError>>(
 	undefined,
 	(set) => {
 		set(undefined);
 		refreshConfig()
 			.then((value) => set(value))
-			.catch((err) => {
-				console.error(err);
+			.catch((e) => {
+				console.error(e);
 				set(null);
 			});
 		return function stop() {
@@ -106,21 +136,22 @@ export const config: Refreshable<Config[] | undefined | null> = refreshable<
 	() => refreshConfig(true)
 );
 
-export const user: Refreshable<User | undefined | null> = refreshable<User | undefined | null>(
-	undefined,
-	(set) => {
-		if (browser) {
-			set(undefined);
-			refreshUser()
-				.then((value) => set(value))
-				.catch((err) => {
-					console.error(err);
-					set(null);
-				});
-		}
-		return function stop() {
-			set(undefined);
-		};
-	},
-	refreshUser
-);
+export const user: Refreshable<SuccessResponse<User> | undefined | ErrorResponse<LockerError>> =
+	refreshable<SuccessResponse<User> | undefined | ErrorResponse<LockerError>>(
+		undefined,
+		(set) => {
+			if (browser) {
+				set(undefined);
+				refreshUser()
+					.then((value) => set(value))
+					.catch((e) => {
+						console.error(e);
+						set(null);
+					});
+			}
+			return function stop() {
+				set(undefined);
+			};
+		},
+		refreshUser
+	);

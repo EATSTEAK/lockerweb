@@ -6,7 +6,10 @@
 	export let departmentText: string;
 	export let lockerLeft: number;
 	export let totalLocker: number;
-	export let availableTime: string;
+	export let activateFrom: Date;
+	export let activateTo: Date;
+
+	$: activateTime = activateFrom && activateTo && timeCalc(activateFrom, activateTo);
 
 	let ref = null;
 
@@ -27,11 +30,26 @@
 	onMount(() => {
 		return () => unsubscribe();
 	});
+
+	function timeCalc(activateFrom: Date, activateTo: Date): string {
+		const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
+		const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
+		const fromMinutes = `${activateFrom.getMinutes()}`.padStart(2, '0');
+		const fromTime = activateFrom ? `${activateFrom.getHours()}:${fromMinutes}` : '';
+		const toMinutes = `${activateTo.getMinutes()}`.padStart(2, '0');
+		const toTime = activateTo ? `${activateTo.getHours()}:${toMinutes}` : '';
+		const isToDateDifferent = toDate && toDate !== fromDate;
+		return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
+	}
 </script>
 
 <button
 	bind:this={ref}
-	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? "active" : ''}`}
+	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? "active" : ''}
+	aspect-square max-w-[160px]
+	rounded-2xl m-1 bg-gray-100 box-border transition-all
+	flex-grow-0 flex-shrink-0 basis-[160px]
+	hover:brightness-90`}
 	on:click
 	on:click|preventDefault={() => {
 		ctx.update(id);
@@ -48,45 +66,24 @@
     }
   }}
 >
-	<div class='wrap'>
+	<div class='flex flex-col'>
 		<div class='department-text'>{departmentText}</div>
-		<div class='locker-status'>
-			<div class='left-locker'>{lockerLeft}</div>
-			<div class='all-locker'>/{totalLocker}</div>
+		<div class='font-bold flex flex-col items-stretch flex-wrap'>
+			<div class='locker-left text-primary-800 text-6xl grow text-center -mb-3'>{lockerLeft}</div>
+			<div class='text-xl text-right mx-5'>/{totalLocker}</div>
 		</div>
-		<div class='available-time'>{availableTime}</div>
+		<div class='available-time text-sm'>{activateTime}</div>
 	</div>
 
 </button>
 
 <style>
     button {
-        @apply aspect-square max-w-[160px] rounded-2xl m-1 bg-gray-100 box-border transition-all flex-grow-0 flex-shrink-0 basis-[160px];
         box-shadow: inset 0 0 0 2px theme('colors.gray.300');
     }
 
-    button:hover {
-        @apply brightness-90;
-    }
-
-    .wrap {
-        @apply flex flex-col p-5;
-    }
-
-    .locker-status {
-        @apply font-bold flex flex-col items-stretch flex-wrap;
-    }
-
-    .unavailable .left-locker {
+    .unavailable .locker-left {
         @apply text-red-600;
-    }
-
-    .left-locker {
-        @apply text-primary-800 text-6xl grow text-center;
-    }
-
-    .all-locker {
-        @apply text-2xl grow text-right;
     }
 
     .unavailable.active {

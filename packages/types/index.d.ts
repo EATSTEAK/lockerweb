@@ -13,8 +13,20 @@ type User = {
 	isAdmin: boolean;
 	department: string;
 	lockerId?: string;
-	claimedUntil?: number;
+	claimedUntil?: Date;
 };
+
+type UserResponse = {
+	id: string;
+	name: string;
+	isAdmin: boolean;
+	department: string;
+	lockerId?: string;
+	claimedUntil?: string;
+};
+
+type UserPutRequest = UserResponse;
+type BatchUserPutRequest = UserPutRequest[];
 
 type UserUpdateRequest = {
 	id: string;
@@ -44,9 +56,36 @@ type AccessTokenInfo = {
 	expiresIn: number;
 };
 
+/* Locker Definition */
+
+type ReservedLocker = {
+	id?: string;
+	lockerId: string;
+	claimedUntil?: Date;
+};
+
+type ReservedLockerResponse = {
+	id?: string;
+	lockerId: string;
+	claimedUntil?: string;
+};
+type ClaimLockerResponse = ReservedLockerResponse;
+
+type UnclaimLockerResponse = {
+	id: string;
+	lockerId: string;
+};
+
 /* Config Definition */
 
 type Config = {
+	id: string;
+	name: string;
+	activateFrom?: Date;
+	activateTo?: Date;
+};
+
+type ConfigResponse = {
 	id: string;
 	name: string;
 	activateFrom?: string;
@@ -63,12 +102,22 @@ type DepartmentConfig = Config & {
 	contact?: string;
 };
 
+type DepartmentConfigResponse = ConfigResponse & {
+	contact?: string;
+};
+
 type DepartmentConfigDao = DaoData &
 	ConfigDao & {
 		c?: { S: string };
 	};
 
 type ServiceConfig = Config & {
+	buildings: {
+		[buildingId: string]: Building;
+	};
+};
+
+type ServiceConfigResponse = ConfigResponse & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
@@ -153,31 +202,62 @@ type LockerCountResponse = {
 	};
 };
 
-/* Error Definition */
+/* Response Definition */
 
-type ResponsibleError = {
-	errorType: string;
-	message?: string;
-	additionalInfo?: Record<string, unknown>;
+type Response = {
+	success: boolean;
 };
 
+type SuccessResponse<T> = {
+	success: true;
+	result?: T;
+};
 
-/* MenuConfig */
+type ErrorResponse<E extends LockerError> = {
+	success: false;
+	error: E;
+};
 
-interface Subsection {
-	department: string;
-	range: [number, number];
-}
+type BadRequestError = LockerError & {
+	code: 400;
+	name: 'BadRequest';
+};
 
-interface Area {
-	subsections: Subsection[];
-	height: number;
-}
+type UnauthorizedError = LockerError & {
+	code: 401;
+	name: 'Unauthorized';
+};
 
-interface Floor {
-	[area: string]: Area;
-}
+type ForbiddenError = LockerError & {
+	code: 403;
+	name: 'Forbidden';
+};
 
-interface Lockers {
-	[floor: string]: Floor;
+type BlockedError = LockerError & {
+	code: 403;
+	name: 'Blocked';
+};
+
+type NotFoundError = LockerError & {
+	code: 404;
+	name: 'NotFound';
+};
+
+type CantClaimError = LockerError & {
+	code: 403;
+	name: 'CantClaim';
+};
+
+type InternalError = LockerError & {
+	code: 500;
+	name: 'InternalError';
+};
+
+/* Error Definition */
+
+interface LockerError {
+	code: number;
+	name: string;
+	message?: string;
+	additionalInfo?: Record<string, unknown>;
 }

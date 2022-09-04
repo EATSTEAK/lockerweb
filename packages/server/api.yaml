@@ -56,8 +56,22 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 401
-                errorDescription: Unauthorized
+                error:
+                  code: 401
+                  name: 'Unauthorized'
+                  message: 'No result parameter provided'
+        '403':
+          description: 현재 로그인 불가할 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Blocked'
+                  message: 'Service unavailable'
   /auth/logout:
     get:
       tags:
@@ -80,7 +94,12 @@ paths:
                   success:
                     type: boolean
                   result:
-                    type: string
+                    type: object
+                    required:
+                      - accessToken
+                    properties:
+                      accessToken:
+                        type: string
         '401':
           description: 로그인 상태가 아닐 경우
           content:
@@ -89,8 +108,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 401
-                errorDescription: Unauthorized
+                error:
+                  code: 401
+                  name: 'Unauthorized'
+                  message: 'Can''t logout when not logged in'
   /locker/query:
     get:
       tags:
@@ -121,27 +142,31 @@ paths:
                   result:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Locker'
-        '500':
-          description: 내부 오류 / department 없이 요청을 수행할 경우
+                      $ref: '#/components/schemas/ReservedLockerResponse'
+        '403':
+          description: 권한 부족
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
-        '401':
-          description: 로그인 상태가 아닐 경우
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
+        '404':
+          description: 사물함을 찾을 수 없을 경우
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 401
-                errorDescription: Unauthorized
+                error:
+                  code: 404
+                  name: 'NotFound'
+                  message: 'Cannot find lockers'
   /locker/count:
     get:
       tags:
@@ -163,16 +188,18 @@ paths:
                     type: boolean
                   result:
                     $ref: '#/components/schemas/LockerCountResponse'
-        '500':
-          description: 내부 오류
+        '404':
+          description: 사물함을 찾을 수 없을 경우
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 404
+                  name: 'NotFound'
+                  message: 'Cannot find lockers'
   /locker/claim:
     post:
       tags:
@@ -203,29 +230,80 @@ paths:
                     type: boolean
                   result:
                     type: object
+                    required:
+                      - id
+                      - lockerId
                     properties:
+                      id:
+                        type: string
                       lockerId:
                         type: string
+                      claimedUntil:
+                        type: string
+                        format: date-time
+        '400':
+          description: '`until` 값이 올바르지 않을 경우'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Key "until" is must be an number'
         '403':
-          description: 사물함이 이미 점유되었을 경우
+          description: '현재 대여가 불가능하거나 사물함이 이미 대여된 경우'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                success: false
-                error: 403
-                errorDescription: Can't claim the locker that already reserved
+              examples:
+                Blocked:
+                  description: '서비스 중단으로 인해 현재 대여가 불가능할 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Blocked'
+                      message: ''
+                Forbidden:
+                  description: '현재 대여가 불가능할 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: ''
+                Permission:
+                  description: '권한 부족'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: 'Sufficient permission'
+                CantClaim:
+                  description: '대여가 불가능한 사물함일 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'CantClaim'
+                      message: 'Requested locker is already claimed'
         '500':
-          description: 내부 오류
+          description: 사물함 정보를 찾을 수 없을 경우
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 500
+                  name: 'InternalError'
+                  message: 'Unknown locker data'
   /locker/unclaim:
     post:
       tags:
@@ -249,29 +327,53 @@ paths:
                     type: boolean
                   result:
                     type: object
+                    required:
+                      - id
+                      - lockerId
                     properties:
+                      id:
+                        type: string
                       lockerId:
                         type: string
         '403':
-          description: 점유한 사물함이 없을 경우
+          description: '현재 대여가 불가능하거나 사물함이 이미 대여된 경우'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                success: false
-                error: 403
-                errorDescription: This user is not claimed an locker yet
-        '500':
-          description: 내부 오류
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                success: false
-                error: 500
-                errorDescription: Internal error
+              examples:
+                Blocked:
+                  description: '서비스 중단으로 인해 현재 대여가 불가능할 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Blocked'
+                      message: ''
+                Permission:
+                  description: '권한 부족'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: 'Sufficient permission'
+                Forbidden:
+                  description: '현재 대여가 불가능할 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: ''
+                CantClaim:
+                  description: '점유한 사물함이 없을 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'CantClaim'
+                      message: 'This user is not claimed an locker yet'
   /user:
     get:
       tags:
@@ -300,17 +402,31 @@ paths:
                   success:
                     type: boolean
                   result:
-                    $ref: '#/components/schemas/User'
-        '500':
-          description: 내부 오류
+                    $ref: '#/components/schemas/UserResponse'
+        '403':
+          description: 권한 부족
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
+        '404':
+          description: 사용자를 찾을 수 없을 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 404
+                  name: 'NotFound'
+                  message: 'Cannot find user info of id 20220000'
   /user/update:
     post:
       tags:
@@ -333,22 +449,33 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/UserUpdateRequest'
-        '500':
-          description: 내부 오류
+        '400':
+          description: 요청 형식이 잘못되었을 때
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Request body is malformed JSON'
+        '403':
+          description: 권한 부족
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /user/delete:
     post:
       tags:
@@ -377,16 +504,30 @@ paths:
                     type: boolean
                   result:
                     $ref: '#/components/schemas/UserDeleteRequest'
-        '500':
-          description: 내부 오류
+        '400':
+          description: 요청 형식이 잘못되었을 때
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Request body is malformed JSON'
+        '403':
+          description: 권한 부족
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /user/query:
     get:
       tags:
@@ -416,17 +557,31 @@ paths:
                   result:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
-        '500':
-          description: 내부 오류 / department 값이 주어지지 않았을 때
+                      $ref: '#/components/schemas/UserResponse'
+        '403':
+          description: 권한 부족
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
+        '404':
+          description: 사용자를 찾을 수 없을 경우
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 404
+                  name: 'NotFound'
+                  message: 'Cannot find user'
   /user/batch/put:
     post:
       tags:
@@ -449,22 +604,33 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/UserBatchPutRequest'
-        '500':
-          description: 내부 오류
+        '400':
+          description: 요청 형식이 잘못되었을 때
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Request body is malformed JSON'
+        '403':
+          description: 권한 부족
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /user/batch/delete:
     post:
       tags:
@@ -487,22 +653,33 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/UserBatchDeleteRequest'
-        '500':
-          description: 내부 오류
+        '400':
+          description: 요청 형식이 잘못되었을 때
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Request body is malformed JSON'
+        '403':
+          description: 권한 부족
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /config:
     get:
       tags:
@@ -528,17 +705,19 @@ paths:
                       - SERVICE
                     properties:
                       SERVICE:
-                        $ref: '#/components/schemas/Config'
-        '500':
-          description: 내부 오류
+                        $ref: '#/components/schemas/ConfigResponse'
+        '404':
+          description: 설정을 찾을 수 없을 경우
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 404
+                  name: 'NotFound'
+                  message: 'Cannot find user'
   /config/update:
     post:
       tags:
@@ -561,22 +740,33 @@ paths:
                 type: object
                 required:
                   - success
-                  - result
                 properties:
                   success:
                     type: boolean
-                  result:
-                    $ref: '#/components/schemas/ConfigUpdateRequest'
-        '500':
-          description: 내부 오류
+        '400':
+          description: 요청 형식이 잘못되었을 때
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Request body is malformed JSON'
+        '403':
+          description: 권한 부족
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
   /config/delete:
     post:
       tags:
@@ -604,17 +794,31 @@ paths:
                   success:
                     type: boolean
                   result:
-                    $ref: '#/components/schemas/ConfigDeleteRequest'
-        '500':
-          description: 내부 오류
+                    type: string
+        '400':
+          description: 요청 형식이 잘못되었을 때
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               example:
                 success: false
-                error: 500
-                errorDescription: Internal error
+                error:
+                  code: 400
+                  name: 'BadRequest'
+                  message: 'Request body is malformed JSON'
+        '403':
+          description: 권한 부족
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: 403
+                  name: 'Forbidden'
+                  message: 'Sufficient permission'
 components:
   securitySchemes:
     UserLoginAuth:
@@ -641,16 +845,22 @@ components:
       required:
         - success
         - error
-        - errorDescription
       properties:
         success:
           type: boolean
           default: false
         error:
-          type: integer
-          format: int32
-        errorDescription:
-          type: string
+          type: object
+          required:
+            - code
+            - name
+          properties:
+            code:
+              type: number
+            name:
+              type: string
+            message:
+              type: string
     AccessTokenInfo:
       title: AccessTokenInfo
       description: 로그인 성공 시 발급되는 엑세스 토큰의 정보입니다.
@@ -672,9 +882,9 @@ components:
         expiresIn:
           type: integer
           format: int32
-    Locker:
-      title: Locker
-      description: 사물함 정보입니다.
+    ReservedLockerResponse:
+      title: ReservedLockerResponse
+      description: 대여된 사물함 정보입니다.
       type: object
       required:
         - lockerId
@@ -685,9 +895,9 @@ components:
           type: string
           description: 이 사물함을 사용중인 사용자의 학번입니다.
         claimedUntil:
-          type: number
-          format: int32
-          description: 이 사물함을 사용하는 기한을 표현한 UNIX TIMESTAMP입니다. 없다면 무기한으로 사용중인 사물함입니다.
+          type: string
+          format: date-time
+          description: 이 사물함을 사용하는 기한을 표현한 ISODate 입니다. 이 값이 없다면 무기한입니다.
     LockerCountResponse:
       title: LockerCountResponse
       description: 사물함 갯수 요청 시 반환하는 형식입니다.
@@ -711,8 +921,8 @@ components:
         until:
           type: string
           format: date-time
-    User:
-      title: User
+    UserResponse:
+      title: UserResponse
       description: 사용자 정보입니다.
       type: object
       required:
@@ -774,9 +984,9 @@ components:
       description: 사용자 정보를 일괄 삽입하고자 할 때 사용합니다.
       type: array
       items:
-        $ref: '#/components/schemas/User'
-    Config:
-      title: Config
+        $ref: '#/components/schemas/UserResponse'
+    ConfigResponse:
+      title: ConfigResponse
       description: 서비스의 설정 정보입니다.
       type: object
       required:
