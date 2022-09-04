@@ -4,10 +4,10 @@
   "description": "SSU IT Collage Locker system.",
   "private": true,
   "scripts": {
-    "build": "pnpm run --filter=./packages/** --stream build",
-    "dev": "pnpm run --filter=./packages/** --stream dev",
-    "delete": "pnpm run delete --filter=client && pnpm delete --filter=server --stream",
-    "deploy": "pnpm run deploy --filter=client && pnpm deploy --filter=server --stream"
+    "build": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client build \" \"pnpm run -r -filter=server build\"",
+    "dev": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client dev \" \"pnpm run -r -filter=server dev\"",
+    "delete": "pnpm run --filter=client delete && pnpm --filter=server delete",
+    "deploy": "pnpm run --filter=client deploy && pnpm --filter=server deploy"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/EATSTEAK/lockerweb/issues"
   },
-  "homepage": "https://github.com/EATSTEAK/lockerweb"
+  "homepage": "https://github.com/EATSTEAK/lockerweb",
+  "devDependencies": {
+    "concurrently": "^7.3.0"
+  }
 }

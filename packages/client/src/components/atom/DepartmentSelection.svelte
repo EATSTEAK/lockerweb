@@ -9,7 +9,7 @@
 	export let activateFrom: Date;
 	export let activateTo: Date;
 
-	$: activateTime = activateFrom && activateTo && timeCalc(activateFrom, activateTo);
+	$: activateTime = (activateFrom || activateTo) ? timeCalc(activateFrom, activateTo) : '';
 
 	let ref = null;
 
@@ -34,9 +34,9 @@
 	function timeCalc(activateFrom: Date, activateTo: Date): string {
 		const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
 		const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
-		const fromMinutes = `${activateFrom.getMinutes()}`.padStart(2, '0');
+		const fromMinutes = activateFrom ? `${activateFrom.getMinutes()}`.padStart(2, '0') : '';
 		const fromTime = activateFrom ? `${activateFrom.getHours()}:${fromMinutes}` : '';
-		const toMinutes = `${activateTo.getMinutes()}`.padStart(2, '0');
+		const toMinutes = activateTo ? `${activateTo.getMinutes()}`.padStart(2, '0') : '';
 		const toTime = activateTo ? `${activateTo.getHours()}:${toMinutes}` : '';
 		const isToDateDifferent = toDate && toDate !== fromDate;
 		return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
@@ -47,13 +47,14 @@
 	bind:this={ref}
 	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? "active" : ''}
 	aspect-square max-w-[160px]
-	rounded-2xl m-1 bg-gray-100 box-border transition-all
+	rounded-2xl bg-gray-100 box-border transition-all
 	flex-grow-0 flex-shrink-0 basis-[160px]
 	hover:brightness-90`}
 	on:click
 	on:click|preventDefault={() => {
 		ctx.update(id);
 	}}
+	on:focus
 	on:mouseover
 	on:mouseenter
 	on:mouseleave
@@ -74,7 +75,6 @@
 		</div>
 		<div class='available-time text-sm'>{activateTime}</div>
 	</div>
-
 </button>
 
 <style>

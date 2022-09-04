@@ -1,6 +1,6 @@
 <script lang="ts">
   export let message: string = "사물함 불러오는 중...";
-  let clazz;
+  let clazz = '';
   export { clazz as class };
   import Locker from "../../icons/Locker.svelte";
 </script>

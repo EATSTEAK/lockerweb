@@ -23,6 +23,7 @@ export class LockerError extends Error {
 		this.name = name;
 		this.message = message;
 		this.additionalInfo = additionalInfo;
+		this.isLockerError = true;
 	}
 }
 

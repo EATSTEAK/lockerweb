@@ -54,7 +54,7 @@
         @apply mt-1 hidden;
     }
 
-    input:invalid ~ p {
+    select:invalid ~ p {
         @apply block;
     }
 </style>

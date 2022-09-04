@@ -60,13 +60,14 @@
 <div class='transition-all bg-white rounded-md flex flex-col gap-1 hover:brightness-95'>
 	<div class='transition-all flex items-center gap-3 overflow-hidden p-1'>
 		<div class='flex items-center'>
-			<button on:click={removeSubsection} class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'>
+			<button on:click={removeSubsection}
+							class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'>
 				<Subtract />
 			</button>
 		</div>
 		<div class='flex flex-wrap items-center gap-3'>
 			<div class='rounded-md overflow-hidden flex items-center flex-wrap'>
-				<label>세부 구역 범위</label>
+				<p class='font-bold mr-2'>세부 구역 범위</p>
 				<div class='flex items-center'>
 					<NumberInput id='range-start' class='w-24' label='세부 구역 시작' bind:value={rangeStart} />
 					<div class='p-2'>~</div>
@@ -74,7 +75,7 @@
 				</div>
 			</div>
 			<div class='flex items-center flex-wrap'>
-				<label>대상 학부</label>
+				<p class='font-bold mr-2'>대상 학부</p>
 				<Select id={`subsection_${key}_department`} label='대상 학부' bind:value={department} required>
 					{#each departments as department}
 						<option value={department.id}>{department.name}</option>
@@ -87,10 +88,3 @@
 		<p class='text-red-800'>{invalidText}</p>
 	{/if}
 </div>
-
-
-<style>
-		label {
-        @apply font-bold mr-2;
-    }
-</style>

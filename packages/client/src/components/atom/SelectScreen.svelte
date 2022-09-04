@@ -1,5 +1,5 @@
 <script>
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 	import SelectObject from '../../icons/SelectObject.svelte';
 </script>

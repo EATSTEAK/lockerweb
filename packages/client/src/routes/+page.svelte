@@ -2,7 +2,7 @@
 	import Entry from '../components/molecule/login/Entry.svelte';
 	import Button from '../components/atom/Button.svelte';
 	import Soongsil from '../icons/Soongsil.svelte';
-	import DepartmentLockerInfo from '../components/molecule/login/LockerStatus.svelte';
+	import LockerStatus from '../components/molecule/login/LockerStatus.svelte';
 	import { browser } from '$app/env';
 	import { getAuthorization } from '$lib/auth';
 	import { config } from '$lib/store';
@@ -19,12 +19,17 @@
 	import Dismiss from '../icons/Dismiss.svelte';
 	import { apiCountLocker } from '$lib/api/locker';
 	import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
+	import { goto } from '$app/navigation';
+	import ErrorScreen from '../components/atom/ErrorScreen.svelte';
+	import { fade } from 'svelte/transition';
+	import { isActivated } from '$lib/utils.js';
+	import ErrorCircle from '../icons/ErrorCircle.svelte';
 
 	let callbackUrl = undefined;
 
-	let countData: LockerCountResponse;
+	let apiResponse: SuccessResponse<LockerCountResponse> | ErrorResponse<LockerError>;
 
-	let lockerCount: LockerCount;
+	let lockerCount: LockerCount = null;
 
 	let contactModalOpen = false;
 
@@ -33,20 +38,20 @@
 
 	if (browser) {
 		if (getAuthorization()) {
-			window.location.href = '/reserve';
+			goto('/reserve');
 		}
 		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
 		callbackNotLoaded = false;
 		apiCountLocker()
 			.then((data) => {
-				if (data.success) {
-					countData = data.result;
-				} else {
-					console.error((data as ErrorResponse<LockerError>).error);
-				}
+				apiResponse = data;
 			})
 			.catch((error) => console.error(error));
 	}
+
+	$: countData = apiResponse && apiResponse.success ? apiResponse.result : undefined;
+
+	$: errorData = apiResponse && apiResponse.success === false ? apiResponse.error : undefined;
 
 
 	$: if ($config && $config.success && countData) {
@@ -55,36 +60,40 @@
 
 	function updateLockerCount(configs: Config[], countInfo: LockerCountResponse): LockerCount {
 		const departmentConfigs = getDepartmentConfigs(configs);
-		const serviceConfig = getServiceConfig(configs)
+		const serviceConfig = getServiceConfig(configs);
 
 		function transformLockerCount(
 			serviceConfig: ServiceConfig,
 			departmentConfig: DepartmentConfig,
-			departmentCount?: { [floor: string]: number }
+			departmentCount?: { [buildingNum: string]: { [floor: string]: number } }
 		): DepartmentLockerCount {
-			const floorLockers = getDepartmentLockerCountsByFloor(serviceConfig, departmentConfig.id);
-			const totalLocker = Object.values(floorLockers).reduce<number>((a: number, v: number) => a + v, 0);
-			const totalReserved = departmentCount ? Object.values(departmentCount).reduce<number>((a: number, v: number) => a + v, 0) : 0;
-			const floors = Object.fromEntries(
-				Object.entries(floorLockers).map(([floor, count]) => ([floor,
-					{
-						canReserve: count >= (departmentCount?.[floor] ?? 0),
-						percentage: Math.round(((departmentCount?.[floor] ?? 0) / count) * 100),
-						totalLocker: count,
-						lockerLeft: count - (departmentCount?.[floor] ?? 0)
-					}
-				]))
+			const buildingLockers = getDepartmentLockerCountsByFloor(serviceConfig, departmentConfig.id);
+			const totalLocker = Object.values(buildingLockers).flatMap(floor => Object.values(floor)).reduce<number>((a: number, v: number) => a + v, 0);
+			const totalReserved = departmentCount ? Object.values(departmentCount).flatMap(floor => Object.values(floor)).reduce<number>((a: number, v: number) => a + v, 0) : 0;
+			const lockers = Object.fromEntries(Object.entries(buildingLockers)
+				.map(([buildingNum, floors]) =>
+					[buildingNum,
+						Object.fromEntries(Object.entries(floors)
+							.map(([floor, count]) =>
+								[floor,
+									{
+										totalLocker: count,
+										lockerLeft: count - (departmentCount?.[floor] ?? 0)
+									}
+								]
+							)
+						)
+					]
+				)
 			);
-			// console.log(departmentConfig.id, floorLockers);
 			return {
 				departmentName: departmentConfig.name,
-				canReserve: (totalLocker > totalReserved),
 				lockerLeft: (totalLocker - totalReserved),
 				totalLocker,
 				...(departmentConfig.activateFrom && { activateFrom: departmentConfig.activateFrom as Date }),
 				...(departmentConfig.activateTo && { activateTo: departmentConfig.activateTo as Date }),
 				contact: departmentConfig.contact ?? '',
-				floors
+				lockers
 			};
 		}
 
@@ -95,18 +104,29 @@
 
 <PageTitle />
 
-<Shell mainClass='p-10'>
+<Shell mainClass='py-8 px-4 md:px-8'>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
 			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
-				<Button
-					disabled={callbackUrl ? undefined : true}
-					href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
-					rel='external'
-					class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight>
-					통합 로그인
-					<Soongsil class='w-8 h-8' slot='icon' />
-				</Button>
+				{#if $config && $config.success && !isActivated($config.result.activateFrom, $config.result.activateTo)}
+					<Button
+						disabled={callbackUrl ? undefined : true}
+						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
+						rel='external'
+						class='bg-red-800 text-white w-full h-16 text-xl' isIconRight>
+						서비스 이용 불가
+						<ErrorCircle class='w-8 h-8' slot='icon' />
+					</Button>
+				{:else}
+					<Button
+						disabled={callbackUrl ? undefined : true}
+						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
+						rel='external'
+						class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight>
+						통합 로그인
+						<Soongsil class='w-8 h-8' slot='icon' />
+					</Button>
+				{/if}
 				<div class='flex flex-row justify-between my-3'>
 					<Credit />
 					<Button on:click={() => contactModalOpen = true}
@@ -122,7 +142,14 @@
 			</div>
 		</NavigationFooter>
 	</Navigation>
-	<DepartmentLockerInfo bind:lockerCount />
+	{#if !errorData}
+		<LockerStatus {lockerCount} />
+	{:else}
+		<div class='h-full' transition:fade>
+			<ErrorScreen class='rounded-md p-4' errorTitle='{errorData.code}'
+									 errorMessage='오류가 발생하였습니다. 관리자에게 문의하십시오.' />
+		</div>
+	{/if}
 </Shell>
 
 <Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'

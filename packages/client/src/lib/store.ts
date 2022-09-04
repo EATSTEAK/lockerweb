@@ -4,10 +4,12 @@ import type { Readable, StartStopNotifier } from 'svelte/store';
 import { writable } from 'svelte/store';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { browser } from '$app/env';
+import { browser, prerendering } from '$app/env';
 import { getAuthorization } from '$lib/auth';
-import { apiGetConfig } from '$lib/api/config';
+import { apiGetConfig, ConfigSchema } from '$lib/api/config';
 import { apiGetUser } from '$lib/api/user';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { z } from 'zod';
 
 type ConfigStore = {
 	lastUpdated: string;
@@ -48,8 +50,9 @@ async function refreshConfig(
 			if (item !== null) {
 				const configStore: ConfigStore = JSON.parse(item);
 				const lastUpdated = new Date(configStore.lastUpdated);
-				if (Date.now() - lastUpdated.getTime() <= 1000 * 60) {
-					return { success: true, result: configStore.configs };
+				const validated = z.array(ConfigSchema.passthrough()).safeParse(configStore.configs);
+				if (Date.now() - lastUpdated.getTime() <= 1000 * 120 && validated.success) {
+					return { success: true, result: validated.data as Config[] };
 				}
 			}
 		}
@@ -82,7 +85,7 @@ async function refreshConfig(
 			};
 		}
 	}
-	throw new Error('This function must be ran in browser');
+	if (!prerendering) throw new Error('This function must be ran in browser');
 }
 
 async function refreshUser(): Promise<SuccessResponse<User> | ErrorResponse<LockerError>> {
