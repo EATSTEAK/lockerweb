@@ -48,7 +48,7 @@
 	let lockerBeginNumber: number | undefined;
 	let lockerEndNumber: number | undefined;
 	let lockerRangeCount: number | undefined;
-	let lockerGridWidthScale: number | undefined = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
+	let lockerGridWidthScale: number | undefined;
 	let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
 
 	function floorSortingCondition(a, b) {
