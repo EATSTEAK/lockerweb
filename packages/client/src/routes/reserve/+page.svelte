@@ -23,16 +23,16 @@
 	let userDepartmentId: string;
 	let contactDepartment: string;
 
-	$: buildingConfig = $config ? $config.find(c => c.id === 'SERVICE') ?? {
+	$: buildingConfig = $config && $config.success ? $config.result.find(c => c.id === 'SERVICE') ?? {
 		id: 'SERVICE',
 		name: undefined,
 		buildings: {}
 	} : undefined;
 
-	$:if ($user) {
-		userReserveLockerConverter($user);
-		if ($config) {
-			loadContact($user, $config);
+	$:if ($user && $user.success) {
+		userReserveLockerConverter($user.result);
+		if ($config && $config.success) {
+			loadContact($user.result, $config.result);
 		}
 	}
 
