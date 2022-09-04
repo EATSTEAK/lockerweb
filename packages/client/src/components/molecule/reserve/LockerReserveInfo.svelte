@@ -38,7 +38,8 @@
 		selectedSectionLockerRange = selectedSectionLockerRange.filter(Array => Array !== undefined)[0];
 		lockerBeginNumber = selectedSectionLockerRange?.[0];
 		lockerEndNumber = selectedSectionLockerRange?.[1];
-		lockerRangeCount = lockerEndNumber - lockerBeginNumber;
+		lockerRangeCount = lockerEndNumber - lockerBeginNumber + 1;
+		lockerGridWidthScale = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
 		console.log('test', selectedSectionLockerRange);
 		console.log('사물함 전체 갯수', lockerRangeCount);
 	}
