@@ -2,7 +2,7 @@
 	import ErrorCircle from '../../icons/ErrorCircle.svelte';
 
 	export let errorMessage = '오류가 발생하였습니다. 관리자에게 문의하십시오.';
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 </script>
 

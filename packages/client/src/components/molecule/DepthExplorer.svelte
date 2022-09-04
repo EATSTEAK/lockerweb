@@ -3,7 +3,7 @@
 
 	export let data: DepthData[];
 	export let selections: string[] = [];
-	let clazz;
+	let clazz = '';
 	export { clazz as class };
 	export let breadcrumbClass;
 	export let rootText = '';

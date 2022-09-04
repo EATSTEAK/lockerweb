@@ -31,7 +31,7 @@
 	}
 </script>
 
-<Shell class={clazz} {navigationClass} {mainClass} bind:navigationCollapsed bind:collapsable>
+<Shell class={clazz} {navigationClass} {mainClass}>
 	<Navigation slot='navigation' class='flex-row w-full'
 							{collapsable} bind:collapsed={navigationCollapsed}>
 		<NavigationHeader class='md:pt-10' slot='header'>
