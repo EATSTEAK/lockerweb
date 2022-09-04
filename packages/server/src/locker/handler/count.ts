@@ -11,11 +11,12 @@ export const getClaimedLockerCountHandler: APIGatewayProxyHandler = async () => 
 		const lockers = await queryLockers();
 		const result = lockers.reduce<LockerCountResponse>((acc, cur) => {
 			const dept = getLockerDepartment(config, cur.lockerId);
-			const parsedLockerId = cur.lockerId.split('-');
-			const lockerFloor = parsedLockerId[1];
+			const [buildingId, lockerFloor] = cur.lockerId.split('-');
 			if (!acc[dept]) acc[dept] = {};
-			if (typeof acc[dept][lockerFloor] !== 'number') acc[dept][lockerFloor] = 0;
-			acc[getLockerDepartment(config, cur.lockerId)][lockerFloor] += 1;
+			if (!acc[dept][buildingId]) acc[buildingId] = {};
+			if (typeof acc[dept][buildingId][lockerFloor] !== 'number')
+				acc[dept][buildingId][lockerFloor] = 0;
+			acc[getLockerDepartment(config, cur.lockerId)][buildingId][lockerFloor] += 1;
 			return acc;
 		}, {});
 		return createResponse(200, {

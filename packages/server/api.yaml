@@ -188,6 +188,17 @@ paths:
                     type: boolean
                   result:
                     $ref: '#/components/schemas/LockerCountResponse'
+              example:
+                success: true
+                result:
+                  G:
+                    21:
+                      B1: 50
+                      4: 10
+                      5: 100
+                  A:
+                    05:
+                      B1: 100
         '404':
           description: 사물함을 찾을 수 없을 경우
           content:
@@ -906,9 +917,12 @@ components:
         departmentId:
           type: object
           properties:
-            floor:
-              type: number
-              format: int32
+            buildingNum:
+              type: object
+              properties:
+                floor:
+                  type: number
+                  format: int32
     LockerClaimRequest:
       title: LockerClaimRequest
       description: 사물함 대여 요청입니다.
