@@ -70,7 +70,6 @@ export class InternalError extends LockerError {
 }
 
 export function isLockerError(error: unknown) {
-	console.log(typeof error, (error as LockerError).isLockerError);
 	return typeof error === 'object' && (error as LockerError)?.isLockerError;
 }
 
