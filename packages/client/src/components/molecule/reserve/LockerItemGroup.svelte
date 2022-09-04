@@ -11,10 +11,6 @@
 
 	export let selectedId = undefined;
 
-	$: if (items) {
-		console.log("items", items);
-	}
-
 	$: currentIndex = -1;
 	$: items = [];
 
