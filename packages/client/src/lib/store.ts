@@ -6,8 +6,10 @@ import { writable } from 'svelte/store';
 // @ts-ignore
 import { browser, prerendering } from '$app/env';
 import { getAuthorization } from '$lib/auth';
-import { apiGetConfig } from '$lib/api/config';
+import { apiGetConfig, ConfigSchema } from '$lib/api/config';
 import { apiGetUser } from '$lib/api/user';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { z } from 'zod';
 
 type ConfigStore = {
 	lastUpdated: string;
@@ -48,8 +50,9 @@ async function refreshConfig(
 			if (item !== null) {
 				const configStore: ConfigStore = JSON.parse(item);
 				const lastUpdated = new Date(configStore.lastUpdated);
-				if (Date.now() - lastUpdated.getTime() <= 1000 * 60) {
-					return { success: true, result: configStore.configs };
+				const validated = z.array(ConfigSchema.passthrough()).safeParse(configStore.configs);
+				if (Date.now() - lastUpdated.getTime() <= 1000 * 120 && validated.success) {
+					return { success: true, result: validated.data as Config[] };
 				}
 			}
 		}
