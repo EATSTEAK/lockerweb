@@ -9,9 +9,6 @@
 	export let buildingConfig: ServiceConfig;
 	export let userDepartmentId: string;
 	export let selectedLocationDataFetchStatus: boolean = true;
-
-	// let menuConfig: string[];
-	// let menuConfig: Lockers = {};
 	let menuConfig: string[];
 	let isMenuConfigConverted: boolean = false;
 
@@ -57,12 +54,6 @@
 		if (a > b) return 1;
 		if (a === b) return 0;
 		else return -1;
-	}
-
-	$: {
-
-		// console.log(menuConfig);
-		// console.log(filteredUserLockerSections?.filter(s => s?.floor === selectedForSections));
 	}
 
 	$: if (buildingConfig && userDepartmentId) {
