@@ -143,7 +143,7 @@
 			</LockerItemGroup>
 		</div>
 	{:else}
-		<LockerLoadingScreen message={selectedSections === undefined && selectedForSections ? "구역을 선택하세요": "로딩 중" } />
+		<LockerLoadingScreen message={selectedSections === undefined && selectedForSections ? "구역을 선택하세요": "로딩 중.." } />
 	{/if}
 </div>
 
