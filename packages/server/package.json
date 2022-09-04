@@ -22,7 +22,6 @@
     "@typescript-eslint/parser": "^5.30.0",
     "aws-sdk": "^2.1166.0",
     "chai": "^4.3.6",
-    "concurrently": "^6.5.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.18.0",
     "eslint-config-airbnb-typescript": "^16.2.0",
