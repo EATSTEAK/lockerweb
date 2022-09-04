@@ -70,7 +70,7 @@
 	<div class='flex flex-col'>
 		<div class='department-text'>{departmentText}</div>
 		<div class='font-bold flex flex-col items-stretch flex-wrap'>
-			<div class='locker-left text-primary-800 text-6xl grow text-center -mb-3'>{lockerLeft}</div>
+			<div class='locker-left text-primary-800 text-6xl grow text-center -mb-2'>{lockerLeft}</div>
 			<div class='text-xl text-right mx-5'>/{totalLocker}</div>
 		</div>
 		<div class='available-time text-sm'>{activateTime}</div>
