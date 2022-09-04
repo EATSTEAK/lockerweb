@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import { config, user } from '$lib/store';
 	import { getDepartmentConfig, getServiceConfig } from '$lib/api/config';
+	import { isActivated } from '$lib/utils';
 
 	let clazz = '';
 	export { clazz as class };
@@ -41,13 +42,10 @@
 		const serviceConfig: ServiceConfig = getServiceConfig(config) as ServiceConfig;
 		const userDeptConfig: DepartmentConfig = getDepartmentConfig(config, user.department) as DepartmentConfig;
 		if (serviceConfig) {
-			if (serviceConfig.activateFrom && serviceConfig.activateFrom.getTime() > time.getTime()) return false;
-			if (serviceConfig.activateTo && serviceConfig.activateTo.getTime() < time.getTime()) return false;
+			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date);
 		}
 		if (userDeptConfig) {
-			console.log(userDeptConfig);
-			if (userDeptConfig.activateFrom && userDeptConfig.activateFrom.getTime() > time.getTime()) return false;
-			if (userDeptConfig.activateTo && userDeptConfig.activateTo.getTime() < time.getTime()) return false;
+			return isActivated(userDeptConfig.activateFrom as Date, userDeptConfig.activateTo as Date);
 		}
 		return true;
 	}

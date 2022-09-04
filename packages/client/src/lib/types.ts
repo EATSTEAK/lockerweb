@@ -17,19 +17,17 @@ export type LockerCount = {
 
 export type DepartmentLockerCount = {
 	departmentName: string;
-	canReserve: boolean;
 	lockerLeft: number;
 	totalLocker: number;
 	activateFrom?: Date;
 	activateTo?: Date;
 	contact: string;
-	floors: {
-		// TODO: Make buildings distinguishable
-		[floor: string]: {
-			canReserve: boolean;
-			percentage: number;
-			totalLocker: number;
-			lockerLeft: number;
+	lockers: {
+		[buildingId: string]: {
+			[floor: string]: {
+				totalLocker: number;
+				lockerLeft: number;
+			};
 		};
 	};
 };

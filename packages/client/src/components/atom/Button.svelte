@@ -2,7 +2,7 @@
 	export let isIconRight: boolean = false;
 	let clazz = '';
 	export { clazz as class };
-	export let href;
+	export let href = null;
 </script>
 
 
