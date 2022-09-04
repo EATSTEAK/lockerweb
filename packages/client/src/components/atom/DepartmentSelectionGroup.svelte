@@ -1,8 +1,8 @@
 <script lang='ts'>
-	import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
-	import { writable } from 'svelte/store';
+    import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
+    import { writable } from 'svelte/store';
 
-	export let selectedIndex = 0;
+    export let selectedIndex = 0;
 
 	const dispatch = createEventDispatcher();
 	const currentId = writable(null);
@@ -50,20 +50,18 @@
 	});
 </script>
 
-<div class="wrap">
-    <slot />
+<div class='wrap flex gap-2 py-2 overflow-x-scroll overflow-y-hidden'>
+	<slot />
 </div>
 
 <style>
-    .wrap {
-        @apply flex overflow-x-scroll overflow-y-hidden;
+
+    .wrap::-webkit-scrollbar {
+        display: none;
     }
 
-    .wrap::-webkit-scrollbar{
-        display:none;
-    }
     .wrap {
-        -ms-overflow-style: none;  /* IE and 엣지 */
-        scrollbar-width: none;  /* 파이어폭스 */
+        -ms-overflow-style: none; /* IE and 엣지 */
+        scrollbar-width: none; /* 파이어폭스 */
     }
 </style>

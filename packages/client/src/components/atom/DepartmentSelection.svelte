@@ -47,7 +47,7 @@
 	bind:this={ref}
 	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? "active" : ''}
 	aspect-square max-w-[160px]
-	rounded-2xl m-1 bg-gray-100 box-border transition-all
+	rounded-2xl bg-gray-100 box-border transition-all
 	flex-grow-0 flex-shrink-0 basis-[160px]
 	hover:brightness-90`}
 	on:click
@@ -74,7 +74,6 @@
 		</div>
 		<div class='available-time text-sm'>{activateTime}</div>
 	</div>
-
 </button>
 
 <style>
