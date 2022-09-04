@@ -14,7 +14,6 @@
 	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
 	export let open = false;
-	export let users: User[];
 
 	const title = '사용자 내보내기';
 	let department = 'all';
