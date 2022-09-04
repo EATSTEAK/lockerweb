@@ -1,11 +1,13 @@
 <script lang='ts'>
 	import { afterUpdate, getContext, onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
 
-	export let lockerSectionName: string;
-	export let lockerNumber: number;
 	export let id: string;
 	export let selected: boolean = false;
+
+	const [buildingId, floor, locker] = id.split('-');
+	let section = locker.slice(0, 1);
+	let lockerNum: number = parseInt(locker.slice(1));
+	let claimedUntil: Date;
 	let clazz = '';
 	export { clazz as class };
 
@@ -58,14 +60,13 @@
 	class='{clazz} cursor-pointer select-none
   flex flex-col w-16 h-16 flex ml-4 mb-2 mt-2 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 active:scale-100
 	focus:border-[3px] focus:border-blue-400 active:border-[3px]'
-	{...$$restProps}
-	transition:fade>
+	{...$$restProps}>
 	<div class='location-title'>
-		<p>{lockerSectionName}</p>
+		<p>{section}</p>
 		<p class='pl-0.5'>구역</p>
 	</div>
 	<div class='divide-line'></div>
-	<div class='locker-number'>{lockerNumber}</div>
+	<div class='locker-number'>{lockerNum}</div>
 </button>
 
 <style>
