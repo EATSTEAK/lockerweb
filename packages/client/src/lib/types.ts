@@ -38,14 +38,6 @@ export type DepthData = {
 	children?: DepthData[];
 };
 
-/* SelectedLocker Type */
-
-export type SelectedLockerItem = {
-	floor: string;
-	section: string;
-	lockers: number[];
-};
-
 /* ServiceSettings Editor Types */
 
 export type BuildingRemoveRequest = { id: string };
