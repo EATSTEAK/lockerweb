@@ -4,7 +4,7 @@ import type { Readable, StartStopNotifier } from 'svelte/store';
 import { writable } from 'svelte/store';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { browser } from '$app/env';
+import { browser, prerendering } from '$app/env';
 import { getAuthorization } from '$lib/auth';
 import { apiGetConfig } from '$lib/api/config';
 import { apiGetUser } from '$lib/api/user';
@@ -82,7 +82,7 @@ async function refreshConfig(
 			};
 		}
 	}
-	throw new Error('This function must be ran in browser');
+	if (!prerendering) throw new Error('This function must be ran in browser');
 }
 
 async function refreshUser(): Promise<SuccessResponse<User> | ErrorResponse<LockerError>> {
