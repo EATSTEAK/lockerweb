@@ -4,14 +4,13 @@
 	import ArrowClockwise from '../../icons/ArrowClockwise.svelte';
 	import Button from '../../components/atom/Button.svelte';
 	import { browser } from '$app/env';
-	import { variables } from '$lib/variables';
 	import NavigationFooter from '../../components/atom/NavigationFooter.svelte';
 	import Shell from '../../components/molecule/Shell.svelte';
 	import Navigation from '../../components/molecule/Navigation.svelte';
 	import NavigationContent from '../../components/atom/NavigationContent.svelte';
 	import PageTitle from '../../components/atom/PageTitle.svelte';
-	import { fetchWithAuth } from '$lib/auth';
 	import { apiLogout } from '$lib/api/auth';
+	import { goto } from '$app/navigation';
 
 	let result;
 	let id;
@@ -21,7 +20,7 @@
 		id = apiLogout();
 		id.then((data) => {
 			document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
-			window.location.href = '/';
+			goto('/');
 		});
 	}
 </script>

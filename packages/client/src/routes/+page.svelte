@@ -19,6 +19,7 @@
 	import Dismiss from '../icons/Dismiss.svelte';
 	import { apiCountLocker } from '$lib/api/locker';
 	import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
+	import { goto } from '$app/navigation';
 
 	let callbackUrl = undefined;
 
@@ -33,7 +34,7 @@
 
 	if (browser) {
 		if (getAuthorization()) {
-			window.location.href = '/reserve';
+			goto('/reserve');
 		}
 		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
 		callbackNotLoaded = false;
@@ -55,7 +56,7 @@
 
 	function updateLockerCount(configs: Config[], countInfo: LockerCountResponse): LockerCount {
 		const departmentConfigs = getDepartmentConfigs(configs);
-		const serviceConfig = getServiceConfig(configs)
+		const serviceConfig = getServiceConfig(configs);
 
 		function transformLockerCount(
 			serviceConfig: ServiceConfig,
