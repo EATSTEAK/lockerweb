@@ -38,3 +38,14 @@ export function getDepartmentLockerCountsByFloor(
 export function getDepartmentNameById(configs: Config[], departmentId: string): string | undefined {
 	return configs?.find((conf) => conf.id === departmentId)?.name;
 }
+
+export function isActivated(activateFrom: Date, activateTo: Date): boolean {
+	if (activateFrom && activateTo) {
+		return activateFrom.getTime() <= Date.now() && activateTo.getTime() > Date.now();
+	} else if (activateFrom) {
+		return activateFrom.getTime() <= Date.now();
+	} else if (activateTo) {
+		return activateTo.getTime() > Date.now();
+	}
+	return true;
+}
