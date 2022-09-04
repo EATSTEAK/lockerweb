@@ -1,132 +1,68 @@
 <script lang='ts'>
-	import SelectionListItemGroup from '../../atom/SelectionListItemGroup.svelte';
-	import SelectionListItem from '../../atom/SelectionListItem.svelte';
 	import LockerItem from './LockerItem.svelte';
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
 	import LockerItemGroup from './LockerItemGroup.svelte';
+	import LockerSectionSelector from './LockerSectionSelector.svelte';
 
-	export let buildingConfig: ServiceConfig;
-	export let userDepartmentId: string;
-	export let selectedLocationDataFetchStatus: boolean = true;
-	let menuConfig: string[];
-	let isMenuConfigConverted: boolean = false;
+	export let serviceConfig: ServiceConfig;
+	export let targetDepartmentId: string;
+	$: buildings = serviceConfig?.buildings ?? {};
 
-	let selections: string[] = [];
+	let selectedBuildingId: string;
+	let selectedFloor: string;
+	let selectedSectionId: string;
+	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 
-	let Floors: [];
-	let section: string;
-
-	let filteredUserLockerSections: Object[];
-	let filteredSectionList: [];
-
-	let selectedBuildingId: number = 21;
-	let selectedFloors: number = undefined;
-	let selectedForSections: string | undefined;
-
-	let selectedSectionIndex: number[] = new Array(menuConfig?.length).fill(0);
-	let selectedSections: string = undefined;
-
-	$: if (filteredSectionList) {
-		let selectedSectionLockerRange = filteredSectionList.map(areaConfigOBJ => {
-			if (areaConfigOBJ?.sectionName === selectedSections) {
-				return areaConfigOBJ.section.subsections[0].range;
-			}
-		});
-		selectedSectionLockerRange = selectedSectionLockerRange.filter(Array => Array !== undefined)[0];
-		lockerBeginNumber = selectedSectionLockerRange?.[0];
-		lockerEndNumber = selectedSectionLockerRange?.[1];
-		lockerRangeCount = lockerEndNumber - lockerBeginNumber + 1;
-		lockerGridWidthScale = (5 * (lockerRangeCount / lockerGridHeight)) + 1;
-		console.log('test', selectedSectionLockerRange);
-		console.log('사물함 전체 갯수', lockerRangeCount);
-	}
+	let lockerList: Array<string> = [];
 
 	let lockerGridHeight: number | undefined = 5;
-	let lockerBeginNumber: number | undefined;
-	let lockerEndNumber: number | undefined;
-	let lockerRangeCount: number | undefined;
-	let lockerGridWidthScale: number | undefined;
-	let lockerGridHeightScale: number | undefined = 5 * lockerGridHeight;
+	$: lockerGridWidthScale = (5 * (lockerList.length / lockerGridHeight)) + 1;
+	$: lockerGridHeightScale = 5 * lockerGridHeight;
 
-	function floorSortingCondition(a, b) {
-		if (a < b) return -1;
-		if (a > b) return 1;
-		if (a === b) return 0;
-		else return -1;
+	function getSectionRange(subsections: LockerSubsection[]) {
+		return subsections.reduce(([min, max], subsection) => {
+			const newMin = min < 0 || subsection.range[0] < min ? subsection.range[0] : min;
+			const newMax = max < 0 || subsection.range[1] > max ? subsection.range[1] : max;
+			return [newMin, newMax];
+		}, [-1, -1]);
 	}
 
-	$: if (buildingConfig && userDepartmentId) {
-		const allLockers = buildingConfig.buildings[selectedBuildingId].lockers;
-		console.log('AllLockers');
-		console.log(Object.entries(allLockers));
-		const allSections: Array<{ floor: string, sectionName: string, section: LockerSection }> = Object.entries(allLockers).flatMap(([floor, sections]) => {
-			return Object.entries(sections).map(([sectionName, section]) => ({ floor, sectionName, section }));
-		});
-		const departmentSections: Array<{ floor: string, sectionName: string, section: LockerSection }> = allSections.filter((sectionData) => {
-			return sectionData.section.subsections.some((subsection: LockerSubsection) => subsection.department === userDepartmentId);
-		});
-		filteredUserLockerSections = departmentSections;
-		const filteredConfig: Set<string> = departmentSections.map(department => department.floor)
-			.reduce((set, floor) => set.add(floor), new Set<string>());
-		menuConfig = Array.from<string>(filteredConfig as ArrayLike<string>);
-		console.log(departmentSections);
-		menuConfig = menuConfig.map(x => x.includes('B') ? x.replace('B', '-') : x).sort();
-		menuConfig = menuConfig.map(x => x.includes('-') ? x.replace('-', 'B') : x).reverse();
-		isMenuConfigConverted = true;
-		console.log(menuConfig);
-	}
+	$: if (selectedSection) {
+		const sectionRange = getSectionRange(selectedSection.subsections);
+		const lockerCount = sectionRange[1] - sectionRange[0] + 1;
 
-	$: {
-		selectedForSections = menuConfig?.[selectedFloors];
-		filteredSectionList = filteredUserLockerSections?.filter(s => s?.floor === selectedForSections);
-		selectedSections = filteredSectionList?.[selectedSectionIndex?.[selectedFloors]]?.sectionName;
-		console.log('선택된 구역 인덱스: ', selectedSectionIndex[selectedFloors]);
-		console.log('----');
-		console.log(selectedFloors);
-		console.log('filteredSectonList', filteredSectionList);
-		console.log('selectedInedx', selectedSectionIndex);
-		console.log('selectedSection', selectedSections);
-		console.log('selectedForSection', selectedForSections);
+		function constructLockerId(buildingId: string, floor: string, section: string, num: number): string {
+			const fixedLengthNum = `${num}`.padStart(3, '0');
+			return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
+		}
+
+		lockerList = new Array(lockerCount).fill(0).map((_, idx) => constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, sectionRange[0] + idx));
+		lockerGridHeight = selectedSection.height;
 	}
-	// $: filteredUserLockerSections = filteredUserLockerSections?.filter(s => s?.floor === selectedForSections);
 </script>
 
 <div class='wrap'>
 	<div class='select-info'>
 		<div class='select-location'>
-			{#if isMenuConfigConverted}
-				<h4 class='text-3xl my-2 mt-8 ml-8'>구역 선택</h4>
-				<div class='location-depths'>
-					<div class='select-floor'>
-						<SelectionListItemGroup bind:selectedIndex={selectedFloors} class='location-select-group'>
-							{#each menuConfig as item, index}
-								<SelectionListItem id={index} class='location-select-item'>{item}</SelectionListItem>
-							{/each}
-						</SelectionListItemGroup>
-					</div>
-					<div class='select-area'>
-						<SelectionListItemGroup bind:selectedIndex={selectedSectionIndex[selectedFloors]}>
-							{#each filteredSectionList as section, index}
-								<SelectionListItem id={index}
-																	 class='location-select-item'>{section.sectionName}</SelectionListItem>
-							{/each}
-						</SelectionListItemGroup>
-					</div>
-				</div>
+			{#if serviceConfig && targetDepartmentId}
+				<LockerSectionSelector {buildings} {targetDepartmentId}
+															 bind:selectedBuildingId
+															 bind:selectedFloor
+															 bind:selectedSectionId />
 			{:else}
 				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300'>구역 선택</Skeleton>
-				<div class='location-depths'>
-					<div class='select-floor'>
+				<div class='w-full h-5/6 flex'>
+					<div class='pl-8 pr-1 w-1/2'>
 						<Skeleton class='location-select-group h-64 rounded-xl bg-gray-300' />
 					</div>
-					<div class='select-area'>
+					<div class='pr-8 pl-1 w-1/2'>
 						<Skeleton class='h-64 rounded-xl bg-gray-300' />
 					</div>
 				</div>
 			{/if}
 		</div>
-		{#if buildingConfig}
+		{#if serviceConfig}
 			<div class='locker-map'>
 				<img class='map-img' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지' aria-level='정보과학관 1층 이미지'>
 			</div>
@@ -134,17 +70,19 @@
 			<Skeleton class='locker-map-skeleton bg-gray-300' />
 		{/if}
 	</div>
-	{#if selectedSections !== undefined }
-		<div class='grow flex items-center overflow-scroll'>
-			<LockerItemGroup class='locker-grid' widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
-				{#each { length: lockerRangeCount } as _, index}
-					<LockerItem id={index} lockerSectionName={selectedSections} lockerNumber={index+lockerBeginNumber} />
-				{/each}
-			</LockerItemGroup>
-		</div>
-	{:else}
-		<LockerLoadingScreen message={selectedSections === undefined && selectedForSections ? "구역을 선택하세요": "로딩 중.." } />
-	{/if}
+	{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
+		{#if selectedSection}
+			<div class='grow flex items-center overflow-scroll'>
+				<LockerItemGroup class='locker-grid' widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
+					{#each lockerList as lockerId, index}
+						<LockerItem id={lockerId} />
+					{/each}
+				</LockerItemGroup>
+			</div>
+		{:else}
+			<LockerLoadingScreen message='로드 중...' />
+		{/if}
+	{/key}
 </div>
 
 <style>
@@ -164,27 +102,6 @@
 
     .locker-map {
         @apply bg-slate-200 grow;
-    }
-
-
-    .location-depths {
-        @apply w-full h-5/6 flex;
-    }
-
-    .select-floor {
-        @apply pl-8 pr-1 w-1/2;
-    }
-
-    .select-area {
-        @apply pr-8 pl-1 w-1/2;
-    }
-
-    .location-select-group {
-        @apply h-full;
-    }
-
-    :global(.location-select-item) {
-        @apply h-11;
     }
 
     .locker-map {

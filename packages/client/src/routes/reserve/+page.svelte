@@ -1,6 +1,5 @@
 <script lang='ts'>
 	import NavigationShell from '../../components/molecule/NavigationShell.svelte';
-	import type { LockerCount } from '$lib/types';
 	import Button from '../../components/atom/Button.svelte';
 	import UserReservedLocker from '../../components/molecule/reserve/UserReservedLocker.svelte';
 	import LockerReserveInfo from '../../components/molecule/reserve/LockerReserveInfo.svelte';
@@ -8,46 +7,43 @@
 	import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
 	import PageTitle from '../../components/atom/PageTitle.svelte';
 	import { config, user } from '$lib/store';
+	import { getServiceConfig } from '$lib/api/config';
 
-	let callbackUrl = undefined;
-	let countData: LockerCountResponse;
-	let lockerCount: LockerCount;
 
 	let fetchStatus: boolean = false;
 
 	let innerWidth: number = 0;
 
+	let reservedLocker: ReservedLocker;
 	let lockerSection: string;
 	let lockerNumber: number;
 	let contact: string;
-	let userDepartmentId: string;
+	let targetDepartmentId: string;
 	let contactDepartment: string;
 
-	$: buildingConfig = $config && $config.success ? $config.result.find(c => c.id === 'SERVICE') ?? {
-		id: 'SERVICE',
-		name: undefined,
-		buildings: {}
-	} : undefined;
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
 	$:if ($user && $user.success) {
-		userReserveLockerConverter($user.result);
+		reservedLocker = getUserReservedLocker($user.result);
 		if ($config && $config.success) {
 			loadContact($user.result, $config.result);
 		}
 	}
 
-	function userReserveLockerConverter(userInfo: User) {
+	function getUserReservedLocker(userInfo: User): ReservedLocker {
 		if (userInfo?.lockerId) {
-			const [building, floors, location] = userInfo.lockerId.split('-');
-			lockerSection = location[0];
-			lockerNumber = parseInt(location.slice(1));
+			return {
+				lockerId: userInfo.lockerId,
+				...(userInfo.claimedUntil && { claimedUntil: userInfo.claimedUntil as Date })
+			};
 		}
+		return null;
 	}
 
 	function loadContact(userInfo: User, config: Array<Config>) {
 		if (userInfo?.department) {
 			const isDepartmentSame = config.find(config => config.id === userInfo.department);
-			userDepartmentId = userInfo.department;
+			targetDepartmentId = userInfo.department;
 			contact = isDepartmentSame.contact;
 			contactDepartment = isDepartmentSame.name;
 		}
@@ -60,7 +56,7 @@
 
 <NavigationShell collapsable={innerWidth && innerWidth <= 768}>
 	<div class='w-full h-96' slot='navigation_content'>
-		<UserReservedLocker reservedSection={lockerSection} reservedNumber={lockerNumber} tillTime='00:00 ~ 14:00' />
+		<UserReservedLocker {reservedLocker} />
 	</div>
 	<div class='flex justify-between items-center w-full' slot='navigation_footer'>
 		<Button class='bg-primary-800 text-white' isIconRight={true} href='/logout'>
@@ -80,7 +76,7 @@
 		{/if}
 	</div>
 	<div class='grow overflow-scroll'>
-		<LockerReserveInfo userDepartmentId={userDepartmentId} buildingConfig={buildingConfig} />
+		<LockerReserveInfo {targetDepartmentId} {serviceConfig} />
 	</div>
 
 </NavigationShell>
