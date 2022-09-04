@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import { afterUpdate, getContext, onMount } from 'svelte';
+	import { afterUpdate, getContext, onMount } from 'svelte';
 
-  export let id: string;
+	export let id: string;
 	export let selected: boolean = false;
 	let clazz = '';
 	export { clazz as class };
@@ -35,6 +35,7 @@
 	on:click|preventDefault={() => {
 		ctx.update(id);
 	}}
+	on:focus
 	on:mouseover
 	on:mouseenter
 	on:mouseleave

@@ -20,6 +20,7 @@
 	};
 </script>
 <svg on:click
+		 on:focus
 		 on:mouseover
 		 on:mouseenter
 		 on:mouseleave

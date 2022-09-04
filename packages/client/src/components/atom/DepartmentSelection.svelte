@@ -54,6 +54,7 @@
 	on:click|preventDefault={() => {
 		ctx.update(id);
 	}}
+	on:focus
 	on:mouseover
 	on:mouseenter
 	on:mouseleave
