@@ -198,7 +198,9 @@ type ConfigDeleteRequest = {
 
 type LockerCountResponse = {
 	[departmentId: string]: {
-		[floor: string]: number;
+		[buildingNum: string]: {
+			[floor: string]: number;
+		};
 	};
 };
 
