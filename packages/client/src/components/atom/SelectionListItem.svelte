@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import { afterUpdate, getContext, onMount } from 'svelte';
+	import { afterUpdate, getContext, onMount } from 'svelte';
 
-  export let id: string;
+	export let id: string;
 	export let selected: boolean = false;
 	let clazz = '';
 	export { clazz as class };
