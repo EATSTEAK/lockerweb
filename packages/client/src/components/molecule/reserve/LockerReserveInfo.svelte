@@ -144,12 +144,11 @@
 	</div>
 	{#if selectedSections !== undefined }
 		<div class='grow flex items-center overflow-scroll'>
-			<div class='locker-grid flex flex-col flex-wrap mt-5 ml-auto mr-auto'
-					 style={`width:${lockerGridWidthScale}rem; height:${lockerGridHeightScale}rem;`}>
-				{#each { length: lockerRangeCount } as _, i}
-					<LockerItem lockerLocation='A' lockerNumber={i+1} />
+			<LockerItemGroup class='locker-grid' widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
+				{#each { length: lockerRangeCount } as _, index}
+					<LockerItem id={index} lockerSectionName={selectedSections} lockerNumber={index+lockerBeginNumber} />
 				{/each}
-			</div>
+			</LockerItemGroup>
 		</div>
 	{:else}
 		<LockerLoadingScreen message={selectedSections === undefined && selectedForSections ? "구역을 선택하세요": "로딩 중" } />
