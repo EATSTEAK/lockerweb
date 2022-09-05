@@ -34,7 +34,7 @@
 <Shell class={clazz} {navigationClass} {mainClass}>
 	<Navigation slot='navigation' class='flex-row w-full'
 							{collapsable} bind:collapsed={navigationCollapsed}>
-		<NavigationHeader class='md:pt-10' slot='header'>
+		<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
 			<slot name='navigation_header'>
 				<div class='flex flex-col grow items-start flex-wrap'>
 					<Soongsil class='w-20 h-20' />

@@ -61,7 +61,7 @@
 	<section class='{navigationClass} flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
 		<slot name='navigation'>
 			<Navigation class='flex-row w-full h-full'>
-				<NavigationHeader class='md:py-10' slot='header'>
+				<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
 					<Soongsil class='w-20 h-20' />
 				</NavigationHeader>
 				<Divider class='my-6' />
