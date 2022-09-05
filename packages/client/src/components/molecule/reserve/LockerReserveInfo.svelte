@@ -52,16 +52,16 @@
 															 bind:selectedSectionId />
 			{:else}
 				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300' />
-				<div class='h-5/6 flex w-full gap-2 px-8'>
-						<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
-						<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
+				<div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
+					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
+					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
 				</div>
 			{/if}
 		</div>
 		<div class='bg-slate-200 md:basis-1/2 grow'>
 			{#if serviceConfig}
-				<div class='p-2 md:p-4 w-full h-full flex justify-center items-center'>
-					<img class='w-full' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
+				<div class='p-8 w-full h-full flex justify-center items-center'>
+					<img class='max-w-full h-auto max-h-[370px]' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
 							 aria-level='정보과학관 1층 이미지'>
 				</div>
 			{:else}
