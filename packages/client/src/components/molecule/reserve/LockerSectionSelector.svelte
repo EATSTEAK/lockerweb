@@ -74,7 +74,7 @@
 </script>
 
 <h4 class='text-3xl my-2 mt-8 ml-8'>구역 선택</h4>
-<div class='h-5/6 flex gap-1 px-8'>
+<div class='h-5/6 flex gap-1 px-8 pb-8'>
 	<div class='basis-1/2'>
 		{#key `${selectedBuildingId}-${selectedFloor}`}
 			<SelectionListItemGroup bind:selectedIndex={selectedFloorIndex} class='h-full'>
