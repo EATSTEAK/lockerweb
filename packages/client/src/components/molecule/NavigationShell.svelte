@@ -37,7 +37,7 @@
 		<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
 			<slot name='navigation_header'>
 				<div class='flex flex-col grow items-start flex-wrap'>
-					<Soongsil class='w-20 h-20' />
+					<Soongsil class='w-12 h-12 md:w-20 md:h-20' />
 				</div>
 				{#if collapsable}
 					<div class='flex justify-center items-center'>
