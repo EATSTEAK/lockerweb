@@ -73,7 +73,7 @@
 						disabled
 						class='bg-green-800 text-white w-full h-16 text-xl' isIconRight={true}>
 						로그인 성공
-						<Checkmark class='animate-spin' slot='icon' />
+						<Checkmark slot='icon' />
 					</Button>
 				{/if}
 			</Entry>
