@@ -61,12 +61,12 @@
 				 class:fixed={collapsable && !isOnTop}>
 		{#if !collapsable || !collapsed}
 			<nav transition:fly={{ y: -100, duration: 500 }}
-					 class='{navClass} px-10 flex flex-col bg-gray-200 grow overflow-y-auto shadow-md'
+					 class='{navClass} px-6 md:px-10 flex flex-col bg-gray-200 grow overflow-y-auto shadow-md'
 					 class:mb-2={collapsable}>
 				<slot />
 			</nav>
 		{/if}
-		<section bind:clientHeight={h} class='{headerClass} px-10 bg-gray-200 transition-all'
+		<section bind:clientHeight={h} class='{headerClass} px-6 md:px-10 bg-gray-200 transition-all'
 						 class:shadow-md={collapsable && collapsed} class:mb-2={collapsable && collapsed}>
 			<slot name='header' />
 		</section>
