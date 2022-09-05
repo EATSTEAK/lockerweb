@@ -74,8 +74,8 @@
 </script>
 
 <h4 class='text-3xl my-2 mt-8 ml-8'>구역 선택</h4>
-<div class='w-full h-5/6 flex'>
-	<div class='pl-8 pr-1 w-1/2'>
+<div class='h-5/6 flex gap-1 px-8'>
+	<div class='basis-1/2'>
 		{#key `${selectedBuildingId}-${selectedFloor}`}
 			<SelectionListItemGroup bind:selectedIndex={selectedFloorIndex} class='h-full'>
 				{#each floorList as item, index}
@@ -86,7 +86,7 @@
 			</SelectionListItemGroup>
 		{/key}
 	</div>
-	<div class='pr-8 pl-1 w-1/2'>
+	<div class='basis-1/2'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			<SelectionListItemGroup bind:selectedIndex={selectedSectionIndex}>
 				{#each sectionList as section, index}
