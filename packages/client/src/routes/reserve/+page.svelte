@@ -3,31 +3,28 @@
 	import Button from '../../components/atom/Button.svelte';
 	import UserReservedLocker from '../../components/molecule/reserve/UserReservedLocker.svelte';
 	import LockerReserveInfo from '../../components/molecule/reserve/LockerReserveInfo.svelte';
-	import Skeleton from '../../components/atom/Skeleton.svelte';
 	import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
 	import PageTitle from '../../components/atom/PageTitle.svelte';
 	import { config, user } from '$lib/store';
 	import { getServiceConfig } from '$lib/api/config';
-
-
-	let fetchStatus: boolean = false;
+	import Settings from '../../icons/Settings.svelte';
+	import Credit from '../../components/molecule/Credit.svelte';
+	import Modal from '../../components/molecule/Modal.svelte';
+	import Dismiss from '../../icons/Dismiss.svelte';
+	import Skeleton from '../../components/atom/Skeleton.svelte';
 
 	let innerWidth: number = 0;
 
 	let reservedLocker: ReservedLocker;
-	let lockerSection: string;
-	let lockerNumber: number;
 	let contact: string;
 	let targetDepartmentId: string;
 	let contactDepartment: string;
+	let contactModalOpen = false;
 
 	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
 	$:if ($user && $user.success) {
 		reservedLocker = getUserReservedLocker($user.result);
-		if ($config && $config.success) {
-			loadContact($user.result, $config.result);
-		}
 	}
 
 	function getUserReservedLocker(userInfo: User): ReservedLocker {
@@ -39,15 +36,6 @@
 		}
 		return null;
 	}
-
-	function loadContact(userInfo: User, config: Array<Config>) {
-		if (userInfo?.department) {
-			const isDepartmentSame = config.find(config => config.id === userInfo.department);
-			targetDepartmentId = userInfo.department;
-			contact = isDepartmentSame.contact;
-			contactDepartment = isDepartmentSame.name;
-		}
-	}
 </script>
 
 <PageTitle name='예약하기' />
@@ -57,26 +45,49 @@
 <NavigationShell collapsable={innerWidth && innerWidth <= 768}>
 	<div class='w-full h-96' slot='navigation_content'>
 		<UserReservedLocker {reservedLocker} />
-	</div>
-	<div class='flex justify-between items-center w-full' slot='navigation_footer'>
-		<Button class='bg-primary-800 text-white' isIconRight={true} href='/logout'>
-			<ArrowExportLtr slot='icon' />
-			로그아웃
-		</Button>
-		{#if contactDepartment}
-			<div class='contact-text text-right text-sm text-gray-600'>
-				<p>{contactDepartment}</p>
-				<p>{contact == undefined ? "연락처를 찾을 수 없습니다" : contact}</p>
-			</div>
+		{#if $config && $config.success}
+			<Button on:click={() => contactModalOpen = true}
+							class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'>
+				도움이 필요하신가요?
+			</Button>
 		{:else}
-			<div class='flex flex-col items-end'>
-				<Skeleton class='w-16 h-4 rounded-sm bg-gray-300'></Skeleton>
-				<Skeleton class='w-20 h-4 mt-1 rounded-sm bg-gray-300 min-w-2/5'></Skeleton>
-			</div>
+			<Skeleton class='w-36 h-6 mt-2 bg-gray-300 rounded-lg'></Skeleton>
 		{/if}
+	</div>
+	<div class='flex flex-col w-full gap-2' slot='navigation_footer'>
+		<div class='flex flex-row justify-between items-center w-full'>
+			<Button class='bg-primary-800 text-white' isIconRight href='/logout'>
+				<ArrowExportLtr slot='icon' />
+				로그아웃
+			</Button>
+			{#if $user && $user.success && $user.result.isAdmin}
+				<Button class='bg-red-200 text-gray-800' isIconRight href='/admin'>
+					서비스 관리
+					<Settings slot='icon' />
+				</Button>
+			{:else}
+				<Credit />
+			{/if}
+		</div>
 	</div>
 	<div class='grow overflow-scroll'>
 		<LockerReserveInfo {targetDepartmentId} {serviceConfig} />
 	</div>
 
 </NavigationShell>
+
+<Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
+			 on:close={() => contactModalOpen = false}
+			 on:click={() => contactModalOpen = false}>
+	{#each (($config && $config.success) ? $config.result : []) as config}
+		{#if config.contact}
+			<div class='my-2 leading-10'>
+				<h5>{config.name} 연락처</h5>
+				<p class='text-gray-700'>{config.contact}</p>
+			</div>
+		{/if}
+	{:else}
+		입력된 연락처가 없습니다.
+	{/each}
+	<Dismiss slot='primaryIcon' />
+</Modal>
