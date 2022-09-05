@@ -17,8 +17,20 @@
 	let floorList = [];
 	let sectionList = [];
 
+	function sortFloor(a: Floor, b: Floor): number {
+		if (parseInt(a.buildingId) > parseInt(b.buildingId)) return 1;
+		if (parseInt(a.buildingId) < parseInt(b.buildingId)) return -1;
+		if (parseInt(a.buildingId) === parseInt(b.buildingId)) {
+			const aFloor = parseInt(a.floor.replace('B', '-'));
+			const bFloor = parseInt(b.floor.replace('B', '-'));
+			if (aFloor > bFloor) return 1;
+			if (aFloor < bFloor) return -1;
+			if (aFloor === bFloor) return 0;
+		}
+	}
+
 	$: if (buildings && targetDepartmentId && !floorList.length) {
-		floorList = constructFloorListByDepartment(buildings, targetDepartmentId);
+		floorList = constructFloorListByDepartment(buildings, targetDepartmentId).sort(sortFloor);
 	}
 	$: if (buildings && targetDepartmentId && typeof selectedFloorIndex === 'number') {
 		sectionList = constructSectionListByDepartmentAndFloor(buildings, targetDepartmentId, {
@@ -29,6 +41,11 @@
 
 	function getBuildingName(buildingId: string): string {
 		return buildings[buildingId]?.name;
+	}
+
+	function getFloorDisplay(floor: string): string {
+		if (!floor.startsWith('B')) return `${floor}F`;
+		return floor;
 	}
 
 	function isReservableSection(section: LockerSection, departmentId: string) {
@@ -80,8 +97,9 @@
 			<SelectionListItemGroup bind:selectedIndex={selectedFloorIndex} class='h-full'>
 				{#each floorList as item, index}
 					<SelectionListItem id='{item.buildingId}-{item.floor}'
-														 class='h-11 focus:!brightness-95'>{getBuildingName(item.buildingId)}
-						- {item.floor}</SelectionListItem>
+														 class='min-h-11 focus:!brightness-95'><span
+						class='text-sm text-gray-500'>{getBuildingName(item.buildingId)}
+						| </span>{getFloorDisplay(item.floor)}</SelectionListItem>
 				{/each}
 			</SelectionListItemGroup>
 		{/key}
@@ -91,7 +109,7 @@
 			<SelectionListItemGroup bind:selectedIndex={selectedSectionIndex}>
 				{#each sectionList as section, index}
 					<SelectionListItem id='{selectedBuildingId}-{selectedFloor}-{section}'
-														 class='h-11 focus:!brightness-95'>{section}</SelectionListItem>
+														 class='min-h-11 focus:!brightness-95'>구역 {section}</SelectionListItem>
 				{/each}
 			</SelectionListItemGroup>
 		{/key}
