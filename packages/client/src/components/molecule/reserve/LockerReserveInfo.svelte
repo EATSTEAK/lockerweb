@@ -50,84 +50,54 @@
 	$: (selectedBuildingId && selectedFloor && selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
 </script>
 
-<div bind:clientWidth={innerWidth} class='wrap'>
-	{#if alertActive}
+
+<div bind:clientWidth={innerWidth} class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
+  {#if alertActive}
 		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSection} {selectedLockerNum}
 												 width={innerWidth} />
 	{/if}
-	<div class='select-info'>
-		<div class='select-location'>
+	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
+		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
 			{#if serviceConfig && targetDepartmentId}
 				<LockerSectionSelector {buildings} {targetDepartmentId}
 															 bind:selectedBuildingId
 															 bind:selectedFloor
 															 bind:selectedSectionId />
 			{:else}
-				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300'>구역 선택</Skeleton>
-				<div class='w-full h-5/6 flex'>
-					<div class='pl-8 pr-1 w-1/2'>
-						<Skeleton class='location-select-group h-64 rounded-xl bg-gray-300' />
-					</div>
-					<div class='pr-8 pl-1 w-1/2'>
-						<Skeleton class='h-64 rounded-xl bg-gray-300' />
-					</div>
+				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300' />
+				<div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
+					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
+					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
 				</div>
 			{/if}
 		</div>
-		{#if serviceConfig}
-			<div class='locker-map'>
-				<img class='map-img' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지' aria-level='정보과학관 1층 이미지'>
-			</div>
-		{:else}
-			<Skeleton class='locker-map-skeleton bg-gray-300' />
-		{/if}
+		<div class='bg-slate-200 md:basis-1/2 grow'>
+			{#if serviceConfig}
+				<div class='p-8 w-full h-full flex justify-center items-center'>
+					<img class='max-w-full h-auto max-h-[370px]' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
+							 aria-level='정보과학관 1층 이미지'>
+				</div>
+			{:else}
+				<Skeleton class='w-full h-full max-h-[370px] bg-gray-300' />
+			{/if}
+		</div>
 	</div>
-	{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
-		{#if selectedSection}
-			<div class='grow flex items-center overflow-scroll'>
-				<LockerItemGroup class='locker-grid' widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
+	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
+		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
+			{#if selectedSection}
+				<LockerItemGroup widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
 					{#each lockerList as lockerId, index}
 						<LockerItem id={lockerId} />
 					{/each}
 				</LockerItemGroup>
-			</div>
-		{:else}
-			<LockerLoadingScreen message='로드 중...' />
-		{/if}
-	{/key}
+			{:else}
+				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />
+			{/if}
+		{/key}
+	</div>
 </div>
 
 <style>
-    .wrap {
-        /* width: auto; 가 아닌 width: 100%; 라면 overflow 된 자식 요소의 크기를 따라간다?? */
-        @apply w-auto h-screen flex flex-col;
-    }
-
-    /* -------------- 영역 선택 및 지도 -------------- */
-    .select-info {
-        @apply flex flex-row min-h-[370px];
-    }
-
-    .select-location {
-        @apply bg-[#d8dee5] w-fit md:min-w-[470px];
-    }
-
-    .locker-map {
-        @apply bg-slate-200 grow;
-    }
-
-    .locker-map {
-        @apply flex max-h-[370px];
-    }
-
-    :global(.locker-map-skeleton) {
-        @apply grow max-h-[370px];
-    }
-
-    .map-img {
-        @apply flex max-h-[270px] ml-auto mr-auto mt-10;
-    }
-
     /* -------------- 사물함 그리드 영역 -------------- */
     .locker-grid {
         scrollbar-color: #c2c2c2 #e0e0e0;
