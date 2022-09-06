@@ -137,7 +137,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
+	<div class='locker-grid flex items-center overflow-x-auto overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			{#if selectedSection && reservedLockers}
 				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
