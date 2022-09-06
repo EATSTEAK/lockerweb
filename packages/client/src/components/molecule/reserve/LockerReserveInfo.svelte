@@ -6,6 +6,9 @@
 	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
 	import { browser } from '$app/env';
 	import { apiQueryLocker } from '$lib/api/locker';
+	import Modal from '../Modal.svelte';
+	import { getBuildingName } from '$lib/utils.js';
+	import Bookmark from '../../../icons/Bookmark.svelte';
 
 	let innerWidth: number = 0;
 
@@ -57,6 +60,7 @@
 	}
 
 	function reserveLocker(lockerId: string) {
+		openReserveModal = false;
 		// TODO: Reserve locker
 		console.debug('Reserving', lockerId);
 	}
@@ -93,6 +97,8 @@
 		lockerGridHeight = selectedSection.height;
 	}
 
+	let openReserveModal: boolean;
+
 	/** selected locker alert */
 	let alertActive: boolean;
 	$: (selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
@@ -103,7 +109,7 @@
 	{#if alertActive}
 		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
 												 width={innerWidth} on:click:secondary={() => selectedLockerId = undefined}
-												 on:click={() => reserveLocker(selectedLockerId)} />
+												 on:click={() => openReserveModal = true} />
 	{/if}
 	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
 		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
@@ -141,6 +147,13 @@
 		{/key}
 	</div>
 </div>
+
+<Modal title='예약 확인' bind:open={openReserveModal} primaryText='예약하기' on:click={() => reserveLocker(selectedLockerId)}
+			 on:click:secondary={() => openReserveModal = false} on:close={() => openReserveModal = false}>
+	정말로 {getBuildingName(serviceConfig?.buildings, selectedBuildingId)} {selectedFloor}층 {selectedSectionId}
+	구역 {selectedLockerNum}번 사물함을 대여하시겠습니까?
+	<Bookmark slot='primaryIcon' />
+</Modal>
 
 <style>
     /* -------------- 사물함 그리드 영역 -------------- */

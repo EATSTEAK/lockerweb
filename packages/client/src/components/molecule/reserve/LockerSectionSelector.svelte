@@ -1,6 +1,7 @@
 <script lang='ts'>
 	import SelectionListItemGroup from '../../atom/SelectionListItemGroup.svelte';
 	import SelectionListItem from '../../atom/SelectionListItem.svelte';
+	import { getBuildingName } from '$lib/utils';
 
 	export let buildings: {
 		[buildingId: string]: Building
@@ -37,10 +38,6 @@
 			buildingId: selectedBuildingId,
 			floor: selectedFloor
 		});
-	}
-
-	function getBuildingName(buildingId: string): string {
-		return buildings[buildingId]?.name;
 	}
 
 	function getFloorDisplay(floor: string): string {
@@ -98,7 +95,7 @@
 				{#each floorList as item, index}
 					<SelectionListItem id='{item.buildingId}-{item.floor}'
 														 class='min-h-11 focus:!brightness-95'><span
-						class='text-sm text-gray-500'>{getBuildingName(item.buildingId)}
+						class='text-sm text-gray-500'>{getBuildingName(buildings, item.buildingId)}
 						| </span>{getFloorDisplay(item.floor)}</SelectionListItem>
 				{/each}
 			</SelectionListItemGroup>

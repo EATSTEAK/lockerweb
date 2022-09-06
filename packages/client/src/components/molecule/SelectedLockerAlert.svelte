@@ -5,6 +5,7 @@
 	import Bookmark from '../../icons/Bookmark.svelte';
 	import { config } from '$lib/store';
 	import { getServiceConfig } from '$lib/api/config';
+	import { getBuildingName } from '$lib/utils.js';
 
 	export let width: number;
 
@@ -23,10 +24,6 @@
 
 	const dispatch = createEventDispatcher();
 
-	function getBuildingName(serviceConfig: ServiceConfig) {
-		return Object.entries(serviceConfig?.buildings).find(name => name[1]?.id === selectedBuildingId)?.[1].name;
-	}
-
 	function click(btnType: 'primary' | 'secondary') {
 		if (btnType === 'primary') {
 			dispatch('click', {});
@@ -41,7 +38,7 @@
 	rounded-xl z-50' style={`width:${width-42}px; background: rgba(80, 80, 80, 0.8);`}>
 	<div class='flex flex-row gap-2 items-center px-1'>
 		<h6 class='text-white bg-[#5F5F5F] rounded-lg py-1 px-2'>선택됨</h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig)}<span
+		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig.buildings, selectedBuildingId)}<span
 			class='pl-2 not-italic'>|</span></h6>
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedFloor}층<span class='pl-2 not-italic'>|</span></h6>
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedSectionId}구역-{selectedLockerNum}</h6>
