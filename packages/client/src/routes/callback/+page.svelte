@@ -14,6 +14,7 @@
 	import Checkmark from '../../icons/Checkmark.svelte';
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 	import { goto } from '$app/navigation';
+	import { user } from '$lib/store';
 
 	let result: string;
 	let response: SuccessResponse<AccessTokenInfo> | ErrorResponse<BlockedError | UnauthorizedError>;
@@ -39,6 +40,7 @@
 			if (data.success) {
 				const { accessToken, expiresIn } = data.result;
 				document.cookie = `locker_session=${encodeURIComponent(accessToken)}; path=/; domain=${window.location.hostname}; max-age=${expiresIn}; samesite=lax`;
+				user.refresh();
 				goto('/reserve');
 			} else {
 				setTimeout(() => goto('/'), 5000);
