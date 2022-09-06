@@ -4,6 +4,9 @@
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
 	import LockerItemGroup from './LockerItemGroup.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
+	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
+
+	let innerWidth: number = 0;
 
 	export let serviceConfig: ServiceConfig;
 	export let targetDepartmentId: string;
@@ -12,6 +15,7 @@
 	let selectedBuildingId: string;
 	let selectedFloor: string;
 	let selectedSectionId: string;
+	let selectedLockerNum: number;
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 
 	let lockerList: Array<string> = [];
@@ -40,9 +44,16 @@
 		lockerList = new Array(lockerCount).fill(0).map((_, idx) => constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, sectionRange[0] + idx));
 		lockerGridHeight = selectedSection.height;
 	}
+
+	/** selected locker alert */
+	let alertActive: boolean = false;
+	$: (selectedFloor && selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
 </script>
 
-<div class='wrap'>
+<div bind:clientWidth={innerWidth} class='wrap'>
+	{#if alertActive}
+		<SelectedLockerAlert {selectedFloor} {selectedSection} {selectedLockerNum} width={innerWidth} />
+	{/if}
 	<div class='select-info'>
 		<div class='select-location'>
 			{#if serviceConfig && targetDepartmentId}
