@@ -1,8 +1,7 @@
 <script lang='ts'>
-	import LockerItem from './LockerItem.svelte';
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
-	import LockerItemGroup from './LockerItemGroup.svelte';
+	import LockerItemGroup from './LockerList.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
 
 	export let serviceConfig: ServiceConfig;
@@ -14,11 +13,8 @@
 	let selectedSectionId: string;
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 
-	let lockerList: Array<string> = [];
-
-	let lockerGridHeight: number | undefined = 5;
-	$: lockerGridWidthScale = (5 * (lockerList.length / lockerGridHeight)) + 1;
-	$: lockerGridHeightScale = 5 * lockerGridHeight;
+	let lockerList: [string, boolean][] = [];
+	let lockerGridHeight: number = 0;
 
 	function getSectionRange(subsections: LockerSubsection[]) {
 		return subsections.reduce(([min, max], subsection) => {
@@ -37,7 +33,12 @@
 			return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
 		}
 
-		lockerList = new Array(lockerCount).fill(0).map((_, idx) => constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, sectionRange[0] + idx));
+		lockerList = new Array(lockerCount).fill(0)
+			.map((_, idx) =>
+				[
+					constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, sectionRange[0] + idx),
+					false
+				]);
 		lockerGridHeight = selectedSection.height;
 	}
 </script>
@@ -72,11 +73,7 @@
 	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			{#if selectedSection}
-				<LockerItemGroup widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
-					{#each lockerList as lockerId, index}
-						<LockerItem id={lockerId} />
-					{/each}
-				</LockerItemGroup>
+				<LockerItemGroup lockers={lockerList} height={lockerGridHeight} />
 			{:else}
 				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />
 			{/if}
