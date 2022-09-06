@@ -47,7 +47,7 @@
 
 	/** selected locker alert */
 	let alertActive: boolean = false;
-	$: (selectedFloor && selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
+	$: (selectedBuildingId && selectedFloor && selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
 </script>
 
 <div bind:clientWidth={innerWidth} class='wrap'>
