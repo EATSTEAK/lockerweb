@@ -1,13 +1,13 @@
 <script lang='ts'>
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
-	import LockerItemGroup from './LockerList.svelte';
+	import LockerList from './LockerList.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
 	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
-
-	let innerWidth: number = 0;
 	import { browser } from '$app/env';
 	import { apiQueryLocker } from '$lib/api/locker';
+
+	let innerWidth: number = 0;
 
 	export let serviceConfig: ServiceConfig;
 	export let targetDepartmentId: string;
@@ -16,7 +16,14 @@
 	let selectedBuildingId: string;
 	let selectedFloor: string;
 	let selectedSectionId: string;
+	let selectedLockerId: string;
 	let selectedLockerNum: number;
+	$: if (selectedLockerId) {
+		const [, , location] = selectedLockerId.split('-');
+		selectedLockerNum = parseInt(location.slice(1));
+	} else {
+		selectedLockerNum = undefined;
+	}
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 	let reservedLockers: string[];
 	let errorData: LockerError;
@@ -47,6 +54,11 @@
 			console.error(e);
 			errorData = e;
 		});
+	}
+
+	function reserveLocker(lockerId: string) {
+		// TODO: Reserve locker
+		console.debug('Reserving', lockerId);
 	}
 
 	function getSectionRange(subsections: LockerSubsection[]) {
@@ -88,9 +100,10 @@
 
 
 <div bind:clientWidth={innerWidth} class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
-  {#if alertActive}
+	{#if alertActive}
 		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
-												 width={innerWidth} />
+												 width={innerWidth} on:click:secondary={() => selectedLockerId = undefined}
+												 on:click={() => reserveLocker(selectedLockerId)} />
 	{/if}
 	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
 		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
@@ -121,7 +134,7 @@
 	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			{#if selectedSection && reservedLockers}
-				<LockerItemGroup lockers={lockerList} height={lockerGridHeight} />
+				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
 			{:else}
 				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />
 			{/if}
