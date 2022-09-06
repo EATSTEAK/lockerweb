@@ -43,7 +43,7 @@
 <svelte:window bind:innerWidth />
 
 <NavigationShell collapsable={innerWidth && innerWidth <= 768}>
-	<div class='w-full h-96' slot='navigation_content'>
+	<div class='w-full h-full' slot='navigation_content'>
 		<UserReservedLocker {reservedLocker} />
 		{#if $config && $config.success}
 			<Button on:click={() => contactModalOpen = true}
