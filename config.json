@@ -20,61 +20,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
-              }
-            },
-            "1": {
-              "A": {
-                "subsections": [
-                  {
-                    "range": [
-                      1,
-                      10
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
-              },
-              "B": {
-                "subsections": [
-                  {
-                    "range": [
-                      11,
-                      40
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
-              },
-              "C": {
-                "subsections": [
-                  {
-                    "range": [
-                      41,
-                      300
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
-              },
-              "D": {
-                "subsections": [
-                  {
-                    "range": [
-                      301,
-                      340
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "4": {
@@ -89,59 +35,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
-              },
-              "E": {
-                "subsections": [
-                  {
-                    "range": [
-                      341,
-                      400
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
-              },
-              "F": {
-                "subsections": [
-                  {
-                    "range": [
-                      401,
-                      460
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
-              },
-              "G": {
-                "subsections": [
-                  {
-                    "range": [
-                      461,
-                      490
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
-              },
-              "H": {
-                "subsections": [
-                  {
-                    "range": [
-                      491,
-                      510
-                    ],
-                    "department": "E"
-                  }
-                ],
-                "disabled": [],
-                "height": 4
+                "height": 5
               }
             }
           }
@@ -162,7 +56,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "B": {
                 "subsections": [
@@ -175,20 +69,20 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "C": {
                 "subsections": [
                   {
                     "range": [
                       81,
-                      150
+                      170
                     ],
                     "department": "C"
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "D": {
                 "subsections": [
@@ -201,7 +95,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "E": {
                 "subsections": [
@@ -214,7 +108,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "F": {
                 "subsections": [
@@ -227,7 +121,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "1": {
@@ -242,7 +136,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "2": {
@@ -257,7 +151,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "B": {
                 "subsections": [
@@ -270,7 +164,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "C": {
                 "subsections": [
@@ -283,7 +177,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "D": {
                 "subsections": [
@@ -296,7 +190,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "E": {
                 "subsections": [
@@ -309,7 +203,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "3": {
@@ -331,7 +225,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "B": {
                 "subsections": [
@@ -344,7 +238,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "C": {
                 "subsections": [
@@ -357,7 +251,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "D": {
                 "subsections": [
@@ -370,7 +264,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "E": {
                 "subsections": [
@@ -383,7 +277,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "4": {
@@ -398,7 +292,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "C": {
                 "subsections": [
@@ -411,7 +305,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "5": {
@@ -426,7 +320,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "F": {
                 "subsections": [
@@ -439,7 +333,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "G": {
                 "subsections": [
@@ -452,7 +346,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "H": {
                 "subsections": [
@@ -465,7 +359,7 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             },
             "6": {
@@ -473,14 +367,14 @@
                 "subsections": [
                   {
                     "range": [
-                      51,
+                      41,
                       70
                     ],
                     "department": "G"
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               },
               "J": {
                 "subsections": [
@@ -493,16 +387,12 @@
                   }
                 ],
                 "disabled": [],
-                "height": 4
+                "height": 5
               }
             }
           }
         }
       }
-    },
-    {
-      "id": "E",
-      "name": "전자정보공학부"
     },
     {
       "id": "A",
