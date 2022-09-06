@@ -39,7 +39,7 @@
 	}
 </script>
 
-<div transition:fly='{{ y: 10, duration: 150 }}' class='background flex flex-row justify-between px-2
+<div transition:fly='{{ y: 10, duration: 150 }}' class='background flex flex-row flex-wrap px-2
  	fixed bottom-5 right-5
 	rounded-xl z-50' style={`width:${width-42}px; background: rgba(80, 80, 80, 0.8);`}>
 	<div class='flex flex-row gap-2 items-center px-1'>
@@ -49,7 +49,7 @@
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedFloor}층<span class='pl-2 not-italic'>|</span></h6>
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedSection}구역-{selectedLockerNum}</h6>
 	</div>
-	<div class='flex flex-row gap-2 items-center'>
+	<div class='flex flex-row flex-end flex-grow justify-end gap-2 items-center mr-1'>
 		<Button on:click={() => click('secondary')}
 						class='{secondaryClass} !py-2 !px-3 bg-[#EBEBEB] border-px border-[#CECECE] text-gray-600 text-center [&[disabled]]:opacity-50'>
 			선택해제
