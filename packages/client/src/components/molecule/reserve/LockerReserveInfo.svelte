@@ -3,6 +3,8 @@
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
 	import LockerItemGroup from './LockerList.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
+	import { browser } from '$app/env';
+	import { apiQueryLocker } from '$lib/api/locker';
 
 	export let serviceConfig: ServiceConfig;
 	export let targetDepartmentId: string;
@@ -12,9 +14,36 @@
 	let selectedFloor: string;
 	let selectedSectionId: string;
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
+	let reservedLockers: string[];
+	let errorData: LockerError;
 
-	let lockerList: [string, boolean][] = [];
+	if (browser) {
+		queryLockerData();
+	}
+
+	let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
 	let lockerGridHeight: number = 0;
+
+	function queryLockerData() {
+		apiQueryLocker().then((res) => {
+			if (res.success) {
+				reservedLockers = res.result.map(reservedLocker => reservedLocker.lockerId);
+			} else {
+				if (res.success === false) {
+					errorData = res.error;
+				} else {
+					console.error(res);
+					errorData = {
+						code: 500,
+						name: 'UnknownError'
+					};
+				}
+			}
+		}).catch(e => {
+			console.error(e);
+			errorData = e;
+		});
+	}
 
 	function getSectionRange(subsections: LockerSubsection[]) {
 		return subsections.reduce(([min, max], subsection) => {
@@ -24,7 +53,7 @@
 		}, [-1, -1]);
 	}
 
-	$: if (selectedSection) {
+	$: if (selectedSection && reservedLockers) {
 		const sectionRange = getSectionRange(selectedSection.subsections);
 		const lockerCount = sectionRange[1] - sectionRange[0] + 1;
 
@@ -34,11 +63,17 @@
 		}
 
 		lockerList = new Array(lockerCount).fill(0)
-			.map((_, idx) =>
-				[
-					constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, sectionRange[0] + idx),
-					false
-				]);
+			.map((_, idx) => {
+				const lockerNum = sectionRange[0] + idx;
+				const lockerId = constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, lockerNum);
+				const disabled = selectedSection.disabled.includes(lockerNum);
+				const reserved = reservedLockers.includes(lockerId);
+				return {
+					lockerId,
+					disabled,
+					reserved
+				};
+			});
 		lockerGridHeight = selectedSection.height;
 	}
 </script>
@@ -72,7 +107,7 @@
 	</div>
 	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
-			{#if selectedSection}
+			{#if selectedSection && reservedLockers}
 				<LockerItemGroup lockers={lockerList} height={lockerGridHeight} />
 			{:else}
 				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />

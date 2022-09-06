@@ -32,10 +32,14 @@
 	tabindex='0'
 	class='{clazz} cursor-pointer select-none
   flex flex-col w-16 h-16 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 active:scale-100
-	focus:border-[3px] focus:border-blue-400 active:border-[3px] p-1 disabled:opacity-50 disabled:bg-gray-100'
+	focus:border-[3px] focus:border-blue-400 active:border-[3px] p-1 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:pointer-events-none'
 	{...$$restProps}>
 	<div class='grow flex font-normal text-xs text-gray-400 justify-center items-center select-none'>
-		<p>{section} 구역</p>
+		{#if titleOverride}
+			<p>{titleOverride}</p>
+		{:else}
+			<p>{section} 구역</p>
+		{/if}
 	</div>
 	<hr class='w-10 h-px border-0 bg-gray-200 ml-auto mr-auto mt-auto mb-auto' />
 	<div class='text-2xl font-extrabold text-gray-500 text-center select-none'>{lockerNum}</div>
