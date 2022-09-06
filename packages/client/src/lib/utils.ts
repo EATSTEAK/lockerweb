@@ -50,3 +50,10 @@ export function isActivated(activateFrom: Date, activateTo: Date): boolean {
 	}
 	return true;
 }
+
+export function getBuildingName(
+	buildings: { [buildingId: string]: Building },
+	buildingId: string
+): string {
+	return buildings?.[buildingId]?.name;
+}
