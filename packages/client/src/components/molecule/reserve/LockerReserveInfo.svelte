@@ -1,158 +1,192 @@
 <script lang='ts'>
-	import Skeleton from '../../atom/Skeleton.svelte';
-	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
-	import LockerList from './LockerList.svelte';
-	import LockerSectionSelector from './LockerSectionSelector.svelte';
-	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
-	import { browser } from '$app/env';
-	import { apiQueryLocker } from '$lib/api/locker';
-	import Modal from '../Modal.svelte';
-	import { getBuildingName } from '$lib/utils.js';
-	import Bookmark from '../../../icons/Bookmark.svelte';
+    import Skeleton from '../../atom/Skeleton.svelte';
+    import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
+    import LockerList from './LockerList.svelte';
+    import LockerSectionSelector from './LockerSectionSelector.svelte';
+    import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
+    import Modal from '../Modal.svelte';
+    import Bookmark from '../../../icons/Bookmark.svelte';
+    import {browser} from '$app/env';
+    import {user} from "$lib/store";
+    import {apiClaimLocker, apiQueryLocker} from '$lib/api/locker';
+    import {getBuildingName} from '$lib/utils.js';
 
-	let innerWidth: number = 0;
+    let innerWidth: number = 0;
 
-	export let serviceConfig: ServiceConfig;
-	export let targetDepartmentId: string;
-	$: buildings = serviceConfig?.buildings ?? {};
+    export let serviceConfig: ServiceConfig;
+    export let targetDepartmentId: string;
+    $: buildings = serviceConfig?.buildings ?? {};
 
-	let selectedBuildingId: string;
-	let selectedFloor: string;
-	let selectedSectionId: string;
-	let selectedLockerId: string;
-	let selectedLockerNum: number;
-	$: if (selectedLockerId) {
-		const [, , location] = selectedLockerId.split('-');
-		selectedLockerNum = parseInt(location.slice(1));
-	} else {
-		selectedLockerNum = undefined;
-	}
-	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
-	let reservedLockers: string[];
-	let errorData: LockerError;
+    let selectedBuildingId: string;
+    let selectedFloor: string;
+    let selectedSectionId: string;
+    let selectedLockerId: string;
+    let selectedLockerNum: number;
+    $: if (selectedLockerId) {
+        const [, , location] = selectedLockerId.split('-');
+        selectedLockerNum = parseInt(location.slice(1));
+    } else {
+        selectedLockerNum = undefined;
+    }
+    $: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
+    let reservedLockers: string[];
+    let errorData: LockerError;
+    let claimErrorData: LockerError;
 
-	if (browser) {
-		queryLockerData();
-	}
+    let claimLoading: boolean = false;
 
-	let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
-	let lockerGridHeight: number = 0;
+    if (browser) {
+        queryLockerData();
+    }
 
-	function queryLockerData() {
-		apiQueryLocker().then((res) => {
-			if (res.success) {
-				reservedLockers = res.result.map(reservedLocker => reservedLocker.lockerId);
-			} else {
-				if (res.success === false) {
-					errorData = res.error;
-				} else {
-					console.error(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
-				}
-			}
-		}).catch(e => {
-			console.error(e);
-			errorData = e;
-		});
-	}
+    let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
+    let lockerGridHeight: number = 0;
 
-	function reserveLocker(lockerId: string) {
-		openReserveModal = false;
-		// TODO: Reserve locker
-		console.debug('Reserving', lockerId);
-	}
+    function queryLockerData() {
+        apiQueryLocker().then((res) => {
+            if (res.success) {
+                reservedLockers = res.result.map(reservedLocker => reservedLocker.lockerId);
+                user.refresh();
+            } else {
+                if (res.success === false) {
+                    errorData = res.error;
+                } else {
+                    console.error(res);
+                    errorData = {
+                        code: 500,
+                        name: 'UnknownError'
+                    };
+                }
+            }
+        }).catch(e => {
+            console.error(e);
+            errorData = e;
+        });
+    }
 
-	function getSectionRange(subsections: LockerSubsection[]) {
-		return subsections.reduce(([min, max], subsection) => {
-			const newMin = min < 0 || subsection.range[0] < min ? subsection.range[0] : min;
-			const newMax = max < 0 || subsection.range[1] > max ? subsection.range[1] : max;
-			return [newMin, newMax];
-		}, [-1, -1]);
-	}
+    function reserveLocker(lockerId: string) {
+        openReserveModal = false;
+        alertActive = false;
+        claimLoading = true;
+        apiClaimLocker(
+            lockerId
+        ).then((res) => {
+            if (res.success) {
+                claimLoading = false;
+                queryLockerData();
+                console.debug("사물함 예약됨");
+            } else {
+                if (res.success === false) {
+                    claimErrorData = res.error;
+                } else {
+                    console.error(res);
+                    errorData = {
+                        code: 500,
+                        name: 'UnknownError'
+                    };
+                }
+            }
+        }).catch(e => {
+            console.error(e);
+            claimErrorData = e;
+        })
+        console.debug('Reserving', lockerId);
+    }
 
-	$: if (selectedSection && reservedLockers) {
-		const sectionRange = getSectionRange(selectedSection.subsections);
-		const lockerCount = sectionRange[1] - sectionRange[0] + 1;
+    function getSectionRange(subsections: LockerSubsection[]) {
+        return subsections.reduce(([min, max], subsection) => {
+            const newMin = min < 0 || subsection.range[0] < min ? subsection.range[0] : min;
+            const newMax = max < 0 || subsection.range[1] > max ? subsection.range[1] : max;
+            return [newMin, newMax];
+        }, [-1, -1]);
+    }
 
-		function constructLockerId(buildingId: string, floor: string, section: string, num: number): string {
-			const fixedLengthNum = `${num}`.padStart(3, '0');
-			return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
-		}
+    $: if (selectedSection && reservedLockers) {
+        const sectionRange = getSectionRange(selectedSection.subsections);
+        const lockerCount = sectionRange[1] - sectionRange[0] + 1;
 
-		lockerList = new Array(lockerCount).fill(0)
-			.map((_, idx) => {
-				const lockerNum = sectionRange[0] + idx;
-				const lockerId = constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, lockerNum);
-				const disabled = selectedSection.disabled.includes(lockerNum);
-				const reserved = reservedLockers.includes(lockerId);
-				return {
-					lockerId,
-					disabled,
-					reserved
-				};
-			});
-		lockerGridHeight = selectedSection.height;
-	}
+        function constructLockerId(buildingId: string, floor: string, section: string, num: number): string {
+            const fixedLengthNum = `${num}`.padStart(3, '0');
+            return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
+        }
 
-	let openReserveModal: boolean;
+        lockerList = new Array(lockerCount).fill(0)
+            .map((_, idx) => {
+                const lockerNum = sectionRange[0] + idx;
+                const lockerId = constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, lockerNum);
+                const disabled = selectedSection.disabled.includes(lockerNum);
+                const reserved = reservedLockers.includes(lockerId);
+                return {
+                    lockerId,
+                    disabled,
+                    reserved
+                };
+            });
+        lockerGridHeight = selectedSection.height;
+    }
 
-	/** selected locker alert */
-	let alertActive: boolean;
-	$: (selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
+    let openReserveModal: boolean;
+
+    /** selected locker alert */
+    let alertActive: boolean;
+    $: (selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
 </script>
 
 
 <div bind:clientWidth={innerWidth} class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
-	{#if alertActive}
-		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
-												 width={innerWidth} on:click:secondary={() => selectedLockerId = undefined}
-												 on:click={() => openReserveModal = true} />
-	{/if}
-	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
-		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
-			{#if serviceConfig && targetDepartmentId}
-				<LockerSectionSelector {buildings} {targetDepartmentId}
-															 bind:selectedBuildingId
-															 bind:selectedFloor
-															 bind:selectedSectionId />
-			{:else}
-				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300' />
-				<div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
-					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
-					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
-				</div>
-			{/if}
-		</div>
-		<div class='bg-slate-200 md:basis-1/2 grow'>
-			{#if serviceConfig}
-				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<img class='max-w-full h-auto max-h-[370px]' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
-							 aria-level='정보과학관 1층 이미지'>
-				</div>
-			{:else}
-				<Skeleton class='w-full h-full max-h-[370px] bg-gray-300' />
-			{/if}
-		</div>
-	</div>
-	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
-		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
-			{#if selectedSection && reservedLockers}
-				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
-			{:else}
-				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />
-			{/if}
-		{/key}
-	</div>
+    {#if alertActive}
+        <SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
+                             width={innerWidth} on:click:secondary={() => selectedLockerId = undefined}
+                             on:click={() => openReserveModal = true}/>
+    {/if}
+    <div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
+        <div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
+            {#if serviceConfig && targetDepartmentId}
+                <LockerSectionSelector {buildings} {targetDepartmentId}
+                                       bind:selectedBuildingId
+                                       bind:selectedFloor
+                                       bind:selectedSectionId
+                                       }
+                />
+            {:else}
+                <Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300'/>
+                <div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
+                    <Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2'/>
+                    <Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2'/>
+                </div>
+            {/if}
+        </div>
+        <div class='bg-slate-200 md:basis-1/2 grow'>
+            {#if serviceConfig}
+                <div class='p-8 w-full h-full flex justify-center items-center'>
+                    <img class='max-w-full h-auto max-h-[370px]' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
+                         aria-level='정보과학관 1층 이미지'>
+                </div>
+            {:else}
+                <Skeleton class='w-full h-full max-h-[370px] bg-gray-300'/>
+            {/if}
+        </div>
+    </div>
+    <div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
+        {#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
+            {#if (selectedSection && reservedLockers) && !claimLoading}
+                <LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight}/>
+            {:else}
+                {#if claimLoading}
+                    <LockerLoadingScreen class='w-full min-h-[340px]' message='예약 중..' selectedLockerInfo={`${selectedFloor}층 | ${selectedSectionId}구역 - ${selectedLockerNum}번`}/>
+                {:else}
+                    <LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중..' />
+                {/if}
+            {/if}
+        {/key}
+    </div>
 </div>
 
 <Modal title='예약 확인' bind:open={openReserveModal} primaryText='예약하기' on:click={() => reserveLocker(selectedLockerId)}
-			 on:click:secondary={() => openReserveModal = false} on:close={() => openReserveModal = false}>
-	정말로 {getBuildingName(serviceConfig?.buildings, selectedBuildingId)} {selectedFloor}층 {selectedSectionId}
-	구역 {selectedLockerNum}번 사물함을 대여하시겠습니까?
-	<Bookmark slot='primaryIcon' />
+       on:click:secondary={() => openReserveModal = false} on:close={() => openReserveModal = false}>
+    정말로 {getBuildingName(serviceConfig?.buildings, selectedBuildingId)} {selectedFloor}층 {selectedSectionId}
+    구역 {selectedLockerNum}번 사물함을 대여하시겠습니까?
+    <Bookmark slot='primaryIcon'/>
 </Modal>
 
 <style>
