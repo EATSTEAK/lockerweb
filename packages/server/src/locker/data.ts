@@ -131,7 +131,7 @@ export const queryLockers = async function (
 		TableName,
 		IndexName: 'lockerIdIndex',
 		KeyConditionExpression: `#type = :type${starts ? ' AND begins_with(#id, :starts)' : ''}`,
-		FilterExpression: 'cU < :zero OR cU > :claimedUntil',
+		FilterExpression: 'attribute_not_exists(cU) OR cU < :zero OR cU > :claimedUntil',
 		ExpressionAttributeNames: {
 			'#type': 'type',
 			...(starts && { '#id': 'id' })
@@ -156,7 +156,7 @@ export const queryLockers = async function (
 	return res.Items.map((item) => {
 		const ret: ReservedLocker = {
 			lockerId: item.lockerId?.S,
-			claimedUntil: new Date(parseInt(item.cU?.N))
+			...(item.cu?.N && { claimedUntil: new Date(parseInt(item.cU?.N)) })
 		};
 		if (showId) ret.id = item.id.S;
 		return ret;
