@@ -34,7 +34,7 @@
 </script>
 
 <div transition:fly='{{ y: 10, duration: 150 }}' class='background flex flex-row flex-wrap px-2
- 	fixed bottom-5 right-5
+ 	fixed bottom-5 right-5 backdrop-blur-sm
 	rounded-xl z-50' style={`width:${width-42}px; background: rgba(80, 80, 80, 0.8);`}>
 	<div class='flex flex-row gap-2 items-center px-1'>
 		<h6 class='text-white bg-[#5F5F5F] rounded-lg py-1 px-2'>선택됨</h6>
