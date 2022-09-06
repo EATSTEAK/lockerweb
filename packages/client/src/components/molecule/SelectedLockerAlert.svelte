@@ -9,15 +9,12 @@
 	export let width: number;
 
 	export let selectedBuildingId: string;
-	let selectedBuildingName: string;
 	export let selectedFloor: number;
-	export let selectedSection: string;
+	export let selectedSectionId: string;
 	export let selectedLockerNum: number;
 
 	export let primaryClass: string = '';
 	export let secondaryClass: string = '';
-	export let isPrimaryBtnIconRight: boolean = false;
-	export let isSecondaryBtnIconRight: boolean = false;
 
 	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
@@ -47,7 +44,7 @@
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig)}<span
 			class='pl-2 not-italic'>|</span></h6>
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedFloor}층<span class='pl-2 not-italic'>|</span></h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedSection}구역-{selectedLockerNum}</h6>
+		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedSectionId}구역-{selectedLockerNum}</h6>
 	</div>
 	<div class='flex flex-row flex-end flex-grow justify-end gap-2 items-center mr-1'>
 		<Button on:click={() => click('secondary')}
@@ -55,8 +52,7 @@
 			선택 해제
 		</Button>
 		<Button on:click={() => click('primary')}
-						class='{primaryClass} !py-2 !pl-2 my-2 bg-[#7088DF] text-white [&[disabled]]:opacity-50 !flex-none'
-						isIconRight={isPrimaryBtnIconRight}>
+						class='{primaryClass} !py-2 !pl-2 my-2 bg-[#7088DF] text-white [&[disabled]]:opacity-50 !flex-none'>
 			<Bookmark slot='icon' />
 			예약하기
 		</Button>

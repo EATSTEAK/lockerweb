@@ -46,14 +46,14 @@
 	}
 
 	/** selected locker alert */
-	let alertActive: boolean = false;
-	$: (selectedBuildingId && selectedFloor && selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
+	let alertActive: boolean;
+	$: (selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
 </script>
 
 
 <div bind:clientWidth={innerWidth} class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
   {#if alertActive}
-		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSection} {selectedLockerNum}
+		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
 												 width={innerWidth} />
 	{/if}
 	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
