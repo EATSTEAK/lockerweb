@@ -31,7 +31,7 @@
 	on:keydown
 	tabindex='0'
 	class='{clazz} cursor-pointer select-none
-  flex flex-col w-16 h-16 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 active:scale-100
+  flex flex-col items-stretch w-16 h-16 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 active:scale-100
 	focus:border-[3px] focus:border-blue-400 active:border-[3px] p-1 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:pointer-events-none'
 	{...$$restProps}>
 	<div class='grow flex font-normal text-xs text-gray-400 justify-center items-center select-none'>
@@ -46,6 +46,10 @@
 </button>
 
 <style>
+    .selected {
+        @apply border-[3px] border-blue-400;
+    }
+
     button:disabled:hover {
         @apply scale-100;
     }
