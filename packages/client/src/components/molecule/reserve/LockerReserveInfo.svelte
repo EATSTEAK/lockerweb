@@ -130,10 +130,12 @@
 		<div class='bg-slate-200 md:basis-1/2 grow'>
 			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<FloorMap class='max-w-full h-auto max-h-[370px]' {selectedBuildingId} {selectedFloor} />
+					<FloorMap class='w-full h-full' {selectedBuildingId} {selectedFloor} {selectedSectionId} />
 				</div>
 			{:else}
-				<Skeleton class='w-full h-full max-h-[370px] bg-gray-300' />
+				<div class='p-8 w-full h-full flex justify-center items-center'>
+					<Skeleton class='w-full max-w-[600px] h-full max-h-[400px] bg-gray-300 rounded-xl' />
+				</div>
 			{/if}
 		</div>
 	</div>
