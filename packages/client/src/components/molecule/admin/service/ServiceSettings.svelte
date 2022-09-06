@@ -6,11 +6,11 @@
 	import SaveEdit from '../../../../icons/SaveEdit.svelte';
 	import ArrowUndo from '../../../../icons/ArrowUndo.svelte';
 	import isEqual from 'lodash.isequal';
-	import { getServiceConfig, apiUpdateConfig } from '$lib/api/config';
+	import { apiUpdateConfig, getServiceConfig } from '$lib/api/config';
 	import { config } from '$lib/store';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import Warning from '../../../../icons/Warning.svelte';
-	import Skeleton from "../../../atom/Skeleton.svelte";
+	import Skeleton from '../../../atom/Skeleton.svelte';
 
 	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
@@ -35,7 +35,6 @@
 		...(activateTo && { activateTo: activateTo.toISOString() }),
 		buildings
 	};
-
 	$: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
 
 	$: isAppliable = isModified && name;
@@ -48,7 +47,7 @@
 		name = serviceConfig?.name ?? '';
 		activateFrom = serviceConfig?.activateFrom ?? null;
 		activateTo = serviceConfig?.activateTo ?? null;
-		buildings = { ...(serviceConfig?.buildings ?? {}) };
+		buildings = structuredClone(serviceConfig?.buildings ?? {});
 	}
 
 	function updateConfig() {
