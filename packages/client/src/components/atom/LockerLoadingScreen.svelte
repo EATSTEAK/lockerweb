@@ -1,13 +1,17 @@
 <script lang="ts">
-  export let message: string = "사물함 불러오는 중...";
-  let clazz = '';
-  export { clazz as class };
-  import Locker from "../../icons/Locker.svelte";
+    export let message: string = "사물함 불러오는 중...";
+    export let selectedLockerInfo: string;
+    let clazz = '';
+    export {clazz as class};
+    import Locker from "../../icons/Locker.svelte";
 </script>
 
 <div class={clazz}>
-  <Locker class="rotate-stop w-16 h-16 mb-2" />
-  <p>{message}</p>
+    <Locker class="rotate-stop w-16 h-16 mb-2"/>
+    <p>{message}</p>
+    {#if selectedLockerInfo}
+        <p class='bg-gray-200 rounded-lg py-1 px-2 mt-1'>{selectedLockerInfo}</p>
+    {/if}
 </div>
 
 <style>
