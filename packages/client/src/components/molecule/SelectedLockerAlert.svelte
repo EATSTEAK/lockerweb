@@ -3,25 +3,31 @@
 	import { fly } from 'svelte/transition';
 	import Button from '../atom/Button.svelte';
 	import Bookmark from '../../icons/Bookmark.svelte';
+	import { config } from '$lib/store';
+	import { getServiceConfig } from '$lib/api/config';
 
 	export let width: number;
 
-	export let selectedFloor: number = 5;
-	export let selectedSection: string = 'A';
-	export let selectedLockerNum: number = 1;
+	export let selectedBuildingId: string;
+	let selectedBuildingName: string;
+	export let selectedFloor: number;
+	export let selectedSection: string;
+	export let selectedLockerNum: number;
 
 	export let primaryClass: string = '';
 	export let secondaryClass: string = '';
 	export let isPrimaryBtnIconRight: boolean = false;
 	export let isSecondaryBtnIconRight: boolean = false;
 
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
 	let clazz = '';
 	export { clazz as class };
 
 	const dispatch = createEventDispatcher();
 
-	function closeAlert() {
-
+	function getBuildingName(serviceConfig: ServiceConfig) {
+		return Object.entries(serviceConfig?.buildings).find(name => name[1]?.id === selectedBuildingId)?.[1].name;
 	}
 
 	function click(btnType: 'primary' | 'secondary') {
@@ -38,6 +44,8 @@
 	rounded-xl z-50' style={`width:${width-42}px; background: rgba(80, 80, 80, 0.8);`}>
 	<div class='flex flex-row gap-2 items-center px-1'>
 		<h6 class='text-white bg-[#5F5F5F] rounded-lg py-1 px-2'>선택됨</h6>
+		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig)}<span
+			class='pl-2 not-italic'>|</span></h6>
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedFloor}층<span class='pl-2 not-italic'>|</span></h6>
 		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedSection}구역-{selectedLockerNum}</h6>
 	</div>
