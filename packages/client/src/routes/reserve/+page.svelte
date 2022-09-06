@@ -18,15 +18,14 @@
 	let innerWidth: number = 0;
 
 	let reservedLocker: ReservedLocker;
-	let contact: string;
 	let targetDepartmentId: string;
-	let contactDepartment: string;
 	let contactModalOpen = false;
 
 	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
 	$:if ($user && $user.success) {
 		reservedLocker = getUserReservedLocker($user.result);
+		targetDepartmentId = $user.result.department;
 	}
 
 	if(browser && !getAuthorization()) {
