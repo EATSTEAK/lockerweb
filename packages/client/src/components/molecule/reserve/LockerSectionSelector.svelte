@@ -109,7 +109,8 @@
 			<SelectionListItemGroup bind:selectedIndex={selectedSectionIndex}>
 				{#each sectionList as section, index}
 					<SelectionListItem id='{selectedBuildingId}-{selectedFloor}-{section}'
-														 class='min-h-11 focus:!brightness-95'>구역 {section}</SelectionListItem>
+														 class='min-h-11 focus:!brightness-95'>{section} 구역
+					</SelectionListItem>
 				{/each}
 			</SelectionListItemGroup>
 		{/key}

@@ -1,10 +1,11 @@
 <script lang='ts'>
-	import LockerItem from './LockerItem.svelte';
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
-	import LockerItemGroup from './LockerItemGroup.svelte';
+	import LockerList from './LockerList.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
 	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
+	import { browser } from '$app/env';
+	import { apiQueryLocker } from '$lib/api/locker';
 
 	let innerWidth: number = 0;
 
@@ -15,14 +16,50 @@
 	let selectedBuildingId: string;
 	let selectedFloor: string;
 	let selectedSectionId: string;
+	let selectedLockerId: string;
 	let selectedLockerNum: number;
+	$: if (selectedLockerId) {
+		const [, , location] = selectedLockerId.split('-');
+		selectedLockerNum = parseInt(location.slice(1));
+	} else {
+		selectedLockerNum = undefined;
+	}
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
+	let reservedLockers: string[];
+	let errorData: LockerError;
 
-	let lockerList: Array<string> = [];
+	if (browser) {
+		queryLockerData();
+	}
 
-	let lockerGridHeight: number | undefined = 5;
-	$: lockerGridWidthScale = (5 * (lockerList.length / lockerGridHeight)) + 1;
-	$: lockerGridHeightScale = 5 * lockerGridHeight;
+	let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
+	let lockerGridHeight: number = 0;
+
+	function queryLockerData() {
+		apiQueryLocker().then((res) => {
+			if (res.success) {
+				reservedLockers = res.result.map(reservedLocker => reservedLocker.lockerId);
+			} else {
+				if (res.success === false) {
+					errorData = res.error;
+				} else {
+					console.error(res);
+					errorData = {
+						code: 500,
+						name: 'UnknownError'
+					};
+				}
+			}
+		}).catch(e => {
+			console.error(e);
+			errorData = e;
+		});
+	}
+
+	function reserveLocker(lockerId: string) {
+		// TODO: Reserve locker
+		console.debug('Reserving', lockerId);
+	}
 
 	function getSectionRange(subsections: LockerSubsection[]) {
 		return subsections.reduce(([min, max], subsection) => {
@@ -32,7 +69,7 @@
 		}, [-1, -1]);
 	}
 
-	$: if (selectedSection) {
+	$: if (selectedSection && reservedLockers) {
 		const sectionRange = getSectionRange(selectedSection.subsections);
 		const lockerCount = sectionRange[1] - sectionRange[0] + 1;
 
@@ -41,7 +78,18 @@
 			return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
 		}
 
-		lockerList = new Array(lockerCount).fill(0).map((_, idx) => constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, sectionRange[0] + idx));
+		lockerList = new Array(lockerCount).fill(0)
+			.map((_, idx) => {
+				const lockerNum = sectionRange[0] + idx;
+				const lockerId = constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, lockerNum);
+				const disabled = selectedSection.disabled.includes(lockerNum);
+				const reserved = reservedLockers.includes(lockerId);
+				return {
+					lockerId,
+					disabled,
+					reserved
+				};
+			});
 		lockerGridHeight = selectedSection.height;
 	}
 
@@ -52,9 +100,10 @@
 
 
 <div bind:clientWidth={innerWidth} class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
-  {#if alertActive}
+	{#if alertActive}
 		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
-												 width={innerWidth} />
+												 width={innerWidth} on:click:secondary={() => selectedLockerId = undefined}
+												 on:click={() => reserveLocker(selectedLockerId)} />
 	{/if}
 	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
 		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
@@ -84,12 +133,8 @@
 	</div>
 	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
-			{#if selectedSection}
-				<LockerItemGroup widthScale={lockerGridWidthScale} heightScale={lockerGridHeightScale}>
-					{#each lockerList as lockerId, index}
-						<LockerItem id={lockerId} />
-					{/each}
-				</LockerItemGroup>
+			{#if selectedSection && reservedLockers}
+				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
 			{:else}
 				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />
 			{/if}
