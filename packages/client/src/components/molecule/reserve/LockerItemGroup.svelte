@@ -52,6 +52,6 @@
 	});
 </script>
 
-<div class='flex flex-col flex-wrap mt-5 ml-auto mr-auto' style={`width:${widthScale}rem; height:${heightScale}rem;`}>
+<div class='flex flex-col flex-wrap mt-2 ml-auto mr-auto' style={`width:${widthScale}rem; height:${heightScale}rem;`}>
 	<slot />
 </div>
