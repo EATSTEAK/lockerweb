@@ -55,7 +55,7 @@
 <svelte:window bind:innerWidth />
 
 <NavigationShell collapsable={innerWidth && innerWidth <= 768}>
-	<div class='w-full h-96' slot='navigation_content'>
+	<div class='w-full h-full' slot='navigation_content'>
 		<UserReservedLocker {reservedLocker} />
 	</div>
 	<div class='flex justify-between items-center w-full' slot='navigation_footer'>
@@ -75,7 +75,7 @@
 			</div>
 		{/if}
 	</div>
-	<div class='grow overflow-scroll'>
+	<div class='grow'>
 		<LockerReserveInfo {targetDepartmentId} {serviceConfig} />
 	</div>
 
