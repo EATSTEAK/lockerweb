@@ -30,7 +30,7 @@
 	let disabledInput: number = null;
 	let disabledInputInvalid: string;
 	let disabled: number[] = original?.disabled ?? [];
-	let subsections: LockerSubsection[] = original?.subsections ?? [];
+	let subsections: LockerSubsection[] = structuredClone(original?.subsections) ?? [];
 
 	$: if ((floor && originalId) || isNew) {
 		initializeValues();
@@ -39,7 +39,7 @@
 	const isNotUppercaseAlphabet = new RegExp('[^A-Z]+');
 	const isNotNumeric = new RegExp('[^0-9]+');
 
-	$: isModified = floor !== floorInput || originalId !== id || original?.height !== height || !isEqual(disabled, original?.disabled ?? []);
+	$: isModified = floor !== floorInput || originalId !== id || original?.height !== height || !isEqual(disabled, original?.disabled ?? []) || !isEqual(subsections, original?.subsections ?? []);
 	$: isAppliable = !!floorInput && !!id && !!height &&
 		id.length === 1 && !isNotUppercaseAlphabet.test(id) &&
 		!isNotNumeric.test((floorInput.startsWith('B') && floorInput.length >= 2) ? floorInput.slice(1) : floorInput);
