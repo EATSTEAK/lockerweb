@@ -7,6 +7,8 @@
 	import PageTitle from '../../components/atom/PageTitle.svelte';
 	import { config, user } from '$lib/store';
 	import { getServiceConfig } from '$lib/api/config';
+	import { browser } from '$app/env';
+	import { deleteAuthorization, getAuthorization } from '$lib/auth';
 	import Settings from '../../icons/Settings.svelte';
 	import Credit from '../../components/molecule/Credit.svelte';
 	import Modal from '../../components/molecule/Modal.svelte';
@@ -25,6 +27,23 @@
 
 	$:if ($user && $user.success) {
 		reservedLocker = getUserReservedLocker($user.result);
+	}
+
+	if(browser && !getAuthorization()) {
+			deleteSessionAndGoIndex();
+	}
+
+	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
+	$: if ($user && $user.success === false && browser) {
+		const error = $user.error;
+		if (error.code === 401 || error.code === 403 || error.code === 404) {
+			deleteSessionAndGoIndex();
+		}
+	}
+
+	function deleteSessionAndGoIndex() {
+		deleteAuthorization();
+		window.location.href = '/';
 	}
 
 	function getUserReservedLocker(userInfo: User): ReservedLocker {

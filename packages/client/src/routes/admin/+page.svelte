@@ -12,8 +12,8 @@
 	import Settings from '../../icons/Settings.svelte';
 	import ContentSettings from '../../icons/ContentSettings.svelte';
 	import { browser } from '$app/env';
-	import { deleteAuthorization } from '$lib/auth';
-	import { apiQueryUser, apiUpdateUser, apiBatchPutUser, apiBatchDeleteUser } from '$lib/api/user';
+	import { deleteAuthorization, getAuthorization } from '$lib/auth';
+	import { apiBatchDeleteUser, apiBatchPutUser, apiQueryUser, apiUpdateUser } from '$lib/api/user';
 	import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 	import Skeleton from '../../components/atom/Skeleton.svelte';
@@ -28,20 +28,30 @@
 	let userRequestError = null;
 
 	let userPromise: Promise<Array<User>>;
+
 	if (browser) {
 		queryUser();
+	}
+
+	if (browser && !getAuthorization()) {
+		deleteSessionAndGoIndex();
+	}
+
+	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
+	$: if ($user && $user.success === false && browser) {
+		const error = $user.error;
+		if (error.code === 401 || error.code === 403 || error.code === 404) {
+			deleteSessionAndGoIndex();
+		}
 	}
 
 	let navigationCollapsed = true;
 	let innerWidth = 0;
 
-	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
-	$: if ($user && !$user.success && browser) {
-		const error = ($user as ErrorResponse<LockerError>).error;
-		if(error.code === 401 || error.code === 403) {
-			deleteAuthorization();
-			window.location.href = '/';
-		}
+
+	function deleteSessionAndGoIndex() {
+		deleteAuthorization();
+		window.location.href = '/';
 	}
 
 	function closeSidebarMenu() {
@@ -55,7 +65,7 @@
 					return res.result;
 				}
 				throw (res as ErrorResponse<LockerError>).error;
-			})
+			});
 	}
 
 	function updateUser(evt: CustomEvent<UserUpdateRequest>) {
