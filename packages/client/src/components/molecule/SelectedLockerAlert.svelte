@@ -52,7 +52,7 @@
 	<div class='flex flex-row flex-end flex-grow justify-end gap-2 items-center mr-1'>
 		<Button on:click={() => click('secondary')}
 						class='{secondaryClass} !py-2 !px-3 bg-[#EBEBEB] border-px border-[#CECECE] text-gray-600 text-center [&[disabled]]:opacity-50'>
-			선택해제
+			선택 해제
 		</Button>
 		<Button on:click={() => click('primary')}
 						class='{primaryClass} !py-2 !pl-2 my-2 bg-[#7088DF] text-white [&[disabled]]:opacity-50 !flex-none'
