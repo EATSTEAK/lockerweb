@@ -52,7 +52,8 @@
 
 <div bind:clientWidth={innerWidth} class='wrap'>
 	{#if alertActive}
-		<SelectedLockerAlert {selectedFloor} {selectedSection} {selectedLockerNum} width={innerWidth} />
+		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSection} {selectedLockerNum}
+												 width={innerWidth} />
 	{/if}
 	<div class='select-info'>
 		<div class='select-location'>
