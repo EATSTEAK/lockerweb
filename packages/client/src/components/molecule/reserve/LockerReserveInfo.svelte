@@ -9,6 +9,7 @@
 	import Modal from '../Modal.svelte';
 	import { getBuildingName } from '$lib/utils.js';
 	import Bookmark from '../../../icons/Bookmark.svelte';
+	import FloorMap from '../../atom/FloorMap.svelte';
 
 	let innerWidth: number = 0;
 
@@ -127,10 +128,9 @@
 			{/if}
 		</div>
 		<div class='bg-slate-200 md:basis-1/2 grow'>
-			{#if serviceConfig}
+			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<img class='max-w-full h-auto max-h-[370px]' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
-							 aria-level='정보과학관 1층 이미지'>
+					<FloorMap class='max-w-full h-auto max-h-[370px]' {selectedBuildingId} {selectedFloor} />
 				</div>
 			{:else}
 				<Skeleton class='w-full h-full max-h-[370px] bg-gray-300' />
