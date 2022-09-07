@@ -66,7 +66,7 @@
 		});
 	}
 
-	function reserveLocker(lockerId: string) {
+	function claimLocker(lockerId: string) {
 		openReserveModal = false;
 		alertActive = false;
 		claimLoading = true;
@@ -92,10 +92,9 @@
 			console.error(e);
 			claimErrorData = e;
 		});
-		console.debug('Reserving', lockerId);
 	}
 
-	function unReserveLocker() {
+	function unClaimLocker() {
 		claimLoading = true;
 		apiUnclaimLocker().then((res) => {
 			if (res.success) {
@@ -208,7 +207,7 @@
 	</div>
 </div>
 
-<Modal title='예약 확인' bind:open={openReserveModal} primaryText='예약하기' on:click={() => reserveLocker(selectedLockerId)}
+<Modal title='예약 확인' bind:open={openReserveModal} primaryText='예약하기' on:click={() => claimLocker(selectedLockerId)}
 			 on:click:secondary={() => openReserveModal = false} on:close={() => openReserveModal = false}>
 	정말로 {getBuildingName(serviceConfig?.buildings, selectedBuildingId)} {selectedFloor}층 {selectedSectionId}
 	구역 {selectedLockerNum}번 사물함을 대여하시겠습니까?
