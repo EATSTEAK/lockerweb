@@ -40,7 +40,7 @@
 		if (getAuthorization()) {
 			goto('/reserve');
 		}
-		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback';
+		callbackUrl = window.location.protocol + '//' + window.location.host + '/callback/';
 		callbackNotLoaded = false;
 		apiCountLocker()
 			.then((data) => {
