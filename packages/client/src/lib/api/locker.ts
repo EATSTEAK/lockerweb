@@ -75,8 +75,11 @@ export async function apiClaimLocker(
 	| ErrorResponse<BadRequestError | BlockedError | ForbiddenError | CantClaimError | InternalError>
 > {
 	const response = await apiRequest<ClaimLockerResponse>('/locker/claim', true, {
-		lockerId,
-		...(claimedUntil && { until: claimedUntil.toISOString() })
+		method: 'POST',
+		body: {
+			lockerId,
+			...(claimedUntil && { until: claimedUntil.toISOString() })
+		}
 	});
 	const claim = createSuccessResponse(ClaimLockerResponseSchema).safeParse(response);
 	if (claim.success) {
@@ -110,7 +113,9 @@ export async function apiUnclaimLocker(): Promise<
 	| SuccessResponse<UnclaimLockerResponse>
 	| ErrorResponse<BlockedError | ForbiddenError | CantClaimError>
 > {
-	const response = await apiRequest<UnclaimLockerResponse>('/locker/unclaim', true);
+	const response = await apiRequest<UnclaimLockerResponse>('/locker/unclaim', true, {
+		method: 'POST'
+	});
 	const unclaim = createSuccessResponse(UnclaimLockerResponseSchema).safeParse(response);
 	if (unclaim.success) {
 		return unclaim.data as SuccessResponse<UnclaimLockerResponse>;

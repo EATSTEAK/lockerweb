@@ -4,19 +4,19 @@ import { variables } from '../variables';
 export async function apiRequest<T>(
 	endpoint: string,
 	withAuth = false,
-	postBody?: unknown
+	{ method, body }: { method: 'GET' | 'POST'; body?: unknown } = { method: 'GET' }
 ): Promise<SuccessResponse<T> | ErrorResponse<LockerError>> {
 	let response;
 	try {
 		if (withAuth) {
 			response = await fetchWithAuth(variables.baseUrl + '/api/v1' + endpoint, {
-				method: postBody ? 'POST' : 'GET',
-				...(postBody && { body: JSON.stringify(postBody) })
+				method,
+				...(body && { body: JSON.stringify(body) })
 			}).then((res) => res.json());
 		} else {
 			response = await fetch(variables.baseUrl + '/api/v1' + endpoint, {
-				method: postBody ? 'POST' : 'GET',
-				...(postBody && { body: JSON.stringify(postBody) })
+				method,
+				...(body && { body: JSON.stringify(body) })
 			}).then((res) => res.json());
 		}
 	} catch (e) {

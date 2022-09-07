@@ -90,7 +90,10 @@ export function getDepartmentConfigs(configs: Config[]): DepartmentConfig[] {
 export async function apiUpdateConfig(
 	updateRequest: ConfigUpdateRequest
 ): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<never>('/config/update', true, updateRequest);
+	const response = await apiRequest<never>('/config/update', true, {
+		method: 'POST',
+		body: updateRequest
+	});
 	const update = createSuccessResponse().safeParse(response);
 	if (update.success) {
 		return update.data as SuccessResponse<never>;
@@ -110,7 +113,10 @@ export async function apiUpdateConfig(
 export async function apiDeleteConfig(
 	configDeleteRequest: ConfigDeleteRequest
 ): Promise<SuccessResponse<string> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<string>('/config/delete', true, configDeleteRequest);
+	const response = await apiRequest<string>('/config/delete', true, {
+		method: 'POST',
+		body: configDeleteRequest
+	});
 	const deleteValidation = createSuccessResponse(z.string()).safeParse(response);
 	if (deleteValidation.success) {
 		return deleteValidation.data as SuccessResponse<string>;

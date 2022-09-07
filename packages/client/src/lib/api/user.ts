@@ -72,7 +72,10 @@ export async function apiGetUser(
 export async function apiUpdateUser(
 	userUpdateRequest: UserUpdateRequest
 ): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<never>('/user/update', true, userUpdateRequest);
+	const response = await apiRequest<never>('/user/update', true, {
+		method: 'POST',
+		body: userUpdateRequest
+	});
 	const update = createSuccessResponse().safeParse(response);
 	if (update.success) {
 		return update.data as SuccessResponse<never>;
@@ -92,7 +95,10 @@ export async function apiUpdateUser(
 export async function apiDeleteUser(
 	userDeleteRequest: UserDeleteRequest
 ): Promise<SuccessResponse<UserDeleteRequest> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<UserDeleteRequest>('/user/delete', true, userDeleteRequest);
+	const response = await apiRequest<UserDeleteRequest>('/user/delete', true, {
+		method: 'POST',
+		body: userDeleteRequest
+	});
 	const deleteValidation = createSuccessResponse(UserDeleteRequestSchema).safeParse(response);
 	if (deleteValidation.success) {
 		return deleteValidation.data as SuccessResponse<UserDeleteRequest>;
@@ -139,7 +145,10 @@ export async function apiBatchPutUser(
 			...(user.claimedUntil && { claimedUntil: user.claimedUntil.toISOString() })
 		};
 	}
-	const response = await apiRequest<never>('/user/batch/put', true, users.map(toUserResponse));
+	const response = await apiRequest<never>('/user/batch/put', true, {
+		method: 'POST',
+		body: users.map(toUserResponse)
+	});
 	const batchPut = createSuccessResponse().safeParse(response);
 	if (batchPut.success) {
 		return batchPut.data as SuccessResponse<never>;
@@ -159,7 +168,10 @@ export async function apiBatchPutUser(
 export async function apiBatchDeleteUser(
 	batchUserDeleteRequest: string[]
 ): Promise<SuccessResponse<never> | ErrorResponse<BadRequestError | ForbiddenError>> {
-	const response = await apiRequest<never>('/user/batch/delete', true, batchUserDeleteRequest);
+	const response = await apiRequest<never>('/user/batch/delete', true, {
+		method: 'POST',
+		body: batchUserDeleteRequest
+	});
 	const batchDelete = createSuccessResponse().safeParse(response);
 	if (batchDelete.success) {
 		return batchDelete.data as SuccessResponse<never>;
