@@ -12,6 +12,7 @@
 	let section: string;
 	let lockerNum: number;
 	let claimedUntil: Date;
+
 	$: if (reservedLocker) {
 		const [building_, floor_, locker] = reservedLocker.lockerId.split('-');
 		buildingId = building_;
@@ -27,22 +28,28 @@
 	<div class='user-reserve-locker-container w-full'>
 		<h4 class='text-4xl'>내 정보</h4>
 		<h5 class='text-xl text-blue-500 mt-3'>예약한 사물함</h5>
-		<div on:click={() => dispatch('unclaim')} class='hover-wrapper cursor-pointer relative w-56 h-44 rounded-2xl'>
+		<div class:pointer-events-none={reservedLocker === null} on:click={() => {dispatch('unclaim')}}
+				 class='hover-wrapper cursor-pointer relative w-56 h-44 rounded-2xl'>
 			<div
 				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-2 mr-2 rounded-lg'>
 				<Dismiss />
 			</div>
-			<div
-				class='hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl'>
-				예약 취소
+			<div class:invisible={reservedLocker !== null} class:backdrop-blur-sm={reservedLocker === null}
+					 class='hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'>
+				{#if reservedLocker !== null}
+					예약 취소
+				{:else}
+					<p class='text-xl'>예약된 사물함이 없음</p>
+				{/if}
 			</div>
 			<div
 				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex p-2 gap-1'>
 				<div class='flex flex-col w-2/5 h-40 bg-gray-300 rounded-2xl text-center justify-center items-center'>
 					<div class='text-2xl font-extrabold align-middle'>구역</div>
-					<div class='location text-7xl font-extrabold'>{section}</div>
+					<div class:invisible={reservedLocker === null} class='location text-7xl font-extrabold'>{section}</div>
 				</div>
-				<div class='number text-primary-800 grow text-7xl font-extrabold text-center'>{lockerNum}</div>
+				<div class:invisible={reservedLocker === null}
+						 class='number text-primary-800 grow text-7xl font-extrabold text-center'>{lockerNum}</div>
 			</div>
 		</div>
 		{#if claimedUntil}
