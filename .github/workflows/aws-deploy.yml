@@ -44,5 +44,7 @@ jobs:
         run: pnpm install --global concurrently cross-env
       - name: Build
         run: pnpm build
-      - name: Deploy
-        run: pnpm deploy
+      - name: Deploy server
+        run: pnpm -r --filter=server deploy --parameter-overrides "JwtSecret=\"${{ secrets.JWT_SECRET }}\""
+      - name: Deploy client
+        run: pnpm -r --filter=client deploy
