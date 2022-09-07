@@ -156,7 +156,8 @@ export const queryLockers = async function (
 	return res.Items.map((item) => {
 		const ret: ReservedLocker = {
 			lockerId: item.lockerId?.S,
-			...(item.cu?.N && { claimedUntil: new Date(parseInt(item.cU?.N)) })
+			...(item.cu?.N &&
+				parseInt(item.cu?.N) >= 0 && { claimedUntil: new Date(parseInt(item.cU?.N)) })
 		};
 		if (showId) ret.id = item.id.S;
 		return ret;
