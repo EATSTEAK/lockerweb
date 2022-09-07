@@ -28,8 +28,8 @@
 		targetDepartmentId = $user.result.department;
 	}
 
-	if(browser && !getAuthorization()) {
-			deleteSessionAndGoIndex();
+	if (browser && !getAuthorization()) {
+		deleteSessionAndGoIndex();
 	}
 
 	// 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
@@ -88,7 +88,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class='grow overflow-scroll'>
+	<div class='grow'>
 		<LockerReserveInfo {targetDepartmentId} {serviceConfig} />
 	</div>
 

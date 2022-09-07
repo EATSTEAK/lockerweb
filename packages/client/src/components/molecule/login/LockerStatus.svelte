@@ -25,7 +25,7 @@
 			<Tag class='bg-gray-200 text-primary-800'>{new Date().getMonth() + 1}/{new Date().getDate()}</Tag>
 		</div>
 		{#if lockerCount}
-			<div transition:fade>
+			<div transition:fade class='overflow-x-auto'>
 				<DepartmentSelectionGroup bind:selectedId={selectedDept}>
 					{#each Object.entries(lockerCount ?? {}) as [key, value], index(key)}
 						<DepartmentSelection id={key} departmentText={value.departmentName} lockerLeft={value.lockerLeft}
@@ -36,7 +36,7 @@
 				</DepartmentSelectionGroup>
 			</div>
 		{:else}
-			<div class='flex gap-2 py-2 overflow-x-scroll overflow-y-hidden'>
+			<div class='flex gap-2 py-2 overflow-x-auto overflow-y-hidden'>
 				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
 				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
 				<Skeleton class='w-[160px] h-[160px] basis-[160px] grow-0 shrink-0 bg-gray-200 rounded-2xl' />
