@@ -2,7 +2,7 @@
   "TableName": "LockerTable",
   "AttributeDefinitions": [
     {
-      "AttributeName": "dept",
+      "AttributeName": "type",
       "AttributeType": "S"
     },
     {
@@ -16,7 +16,7 @@
   ],
   "KeySchema": [
     {
-      "AttributeName": "dept",
+      "AttributeName": "type",
       "KeyType": "HASH"
     },
     {
@@ -24,12 +24,12 @@
       "KeyType": "RANGE"
     }
   ],
-  "GlobalSecondaryIndexes": [
+  "LocalSecondaryIndexes": [
     {
       "IndexName": "lockerIdIndex",
       "KeySchema": [
         {
-          "AttributeName": "dept",
+          "AttributeName": "type",
           "KeyType": "HASH"
         },
         {
@@ -40,7 +40,10 @@
       "Projection": {
         "ProjectionType": "INCLUDE",
         "NonKeyAttributes": [
-          "claimedUntil"
+          "iA",
+          "d",
+          "n",
+          "cU"
         ]
       }
     }

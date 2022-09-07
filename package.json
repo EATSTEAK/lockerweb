@@ -1,25 +1,28 @@
 {
-  "name": "ssu-it-locker",
-  "version": "0.0.1",
+  "name": "lockerweb",
+  "version": "0.9.0",
   "description": "SSU IT Collage Locker system.",
   "private": true,
   "scripts": {
-    "build": "pnpm --filter=./packages/** --stream build",
-    "dev": "pnpm --filter=./packages/** --stream dev",
-    "delete": "pnpm delete --filter=client && pnpm delete --filter=server --stream",
-    "deploy": "pnpm deploy --filter=client && pnpm deploy --filter=server --stream"
+    "build": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client build \" \"pnpm run -r -filter=server build\"",
+    "dev": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client dev \" \"pnpm run -r -filter=server dev\"",
+    "delete": "pnpm run --filter=client delete && pnpm --filter=server delete",
+    "deploy": "pnpm run --filter=client deploy && pnpm --filter=server deploy"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EATSTEAK/ssu-it-locker.git"
+    "url": "git+https://github.com/EATSTEAK/lockerweb.git"
   },
   "workspaces": [
     "packages/*"
   ],
-  "author": "EATSTEAK <me@eatsteak.dev>",
+  "author": "EATSTEAK <me@eatsteak.dev>, Twince <tjsdn811@gmail.com>,  UnbroKen <unbroken2650@gmail.com>, SamSim <jun78111209@gmail.com>, intersoom <sallybig@naver.com>, Suho Han <hansuho36eie@soongsil.ac.kr>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/EATSTEAK/ssu-it-locker/issues"
+    "url": "https://github.com/EATSTEAK/lockerweb/issues"
   },
-  "homepage": "https://github.com/EATSTEAK/ssu-it-locker#readme"
+  "homepage": "https://github.com/EATSTEAK/lockerweb",
+  "devDependencies": {
+    "concurrently": "^7.3.0"
+  }
 }

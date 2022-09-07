@@ -1,3 +1,4 @@
 dist/
 env.ts
 src/lockers.json
+env.json

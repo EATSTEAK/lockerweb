@@ -13,14 +13,22 @@ Parameters:
   AwsSamLocal:
     Type: String
     Default: ''
+  AdminId:
+    Type: String
+    Default: '20211561'
+  JwtSecret:
+    Type: String
+    Default: 'this-is-sample-secret-key'
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 30
     Environment:
       Variables:
         TABLE_NAME: !Ref TableName
         AWS_SAM_LOCAL: !Ref AwsSamLocal
+        ADMIN_ID: !Ref AdminId
+        JWT_SECRET: !Ref JWT_SECRET
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
@@ -35,40 +43,80 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        AuthCallback:
+        AuthSsuLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/auth/callback
+            Path: /api/v1/auth/ssu_login
             Method: options
         AuthLogout:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/auth/logout
+            Path: /api/v1/auth/logout
             Method: options
-        LockerList:
+        ConfigGet:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/locker/list
+            Path: /api/v1/config
+            Method: options
+        ConfigUpdate:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/config/update
+            Method: options
+        ConfigDelete:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/config/delete
             Method: options
         LockerClaim:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/locker/claim
+            Path: /api/v1/locker/claim
+            Method: options
+        LockerUnclaim:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/locker/unclaim
             Method: options
         LockerCount:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/locker/count
+            Path: /api/v1/locker/count
+            Method: options
+        LockerQuery:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/locker/query
             Method: options
         UserGet:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/user/get
+            Path: /api/v1/user
             Method: options
         UserUpdate:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/user/update
+            Path: /api/v1/user/update
+            Method: options
+        UserDelete:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/user/delete
+            Method: options
+        UserQuery:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/user/query
+            Method: options
+        UserBatchDelete:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/user/batch/delete
+            Method: options
+        UserBatchPut:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /api/v1/user/batch/put
             Method: options
   DependenciesLayer:
     Type: AWS::Serverless::LayerVersion
@@ -80,11 +128,11 @@ Resources:
       CompatibleRuntimes:
         - nodejs14.x
   # Backend Lambda Resources
-  AuthCallbackFunction:
+  AuthSsuLoginFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: auth.callbackHandler
+      Handler: handler.auth.ssuLoginHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -95,16 +143,16 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        AuthCallback:
+        AuthSsuLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/auth/callback
+            Path: /api/v1/auth/ssu_login
             Method: get
   AuthLogoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: auth.logoutHandler
+      Handler: handler.auth.logoutHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -118,13 +166,13 @@ Resources:
         AuthLogout:
           Type: Api
           Properties:
-            Path: /api/auth/logout
+            Path: /api/v1/auth/logout
             Method: get
-  LockerListFunction:
+  ConfigGetFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: locker.getClaimedLockersHandler
+      Handler: handler.config.getConfigHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -135,16 +183,16 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerList:
+        ConfigGet:
           Type: Api
           Properties:
-            Path: /api/locker/list
+            Path: /api/v1/config
             Method: get
-  LockerCountFunction:
+  ConfigUpdateFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: locker.getClaimedLockerCountHandler
+      Handler: handler.config.updateConfigHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -155,16 +203,36 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        LockerCount:
+        ConfigUpdate:
           Type: Api
           Properties:
-            Path: /api/locker/count
-            Method: get
+            Path: /api/v1/config/update
+            Method: post
+  ConfigDeleteFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.config.deleteConfigHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        ConfigDelete:
+          Type: Api
+          Properties:
+            Path: /api/v1/config/delete
+            Method: post
   LockerClaimFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: locker.claimLockerHandler
+      Handler: handler.locker.claimLockerHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -178,13 +246,73 @@ Resources:
         LockerClaim:
           Type: Api
           Properties:
-            Path: /api/locker/claim
+            Path: /api/v1/locker/claim
             Method: post
+  LockerUnclaimFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.locker.unclaimLockerHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        LockerUnclaim:
+          Type: Api
+          Properties:
+            Path: /api/v1/locker/unclaim
+            Method: post
+  LockerCountFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.locker.getClaimedLockerCountHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        LockerCount:
+          Type: Api
+          Properties:
+            Path: /api/v1/locker/count
+            Method: get
+  LockerQueryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.locker.queryClaimedLockersHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        LockerQuery:
+          Type: Api
+          Properties:
+            Path: /api/v1/locker/query
+            Method: get
   UserGetFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: user.getUserInfoHandler
+      Handler: handler.user.getUserHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -198,13 +326,33 @@ Resources:
         UserGet:
           Type: Api
           Properties:
-            Path: /api/user/get
+            Path: /api/v1/user
+            Method: get
+  UserQueryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.user.queryUserHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        UserQuery:
+          Type: Api
+          Properties:
+            Path: /api/v1/user/query
             Method: get
   UserUpdateFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: user.updateUserInfoHandler
+      Handler: handler.user.updateUserHandler
       Runtime: nodejs14.x
       Layers:
         - !Ref DependenciesLayer
@@ -218,7 +366,67 @@ Resources:
         UserUpdate:
           Type: Api
           Properties:
-            Path: /api/user/update
+            Path: /api/v1/user/update
+            Method: post
+  UserDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.user.deleteUserHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        UserDelete:
+          Type: Api
+          Properties:
+            Path: /api/v1/user/delete
+            Method: post
+  UserBatchDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.user.batchDeleteUserHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        UserBatchDelete:
+          Type: Api
+          Properties:
+            Path: /api/v1/user/batch/delete
+            Method: post
+  UserBatchPutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: handler.user.batchPutUserHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref DependenciesLayer
+      Policies:
+        - AWSLambdaExecute
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Architectures:
+        - x86_64
+      Events:
+        UserBatchPut:
+          Type: Api
+          Properties:
+            Path: /api/v1/user/batch/put
             Method: post
   DynamoDBLockerTable:
     Type: AWS::DynamoDB::Table
@@ -227,26 +435,31 @@ Resources:
     Properties:
       TableName: !Ref TableName
       AttributeDefinitions:
+        - AttributeName: type
+          AttributeType: S
         - AttributeName: id
           AttributeType: S
         - AttributeName: lockerId
           AttributeType: S
       KeySchema:
-        - AttributeName: dept
+        - AttributeName: type
           KeyType: HASH
         - AttributeName: id
           KeyType: RANGE
-      GlobalSecondaryIndexes:
+      LocalSecondaryIndexes:
         - IndexName: lockerIdIndex
           KeySchema:
-            - AttributeName: dept
+            - AttributeName: type
               KeyType: HASH
             - AttributeName: lockerId
               KeyType: RANGE
           Projection:
             ProjectionType: INCLUDE
             NonKeyAttributes:
-              - claimedUntil
+              - iA
+              - n
+              - d
+              - cU
       BillingMode: 'PAY_PER_REQUEST'
   FrontS3Bucket:
     DeletionPolicy: 'Delete'
@@ -276,8 +489,8 @@ Resources:
     Properties:
       CachePolicyConfig:
         Name: 'ApiCachePolicy'
-        DefaultTTL: 3600
-        MaxTTL: 31536000
+        DefaultTTL: 1
+        MaxTTL: 1
         MinTTL: 0
         ParametersInCacheKeyAndForwardedToOrigin:
           CookiesConfig:
