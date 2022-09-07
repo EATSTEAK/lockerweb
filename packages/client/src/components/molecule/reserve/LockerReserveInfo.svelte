@@ -8,7 +8,7 @@
 	import Bookmark from '../../../icons/Bookmark.svelte';
 	import { browser } from '$app/env';
 	import { user } from '$lib/store';
-	import { apiClaimLocker, apiQueryLocker } from '$lib/api/locker';
+	import { apiClaimLocker, apiQueryLocker, apiUnclaimLocker } from '$lib/api/locker';
 	import { getBuildingName } from '$lib/utils.js';
 	import FloorMap from '../../atom/FloorMap.svelte';
 
@@ -33,6 +33,7 @@
 	let reservedLockers: string[];
 	let errorData: LockerError;
 	let claimErrorData: LockerError;
+	let unClaimErrorData: LockerError;
 
 	let claimLoading: boolean = false;
 
@@ -92,6 +93,30 @@
 			claimErrorData = e;
 		});
 		console.debug('Reserving', lockerId);
+	}
+
+	function unReserveLocker() {
+		claimLoading = true;
+		apiUnclaimLocker().then((res) => {
+			if (res.success) {
+				claimLoading = false;
+				queryLockerData();
+				console.debug('사물함 반납됨');
+			} else {
+				if (res.success === false) {
+					unClaimErrorData = res.error;
+				} else {
+					console.log(res);
+					errorData = {
+						code: 500,
+						name: 'UnknownError'
+					};
+				}
+			}
+		}).catch(e => {
+			console.error(e);
+			unClaimErrorData = e;
+		});
 	}
 
 	function getSectionRange(subsections: LockerSubsection[]) {
