@@ -24,6 +24,7 @@
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 
 	let innerWidth: number = 0;
+	let contentWidth: number = 0;
 
 	let reservedLocker: ReservedLocker;
 	let reservedLockerIds: string[];
@@ -198,7 +199,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class='h-full relative' bind:clientWidth={innerWidth}>
+	<div class='h-full relative' bind:clientWidth={contentWidth}>
 		{#if !errorData}
 			{#if selectedLockerId && !isClaiming && !isUnclaiming}
 				<SelectedLockerAlert {selectedLockerId} width={innerWidth}
