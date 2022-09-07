@@ -45,6 +45,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Deploy server
-        run: pnpm -r --filter=server deploy --parameter-overrides "JwtSecret=\"${{ secrets.JWT_SECRET }}\""
+        run: pnpm -r --filter=server run deploy --parameter-overrides "JwtSecret=\"${{ secrets.JWT_SECRET }}\""
       - name: Deploy client
-        run: pnpm -r --filter=client deploy
+        run: pnpm -r --filter=client run deploy
