@@ -57,3 +57,20 @@ export function getBuildingName(
 ): string {
 	return buildings?.[buildingId]?.name;
 }
+
+export function extractLockerInfoFromId(lockerId: string): {
+	buildingId: string;
+	floor: string;
+	sectionId: string;
+	lockerNum: number;
+} {
+	const [buildingId, floor, locker] = lockerId.split('-');
+	const sectionId = locker.slice(0, 1);
+	const lockerNum = parseInt(locker.slice(1));
+	return {
+		buildingId,
+		floor,
+		sectionId,
+		lockerNum
+	};
+}
