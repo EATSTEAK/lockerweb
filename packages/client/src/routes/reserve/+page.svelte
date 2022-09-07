@@ -14,12 +14,14 @@
 	import Modal from '../../components/molecule/Modal.svelte';
 	import Dismiss from '../../icons/Dismiss.svelte';
 	import Skeleton from '../../components/atom/Skeleton.svelte';
+	import BookmarkOff from '../../icons/BookmarkOff.svelte';
 
 	let innerWidth: number = 0;
 
 	let reservedLocker: ReservedLocker;
 	let targetDepartmentId: string;
 	let contactModalOpen = false;
+	let unclaimModalOpen = false;
 
 	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
@@ -56,6 +58,12 @@
 		}
 		return null;
 	}
+
+	function unclaimLocker() {
+		unclaimModalOpen = false;
+		console.log('unclaim');
+		// TODO: Implement unclaim request
+	}
 </script>
 
 <PageTitle name='예약하기' />
@@ -64,7 +72,7 @@
 
 <NavigationShell collapsable={innerWidth && innerWidth <= 768}>
 	<div class='w-full h-full' slot='navigation_content'>
-		<UserReservedLocker {reservedLocker} />
+		<UserReservedLocker {reservedLocker} on:unclaim={() => unclaimModalOpen = true} />
 		{#if $config && $config.success}
 			<Button on:click={() => contactModalOpen = true}
 							class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'>
@@ -110,4 +118,11 @@
 		입력된 연락처가 없습니다.
 	{/each}
 	<Dismiss slot='primaryIcon' />
+</Modal>
+
+<Modal title='예약 취소 확인' bind:open={unclaimModalOpen} primaryText='예약 취소'
+			 on:click={() => unclaimLocker()}
+			 on:click:secondary={() => unclaimModalOpen = false} on:close={() => unclaimModalOpen = false}>
+	정말로 예약하신 사물함을 예약 취소하시겠습니까?
+	<BookmarkOff slot='primaryIcon' />
 </Modal>
