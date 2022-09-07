@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 
-exec('aws cloudformation describe-stacks --stack-name ssu-it-locker', (err, stdout, stderr) => {
+exec('aws cloudformation describe-stacks --stack-name lockerweb', (err, stdout, stderr) => {
 	if (err) {
 		console.error(`Exception thrown: ${err.message}`);
 		return;
