@@ -106,8 +106,8 @@
 		apiClaimLocker(
 			lockerId
 		).then((res) => {
+			isClaiming = false;
 			if (res.success) {
-				isClaiming = false;
 				user.refresh();
 				queryLockerData();
 			} else {
@@ -122,6 +122,7 @@
 				}
 			}
 		}).catch(e => {
+			isClaiming = false;
 			console.error(e);
 			errorData = e;
 		});
@@ -131,9 +132,9 @@
 		unclaimModalOpen = false;
 		isUnclaiming = true;
 		apiUnclaimLocker().then((res) => {
+			isUnclaiming = false;
 			if (res.success) {
 				queryLockerData();
-				isUnclaiming = false;
 			} else {
 				if (res.success === false) {
 					errorData = res.error;
@@ -146,6 +147,7 @@
 				}
 			}
 		}).catch(e => {
+			isUnclaiming = false;
 			console.error(e);
 			errorData = e;
 		});
