@@ -3,13 +3,6 @@
 	import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
 	import LockerList from './LockerList.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
-	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
-	import Modal from '../Modal.svelte';
-	import Bookmark from '../../../icons/Bookmark.svelte';
-	import { browser } from '$app/env';
-	import { user } from '$lib/store';
-	import { apiClaimLocker, apiQueryLocker, apiUnclaimLocker } from '$lib/api/locker';
-	import { getBuildingName } from '$lib/utils.js';
 	import FloorMap from '../../atom/FloorMap.svelte';
 
 	let innerWidth: number = 0;
@@ -21,7 +14,7 @@
 	let selectedBuildingId: string;
 	let selectedFloor: string;
 	let selectedSectionId: string;
-	let selectedLockerId: string;
+	export let selectedLockerId: string;
 	let selectedLockerNum: number;
 	$: if (selectedLockerId) {
 		const [, , location] = selectedLockerId.split('-');
@@ -30,93 +23,13 @@
 		selectedLockerNum = undefined;
 	}
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
-	let reservedLockers: string[];
+	export let reservedLockerIds: string[];
 	let errorData: LockerError;
-	let claimErrorData: LockerError;
-	let unClaimErrorData: LockerError;
 
 	let claimLoading: boolean = false;
 
-	if (browser) {
-		queryLockerData();
-	}
-
 	let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
 	let lockerGridHeight: number = 0;
-
-	function queryLockerData() {
-		apiQueryLocker().then((res) => {
-			if (res.success) {
-				reservedLockers = res.result.map(reservedLocker => reservedLocker.lockerId);
-				user.refresh();
-			} else {
-				if (res.success === false) {
-					errorData = res.error;
-				} else {
-					console.error(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
-				}
-			}
-		}).catch(e => {
-			console.error(e);
-			errorData = e;
-		});
-	}
-
-	function claimLocker(lockerId: string) {
-		openReserveModal = false;
-		alertActive = false;
-		claimLoading = true;
-		apiClaimLocker(
-			lockerId
-		).then((res) => {
-			if (res.success) {
-				claimLoading = false;
-				queryLockerData();
-				console.debug('사물함 예약됨');
-			} else {
-				if (res.success === false) {
-					claimErrorData = res.error;
-				} else {
-					console.error(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
-				}
-			}
-		}).catch(e => {
-			console.error(e);
-			claimErrorData = e;
-		});
-	}
-
-	function unClaimLocker() {
-		claimLoading = true;
-		apiUnclaimLocker().then((res) => {
-			if (res.success) {
-				claimLoading = false;
-				queryLockerData();
-				console.debug('사물함 반납됨');
-			} else {
-				if (res.success === false) {
-					unClaimErrorData = res.error;
-				} else {
-					console.log(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
-				}
-			}
-		}).catch(e => {
-			console.error(e);
-			unClaimErrorData = e;
-		});
-	}
 
 	function getSectionRange(subsections: LockerSubsection[]) {
 		return subsections.reduce(([min, max], subsection) => {
@@ -126,7 +39,7 @@
 		}, [-1, -1]);
 	}
 
-	$: if (selectedSection && reservedLockers) {
+	$: if (selectedSection && reservedLockerIds) {
 		const sectionRange = getSectionRange(selectedSection.subsections);
 		const lockerCount = sectionRange[1] - sectionRange[0] + 1;
 
@@ -140,7 +53,7 @@
 				const lockerNum = sectionRange[0] + idx;
 				const lockerId = constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, lockerNum);
 				const disabled = selectedSection.disabled.includes(lockerNum);
-				const reserved = reservedLockers.includes(lockerId);
+				const reserved = reservedLockerIds.includes(lockerId);
 				return {
 					lockerId,
 					disabled,
@@ -149,21 +62,10 @@
 			});
 		lockerGridHeight = selectedSection.height;
 	}
-
-	let openReserveModal: boolean;
-
-	/** selected locker alert */
-	let alertActive: boolean;
-	$: (selectedSection && selectedLockerNum) ? alertActive = true : alertActive = false;
 </script>
 
 
-<div bind:clientWidth={innerWidth} class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
-	{#if alertActive}
-		<SelectedLockerAlert {selectedBuildingId} {selectedFloor} {selectedSectionId} {selectedLockerNum}
-												 width={innerWidth} on:click:secondary={() => selectedLockerId = undefined}
-												 on:click={() => openReserveModal = true} />
-	{/if}
+<div class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
 	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
 		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
 			{#if serviceConfig && targetDepartmentId}
@@ -182,37 +84,25 @@
 		<div class='bg-slate-200 md:basis-1/2 grow'>
 			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<FloorMap class='w-full h-full' {selectedBuildingId} {selectedFloor} {selectedSectionId} />
+					<FloorMap class='w-full h-full aspect-[4/3]' {selectedBuildingId} {selectedFloor} {selectedSectionId} />
 				</div>
 			{:else}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<Skeleton class='w-full max-w-[600px] h-full max-h-[400px] bg-gray-300 rounded-xl' />
+					<div class='w-full h-full rounded-xl bg-gray-300 animate-pulse'></div>
 				</div>
 			{/if}
 		</div>
 	</div>
 	<div class='locker-grid flex items-center overflow-x-auto overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
-			{#if (selectedSection && reservedLockers) && !claimLoading}
+			{#if selectedSection && reservedLockerIds}
 				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
 			{:else}
-				{#if claimLoading}
-					<LockerLoadingScreen class='w-full min-h-[340px]' message='예약 중..'
-															 selectedLockerInfo={`${selectedFloor}층 | ${selectedSectionId}구역 - ${selectedLockerNum}번`} />
-				{:else}
-					<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중..' />
-				{/if}
+				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중..' />
 			{/if}
 		{/key}
 	</div>
 </div>
-
-<Modal title='예약 확인' bind:open={openReserveModal} primaryText='예약하기' on:click={() => claimLocker(selectedLockerId)}
-			 on:click:secondary={() => openReserveModal = false} on:close={() => openReserveModal = false}>
-	정말로 {getBuildingName(serviceConfig?.buildings, selectedBuildingId)} {selectedFloor}층 {selectedSectionId}
-	구역 {selectedLockerNum}번 사물함을 대여하시겠습니까?
-	<Bookmark slot='primaryIcon' />
-</Modal>
 
 <style>
     /* -------------- 사물함 그리드 영역 -------------- */

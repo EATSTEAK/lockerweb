@@ -1,6 +1,6 @@
 <script lang='ts'>
 	export let message: string = '사물함 불러오는 중...';
-	export let selectedLockerInfo: string;
+	export let selectedLockerInfo: string = null;
 	let clazz = '';
 	export { clazz as class };
 	import Locker from '../../icons/Locker.svelte';

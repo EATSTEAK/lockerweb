@@ -5,14 +5,23 @@
 	import Bookmark from '../../icons/Bookmark.svelte';
 	import { config } from '$lib/store';
 	import { getServiceConfig } from '$lib/api/config';
-	import { getBuildingName } from '$lib/utils.js';
+	import { extractLockerInfoFromId, getBuildingName } from '$lib/utils.js';
 
 	export let width: number;
 
-	export let selectedBuildingId: string;
-	export let selectedFloor: number;
-	export let selectedSectionId: string;
-	export let selectedLockerNum: number;
+	export let selectedLockerId: string;
+	let buildingId: string;
+	let floor: string;
+	let sectionId: string;
+	let lockerNum: number;
+	$: if(selectedLockerId) {
+		const lockerInfo = extractLockerInfoFromId(selectedLockerId);
+		buildingId = lockerInfo.buildingId;
+		floor = lockerInfo.floor;
+		sectionId = lockerInfo.sectionId;
+		lockerNum = lockerInfo.lockerNum;
+	}
+
 
 	export let primaryClass: string = '';
 	export let secondaryClass: string = '';
@@ -38,10 +47,10 @@
 	rounded-xl z-50' style={`width:${width-42}px; background: rgba(80, 80, 80, 0.8);`}>
 	<div class='flex flex-row gap-2 items-center px-1'>
 		<h6 class='text-white bg-[#5F5F5F] rounded-lg py-1 px-2'>선택됨</h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig.buildings, selectedBuildingId)}<span
+		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig.buildings, buildingId)}<span
 			class='pl-2 not-italic'>|</span></h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedFloor}층<span class='pl-2 not-italic'>|</span></h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{selectedSectionId}구역-{selectedLockerNum}</h6>
+		<h6 class='text-[#D5FFD4] italic font-semibold'>{floor}층<span class='pl-2 not-italic'>|</span></h6>
+		<h6 class='text-[#D5FFD4] italic font-semibold'>{sectionId}구역-{lockerNum}</h6>
 	</div>
 	<div class='flex flex-row flex-end flex-grow justify-end gap-2 items-center mr-1'>
 		<Button on:click={() => click('secondary')}
