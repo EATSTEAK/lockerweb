@@ -135,6 +135,7 @@
 			isUnclaiming = false;
 			if (res.success) {
 				queryLockerData();
+				user.refresh();
 			} else {
 				if (res.success === false) {
 					errorData = res.error;
