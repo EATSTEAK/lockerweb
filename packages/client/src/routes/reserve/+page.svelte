@@ -26,6 +26,8 @@
 	$:if ($user && $user.success) {
 		reservedLocker = getUserReservedLocker($user.result);
 		targetDepartmentId = $user.result.department;
+	} else {
+		reservedLocker = undefined;
 	}
 
 	if (browser && !getAuthorization()) {

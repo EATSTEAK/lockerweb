@@ -4,11 +4,12 @@
 	import LockerList from './LockerList.svelte';
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
 	import SelectedLockerAlert from '../SelectedLockerAlert.svelte';
-	import { browser } from '$app/env';
-	import { apiQueryLocker } from '$lib/api/locker';
 	import Modal from '../Modal.svelte';
-	import { getBuildingName } from '$lib/utils.js';
 	import Bookmark from '../../../icons/Bookmark.svelte';
+	import { browser } from '$app/env';
+	import { user } from '$lib/store';
+	import { apiClaimLocker, apiQueryLocker } from '$lib/api/locker';
+	import { getBuildingName } from '$lib/utils.js';
 	import FloorMap from '../../atom/FloorMap.svelte';
 
 	let innerWidth: number = 0;
@@ -31,6 +32,9 @@
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 	let reservedLockers: string[];
 	let errorData: LockerError;
+	let claimErrorData: LockerError;
+
+	let claimLoading: boolean = false;
 
 	if (browser) {
 		queryLockerData();
@@ -43,6 +47,7 @@
 		apiQueryLocker().then((res) => {
 			if (res.success) {
 				reservedLockers = res.result.map(reservedLocker => reservedLocker.lockerId);
+				user.refresh();
 			} else {
 				if (res.success === false) {
 					errorData = res.error;
@@ -62,7 +67,30 @@
 
 	function reserveLocker(lockerId: string) {
 		openReserveModal = false;
-		// TODO: Reserve locker
+		alertActive = false;
+		claimLoading = true;
+		apiClaimLocker(
+			lockerId
+		).then((res) => {
+			if (res.success) {
+				claimLoading = false;
+				queryLockerData();
+				console.debug('사물함 예약됨');
+			} else {
+				if (res.success === false) {
+					claimErrorData = res.error;
+				} else {
+					console.error(res);
+					errorData = {
+						code: 500,
+						name: 'UnknownError'
+					};
+				}
+			}
+		}).catch(e => {
+			console.error(e);
+			claimErrorData = e;
+		});
 		console.debug('Reserving', lockerId);
 	}
 
@@ -141,10 +169,15 @@
 	</div>
 	<div class='locker-grid flex items-center overflow-x-auto overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
-			{#if selectedSection && reservedLockers}
+			{#if (selectedSection && reservedLockers) && !claimLoading}
 				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
 			{:else}
-				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중...' />
+				{#if claimLoading}
+					<LockerLoadingScreen class='w-full min-h-[340px]' message='예약 중..'
+															 selectedLockerInfo={`${selectedFloor}층 | ${selectedSectionId}구역 - ${selectedLockerNum}번`} />
+				{:else}
+					<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중..' />
+				{/if}
 			{/if}
 		{/key}
 	</div>

@@ -19,7 +19,7 @@
 	const dateFormatter = new Intl.DateTimeFormat('ko', { timeStyle: 'short', dateStyle: 'short' });
 	$: claimedUntilDisplay = claimedUntil ? dateFormatter.format(claimedUntil) : '';
 </script>
-{#if section !== undefined}
+{#if reservedLocker !== undefined}
 	<div class='w-full'>
 		<h4 class='text-4xl'>내 정보</h4>
 		<h5 class='text-xl text-blue-500 mt-3'>예약한 사물함</h5>
