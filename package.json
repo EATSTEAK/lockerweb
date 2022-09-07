@@ -6,8 +6,8 @@
   "scripts": {
     "build": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client build \" \"pnpm run -r -filter=server build\"",
     "dev": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client dev \" \"pnpm run -r -filter=server dev\"",
-    "delete": "pnpm run --filter=client delete && pnpm --filter=server delete",
-    "deploy": "pnpm run --filter=client deploy && pnpm --filter=server deploy"
+    "delete": "pnpm run --filter=client delete && pnpm run --filter=server delete",
+    "deploy": "pnpm run --filter=server deploy && pnpm run --filter=client deploy"
   },
   "repository": {
     "type": "git",

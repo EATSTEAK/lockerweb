@@ -28,7 +28,7 @@ Globals:
         TABLE_NAME: !Ref TableName
         AWS_SAM_LOCAL: !Ref AwsSamLocal
         ADMIN_ID: !Ref AdminId
-        JWT_SECRET: !Ref JWT_SECRET
+        JWT_SECRET: !Ref JwtSecret
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
