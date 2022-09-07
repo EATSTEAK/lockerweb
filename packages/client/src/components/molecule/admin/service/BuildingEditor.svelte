@@ -70,7 +70,6 @@
 	}
 
 	function sectionUpdate(evt: CustomEvent<SectionUpdateRequest>) {
-		console.log('update', selectedBuilding, evt.detail);
 		const { floor, id, height, disabled, subsections } = evt.detail;
 		if (!buildings[selections[0]].lockers) buildings[selections[0]].lockers = {};
 		if (!buildings[selections[0]].lockers[floor]) buildings[selections[0]].lockers[floor] = {};
@@ -80,26 +79,30 @@
 			disabled
 		};
 		buildings = { ...buildings };
-		console.log(buildings);
 	}
 
 	function sectionRemove(evt: CustomEvent<SectionRemoveRequest>) {
-		console.log('remove', selectedBuilding, evt.detail);
 		const { floor, id } = evt.detail;
 		delete buildings[selections[0]].lockers[floor][id];
 		if (Object.keys(buildings[selections[0]].lockers[floor]).length === 0) delete buildings[selections[0]].lockers[floor];
 		buildings = { ...buildings };
-		console.log(buildings);
 	}
 </script>
 
-<section class='wrap'>
-	<aside class='explorer'>
+<section class='flex flex-col xl:flex-row flex-wrap gap-2'>
+	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px]'>
 		<DepthExplorer rootText='건물 선택' breadcrumbClass='p-1'
 									 class='bg-white rounded-md max-h-[480px] overflow-x-hidden overflow-y-scroll'
 									 data={depthData}
 									 bind:selections={selections}>
-			<button tabindex='0' slot='item' let:option let:selected class='depth-item' class:selected={selected}>
+			<button tabindex='0' slot='item' let:option let:selected
+							class='my-1 w-full text-gray-700 flex justify-between
+							p-2 bg-white cursor-pointer border-l-2 border-white transition-all
+							outline-primary-800 outline-0 outline-none
+							hover:brightness-90 hover:scale-[1.01]
+							active:brightness-75 active:scale-100
+							focus:brightness-75'
+							class:selected={selected}>
 				{option.name}
 				{#if option.id === 'add'}
 					<AddSquare />
@@ -107,7 +110,7 @@
 			</button>
 		</DepthExplorer>
 	</aside>
-	<article class='edit'>
+	<article class='grow rounded-md overflow-hidden'>
 		{#if selections.length === 0}
 			<SelectScreen class='min-h-[540px]' />
 		{:else if selections.length === 1}
@@ -123,35 +126,7 @@
 
 
 <style>
-    .wrap {
-        @apply flex flex-col xl:flex-row flex-wrap gap-2;
-    }
-
-    .explorer {
-        @apply p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px];
-    }
-
-    .depth-item {
-        @apply my-1 w-full text-gray-700 flex justify-between p-2 bg-white cursor-pointer border-l-2 border-white transition-all outline-primary-800 outline-0 outline-none;
-    }
-
-    .depth-item:hover {
-        @apply brightness-90 scale-[1.01];
-    }
-
-    .depth-item:active {
-        @apply brightness-75 scale-100;
-    }
-
-    .depth-item:focus {
-        @apply brightness-75;
-    }
-
     .selected {
         @apply border-primary-800 bg-gray-100 font-bold;
-    }
-
-    .edit {
-        @apply grow rounded-md overflow-hidden;
     }
 </style>
