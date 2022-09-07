@@ -119,3 +119,10 @@
 	{/each}
 	<Dismiss slot='primaryIcon' />
 </Modal>
+
+<Modal title='예약 취소 확인' bind:open={unclaimModalOpen} primaryText='예약 취소'
+			 on:click={() => unclaimLocker()}
+			 on:click:secondary={() => unclaimModalOpen = false} on:close={() => unclaimModalOpen = false}>
+	정말로 예약하신 사물함을 예약 취소하시겠습니까?
+	<BookmarkOff slot='primaryIcon' />
+</Modal>
