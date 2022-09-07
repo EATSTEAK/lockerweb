@@ -24,6 +24,7 @@
 	import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 
 	let innerWidth: number = 0;
+	let contentWidth: number = 0;
 
 	let reservedLocker: ReservedLocker;
 	let reservedLockerIds: string[];
@@ -106,8 +107,8 @@
 		apiClaimLocker(
 			lockerId
 		).then((res) => {
+			isClaiming = false;
 			if (res.success) {
-				isClaiming = false;
 				user.refresh();
 				queryLockerData();
 			} else {
@@ -122,6 +123,7 @@
 				}
 			}
 		}).catch(e => {
+			isClaiming = false;
 			console.error(e);
 			errorData = e;
 		});
@@ -131,9 +133,10 @@
 		unclaimModalOpen = false;
 		isUnclaiming = true;
 		apiUnclaimLocker().then((res) => {
+			isUnclaiming = false;
 			if (res.success) {
 				queryLockerData();
-				isUnclaiming = false;
+				user.refresh();
 			} else {
 				if (res.success === false) {
 					errorData = res.error;
@@ -146,6 +149,7 @@
 				}
 			}
 		}).catch(e => {
+			isUnclaiming = false;
 			console.error(e);
 			errorData = e;
 		});
@@ -198,7 +202,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class='h-full relative' bind:clientWidth={innerWidth}>
+	<div class='h-full relative' bind:clientWidth={contentWidth}>
 		{#if !errorData}
 			{#if selectedLockerId && !isClaiming && !isUnclaiming}
 				<SelectedLockerAlert {selectedLockerId} width={innerWidth}

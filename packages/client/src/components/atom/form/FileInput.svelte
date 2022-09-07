@@ -13,10 +13,14 @@
 	export let invalidClass: string = '';
 	export let invalidText: string = '이 값은 올바르지 않습니다.';
 
+	let ref;
 	let value;
 	let clazz = '';
 	export { clazz as class };
 
+	function openFileDialog() {
+		if(ref) ref.click();
+	}
 </script>
 
 <div class={clazz}>
@@ -24,7 +28,7 @@
 		<div>
 			<p class={labelClass} hidden={!showLabel}>{label ?? ''} <span class:hidden={!$$props.required}
 																																		class='text-red-800'>*</span></p>
-			<Button class='bg-primary-800 text-white' isIconRight>
+			<Button class='bg-primary-800 text-white' isIconRight on:click={openFileDialog}>
 				<ArrowUpload slot='icon' />
 				{#if !multiple && files && files.length}
 					다시 업로드
@@ -34,7 +38,7 @@
 			</Button>
 		</div>
 	</label>
-	<input id={id} type='file'
+	<input bind:this={ref} id={id} type='file'
 				 class={inputClass}
 				 bind:files
 				 bind:value
