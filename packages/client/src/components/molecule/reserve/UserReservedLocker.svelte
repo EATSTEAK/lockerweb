@@ -20,7 +20,7 @@
 	$: claimedUntilDisplay = claimedUntil ? dateFormatter.format(claimedUntil) : '';
 </script>
 {#if reservedLocker !== undefined}
-	<div class='w-full'>
+	<div class='user-reserve-locker-container w-full'>
 		<h4 class='text-4xl'>내 정보</h4>
 		<h5 class='text-xl text-blue-500 mt-3'>예약한 사물함</h5>
 		<div class='w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex p-2 gap-1'>
@@ -44,3 +44,17 @@
 		<Skeleton class='w-24 h-6 mt-2 bg-gray-300 rounded-lg'></Skeleton>
 	</div>
 {/if}
+
+<style>
+    .hover-wrapper:hover > .user-reserve-box {
+        @apply bg-white opacity-40 cursor-pointer transition-all;
+    }
+
+    .hover-wrapper:hover > .hover-popup {
+        @apply visible backdrop-blur-sm rounded-xl;
+    }
+
+    .user-reserve-locker-container {
+        @apply relative;
+    }
+</style>
