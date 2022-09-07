@@ -79,7 +79,7 @@
 			</Navigation>
 		</slot>
 	</section>
-	<section class='{mainClass} grow md:max-h-screen overflow-x-scroll md:overflow-y-scroll'>
+	<section class='{mainClass} grow md:max-h-screen overflow-x-auto md:overflow-y-auto'>
 		<slot />
 	</section>
 </main>

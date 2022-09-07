@@ -90,7 +90,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class='grow overflow-scroll'>
+	<div class='grow'>
 		<LockerReserveInfo {targetDepartmentId} {serviceConfig} />
 	</div>
 

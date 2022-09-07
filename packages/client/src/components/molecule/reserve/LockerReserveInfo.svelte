@@ -10,6 +10,7 @@
 	import { user } from '$lib/store';
 	import { apiClaimLocker, apiQueryLocker } from '$lib/api/locker';
 	import { getBuildingName } from '$lib/utils.js';
+	import FloorMap from '../../atom/FloorMap.svelte';
 
 	let innerWidth: number = 0;
 
@@ -145,9 +146,7 @@
 				<LockerSectionSelector {buildings} {targetDepartmentId}
 															 bind:selectedBuildingId
 															 bind:selectedFloor
-															 bind:selectedSectionId
-															 }
-				/>
+															 bind:selectedSectionId />
 			{:else}
 				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300' />
 				<div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
@@ -157,17 +156,18 @@
 			{/if}
 		</div>
 		<div class='bg-slate-200 md:basis-1/2 grow'>
-			{#if serviceConfig}
+			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<img class='max-w-full h-auto max-h-[370px]' src='/floorMaps/1F.svg' alt='정보과학관 1층 이미지'
-							 aria-level='정보과학관 1층 이미지'>
+					<FloorMap class='w-full h-full' {selectedBuildingId} {selectedFloor} {selectedSectionId} />
 				</div>
 			{:else}
-				<Skeleton class='w-full h-full max-h-[370px] bg-gray-300' />
+				<div class='p-8 w-full h-full flex justify-center items-center'>
+					<Skeleton class='w-full max-w-[600px] h-full max-h-[400px] bg-gray-300 rounded-xl' />
+				</div>
 			{/if}
 		</div>
 	</div>
-	<div class='locker-grid flex items-center overflow-x-scroll overflow-y-visible w-full self-stretch'>
+	<div class='locker-grid flex items-center overflow-x-auto overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			{#if (selectedSection && reservedLockers) && !claimLoading}
 				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />

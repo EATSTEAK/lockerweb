@@ -17,7 +17,8 @@
 
 </script>
 
-<div class='flex flex-col flex-wrap mt-2 ml-auto mr-auto' style={`width:${widthScale}rem; height:${heightScale}rem;`}>
+<div class='flex flex-col flex-wrap mt-8 mb-20 ml-auto mr-auto'
+		 style={`width:${widthScale}rem; height:${heightScale}rem;`}>
 	{#each lockers as { lockerId, disabled, reserved }, index}
 		<LockerItem class='ml-4 my-2' id={lockerId} disabled={disabled || reserved} on:click={() => selectedId = lockerId}
 								selected={selectedId === lockerId}

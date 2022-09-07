@@ -1,8 +1,8 @@
 <script lang='ts'>
-    import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
-    import { writable } from 'svelte/store';
+	import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 
-    export let selectedIndex = 0;
+	export let selectedIndex = 0;
 
 	const dispatch = createEventDispatcher();
 	const currentId = writable(null);
@@ -55,13 +55,8 @@
 </div>
 
 <style>
-
-    .wrap::-webkit-scrollbar {
-        display: none;
-    }
-
     .wrap {
-        -ms-overflow-style: none; /* IE and 엣지 */
-        scrollbar-width: none; /* 파이어폭스 */
+        scrollbar-color: #c2c2c2 #e0e0e0;
+        scrollbar-width: thin;
     }
 </style>

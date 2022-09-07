@@ -133,7 +133,6 @@ type Building = {
 	name: string;
 	lockers: {
 		[floor: string]: {
-			// TODO: Make buildings distinguishable
 			[lockerName: string]: LockerSection;
 		};
 	};
