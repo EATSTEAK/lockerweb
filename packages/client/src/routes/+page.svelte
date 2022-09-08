@@ -78,7 +78,7 @@
 								[floor,
 									{
 										totalLocker: count,
-										lockerLeft: count - (departmentCount?.[floor] ?? 0)
+										lockerLeft: count - (departmentCount?.[buildingNum]?.[floor] ?? 0)
 									}
 								]
 							)
@@ -97,7 +97,7 @@
 			};
 		}
 
-		return Object.fromEntries(Object.entries(departmentConfigs).map(([key, value]) => [key, transformLockerCount(serviceConfig, value, countInfo?.[key])]));
+		return Object.fromEntries(departmentConfigs.map<[string, DepartmentLockerCount]>(config => [config.id, transformLockerCount(serviceConfig, config, countInfo?.[config.id])]));
 	}
 
 </script>
