@@ -65,6 +65,13 @@ export const CantClaimErrorSchema = z
 	})
 	.passthrough();
 
+export const CantUnclaimErrorSchema = z
+	.object({
+		code: z.literal(403),
+		name: z.literal('CantUnclaim')
+	})
+	.passthrough();
+
 export const InternalErrorSchema = z.object({
 	code: z.literal(500),
 	name: z.literal('InternalError')

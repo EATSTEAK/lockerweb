@@ -249,6 +249,11 @@ type CantClaimError = LockerError & {
 	name: 'CantClaim';
 };
 
+type CantUnclaimError = LockerError & {
+	code: 403;
+	name: 'CantUnclaim';
+};
+
 type InternalError = LockerError & {
 	code: 500;
 	name: 'InternalError';

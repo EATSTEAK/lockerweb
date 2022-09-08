@@ -63,6 +63,12 @@ export class CantClaimError extends LockerError {
 	}
 }
 
+export class CantUnclaimError extends LockerError {
+	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
+		super(403, 'CantUnclaim', message, additionalInfo);
+	}
+}
+
 export class InternalError extends LockerError {
 	constructor(message?: string, additionalInfo?: Record<string, unknown>) {
 		super(500, 'InternalError', message, additionalInfo);
