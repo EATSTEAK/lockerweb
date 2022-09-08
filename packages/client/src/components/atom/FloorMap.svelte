@@ -18,7 +18,7 @@
 	}
 </script>
 {#key `${selectedBuildingId}-${selectedFloor}`}
-	<div style:--bg-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}.svg")' class='{clazz} w-full h-full bg'
+	<div style:--bg-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}.png")' class='{clazz} w-full h-full bg'
 			 in:fly={{ y: 100, duration: 300 }} aria-label={alt}>
 		{#if selectedSectionId}
 			<div in:fade style:--locker-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}/{selectedSectionId}.svg"'
