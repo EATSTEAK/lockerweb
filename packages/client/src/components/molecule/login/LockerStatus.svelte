@@ -11,7 +11,7 @@
 	export let lockerCount;
 
 	let selectedDept;
-	$: if (lockerCount) {
+	$: if (lockerCount && !selectedDept) {
 		selectedDept = Object.keys(lockerCount)[0];
 	}
 	$: departmentStatus = selectedDept ? lockerCount[selectedDept] : undefined;
