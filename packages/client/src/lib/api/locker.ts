@@ -6,6 +6,7 @@ import {
 	BadRequestErrorSchema,
 	BlockedErrorSchema,
 	CantClaimErrorSchema,
+	CantUnclaimErrorSchema,
 	createErrorResponse,
 	createSuccessResponse,
 	ForbiddenErrorSchema,
@@ -111,7 +112,7 @@ export async function apiClaimLocker(
 
 export async function apiUnclaimLocker(): Promise<
 	| SuccessResponse<UnclaimLockerResponse>
-	| ErrorResponse<BlockedError | ForbiddenError | CantClaimError>
+	| ErrorResponse<BlockedError | ForbiddenError | CantUnclaimError>
 > {
 	const response = await apiRequest<UnclaimLockerResponse>('/locker/unclaim', true, {
 		method: 'POST'
@@ -128,9 +129,9 @@ export async function apiUnclaimLocker(): Promise<
 	if (forbidden.success) {
 		return forbidden.data as ErrorResponse<ForbiddenError>;
 	}
-	const cantClaim = createErrorResponse(CantClaimErrorSchema).safeParse(response);
-	if (cantClaim.success) {
-		return cantClaim.data as ErrorResponse<CantClaimError>;
+	const cantUnclaim = createErrorResponse(CantUnclaimErrorSchema).safeParse(response);
+	if (cantUnclaim.success) {
+		return cantUnclaim.data as ErrorResponse<CantUnclaimError>;
 	}
 	const other = createErrorResponse().parse(response);
 	throw other.error;
