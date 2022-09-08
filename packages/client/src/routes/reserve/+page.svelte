@@ -156,13 +156,13 @@
 	}
 
 	function getErrorMessage(errorData: LockerError): string {
-		if (errorData.name === 'BlockedError') {
+		if (errorData.name === 'Blocked') {
 			return '현재는 해당 작업을 수행할 수 없습니다. 이용 시간을 확인하세요.';
-		} else if (errorData.name === 'ForbiddenError') {
+		} else if (errorData.name === 'Forbidden') {
 			return '해당 작업을 수행할 권한이 없습니다. 로그인 여부를 확인하세요.';
-		} else if (errorData.name === 'CantClaimError') {
+		} else if (errorData.name === 'CantClaim') {
 			return '이미 다른 사람이 예약한 사물함입니다. 다른 사물함을 예약하세요.';
-		} else if (errorData.name === 'CantUnclaimError') {
+		} else if (errorData.name === 'CantUnclaim') {
 			return '이 사물함은 반납할 수 없습니다. 이미 반납되었을 수 있습니다.';
 		} else {
 			return '알 수 없는 오류입니다. 관리자에게 문의하세요.';
