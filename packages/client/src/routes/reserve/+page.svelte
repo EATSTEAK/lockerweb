@@ -205,7 +205,7 @@
 	<div class='h-full relative' bind:clientWidth={contentWidth}>
 		{#if !errorData}
 			{#if selectedLockerId && !isClaiming && !isUnclaiming}
-				<SelectedLockerAlert {selectedLockerId} width={innerWidth}
+				<SelectedLockerAlert {selectedLockerId} width={contentWidth}
 														 on:click:secondary={() => selectedLockerId = undefined}
 														 on:click={() => claimModalOpen = true} />
 			{/if}
