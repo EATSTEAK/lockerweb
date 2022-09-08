@@ -26,7 +26,7 @@ const UnclaimLockerResponseSchema = z.object({
 	lockerId: z.string()
 });
 
-const LockerCountResponseSchema = z.record(z.record(z.number()));
+const LockerCountResponseSchema = z.record(z.record(z.record(z.number())));
 
 export async function apiQueryLocker(
 	showId = false
