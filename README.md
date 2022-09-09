@@ -5,6 +5,7 @@
    <a href="https://github.com/EATSTEAK/lockerweb/LICENSE.md"><img alt="License" src="https://img.shields.io/github/license/EATSTEAK/lockerweb?style=for-the-badge"></a>
    <a href="https://eatsteak.github.io/lockerweb"><img alt="API Docs" src="https://img.shields.io/badge/API%20Docs-v1-%2389bf04?style=for-the-badge&logo=Swagger"></a>
    <a href="https://ssuitlocker.com"><img alt="Website" src="https://img.shields.io/website?down_color=red&down_message=%EC%A0%91%EC%86%8D%20%EB%B6%88%EA%B0%80&label=IT%EB%8C%80%ED%95%99%20%EC%82%AC%EB%AC%BC%ED%95%A8%20%EC%98%88%EC%95%BD%20%EC%8B%9C%EC%8A%A4%ED%85%9C&style=for-the-badge&up_color=%2300a3c9&up_message=%EC%A0%91%EC%86%8D%20%EA%B0%80%EB%8A%A5&url=https%3A%2F%2Fssuitlocker.com"></a>
+   <a href="https://github.com/EATSTEAK/lockerweb/actions/workflows/aws-deploy.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/EATSTEAK/lockerweb/Deploy%20to%20AWS?label=Deploy&logo=github&style=for-the-badge"></a>
 </p>
 
 -----
@@ -15,7 +16,7 @@
 
 ## 서비스 배포 및 설정
 
-서비스를 설정하고 배포하려는 운영자라면 [서비스 배포 및 설정]([https://github.com/EATSTEAK/lockerweb/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EC%A0%95-%EB%B0%8F-%EB%B0%B0%ED%8F%AC](https://github.com/EATSTEAK/lockerweb/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B0%B0%ED%8F%AC-%EB%B0%8F-%EC%84%A4%EC%A0%95))를 참고하세요.
+서비스를 설정하고 배포하려는 운영자라면 [서비스 배포 및 설정](https://github.com/EATSTEAK/lockerweb/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B0%B0%ED%8F%AC-%EB%B0%8F-%EC%84%A4%EC%A0%95)을 참고하세요.
 
 ## 개발하기
 
