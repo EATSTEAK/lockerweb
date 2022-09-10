@@ -464,7 +464,7 @@ Resources:
   FrontS3Bucket:
     DeletionPolicy: 'Delete'
     Metadata:
-      Comment: 'Bucket to store some data'
+      Comment: 'Bucket to store client files'
     Properties:
       AccessControl: PublicRead
       WebsiteConfiguration:
@@ -524,7 +524,7 @@ Resources:
   CfDistribution:
     Properties:
       DistributionConfig:
-        Comment: 'A simple distribution with an S3 origin'
+        Comment: 'CloudFront distribution of lockerweb service'
         DefaultCacheBehavior:
           AllowedMethods:
             - 'HEAD'
