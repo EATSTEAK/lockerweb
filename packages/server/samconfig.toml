@@ -3,10 +3,8 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "lockerweb"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1jc84d29ijopv"
 s3_prefix = "lockerweb"
 region = "ap-northeast-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
-parameter_overrides = "TableName=\"LockerTable\" AwsSamLocal=\"\" AdminId=\"20211561\""
