@@ -13,11 +13,14 @@
 	import { config, user } from '$lib/store';
 	import { getDepartmentConfig, getServiceConfig } from '$lib/api/config';
 	import { isActivated } from '$lib/utils';
+	import Info from '../../icons/Info.svelte';
 
 	let clazz = '';
 	export { clazz as class };
 
 	let currentTime = new Date();
+
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
 	onMount(() => {
 		if (!disableBlock) {
@@ -39,7 +42,6 @@
 
 	function isReservable(config: Config[], user: User, time: Date): boolean {
 		if (!user || user.isAdmin) return true;
-		const serviceConfig: ServiceConfig = getServiceConfig(config) as ServiceConfig;
 		const userDeptConfig: DepartmentConfig = getDepartmentConfig(config, user.department) as DepartmentConfig;
 		if (serviceConfig) {
 			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date);
@@ -80,6 +82,14 @@
 		</slot>
 	</section>
 	<section class='{mainClass} grow md:max-h-screen overflow-x-auto md:overflow-y-auto'>
+		{#if serviceConfig && serviceConfig.alert}
+			<div class='bg-primary-200 rounded-md p-6 m-2 flex gap-3'>
+				<Info />
+				<div class='grow'>
+					<span class='font-bold'>안내:</span> {serviceConfig.alert}
+				</div>
+			</div>
+		{/if}
 		<slot />
 	</section>
 </main>
