@@ -21,6 +21,7 @@
 	let name;
 	let activateFrom;
 	let activateTo;
+	let alert;
 	let buildings;
 
 	$: if (serviceConfig) {
@@ -31,8 +32,9 @@
 	$: newConfig = {
 		id: 'SERVICE',
 		name,
-		...(activateFrom && { activateFrom: activateFrom.toISOString() }),
-		...(activateTo && { activateTo: activateTo.toISOString() }),
+		...(activateFrom ? { activateFrom: activateFrom.toISOString() } : (serviceConfig?.activateFrom && { activateFrom: null })),
+		...(activateTo ? { activateTo: activateTo.toISOString() } : (serviceConfig?.activateTo && { activateTo: null })),
+		...(alert ? { alert } : (serviceConfig.alert && { alert: null })),
 		buildings
 	};
 	$: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
@@ -48,6 +50,7 @@
 		activateFrom = serviceConfig?.activateFrom ?? null;
 		activateTo = serviceConfig?.activateTo ?? null;
 		buildings = structuredClone(serviceConfig?.buildings ?? {});
+		alert = serviceConfig?.alert ?? null;
 	}
 
 	function updateConfig() {
@@ -69,8 +72,8 @@
 
 </script>
 
-<div class='my-8 md:mx-8 flex flex-col gap-3'>
-	<div class='mx-6 md:mx-0 flex flex-wrap items-start'>
+<div class='my-8 md:mx-4 flex flex-col gap-3'>
+	<div class='mx-4 md:mx-0 flex flex-wrap items-start'>
 		<h3>서비스 설정</h3>
 		<div class='grow flex justify-end gap-1'>
 			<Button on:click={initializeValues} disabled={!isModified ? true : undefined}
@@ -107,7 +110,13 @@
 												 bind:value={activateFrom} invalidClass='text-red-800' />
 					<DateTimeInput class='my-2' inputClass='w-full max-w-sm' id='activate_to' label='예약 종료일' showLabel
 												 bind:value={activateTo} invalidClass='text-red-800' />
+					<TextInput class='my-2' inputClass='w-full max-w-sm' id='name' label='공지사항' showLabel
+										 bind:value={alert} />
 				{:else}
+					<div class='flex flex-col gap-1 my-2'>
+						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
+					</div>
 					<div class='flex flex-col gap-1 my-2'>
 						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
 						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
