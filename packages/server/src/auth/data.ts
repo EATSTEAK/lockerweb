@@ -1,5 +1,5 @@
 import type { GetItemInput, UpdateItemInput, UpdateItemOutput } from 'aws-sdk/clients/dynamodb';
-import { ForbiddenError, UnauthorizedError } from '../util/error';
+import { BlockedError, ForbiddenError, UnauthorizedError } from '../util/error';
 import { adminId, dynamoDB, TableName } from '../util/database';
 import type { AWSError } from 'aws-sdk';
 
@@ -40,7 +40,8 @@ export const revokeToken = async function (
 
 export const issueToken = async function (
 	id: string,
-	token: string
+	token: string,
+	isServiceBlocked: boolean
 ): Promise<{ id: string; expires: number }> {
 	const expires = Date.now() + 3600 * 1000 * 24;
 	const condition = 'attribute_exists(d)';
@@ -66,11 +67,13 @@ export const issueToken = async function (
 		res = await dynamoDB.updateItem(req).promise();
 	} catch (e) {
 		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
-			throw new ForbiddenError('This user cannot login to service');
+			throw new BlockedError('This user cannot login to service');
 		}
 		throw e;
 	}
 	if (res.Attributes.hasOwnProperty('aT') && res.Attributes.aT.S === token) {
+		if (res.Attributes.iA?.BOOL !== true && isServiceBlocked)
+			throw new BlockedError('This user cannot login to service');
 		return { id, expires };
 	} else {
 		throw new ForbiddenError('Cannot issue token', { id, expires });
