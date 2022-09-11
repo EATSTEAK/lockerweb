@@ -1,7 +1,7 @@
 <script lang='ts'>
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import Dismiss from '../../../icons/Dismiss.svelte';
-	import { extractLockerInfoFromId, getBuildingName } from '$lib/utils.js';
+	import { getBuildingName } from '$lib/utils.js';
 	import { getServiceConfig } from '$lib/api/config';
 	import { createEventDispatcher } from 'svelte';
 	import { config } from '$lib/store';
