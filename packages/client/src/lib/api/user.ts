@@ -145,6 +145,7 @@ export async function apiBatchPutUser(
 			...(user.claimedUntil && { claimedUntil: user.claimedUntil.toISOString() })
 		};
 	}
+
 	const response = await apiRequest<never>('/user/batch/put', true, {
 		method: 'POST',
 		body: users.map(toUserResponse)

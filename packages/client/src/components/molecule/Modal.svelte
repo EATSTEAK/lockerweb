@@ -48,15 +48,24 @@
 		const doc = dialog.ownerDocument;
 		const win = doc.defaultView || doc.parentWindow;
 		if (event.view !== win || (event.clientX === 0 && event.clientY === 0)) return;
-		const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
-			&& rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+		const isInDialog =
+			rect.top <= event.clientY &&
+			event.clientY <= rect.top + rect.height &&
+			rect.left <= event.clientX &&
+			event.clientX <= rect.left + rect.width;
 		if (!isInDialog && !preventOutclick) {
 			// closeModal();
 		}
 	}
 </script>
 
-<dialog on:click={outClick} on:cancel on:cancel|preventDefault bind:this={dialog} {open} class='{clazz} grow bg-gray-200
+<dialog
+	on:click={outClick}
+	on:cancel
+	on:cancel|preventDefault
+	bind:this={dialog}
+	{open}
+	class='{clazz} grow bg-gray-200
         rounded-xl
         fixed
         p-0
@@ -65,15 +74,19 @@
         transition-all
         shadow-xl
         md:w-[480px]
-				backdrop:bg-black backdrop:opacity-30' {...$$restProps}>
+				backdrop:bg-black backdrop:opacity-30'
+	{...$$restProps}
+>
 	<div class='flex flex-col items-stretch gap-3 w-full h-auto max-h-screen'>
 		<div class='flex justify-between select-none'>
 			<div class='pl-4 pt-3 text-gray-700'>
 				<h4>{title}</h4>
 				{#if subtitle}<h5>{subtitle}</h5>{/if}
 			</div>
-			<button on:click={closeModal}
-							class='w-14 h-10 bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'>
+			<button
+				on:click={closeModal}
+				class='w-14 h-10 bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'
+			>
 				<Dismiss />
 			</button>
 		</div>
@@ -83,30 +96,42 @@
 		<div class='mx-4 pb-4 flex justify-end gap-3'>
 			<slot name='actions'>
 				{#if $$slots.secondaryIcon}
-					<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
-									class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
-									isIconRight={isSecondaryBtnIconRight}>
+					<Button
+						on:click={() => click('secondary')}
+						disabled={secondaryDisabled ? true : undefined}
+						class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+						isIconRight={isSecondaryBtnIconRight}
+					>
 						<slot slot='icon' name='secondaryIcon' />
 						{secondaryText}
 					</Button>
 				{:else}
-					<Button on:click={() => click('secondary')} disabled={secondaryDisabled ? true : undefined}
-									class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
-									isIconRight={isSecondaryBtnIconRight}>
+					<Button
+						on:click={() => click('secondary')}
+						disabled={secondaryDisabled ? true : undefined}
+						class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+						isIconRight={isSecondaryBtnIconRight}
+					>
 						{secondaryText}
 					</Button>
 				{/if}
 				{#if $$slots.primaryIcon}
-					<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
-									class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
-									isIconRight={isPrimaryBtnIconRight}>
+					<Button
+						on:click={() => click('primary')}
+						disabled={primaryDisabled ? true : undefined}
+						class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+						isIconRight={isPrimaryBtnIconRight}
+					>
 						<slot slot='icon' name='primaryIcon' />
 						{primaryText}
 					</Button>
 				{:else}
-					<Button on:click={() => click('primary')} disabled={primaryDisabled ? true : undefined}
-									class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
-									isIconRight={isPrimaryBtnIconRight}>
+					<Button
+						on:click={() => click('primary')}
+						disabled={primaryDisabled ? true : undefined}
+						class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+						isIconRight={isPrimaryBtnIconRight}
+					>
 						{primaryText}
 					</Button>
 				{/if}

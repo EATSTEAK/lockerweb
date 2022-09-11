@@ -31,7 +31,14 @@
 		}
 	});
 
-	$: if ($config && $config.success && $user && $user.success && !disableBlock && !isReservable($config.result, $user.result, currentTime)) {
+	$: if (
+		$config &&
+		$config.success &&
+		$user &&
+		$user.success &&
+		!disableBlock &&
+		!isReservable($config.result, $user.result, currentTime)
+	) {
 		blockedModalOpen = true;
 	}
 
@@ -40,7 +47,10 @@
 	function isReservable(config: Config[], user: User, time: Date): boolean {
 		if (!user || user.isAdmin) return true;
 		const serviceConfig: ServiceConfig = getServiceConfig(config) as ServiceConfig;
-		const userDeptConfig: DepartmentConfig = getDepartmentConfig(config, user.department) as DepartmentConfig;
+		const userDeptConfig: DepartmentConfig = getDepartmentConfig(
+			config,
+			user.department
+		) as DepartmentConfig;
 		if (serviceConfig) {
 			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date);
 		}
@@ -49,7 +59,6 @@
 		}
 		return true;
 	}
-
 
 	export let navigationClass = '';
 	export let mainClass = '';
@@ -65,16 +74,13 @@
 					<Soongsil class='w-12 h-12 md:w-20 md:h-20' />
 				</NavigationHeader>
 				<Divider class='my-6' />
-				<NavigationContent>
-				</NavigationContent>
+				<NavigationContent />
 				<NavigationFooter>
 					<Button class='bg-primary-800 text-white' isIconRight={true} href='/logout'>
 						<ArrowExportLtr slot='icon' />
 						로그아웃
 					</Button>
-					<Button on:click={() => blockedModalOpen = true}>
-						예약불가
-					</Button>
+					<Button on:click={() => (blockedModalOpen = true)}>예약불가</Button>
 				</NavigationFooter>
 			</Navigation>
 		</slot>
@@ -84,9 +90,16 @@
 	</section>
 </main>
 
-<Modal title='예약 불가 알림' bind:open={blockedModalOpen} preventOutclick on:cancel={() => console.log('hello')}
-			 secondaryClass='hidden'
-			 primaryText='로그아웃' isPrimaryBtnIconRight on:click={() => goto('/logout')}>
+<Modal
+	title='예약 불가 알림'
+	bind:open={blockedModalOpen}
+	preventOutclick
+	on:cancel={() => console.log('hello')}
+	secondaryClass='hidden'
+	primaryText='로그아웃'
+	isPrimaryBtnIconRight
+	on:click={() => goto('/logout')}
+>
 	현재 예약 가능한 시간이 아닙니다.
 	<ArrowExportLtr slot='primaryIcon' />
 </Modal>

@@ -12,8 +12,8 @@
 	export let isNew = false;
 
 	const dispatch = createEventDispatcher<{
-		delete: ConfigDeleteRequest,
-		update: DepartmentConfigUpdateRequest
+		delete: ConfigDeleteRequest;
+		update: DepartmentConfigUpdateRequest;
 	}>();
 
 	let id: string;
@@ -25,8 +25,8 @@
 	function initializeValues() {
 		id = original?.id ?? '';
 		name = original?.name ?? '';
-		activateFrom = original?.activateFrom as Date ?? null;
-		activateTo = original?.activateTo as Date ?? null;
+		activateFrom = (original?.activateFrom as Date) ?? null;
+		activateTo = (original?.activateTo as Date) ?? null;
 		contact = original?.contact ?? '';
 	}
 
@@ -62,17 +62,56 @@
 		{:else}
 			<h4>{original.name} 수정</h4>
 		{/if}
-		<TextInput class='my-2' inputClass='w-full max-w-sm' id='id' label='학부 ID' showLabel disabled={!isNew}
-							 bind:value={id} required={isNew} pattern='\w+' invalidClass='text-red-800'
-							 invalidText={id ? 'ID는 알파벳 혹은 _ 만 허용됩니다.' : '이 값은 필수입니다.'} />
-		<TextInput class='my-2' inputClass='w-full max-w-sm' id='name' label='학부 이름' showLabel
-							 bind:value={name} required invalidClass='text-red-800' invalidText='이 값은 필수입니다.' />
-		<DateTimeInput class='my-2' inputClass='w-full max-w-sm' id='activate_from' label='예약 시작일' showLabel
-									 bind:value={activateFrom} invalidClass='text-red-800' />
-		<DateTimeInput class='my-2' inputClass='w-full max-w-sm' id='activate_to' label='예약 종료일' showLabel
-									 bind:value={activateTo} invalidClass='text-red-800' />
-		<TextInput class='my-2' inputClass='w-full max-w-sm' id='contact' label='학부 연락처' showLabel
-							 bind:value={contact} />
+		<TextInput
+			class='my-2'
+			inputClass='w-full max-w-sm'
+			id='id'
+			label='학부 ID'
+			showLabel
+			disabled={!isNew}
+			bind:value={id}
+			required={isNew}
+			pattern='\w+'
+			invalidClass='text-red-800'
+			invalidText={id ? 'ID는 알파벳 혹은 _ 만 허용됩니다.' : '이 값은 필수입니다.'}
+		/>
+		<TextInput
+			class='my-2'
+			inputClass='w-full max-w-sm'
+			id='name'
+			label='학부 이름'
+			showLabel
+			bind:value={name}
+			required
+			invalidClass='text-red-800'
+			invalidText='이 값은 필수입니다.'
+		/>
+		<DateTimeInput
+			class='my-2'
+			inputClass='w-full max-w-sm'
+			id='activate_from'
+			label='예약 시작일'
+			showLabel
+			bind:value={activateFrom}
+			invalidClass='text-red-800'
+		/>
+		<DateTimeInput
+			class='my-2'
+			inputClass='w-full max-w-sm'
+			id='activate_to'
+			label='예약 종료일'
+			showLabel
+			bind:value={activateTo}
+			invalidClass='text-red-800'
+		/>
+		<TextInput
+			class='my-2'
+			inputClass='w-full max-w-sm'
+			id='contact'
+			label='학부 연락처'
+			showLabel
+			bind:value={contact}
+		/>
 	</div>
 	<div class='actions-wrap'>
 		<hr />
@@ -84,14 +123,22 @@
 				</Button>
 			{/if}
 			{#if !isNew}
-				<Button disabled={isSaveDisabled} on:click={updateDepartment}
-								class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
+				<Button
+					disabled={isSaveDisabled}
+					on:click={updateDepartment}
+					class='bg-primary-800 text-white [&[disabled]]:bg-primary-400'
+					isIconRight
+				>
 					저장
 					<SaveEdit slot='icon' />
 				</Button>
 			{:else}
-				<Button disabled={isSaveDisabled} on:click={updateDepartment}
-								class='bg-primary-800 text-white [&[disabled]]:bg-primary-400' isIconRight>
+				<Button
+					disabled={isSaveDisabled}
+					on:click={updateDepartment}
+					class='bg-primary-800 text-white [&[disabled]]:bg-primary-400'
+					isIconRight
+				>
 					추가
 					<Add slot='icon' />
 				</Button>

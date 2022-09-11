@@ -27,13 +27,18 @@
 	let serviceName = '사물함 예약 시스템';
 
 	$: if ($config && $config.success) {
-		serviceName = $config.result.find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 예약 시스템';
+		serviceName =
+			$config.result.find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 예약 시스템';
 	}
 </script>
 
 <Shell class={clazz} {navigationClass} {mainClass}>
-	<Navigation slot='navigation' class='flex-row w-full'
-							{collapsable} bind:collapsed={navigationCollapsed}>
+	<Navigation
+		slot='navigation'
+		class='flex-row w-full'
+		{collapsable}
+		bind:collapsed={navigationCollapsed}
+	>
 		<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
 			<slot name='navigation_header'>
 				<div class='flex flex-col grow items-start flex-wrap'>

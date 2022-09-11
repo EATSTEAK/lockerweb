@@ -48,7 +48,6 @@
 	let navigationCollapsed = true;
 	let innerWidth = 0;
 
-
 	function deleteSessionAndGoIndex() {
 		deleteAuthorization();
 		window.location.href = '/';
@@ -59,19 +58,18 @@
 	}
 
 	function queryUser() {
-		userPromise = apiQueryUser()
-			.then((res) => {
-				if (res.success) {
-					return res.result;
-				}
-				throw (res as ErrorResponse<LockerError>).error;
-			});
+		userPromise = apiQueryUser().then((res) => {
+			if (res.success) {
+				return res.result;
+			}
+			throw (res as ErrorResponse<LockerError>).error;
+		});
 	}
 
 	function updateUser(evt: CustomEvent<UserUpdateRequest>) {
 		userUpdating = true;
 		apiUpdateUser(evt.detail)
-			.then(res => {
+			.then((res) => {
 				userUpdating = false;
 				if (res.success) {
 					queryUser();
@@ -80,7 +78,7 @@
 					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				userUpdating = false;
 				userRequestError = err;
 			});
@@ -89,7 +87,7 @@
 	function batchPutUser(evt: CustomEvent<User[]>) {
 		userUpdating = true;
 		apiBatchPutUser(evt.detail)
-			.then(res => {
+			.then((res) => {
 				userUpdating = false;
 				if (res.success) {
 					queryUser();
@@ -98,7 +96,7 @@
 					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				userUpdating = false;
 				userRequestError = err;
 			});
@@ -107,7 +105,7 @@
 	function batchDeleteUser(evt: CustomEvent<string[]>) {
 		userUpdating = true;
 		apiBatchDeleteUser(evt.detail)
-			.then(res => {
+			.then((res) => {
 				userUpdating = false;
 				if (res.success) {
 					queryUser();
@@ -116,7 +114,7 @@
 					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				userUpdating = false;
 				userRequestError = err;
 			});
@@ -132,15 +130,27 @@
 		{#if $user && $user.success}
 			<h3>설정</h3>
 			<SelectionListItemGroup bind:selectedIndex={selectedTabIndex}>
-				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='user'>
+				<SelectionListItem
+					on:click={closeSidebarMenu}
+					class='flex justify-between items-center'
+					id='user'
+				>
 					<span>사용자 설정</span>
 					<PeopleSettings />
 				</SelectionListItem>
-				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='service'>
+				<SelectionListItem
+					on:click={closeSidebarMenu}
+					class='flex justify-between items-center'
+					id='service'
+				>
 					<span>서비스 설정</span>
 					<Settings />
 				</SelectionListItem>
-				<SelectionListItem on:click={closeSidebarMenu} class='flex justify-between items-center' id='department'>
+				<SelectionListItem
+					on:click={closeSidebarMenu}
+					class='flex justify-between items-center'
+					id='department'
+				>
 					<span>학부별 설정</span>
 					<ContentSettings />
 				</SelectionListItem>
@@ -162,7 +172,7 @@
 	</section>
 	<div class='h-screen'>
 		{#if $user && $user.success && (!$user.result.department || $user.result.isAdmin)}
-			{#if selectedTab === "user"}
+			{#if selectedTab === 'user'}
 				{#await userPromise}
 					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
 						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
@@ -171,9 +181,14 @@
 						<LoadingScreen class='min-h-[32rem] md:rounded-md' />
 					</div>
 				{:then users}
-					<UserSettings on:user:update={updateUser} on:user:batchPut={batchPutUser}
-												on:user:batchDelete={batchDeleteUser}
-												updating={userUpdating} error={userRequestError} {users} />
+					<UserSettings
+						on:user:update={updateUser}
+						on:user:batchPut={batchPutUser}
+						on:user:batchDelete={batchDeleteUser}
+						updating={userUpdating}
+						error={userRequestError}
+						{users}
+					/>
 				{:catch err}
 					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
 						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
@@ -182,9 +197,9 @@
 						<ErrorScreen class='min-h-[32rem] md:rounded-md' />
 					</div>
 				{/await}
-			{:else if selectedTab === "service"}
+			{:else if selectedTab === 'service'}
 				<ServiceSettings />
-			{:else if selectedTab === "department"}
+			{:else if selectedTab === 'department'}
 				<DepartmentSettings />
 			{/if}
 		{:else if $user === undefined}

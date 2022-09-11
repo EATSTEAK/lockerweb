@@ -22,57 +22,72 @@
 	} else {
 		selectedLockerNum = undefined;
 	}
-	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
+	$: selectedSection =
+		serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 	export let reservedLockerIds: string[];
 	let errorData: LockerError;
 
 	let claimLoading: boolean = false;
 
-	let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
+	let lockerList: { lockerId: string; disabled: boolean; reserved: boolean }[] = [];
 	let lockerGridHeight: number = 0;
 
 	function getSectionRange(subsections: LockerSubsection[]) {
-		return subsections.reduce(([min, max], subsection) => {
-			const newMin = min < 0 || subsection.range[0] < min ? subsection.range[0] : min;
-			const newMax = max < 0 || subsection.range[1] > max ? subsection.range[1] : max;
-			return [newMin, newMax];
-		}, [-1, -1]);
+		return subsections.reduce(
+			([min, max], subsection) => {
+				const newMin = min < 0 || subsection.range[0] < min ? subsection.range[0] : min;
+				const newMax = max < 0 || subsection.range[1] > max ? subsection.range[1] : max;
+				return [newMin, newMax];
+			},
+			[-1, -1]
+		);
 	}
 
 	$: if (selectedSection && reservedLockerIds) {
 		const sectionRange = getSectionRange(selectedSection.subsections);
 		const lockerCount = sectionRange[1] - sectionRange[0] + 1;
 
-		function constructLockerId(buildingId: string, floor: string, section: string, num: number): string {
+		function constructLockerId(
+			buildingId: string,
+			floor: string,
+			section: string,
+			num: number
+		): string {
 			const fixedLengthNum = `${num}`.padStart(3, '0');
 			return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
 		}
 
-		lockerList = new Array(lockerCount).fill(0)
-			.map((_, idx) => {
-				const lockerNum = sectionRange[0] + idx;
-				const lockerId = constructLockerId(selectedBuildingId, selectedFloor, selectedSectionId, lockerNum);
-				const disabled = selectedSection.disabled.includes(lockerNum);
-				const reserved = reservedLockerIds.includes(lockerId);
-				return {
-					lockerId,
-					disabled,
-					reserved
-				};
-			});
+		lockerList = new Array(lockerCount).fill(0).map((_, idx) => {
+			const lockerNum = sectionRange[0] + idx;
+			const lockerId = constructLockerId(
+				selectedBuildingId,
+				selectedFloor,
+				selectedSectionId,
+				lockerNum
+			);
+			const disabled = selectedSection.disabled.includes(lockerNum);
+			const reserved = reservedLockerIds.includes(lockerId);
+			return {
+				lockerId,
+				disabled,
+				reserved
+			};
+		});
 		lockerGridHeight = selectedSection.height;
 	}
 </script>
-
 
 <div class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
 	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
 		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
 			{#if serviceConfig && targetDepartmentId}
-				<LockerSectionSelector {buildings} {targetDepartmentId}
-															 bind:selectedBuildingId
-															 bind:selectedFloor
-															 bind:selectedSectionId />
+				<LockerSectionSelector
+					{buildings}
+					{targetDepartmentId}
+					bind:selectedBuildingId
+					bind:selectedFloor
+					bind:selectedSectionId
+				/>
 			{:else}
 				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300' />
 				<div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
@@ -84,7 +99,12 @@
 		<div class='bg-slate-200 md:basis-1/2 grow'>
 			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<FloorMap class='w-full h-full aspect-[4/3]' {selectedBuildingId} {selectedFloor} {selectedSectionId} />
+					<FloorMap
+						class='w-full h-full aspect-[4/3]'
+						{selectedBuildingId}
+						{selectedFloor}
+						{selectedSectionId}
+					/>
 				</div>
 			{:else}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
@@ -96,7 +116,11 @@
 	<div class='locker-grid flex items-center overflow-x-auto overflow-y-visible w-full self-stretch'>
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			{#if selectedSection && reservedLockerIds}
-				<LockerList bind:selectedId={selectedLockerId} lockers={lockerList} height={lockerGridHeight} />
+				<LockerList
+					bind:selectedId={selectedLockerId}
+					lockers={lockerList}
+					height={lockerGridHeight}
+				/>
 			{:else}
 				<LockerLoadingScreen class='w-full min-h-[340px]' message='로드 중..' />
 			{/if}
