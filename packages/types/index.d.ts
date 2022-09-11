@@ -182,6 +182,7 @@ type ConfigUpdateRequest = {
 	name?: string;
 	activateFrom?: string | null;
 	activateTo?: string | null;
+	alert?: string | null;
 };
 
 type DepartmentConfigUpdateRequest = ConfigUpdateRequest & {
