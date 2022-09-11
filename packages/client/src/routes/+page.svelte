@@ -53,7 +53,6 @@
 
 	$: errorData = apiResponse && apiResponse.success === false ? apiResponse.error : undefined;
 
-
 	$: if ($config && $config.success && countData) {
 		lockerCount = updateLockerCount($config.result, countData);
 	}
@@ -68,38 +67,48 @@
 			departmentCount?: { [buildingNum: string]: { [floor: string]: number } }
 		): DepartmentLockerCount {
 			const buildingLockers = getDepartmentLockerCountsByFloor(serviceConfig, departmentConfig.id);
-			const totalLocker = Object.values(buildingLockers).flatMap(floor => Object.values(floor)).reduce<number>((a: number, v: number) => a + v, 0);
-			const totalReserved = departmentCount ? Object.values(departmentCount).flatMap(floor => Object.values(floor)).reduce<number>((a: number, v: number) => a + v, 0) : 0;
-			const lockers = Object.fromEntries(Object.entries(buildingLockers)
-				.map(([buildingNum, floors]) =>
-					[buildingNum,
-						Object.fromEntries(Object.entries(floors)
-							.map(([floor, count]) =>
-								[floor,
-									{
-										totalLocker: count,
-										lockerLeft: count - (departmentCount?.[buildingNum]?.[floor] ?? 0)
-									}
-								]
-							)
-						)
-					]
-				)
+			const totalLocker = Object.values(buildingLockers)
+				.flatMap((floor) => Object.values(floor))
+				.reduce<number>((a: number, v: number) => a + v, 0);
+			const totalReserved = departmentCount
+				? Object.values(departmentCount)
+					.flatMap((floor) => Object.values(floor))
+					.reduce<number>((a: number, v: number) => a + v, 0)
+				: 0;
+			const lockers = Object.fromEntries(
+				Object.entries(buildingLockers).map(([buildingNum, floors]) => [
+					buildingNum,
+					Object.fromEntries(
+						Object.entries(floors).map(([floor, count]) => [
+							floor,
+							{
+								totalLocker: count,
+								lockerLeft: count - (departmentCount?.[buildingNum]?.[floor] ?? 0)
+							}
+						])
+					)
+				])
 			);
 			return {
 				departmentName: departmentConfig.name,
-				lockerLeft: (totalLocker - totalReserved),
+				lockerLeft: totalLocker - totalReserved,
 				totalLocker,
-				...(departmentConfig.activateFrom && { activateFrom: departmentConfig.activateFrom as Date }),
+				...(departmentConfig.activateFrom && {
+					activateFrom: departmentConfig.activateFrom as Date
+				}),
 				...(departmentConfig.activateTo && { activateTo: departmentConfig.activateTo as Date }),
 				contact: departmentConfig.contact ?? '',
 				lockers
 			};
 		}
 
-		return Object.fromEntries(departmentConfigs.map<[string, DepartmentLockerCount]>(config => [config.id, transformLockerCount(serviceConfig, config, countInfo?.[config.id])]));
+		return Object.fromEntries(
+			departmentConfigs.map<[string, DepartmentLockerCount]>((config) => [
+				config.id,
+				transformLockerCount(serviceConfig, config, countInfo?.[config.id])
+			])
+		);
 	}
-
 </script>
 
 <PageTitle />
@@ -111,26 +120,36 @@
 				{#if $config && $config.success && !isActivated($config.result.activateFrom, $config.result.activateTo)}
 					<Button
 						disabled={callbackUrl ? undefined : true}
-						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
+						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
+							callbackUrl
+						)}'
 						rel='external'
-						class='bg-red-800 text-white w-full h-16 text-xl' isIconRight>
+						class='bg-red-800 text-white w-full h-16 text-xl'
+						isIconRight
+					>
 						서비스 이용 불가
 						<ErrorCircle class='w-8 h-8' slot='icon' />
 					</Button>
 				{:else}
 					<Button
 						disabled={callbackUrl ? undefined : true}
-						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(callbackUrl)}'
+						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
+							callbackUrl
+						)}'
 						rel='external'
-						class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight>
+						class='bg-primary-800 text-white w-full h-16 text-xl'
+						isIconRight
+					>
 						통합 로그인
 						<Soongsil class='w-8 h-8' slot='icon' />
 					</Button>
 				{/if}
 				<div class='flex flex-row justify-between my-3'>
 					<Credit />
-					<Button on:click={() => contactModalOpen = true}
-									class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'>
+					<Button
+						on:click={() => (contactModalOpen = true)}
+						class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'
+					>
 						도움이 필요하신가요?
 					</Button>
 				</div>
@@ -146,16 +165,24 @@
 		<LockerStatus {lockerCount} />
 	{:else}
 		<div class='h-full' transition:fade>
-			<ErrorScreen class='rounded-md p-4' errorTitle='{errorData.code}'
-									 errorMessage='오류가 발생하였습니다. 관리자에게 문의하십시오.' />
+			<ErrorScreen
+				class='rounded-md p-4'
+				errorTitle={errorData.code}
+				errorMessage='오류가 발생하였습니다. 관리자에게 문의하십시오.'
+			/>
 		</div>
 	{/if}
 </Shell>
 
-<Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
-			 on:close={() => contactModalOpen = false}
-			 on:click={() => contactModalOpen = false}>
-	{#each (($config && $config.success) ? $config.result : []) as config}
+<Modal
+	title='학과(부) 연락처'
+	bind:open={contactModalOpen}
+	secondaryClass='hidden'
+	primaryText='닫기'
+	on:close={() => (contactModalOpen = false)}
+	on:click={() => (contactModalOpen = false)}
+>
+	{#each $config && $config.success ? $config.result : [] as config}
 		{#if config.contact}
 			<div class='my-2 leading-10'>
 				<h5>{config.name} 연락처</h5>

@@ -22,9 +22,13 @@
 	let depthData = constructDepthData(buildings);
 
 	$: selectedBuilding = buildings[selections[0]];
-	$: selectedFloor = selections[1] && selections[1] !== 'add' ? selections[1].split('-')[0] : undefined;
-	$: selectedSectionId = selections[1] && selections[1] !== 'add' ? selections[1].split('-')[1] : undefined;
-	$: selectedSection = selectedFloor ? selectedBuilding.lockers[selectedFloor]?.[selectedSectionId] : undefined;
+	$: selectedFloor =
+		selections[1] && selections[1] !== 'add' ? selections[1].split('-')[0] : undefined;
+	$: selectedSectionId =
+		selections[1] && selections[1] !== 'add' ? selections[1].split('-')[1] : undefined;
+	$: selectedSection = selectedFloor
+		? selectedBuilding.lockers[selectedFloor]?.[selectedSectionId]
+		: undefined;
 
 	$: if (buildings) {
 		depthData = constructDepthData(buildings);
@@ -39,14 +43,22 @@
 				if (!sect[floor]?.[id]) selections = [];
 			}
 		}
-		return [...Object.entries(buildings).map<DepthData>(([buildingNum, building]) => ({
-			id: buildingNum,
-			name: building.name,
-			children: [...Object.entries(building.lockers).flatMap<DepthData>(([floor, sections]) => Object.keys(sections).map<DepthData>((sectionId) => ({
-				id: `${floor}-${sectionId}`,
-				name: `${formatFloor(floor ?? '')} 구역 ${sectionId}`
-			}))), { id: 'add', name: '구역 추가...' }]
-		})), { id: 'add', name: '건물 추가...' }];
+		return [
+			...Object.entries(buildings).map<DepthData>(([buildingNum, building]) => ({
+				id: buildingNum,
+				name: building.name,
+				children: [
+					...Object.entries(building.lockers).flatMap<DepthData>(([floor, sections]) =>
+						Object.keys(sections).map<DepthData>((sectionId) => ({
+							id: `${floor}-${sectionId}`,
+							name: `${formatFloor(floor ?? '')} 구역 ${sectionId}`
+						}))
+					),
+					{ id: 'add', name: '구역 추가...' }
+				]
+			})),
+			{ id: 'add', name: '건물 추가...' }
+		];
 	}
 
 	function buildingUpdate(evt: CustomEvent<BuildingUpdateRequest>) {
@@ -84,25 +96,34 @@
 	function sectionRemove(evt: CustomEvent<SectionRemoveRequest>) {
 		const { floor, id } = evt.detail;
 		delete buildings[selections[0]].lockers[floor][id];
-		if (Object.keys(buildings[selections[0]].lockers[floor]).length === 0) delete buildings[selections[0]].lockers[floor];
+		if (Object.keys(buildings[selections[0]].lockers[floor]).length === 0)
+			delete buildings[selections[0]].lockers[floor];
 		buildings = { ...buildings };
 	}
 </script>
 
 <section class='flex flex-col xl:flex-row flex-wrap gap-2'>
 	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px]'>
-		<DepthExplorer rootText='건물 선택' breadcrumbClass='p-1'
-									 class='bg-white rounded-md max-h-[480px] overflow-x-hidden overflow-y-scroll'
-									 data={depthData}
-									 bind:selections={selections}>
-			<button tabindex='0' slot='item' let:option let:selected
-							class='my-1 w-full text-gray-700 flex justify-between
+		<DepthExplorer
+			rootText='건물 선택'
+			breadcrumbClass='p-1'
+			class='bg-white rounded-md max-h-[480px] overflow-x-hidden overflow-y-scroll'
+			data={depthData}
+			bind:selections
+		>
+			<button
+				tabindex='0'
+				slot='item'
+				let:option
+				let:selected
+				class='my-1 w-full text-gray-700 flex justify-between
 							p-2 bg-white cursor-pointer border-l-2 border-white transition-all
 							outline-primary-800 outline-0 outline-none
 							hover:brightness-90 hover:scale-[1.01]
 							active:brightness-75 active:scale-100
 							focus:brightness-75'
-							class:selected={selected}>
+				class:selected
+			>
 				{option.name}
 				{#if option.id === 'add'}
 					<AddSquare />
@@ -114,16 +135,24 @@
 		{#if selections.length === 0}
 			<SelectScreen class='min-h-[540px]' />
 		{:else if selections.length === 1}
-			<BuildingSettings on:update={buildingUpdate} on:remove={buildingRemove} original={selectedBuilding}
-												isNew={selections[0] === 'add'} />
+			<BuildingSettings
+				on:update={buildingUpdate}
+				on:remove={buildingRemove}
+				original={selectedBuilding}
+				isNew={selections[0] === 'add'}
+			/>
 		{:else if selections.length === 2}
-			<SectionSettings on:update={sectionUpdate} on:remove={sectionRemove} floor={selectedFloor}
-											 originalId={selectedSectionId} original={selectedSection}
-											 isNew={selections[1] === 'add'} />
+			<SectionSettings
+				on:update={sectionUpdate}
+				on:remove={sectionRemove}
+				floor={selectedFloor}
+				originalId={selectedSectionId}
+				original={selectedSection}
+				isNew={selections[1] === 'add'}
+			/>
 		{/if}
 	</article>
 </section>
-
 
 <style>
     .selected {

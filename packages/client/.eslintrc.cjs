@@ -1,7 +1,15 @@
 module.exports = {
 	root: true,
 	parser: '@typescript-eslint/parser',
-	extends: ['plugin:import/recommended', 'plugin:import/typescript', 'plugin:tailwindcss/recommended', 'eslint:recommended', 'airbnb-typescript/base', 'plugin:@typescript-eslint/recommended', 'prettier'],
+	extends: [
+		'plugin:import/recommended',
+		'plugin:import/typescript',
+		'plugin:tailwindcss/recommended',
+		'eslint:recommended',
+		'airbnb-typescript/base',
+		'plugin:@typescript-eslint/recommended',
+		'prettier'
+	],
 	plugins: ['svelte3', '@typescript-eslint', 'tailwindcss'],
 	ignorePatterns: ['*.cjs'],
 	overrides: [{ files: ['*.svelte'], processor: 'svelte3/svelte3' }],

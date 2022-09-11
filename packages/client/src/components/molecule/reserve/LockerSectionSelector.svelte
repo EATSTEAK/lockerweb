@@ -4,13 +4,13 @@
 	import { getBuildingName } from '$lib/utils';
 
 	export let buildings: {
-		[buildingId: string]: Building
+		[buildingId: string]: Building;
 	};
 
 	type Floor = {
-		buildingId: string,
-		floor: string
-	}
+		buildingId: string;
+		floor: string;
+	};
 	export let targetDepartmentId: string;
 	export let selectedBuildingId: string;
 	export let selectedFloor: string;
@@ -46,12 +46,18 @@
 	}
 
 	function isReservableSection(section: LockerSection, departmentId: string) {
-		return section.subsections.some(subsection => subsection.department === departmentId);
+		return section.subsections.some((subsection) => subsection.department === departmentId);
 	}
 
-	function constructFloorListByDepartment(buildings: { [buildingId: string]: Building }, departmentId: string): Floor[] {
-		function isReservableFloor(lockers: { [lockerName: string]: LockerSection }, departmentId: string): boolean {
-			return Object.values(lockers).some(section => isReservableSection(section, departmentId));
+	function constructFloorListByDepartment(
+		buildings: { [buildingId: string]: Building },
+		departmentId: string
+	): Floor[] {
+		function isReservableFloor(
+			lockers: { [lockerName: string]: LockerSection },
+			departmentId: string
+		): boolean {
+			return Object.values(lockers).some((section) => isReservableSection(section, departmentId));
 		}
 
 		return Object.entries(buildings).flatMap(([id, building]) =>
@@ -60,16 +66,20 @@
 				.map(([floor, lockers]) => ({
 					buildingId: id,
 					floor
-				})));
+				}))
+		);
 	}
 
-	function constructSectionListByDepartmentAndFloor(buildings: { [buildingId: string]: Building }, departmentId: string, floor: Floor): string[] {
+	function constructSectionListByDepartmentAndFloor(
+		buildings: { [buildingId: string]: Building },
+		departmentId: string,
+		floor: Floor
+	): string[] {
 		const targetFloor = buildings[floor.buildingId].lockers[floor.floor];
 		return Object.entries(targetFloor)
 			.filter(([sectionId, section]) => isReservableSection(section, departmentId))
 			.map(([sectionId, section]) => sectionId);
 	}
-
 
 	let selectedFloorIndex: number;
 	let selectedSectionIndex: number;
@@ -93,10 +103,14 @@
 		{#key `${selectedBuildingId}-${selectedFloor}`}
 			<SelectionListItemGroup bind:selectedIndex={selectedFloorIndex} class='h-full'>
 				{#each floorList as item, index}
-					<SelectionListItem id='{item.buildingId}-{item.floor}'
-														 class='min-h-11 focus:!brightness-95'><span
-						class='text-sm text-gray-500'>{getBuildingName(buildings, item.buildingId)}
-						| </span>{getFloorDisplay(item.floor)}</SelectionListItem>
+					<SelectionListItem
+						id='{item.buildingId}-{item.floor}'
+						class='min-h-11 focus:!brightness-95'
+					><span class='text-sm text-gray-500'
+					>{getBuildingName(buildings, item.buildingId)}
+						|
+						</span>{getFloorDisplay(item.floor)}</SelectionListItem
+					>
 				{/each}
 			</SelectionListItemGroup>
 		{/key}
@@ -105,8 +119,10 @@
 		{#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
 			<SelectionListItemGroup bind:selectedIndex={selectedSectionIndex}>
 				{#each sectionList as section, index}
-					<SelectionListItem id='{selectedBuildingId}-{selectedFloor}-{section}'
-														 class='min-h-11 focus:!brightness-95'>{section} 구역
+					<SelectionListItem
+						id='{selectedBuildingId}-{selectedFloor}-{section}'
+						class='min-h-11 focus:!brightness-95'
+					>{section} 구역
 					</SelectionListItem>
 				{/each}
 			</SelectionListItemGroup>

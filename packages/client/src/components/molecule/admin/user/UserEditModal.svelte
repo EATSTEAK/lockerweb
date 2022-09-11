@@ -54,14 +54,38 @@
 	}
 </script>
 
-<Modal on:close on:click:secondary={closeModal} on:click={submitUser} {title} bind:open primaryText='저장'
-			 isPrimaryBtnIconRight isSecondaryBtnIconRight {...$$restProps}>
+<Modal
+	on:close
+	on:click:secondary={closeModal}
+	on:click={submitUser}
+	{title}
+	bind:open
+	primaryText='저장'
+	isPrimaryBtnIconRight
+	isSecondaryBtnIconRight
+	{...$$restProps}
+>
 	<div class='flex flex-col gap-1'>
-		<TextInput id='id' bind:value={id} label='학번' showLabel disabled={!!targetUser ? true : undefined}
-							 required={!targetUser} invalidClass='text-red-800'
-							 invalidText={id ? '학번은 숫자로만 이루어져야 합니다.' : '이 값은 필수입니다.'} pattern='\d+' />
-		<TextInput id='name' bind:value={name} label='이름' showLabel
-							 invalidClass='text-red-800' invalidText='이 값은 필수입니다.' required />
+		<TextInput
+			id='id'
+			bind:value={id}
+			label='학번'
+			showLabel
+			disabled={!!targetUser ? true : undefined}
+			required={!targetUser}
+			invalidClass='text-red-800'
+			invalidText={id ? '학번은 숫자로만 이루어져야 합니다.' : '이 값은 필수입니다.'}
+			pattern='\d+'
+		/>
+		<TextInput
+			id='name'
+			bind:value={name}
+			label='이름'
+			showLabel
+			invalidClass='text-red-800'
+			invalidText='이 값은 필수입니다.'
+			required
+		/>
 		<div class='department'>
 			<p>대상 학부</p>
 			<Select id={`department`} label='대상 학부' bind:value={department} required>
@@ -71,9 +95,20 @@
 			</Select>
 		</div>
 		<Checkbox id='is_admin' bind:checked={isAdmin} label='관리자 여부' showLabel />
-		<TextInput id='locker_id' bind:value={lockerId} label='대여한 사물함 ID' invalidClass='text-red-800'
-							 invalidText='사물함 ID의 값은 (건물번호)-(층)-(구역)(번호) 형식입니다.(ex. 21-1-A003)' showLabel />
-		<DateTimeInput id='claimed_until' bind:value={claimedUntil} label='사물함 대여 기한(미입력시 무기한)' showLabel />
+		<TextInput
+			id='locker_id'
+			bind:value={lockerId}
+			label='대여한 사물함 ID'
+			invalidClass='text-red-800'
+			invalidText='사물함 ID의 값은 (건물번호)-(층)-(구역)(번호) 형식입니다.(ex. 21-1-A003)'
+			showLabel
+		/>
+		<DateTimeInput
+			id='claimed_until'
+			bind:value={claimedUntil}
+			label='사물함 대여 기한(미입력시 무기한)'
+			showLabel
+		/>
 	</div>
 	<SaveEdit slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />

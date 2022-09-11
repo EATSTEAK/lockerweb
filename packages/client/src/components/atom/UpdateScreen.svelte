@@ -5,20 +5,12 @@
 	export { clazz as class };
 </script>
 
-<div class={clazz}>
+<div class='{clazz} h-full bg-gray-200 text-gray-400 flex flex-col justify-center items-center'>
 	<ArrowUpload class='fly-up w-16 h-16' />
-	<p>업데이트 중...</p>
+	<p class='animate-pulse'>업데이트 중...</p>
 </div>
 
 <style>
-    div {
-        @apply h-full bg-gray-200 text-gray-400 flex flex-col justify-center items-center;
-    }
-
-    p {
-        @apply animate-pulse;
-    }
-
     :global(.fly-up) {
         animation-duration: 4s;
         animation-timing-function: ease-in-out;

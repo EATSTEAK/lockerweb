@@ -21,9 +21,9 @@
 	import { getDepartmentConfigs } from '$lib/api/config';
 
 	const dispatch = createEventDispatcher<{
-		'user:update': UserUpdateRequest,
-		'user:batchPut': User[],
-		'user:batchDelete': string[]
+		'user:update': UserUpdateRequest;
+		'user:batchPut': User[];
+		'user:batchDelete': string[];
 	}>();
 
 	export let users: Array<User>;
@@ -60,10 +60,10 @@
 	}
 
 	function getUsersByDepartment(department: string, users: Array<User>) {
-		if (departments.map(dept => dept.id).includes(department)) {
-			return users.filter(user => user.department === department);
+		if (departments.map((dept) => dept.id).includes(department)) {
+			return users.filter((user) => user.department === department);
 		}
-		return users.filter(user => !departments.map(dept => dept.id).includes(user.department));
+		return users.filter((user) => !departments.map((dept) => dept.id).includes(user.department));
 	}
 
 	function updateUser(evt: CustomEvent<User>) {
@@ -84,7 +84,9 @@
 		uploadUserModalOpen = false;
 		const data = evt.detail;
 		const userKeys = users.map((u: User) => u.id);
-		const putUsers = data.overwrite ? data.users : data.users.filter((u: User) => !userKeys.includes(u.id));
+		const putUsers = data.overwrite
+			? data.users
+			: data.users.filter((u: User) => !userKeys.includes(u.id));
 		dispatch('user:batchPut', putUsers);
 	}
 
@@ -95,8 +97,8 @@
 
 	function batchUnclaimUser(ids: string[]) {
 		batchUnclaimModalOpen = false;
-		const targetUsers = users.filter(user => ids.includes(user.id));
-		const unclaimedTargetUsers = targetUsers.map(user => {
+		const targetUsers = users.filter((user) => ids.includes(user.id));
+		const unclaimedTargetUsers = targetUsers.map((user) => {
 			delete user.lockerId;
 			delete user.claimedUntil;
 			return user;
@@ -106,13 +108,13 @@
 
 	// noinspection NonAsciiCharacters
 	type ReadableUser = {
-		'학번': string,
-		'성명': string,
-		'학과(부)': string,
-		'관리자 여부': '예' | '아니오',
-		'예약한 사물함'?: string,
-		'사용 기한'?: string
-	}
+		학번: string;
+		성명: string;
+		'학과(부)': string;
+		'관리자 여부': '예' | '아니오';
+		'예약한 사물함'?: string;
+		'사용 기한'?: string;
+	};
 
 	const dateFormatter = new Intl.DateTimeFormat('ko-KR', {
 		dateStyle: 'short',
@@ -120,21 +122,25 @@
 		hour12: false
 	});
 
-	function exportUser(evt: CustomEvent<{ department: string; reservedOnly: boolean; }>) {
+	function exportUser(evt: CustomEvent<{ department: string; reservedOnly: boolean }>) {
 		const { department, reservedOnly } = evt.detail;
 		userExportModalOpen = false;
 		// noinspection NonAsciiCharacters
-		const readableUsers: ReadableUser[] = (users ?? []).filter((u: User) => {
-			return (department === 'all' || department === u.department) &&
-				(reservedOnly === false || u.lockerId);
-		}).map((u: User) => ({
-			'학번': u.id,
-			'성명': u.name,
-			'학과(부)': departments.find(dept => u.department === dept)?.name ?? '알 수 없음',
-			'관리자 여부': u.isAdmin ? '예' : '아니오',
-			...(u.lockerId && { '예약한 사물함': (u.lockerId ?? '없음') }),
-			...(u.claimedUntil && { '사용 기한': (dateFormatter.format(u.claimedUntil as Date)) })
-		}));
+		const readableUsers: ReadableUser[] = (users ?? [])
+			.filter((u: User) => {
+				return (
+					(department === 'all' || department === u.department) &&
+					(reservedOnly === false || u.lockerId)
+				);
+			})
+			.map((u: User) => ({
+				학번: u.id,
+				성명: u.name,
+				'학과(부)': departments.find((dept) => u.department === dept)?.name ?? '알 수 없음',
+				'관리자 여부': u.isAdmin ? '예' : '아니오',
+				...(u.lockerId && { '예약한 사물함': u.lockerId ?? '없음' }),
+				...(u.claimedUntil && { '사용 기한': dateFormatter.format(u.claimedUntil as Date) })
+			}));
 		generate(readableUsers);
 	}
 
@@ -175,20 +181,27 @@
 		{/if}
 	</div>
 	{#if !updating && !error}
-		<div class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3 basis-[640px] min-w-[640px]'>
+		<div
+			class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3 basis-[640px] min-w-[640px]'
+		>
 			<TabGroup bind:selectedId={selectedTab}>
 				{#each departments as department}
 					<TabItem id={department.id}>{department.name}</TabItem>
 				{/each}
 				<!-- 존재하지 않는 학부를 가진 사용자가 있을 경우 -->
-				{#if users.filter(user => !departments.map(dept => dept.id).includes(user.department)).length}
+				{#if users.filter((user) => !departments
+					.map((dept) => dept.id)
+					.includes(user.department)).length}
 					<TabItem id='unknown'>알 수 없음</TabItem>
 				{/if}
 			</TabGroup>
-			<UserDatatable on:batchDelete={() => batchDeleteModalOpen = true}
-										 on:batchUnclaim={() => batchUnclaimModalOpen = true} on:edit={(evt) => editUser(evt.detail)}
-										 users={departmentUsers}
-										 bind:selected={selectedUser} />
+			<UserDatatable
+				on:batchDelete={() => (batchDeleteModalOpen = true)}
+				on:batchUnclaim={() => (batchUnclaimModalOpen = true)}
+				on:edit={(evt) => editUser(evt.detail)}
+				users={departmentUsers}
+				bind:selected={selectedUser}
+			/>
 		</div>
 	{:else if updating}
 		<UpdateScreen class='md:rounded-md min-h-[360px]' />
@@ -197,28 +210,54 @@
 	{/if}
 </div>
 
-<UserEditModal targetUser={editTargetUser} bind:open={userEditModalOpen} on:close={() => userEditModalOpen = false}
-							 on:submit={updateUser} />
-<UserImportModal bind:open={uploadUserModalOpen} on:close={() => uploadUserModalOpen = false}
-								 on:submit={importUser} />
+<UserEditModal
+	targetUser={editTargetUser}
+	bind:open={userEditModalOpen}
+	on:close={() => (userEditModalOpen = false)}
+	on:submit={updateUser}
+/>
+<UserImportModal
+	bind:open={uploadUserModalOpen}
+	on:close={() => (uploadUserModalOpen = false)}
+	on:submit={importUser}
+/>
 
-<UserExportModal bind:open={userExportModalOpen} on:close={() => userExportModalOpen = false} on:submit={exportUser}
-								 {users} />
+<UserExportModal
+	bind:open={userExportModalOpen}
+	on:close={() => (userExportModalOpen = false)}
+	on:submit={exportUser}
+	{users}
+/>
 
-<Modal bind:open={batchDeleteModalOpen} title='일괄 삭제' on:close={() => batchDeleteModalOpen = false}
-			 on:click:secondary={() => batchDeleteModalOpen = false}
-			 on:click={() => batchDeleteUser(selectedUser)}>
-	<p>선택된 <span class='font-bold'>{selectedUser.length}</span>명의 사용자를 일괄 삭제하시겠습니까?</p>
+<Modal
+	bind:open={batchDeleteModalOpen}
+	title='일괄 삭제'
+	on:close={() => (batchDeleteModalOpen = false)}
+	on:click:secondary={() => (batchDeleteModalOpen = false)}
+	on:click={() => batchDeleteUser(selectedUser)}
+>
+	<p>
+		선택된 <span class='font-bold'>{selectedUser.length}</span>명의 사용자를 일괄 삭제하시겠습니까?
+	</p>
 	<p class='text-red-800 font-bold'>주의! 이 작업은 되돌릴 수 없습니다.</p>
 	<PeopleTeamDelete slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />
 </Modal>
-<Modal bind:open={batchUnclaimModalOpen} title='일괄 예약 취소' on:close={() => batchUnclaimModalOpen = false}
-			 on:click:secondary={() => batchUnclaimModalOpen = false}
-			 on:click={() => batchUnclaimUser(selectedUser)}>
-	<p>선택된 <span class='font-bold'>{selectedUser.length}</span>명의 사용자 사물함을 취소하시겠습니까?</p>
+<Modal
+	bind:open={batchUnclaimModalOpen}
+	title='일괄 예약 취소'
+	on:close={() => (batchUnclaimModalOpen = false)}
+	on:click:secondary={() => (batchUnclaimModalOpen = false)}
+	on:click={() => batchUnclaimUser(selectedUser)}
+>
+	<p>
+		선택된 <span class='font-bold'>{selectedUser.length}</span>명의 사용자 사물함을
+		취소하시겠습니까?
+	</p>
 	<p class='font-bold'>주의! 이 작업은 되돌릴 수 없습니다.</p>
-	<p class='text-lg text-red-800 font-bold'>경고! 이 작업을 예약 시간 중 진행하면 사용자가 로그아웃 될 수 있습니다!!</p>
+	<p class='text-lg text-red-800 font-bold'>
+		경고! 이 작업을 예약 시간 중 진행하면 사용자가 로그아웃 될 수 있습니다!!
+	</p>
 	<DocumentHeaderRemove slot='primaryIcon' />
 	<Dismiss slot='secondaryIcon' />
 </Modal>
