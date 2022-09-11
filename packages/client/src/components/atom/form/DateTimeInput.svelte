@@ -16,61 +16,36 @@
 	let mounted = false;
 
 	onMount(() => {
-		localDate = value ? new Date(value.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1) : undefined;
+		localDate = value
+			? new Date(value.getTime() - new Date().getTimezoneOffset() * 60000)
+				.toISOString()
+				.slice(0, -1)
+			: undefined;
 		mounted = true;
 	});
 
 	$: if (mounted && localDate) {
 		value = new Date(localDate);
 	}
-
-
 </script>
 
-<div class={clazz}>
-	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''} <span class:hidden={!$$props.required}
-																																						 class='text-red-800'>*</span></label>
-	<input id={id} type='datetime-local'
-				 class={inputClass}
-				 bind:value={localDate}
-				 {...$$restProps}
+<div class='{clazz} flex flex-col'>
+	<label class='{labelClass} font-bold block mb-1' for={id} class:hidden={!showLabel}
+	>{label ?? ''} <span class:hidden={!$$props.required} class='text-red-800'>*</span></label
+	>
+	<input
+		id={id}
+		type='datetime-local'
+		class='{inputClass} transition-all rounded-md bg-gray-100 border-transparent
+				 		hover:bg-gray-200 focus:bg-white
+						disabled:bg-gray-300 disabled:text-gray-400'
+		bind:value={localDate}
+		{...$$restProps}
 	/>
-	<p class={invalidClass}>{invalidText}</p>
+	<p class='{invalidClass} mt-1 hidden'>{invalidText}</p>
 </div>
 
 <style>
-    div {
-        @apply flex flex-col;
-    }
-
-    label {
-        @apply font-bold block mb-1;
-    }
-
-    label[hidden] {
-        @apply hidden;
-    }
-
-    input {
-        @apply transition-all rounded-md bg-gray-100 border-transparent;
-    }
-
-    input:hover {
-        @apply bg-gray-200;
-    }
-
-    input:focus {
-        @apply bg-white;
-    }
-
-    input:disabled {
-        @apply bg-gray-300 text-gray-400;
-    }
-
-    p {
-        @apply mt-1 hidden;
-    }
-
     input:invalid ~ p {
         @apply block;
     }

@@ -9,51 +9,24 @@
 	export let invalidText: string = '값을 입력하세요.';
 	let clazz = '';
 	export { clazz as class };
-
 </script>
 
-<div class={clazz}>
-	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''} <span class:hidden={!$$props.required}
-																																						 class='text-red-800'>*</span></label>
-	<select id={id} class={selectClass} bind:value {...$$restProps}>
+<div class='{clazz} flex flex-col'>
+	<label class='{labelClass} font-bold block mb-1' for={id} class:hidden={!showLabel}
+	>{label ?? ''} <span class:hidden={!$$props.required} class='text-red-800'>*</span></label
+	>
+	<select
+		id={id}
+		class='{selectClass} transition-all rounded-md bg-gray-100 border-transparent hover:bg-gray-200 focus:bg-white disabled:bg-gray-300 disabled:text-gray-400'
+		bind:value
+		{...$$restProps}
+	>
 		<slot />
 	</select>
-	<p class={invalidClass}>{invalidText}</p>
+	<p class='{invalidClass} mt-1 hidden'>{invalidText}</p>
 </div>
 
 <style>
-    div {
-        @apply flex flex-col;
-    }
-
-    label {
-        @apply font-bold block mb-1;
-    }
-
-    label[hidden] {
-        @apply hidden;
-    }
-
-    select {
-        @apply transition-all rounded-md bg-gray-100 border-transparent;
-    }
-
-    select:hover {
-        @apply bg-gray-200;
-    }
-
-    select:focus {
-        @apply bg-white;
-    }
-
-    select:disabled {
-        @apply bg-gray-300 text-gray-400;
-    }
-
-    p {
-        @apply mt-1 hidden;
-    }
-
     select:invalid ~ p {
         @apply block;
     }

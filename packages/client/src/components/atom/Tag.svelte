@@ -4,12 +4,6 @@
 	export { clazz as class };
 </script>
 
-<div on:click class={`tag ${clazz || ''}`} style={`${style || ''}`}>
+<div on:click class='{clazz} rounded-xl py-1 px-2 font-semibold inline' style={`${style || ''}`}>
 	<slot />
 </div>
-
-<style>
-    .tag {
-        @apply rounded-xl py-1 px-2 font-semibold inline;
-    }
-</style>

@@ -30,7 +30,11 @@
 <button
 	bind:this={ref}
 	class:active={selected}
-	class={clazz}
+	class='{clazz}
+		bg-white box-border border-l-4 border-white transition-all p-4 outline-0 outline-none
+		hover:brightness-90 hover:scale-[1.01]
+		active:brightness-75 active:border-primary-800 active:font-bold active:scale-100
+		focus:brightness-75'
 	on:click
 	on:click|preventDefault={() => {
 		ctx.update(id);
@@ -41,35 +45,18 @@
 	on:mouseleave
 	on:keydown
 	on:keydown={({ key }) => {
-    if (key === 'ArrowRight') {
-      ctx.change(1);
-    } else if (key === 'ArrowLeft') {
-      ctx.change(-1);
-    }
-  }}
+		if (key === 'ArrowRight') {
+			ctx.change(1);
+		} else if (key === 'ArrowLeft') {
+			ctx.change(-1);
+		}
+	}}
 >
 	<slot />
 </button>
 
 <style>
-    button {
-        @apply bg-white box-border border-l-4 border-white transition-all p-4 outline-0 outline-none;
-    }
-
-    button:hover {
-        @apply brightness-90 scale-[1.01];
-    }
-
-    button:active {
-        @apply brightness-75 border-primary-800 font-bold scale-100;
-    }
-
-    button:focus {
-        @apply brightness-75;
-    }
-
     .active {
         @apply brightness-95 border-primary-800 font-bold;
     }
-
 </style>

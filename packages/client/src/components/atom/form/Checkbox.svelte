@@ -7,37 +7,22 @@
 	export let inputClass: string = '';
 	let clazz = '';
 	export { clazz as class };
-
 </script>
 
-<div class={clazz}>
-	<label class={labelClass} for={id} hidden={!showLabel}>{label ?? ''}</label>
-	<input id={id} type='checkbox'
-				 on:change
-				 on:input
-				 class={inputClass}
-				 bind:checked
-				 {...$$restProps}
+<div class='{clazz} flex flex-col'>
+	<label class='{labelClass} font-bold block mb-1' for={id} class:hidden={!showLabel}>{label ?? ''}</label>
+	<input
+		id={id}
+		type='checkbox'
+		on:change
+		on:input
+		class='{inputClass} transition-all rounded-md'
+		bind:checked
+		{...$$restProps}
 	/>
 </div>
 
 <style>
-    div {
-        @apply flex flex-col;
-    }
-
-    label {
-        @apply font-bold block mb-1;
-    }
-
-    label[hidden] {
-        @apply hidden;
-    }
-
-    input {
-        @apply transition-all rounded-md;
-    }
-
     input:not(:checked) {
         @apply bg-gray-100 border-gray-400;
     }

@@ -50,12 +50,6 @@
 	});
 </script>
 
-<div class='tab-group'>
+<div class='flex flex-row gap-1'>
 	<slot />
 </div>
-
-<style>
-    .tab-group {
-        @apply flex flex-row gap-1;
-    }
-</style>
