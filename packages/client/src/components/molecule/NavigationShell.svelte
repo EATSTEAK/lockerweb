@@ -24,6 +24,8 @@
 
 	export let collapsable = true;
 
+	export let disableBlock = false;
+
 	let serviceName = '사물함 예약 시스템';
 
 	$: if ($config && $config.success) {
@@ -32,7 +34,7 @@
 	}
 </script>
 
-<Shell class={clazz} {navigationClass} {mainClass}>
+<Shell class={clazz} {navigationClass} {mainClass} {disableBlock}>
 	<Navigation
 		slot='navigation'
 		class='flex-row w-full'
