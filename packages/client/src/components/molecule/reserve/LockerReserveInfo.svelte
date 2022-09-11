@@ -88,7 +88,7 @@
 				</div>
 			{:else}
 				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<div class='w-full h-full rounded-xl bg-gray-300 animate-pulse'></div>
+					<Skeleton class='w-full h-full rounded-xl bg-gray-300' />
 				</div>
 			{/if}
 		</div>
