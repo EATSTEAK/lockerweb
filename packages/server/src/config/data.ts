@@ -116,7 +116,8 @@ function toServiceConfigDao(data: ServiceConfig): ServiceConfigDao {
 			M: Object.fromEntries(
 				Object.entries(data.buildings).map(([s, b]) => [s, { M: toBuildingData(b) }])
 			)
-		}
+		},
+		...(data.alert && { a: { S: data.alert } })
 	};
 }
 
@@ -125,7 +126,8 @@ function fromServiceConfigDao(dao: ServiceConfigDao): ServiceConfig {
 		...fromConfigDao(dao),
 		buildings: Object.fromEntries(
 			Object.entries(dao.b?.M ?? {}).map(([s, bd]) => [s, fromBuildingData(bd.M)])
-		)
+		),
+		...(dao.a?.S && { alert: dao.a.S })
 	};
 }
 
@@ -236,12 +238,21 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 		attributeNames['#aT'] = 'aT';
 		updateExp += `${updateExp ? ',' : 'SET'} #aT = :activateTo`;
 	}
+	if (config.alert) {
+		attributes[':alert'] = { S: config.alert };
+		attributeNames['#a'] = 'a';
+		updateExp += `${updateExp ? ',' : 'SET'} #a = :alert`;
+	}
 	if (config.activateFrom === null) {
 		removeExp += `${removeExp ? ',' : 'REMOVE'} aF`;
 	}
 	if (config.activateTo === null) {
 		attributeNames['#aT'] = 'aT';
 		removeExp += `${removeExp ? ',' : 'REMOVE'} #aT`;
+	}
+	if (config.alert === null) {
+		attributeNames['#a'] = 'a';
+		removeExp += `${removeExp ? ',' : 'REMOVE'} #a';`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
