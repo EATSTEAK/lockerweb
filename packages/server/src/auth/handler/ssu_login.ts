@@ -54,7 +54,7 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			const accessToken = jwt.sign({ aud: id }, JWT_SECRET, {
 				expiresIn: 3600 * 1000
 			});
-			const issued = await issueToken(id, accessToken, blockedDepartments);
+			const issued = await issueToken(id, accessToken);
 			const left = Math.floor((issued.expires - Date.now()) / 1000);
 			const res = {
 				success: true,
