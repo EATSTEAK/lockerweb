@@ -83,7 +83,7 @@
 	</section>
 	<section class='{mainClass} grow md:max-h-screen overflow-x-auto md:overflow-y-auto'>
 		{#if serviceConfig && serviceConfig.alert}
-			<div class='bg-primary-200 rounded-md p-6 m-2 flex gap-3'>
+			<div class='bg-primary-200 rounded-md p-6 my-4 mx-6 md:mx-8 flex gap-3'>
 				<Info />
 				<div class='grow'>
 					<span class='font-bold'>안내:</span> {serviceConfig.alert}

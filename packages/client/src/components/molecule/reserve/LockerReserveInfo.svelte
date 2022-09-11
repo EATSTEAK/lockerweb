@@ -5,8 +5,6 @@
 	import LockerSectionSelector from './LockerSectionSelector.svelte';
 	import FloorMap from '../../atom/FloorMap.svelte';
 
-	let innerWidth: number = 0;
-
 	export let serviceConfig: ServiceConfig;
 	export let targetDepartmentId: string;
 	$: buildings = serviceConfig?.buildings ?? {};
@@ -25,8 +23,6 @@
 	$: selectedSection = serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
 	export let reservedLockerIds: string[];
 	let errorData: LockerError;
-
-	let claimLoading: boolean = false;
 
 	let lockerList: { lockerId: string, disabled: boolean, reserved: boolean }[] = [];
 	let lockerGridHeight: number = 0;
@@ -66,30 +62,32 @@
 
 
 <div class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
-	<div class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full'>
-		<div class='bg-[#d8dee5] md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] shrink flex flex-col'>
+	<div
+		class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full py-4 md:px-8 gap-4'>
+		<div
+			class='bg-slate-200 md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] items-stretch shrink flex flex-col md:rounded-xl overflow-hidden p-8'>
 			{#if serviceConfig && targetDepartmentId}
 				<LockerSectionSelector {buildings} {targetDepartmentId}
 															 bind:selectedBuildingId
 															 bind:selectedFloor
 															 bind:selectedSectionId />
 			{:else}
-				<Skeleton class='rounded-lg h-10 w-48 ml-8 my-2 mt-8 bg-gray-300' />
-				<div class='h-5/6 flex w-full gap-2 px-8 pb-8'>
+				<Skeleton class='rounded-lg h-10 w-48 bg-gray-300 mb-4' />
+				<div class='h-5/6 flex w-full gap-2'>
 					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
 					<Skeleton class='h-64 rounded-xl bg-gray-300 w-1/2' />
 				</div>
 			{/if}
 		</div>
-		<div class='bg-slate-200 md:basis-1/2 grow'>
+		<div
+			class='w-full h-full flex flex-col md:rounded-xl overflow-hidden bg-slate-200 md:basis-1/2 grow p-8 gap-4'>
 			{#if serviceConfig && selectedBuildingId && selectedFloor}
-				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<FloorMap class='w-full h-full aspect-[4/3]' {selectedBuildingId} {selectedFloor} {selectedSectionId} />
-				</div>
+				<h4 class='text-3xl'>배치도</h4>
+				<FloorMap class='grow rounded-xl aspect-[4/3] max-h-[50vh]' {selectedBuildingId} {selectedFloor}
+									{selectedSectionId} />
 			{:else}
-				<div class='p-8 w-full h-full flex justify-center items-center'>
-					<Skeleton class='w-full h-full rounded-xl bg-gray-300' />
-				</div>
+				<Skeleton class='rounded-lg h-10 w-48 bg-gray-300' />
+				<Skeleton class='grow rounded-xl bg-gray-300 aspect-[4/3] max-h-[50vh]' />
 			{/if}
 		</div>
 	</div>

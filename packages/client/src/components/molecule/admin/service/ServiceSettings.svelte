@@ -72,8 +72,8 @@
 
 </script>
 
-<div class='my-8 md:mx-8 flex flex-col gap-3'>
-	<div class='mx-6 md:mx-0 flex flex-wrap items-start'>
+<div class='my-8 md:mx-4 flex flex-col gap-3'>
+	<div class='mx-4 md:mx-0 flex flex-wrap items-start'>
 		<h3>서비스 설정</h3>
 		<div class='grow flex justify-end gap-1'>
 			<Button on:click={initializeValues} disabled={!isModified ? true : undefined}
