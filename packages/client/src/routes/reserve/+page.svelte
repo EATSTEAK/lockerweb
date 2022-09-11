@@ -188,8 +188,8 @@
 	</div>
 	<div class='flex flex-col w-full gap-2' slot='navigation_footer'>
 		<div class='flex flex-row justify-between items-center w-full'>
-			<Button class='bg-primary-800 text-white' isIconRight href='/logout'>
-				<ArrowExportLtr slot='icon' />
+			<Button class='bg-primary-800 text-white' href='/logout'>
+				<ArrowExportLtr slot='icon' class='rotate-180'/>
 				로그아웃
 			</Button>
 			{#if $user && $user.success && $user.result.isAdmin}

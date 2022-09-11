@@ -58,7 +58,7 @@
 		</NavigationContent>
 		<NavigationFooter>
 			<slot name='navigation_footer'>
-				<Button class='bg-primary-800 text-white' isIconRight={true} href='/logout'>
+				<Button class='bg-primary-800 text-white' href='/logout'>
 					<ArrowExportLtr slot='icon' />
 					로그아웃
 				</Button>

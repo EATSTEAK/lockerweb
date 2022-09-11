@@ -151,8 +151,8 @@
 		{/if}
 	</section>
 	<section class='flex gap-3 items-center w-full' slot='navigation_footer'>
-		<Button class='bg-primary-800 text-white' isIconRight={true} href='/logout'>
-			<ArrowExportLtr slot='icon' />
+		<Button class='bg-primary-800 text-white' href='/logout'>
+			<ArrowExportLtr slot='icon' class='rotate-180' />
 			로그아웃
 		</Button>
 		<Button class='bg-green-200 text-black' isIconRight={true} href='/reserve'>
