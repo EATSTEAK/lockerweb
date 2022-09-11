@@ -39,7 +39,8 @@ const DepartmentConfigSchema = ConfigSchema.extend({
 });
 
 const ServiceConfigSchema = ConfigSchema.extend({
-	buildings: BuildingSchema.default({})
+	buildings: z.record(BuildingSchema).default({}).optional(),
+	alert: z.string().optional()
 });
 
 const ConfigUpdateRequestSchema = z.object({
@@ -48,7 +49,7 @@ const ConfigUpdateRequestSchema = z.object({
 	activateFrom: z.string().optional(),
 	activateTo: z.string().optional(),
 	contact: z.string().optional(),
-	buildings: BuildingSchema.optional()
+	buildings: z.record(BuildingSchema).optional()
 });
 
 export async function apiGetConfig(): Promise<
@@ -70,21 +71,29 @@ export async function apiGetConfig(): Promise<
 }
 
 export function getServiceConfig(configs: Config[]): ServiceConfig {
-	return (
-		(configs.find((c: Config) => c.id === 'SERVICE') as ServiceConfig) ?? {
-			id: 'SERVICE',
-			name: null,
-			buildings: {}
-		}
-	);
+	const foundConfig = configs.find((c: Config) => c.id === 'SERVICE') as ServiceConfig;
+	const parsed = ServiceConfigSchema.safeParse(foundConfig);
+	if (parsed.success) return parsed.data as ServiceConfig;
+	console.error(parsed, foundConfig);
+	return {
+		id: 'SERVICE',
+		name: null,
+		buildings: {}
+	};
 }
 
 export function getDepartmentConfig(configs: Config[], departmentId: string): DepartmentConfig {
-	return configs.find((c: Config) => c.id === departmentId) as DepartmentConfig;
+	const foundConfig = configs.find((c: Config) => c.id === departmentId);
+	const parsed = DepartmentConfigSchema.safeParse(foundConfig);
+	if (parsed.success) return parsed.data as DepartmentConfig;
+	return null;
 }
 
 export function getDepartmentConfigs(configs: Config[]): DepartmentConfig[] {
-	return configs.filter((c: Config) => c.id !== 'SERVICE') as DepartmentConfig[];
+	const foundConfigs = configs.filter((c: Config) => c.id !== 'SERVICE') as DepartmentConfig[];
+	const parsed = z.array(DepartmentConfigSchema).safeParse(foundConfigs);
+	if (parsed.success) return parsed.data as DepartmentConfig[];
+	return null;
 }
 
 export async function apiUpdateConfig(

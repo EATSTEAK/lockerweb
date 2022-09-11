@@ -32,8 +32,7 @@
 	}
 
 	function calculateYDirection(yDiff: number) {
-		if ((yDiff > 0 && yDirection < 0) || (yDiff < 0 && yDirection > 0)) yDirection = 0;
-		else yDirection += yDiff;
+		if ((yDiff > 0 && yDirection < 0) || (yDiff < 0 && yDirection > 0)) yDirection = 0; else yDirection += yDiff;
 	}
 
 	$: isOnTop = y <= 80;
@@ -56,30 +55,21 @@
 <svelte:window bind:scrollY={y} />
 {#if !collapsable || !hideNavbar || isOnTop || !collapsed}
 	<!-- fly animation 시 header 아래로 nav 가 expand 되도록 element 의 순서를 바꾸고 `flex-col-reverse` 를 적용 -->
-	<aside
-		class='{clazz} flex flex-col-reverse justify-end max-h-screen z-50 overflow-y-auto'
-		transition:fly={{ y: -100, duration: 500 }}
-		class:absolute={collapsable && isOnTop}
-		class:fixed={collapsable && !isOnTop}
-	>
+	<aside class='{clazz} flex flex-col-reverse justify-end max-h-screen z-50 overflow-y-auto'
+				 transition:fly={{ y: -100, duration: 500 }}
+				 class:fixed={collapsable}>
 		{#if !collapsable || !collapsed}
-			<nav
-				transition:fly={{ y: -100, duration: 500 }}
-				class='{navClass} px-6 md:px-10 flex flex-col bg-gray-200 grow overflow-y-auto shadow-md'
-				class:mb-2={collapsable}
-			>
+			<nav transition:fly={{ y: -100, duration: 500 }}
+					 class='{navClass} px-6 md:px-10 flex flex-col bg-gray-200 grow overflow-y-auto shadow-md'
+					 class:mb-2={collapsable}>
 				<slot />
 			</nav>
 		{/if}
-		<section
-			bind:clientHeight={h}
-			class='{headerClass} px-6 md:px-10 bg-gray-200 transition-all'
-			class:shadow-md={collapsable && collapsed}
-			class:mb-2={collapsable && collapsed}
-		>
+		<section bind:clientHeight={h} class='{headerClass} px-6 md:px-10 bg-gray-200 transition-all'
+						 class:shadow-md={collapsable && collapsed} class:mb-2={collapsable && collapsed}>
 			<slot name='header' />
 		</section>
 	</aside>
 {/if}
 
-<div style:margin-top={collapsable ? `${h}px` : '0'} />
+<div style:margin-top={collapsable ? `${h}px` : '0'}></div>
