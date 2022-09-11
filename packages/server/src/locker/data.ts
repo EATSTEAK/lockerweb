@@ -44,7 +44,9 @@ export const claimLocker = async function (
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression: 'SET #lockerId = :lockerId, cU = :claimedUntil',
-		ConditionExpression: `#aT = :token${condition ? ` AND ((${condition}) OR iA = :true)` : ''}`,
+		ConditionExpression: `#aT = :token${
+			id !== adminId && condition ? ` AND ((${condition}) OR iA = :true)` : ''
+		}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
@@ -91,7 +93,9 @@ export const unclaimLocker = async function (
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression: 'REMOVE #lockerId',
-		ConditionExpression: `#aT = :token ${condition ? ` AND ((${condition}) OR iA = :true)` : ''}`,
+		ConditionExpression: `#aT = :token ${
+			id !== adminId && condition ? ` AND ((${condition}) OR iA = :true)` : ''
+		}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
