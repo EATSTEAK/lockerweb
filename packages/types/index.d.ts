@@ -115,6 +115,7 @@ type ServiceConfig = Config & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
+	alert?: string;
 };
 
 type ServiceConfigResponse = ConfigResponse & {

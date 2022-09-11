@@ -39,7 +39,8 @@ const DepartmentConfigSchema = ConfigSchema.extend({
 });
 
 const ServiceConfigSchema = ConfigSchema.extend({
-	buildings: BuildingSchema.default({})
+	buildings: BuildingSchema.default({}),
+	alert: z.string().optional()
 });
 
 const ConfigUpdateRequestSchema = z.object({
