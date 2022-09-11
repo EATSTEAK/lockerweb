@@ -13,7 +13,7 @@
 
 <h3><span class='text-primary-800'>{departmentStatus.departmentName}</span> 층별 예약 현황</h3>
 <div class='flex gap-1 mt-2 items-center'>
-	<Tag class='bg-gray-200'>문의 사항</Tag>
+	<Tag class='block shrink-0 bg-gray-200'>문의 사항</Tag>
 	<p>{departmentStatus.contact}</p>
 </div>
 

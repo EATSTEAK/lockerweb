@@ -56,7 +56,8 @@ export const issueToken = async function (
 		}),
 		ExpressionAttributeValues: {
 			':token': { S: token },
-			':expiresOn': { N: `${expires}` }
+			':expiresOn': { N: `${expires}` },
+			...(id !== adminId && { ':true': { BOOL: true } })
 		},
 		ReturnValues: 'ALL_NEW'
 	};
