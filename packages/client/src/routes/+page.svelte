@@ -53,6 +53,8 @@
 
 	$: errorData = apiResponse && apiResponse.success === false ? apiResponse.error : undefined;
 
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
 	$: if ($config && $config.success && countData) {
 		lockerCount = updateLockerCount($config.result, countData);
 	}
@@ -117,7 +119,7 @@
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
 			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
-				{#if $config && $config.success && !isActivated($config.result.activateFrom, $config.result.activateTo)}
+				{#if serviceConfig && !isActivated(serviceConfig.activateFrom, serviceConfig.activateTo)}
 					<Button
 						disabled={callbackUrl ? undefined : true}
 						href='https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
@@ -127,7 +129,7 @@
 						class='bg-red-800 text-white w-full h-16 text-xl'
 						isIconRight
 					>
-						서비스 이용 불가
+						예약 불가(열람만 가능)
 						<ErrorCircle class='w-8 h-8' slot='icon' />
 					</Button>
 				{:else}
