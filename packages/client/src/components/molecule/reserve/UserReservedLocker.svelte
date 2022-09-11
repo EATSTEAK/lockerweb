@@ -1,11 +1,16 @@
 <script lang='ts'>
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import Dismiss from '../../../icons/Dismiss.svelte';
+	import { extractLockerInfoFromId, getBuildingName } from '$lib/utils.js';
+	import { getServiceConfig } from '$lib/api/config';
 	import { createEventDispatcher } from 'svelte';
+	import { config } from '$lib/store';
 
 	const dispatch = createEventDispatcher();
 
 	export let reservedLocker: ReservedLocker;
+
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
 	let buildingId: string;
 	let floor: string;
@@ -53,21 +58,20 @@
 				{/if}
 			</div>
 			<div
-				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex p-2 gap-1'
+				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex flex-col p-2 gap-1'
 			>
 				<div
-					class='flex flex-col w-2/5 h-40 bg-gray-300 rounded-2xl text-center justify-center items-center'
+					class='flex flex-col w-full px-2 h-16 bg-gray-300 rounded-2xl text-center justify-center items-center'
 				>
-					<div class='text-2xl font-extrabold align-middle'>구역</div>
-					<div class:invisible={reservedLocker === null} class='location text-7xl font-extrabold'>
-						{section}
+					<div class:invisible={reservedLocker === null} class='location text-2xl font-extrabold'>
+						{getBuildingName(serviceConfig.buildings, buildingId)} {floor}층
 					</div>
 				</div>
 				<div
 					class:invisible={reservedLocker === null}
-					class='number text-primary-800 grow text-7xl font-extrabold text-center'
+					class='number text-primary-800 grow text-7xl flex items-center font-extrabold text-center'
 				>
-					{lockerNum}
+					{section}-{lockerNum}
 				</div>
 			</div>
 		</div>
