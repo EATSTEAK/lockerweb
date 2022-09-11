@@ -14,7 +14,7 @@
 	let floor: string;
 	let sectionId: string;
 	let lockerNum: number;
-	$: if(selectedLockerId) {
+	$: if (selectedLockerId) {
 		const lockerInfo = extractLockerInfoFromId(selectedLockerId);
 		buildingId = lockerInfo.buildingId;
 		floor = lockerInfo.floor;
@@ -45,12 +45,15 @@
 <div transition:fly='{{ y: 10, duration: 150 }}' class='background flex flex-row flex-wrap px-2
  	fixed bottom-5 right-5 backdrop-blur-sm
 	rounded-xl z-50' style={`width:${width-42}px; background: rgba(80, 80, 80, 0.8);`}>
-	<div class='flex flex-row gap-2 items-center px-1'>
-		<h6 class='text-white bg-[#5F5F5F] rounded-lg py-1 px-2'>선택됨</h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig.buildings, buildingId)}<span
-			class='pl-2 not-italic'>|</span></h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{floor}층<span class='pl-2 not-italic'>|</span></h6>
-		<h6 class='text-[#D5FFD4] italic font-semibold'>{sectionId}구역-{lockerNum}</h6>
+	<div class='flex flex-row flex-wrap gap-2 items-center px-1'>
+		<h6 class='text-white bg-[#5F5F5F] rounded-lg my-2 py-1 px-2'>선택됨</h6>
+		<div class='flex flex-row gap-1'>
+			<h6 class='text-[#D5FFD4] italic font-semibold'>{getBuildingName(serviceConfig.buildings, buildingId)}<span
+				class='pl-2 not-italic'>|</span></h6>
+			<h6 class='text-[#D5FFD4] italic font-semibold'>{floor}층<span class='pl-2 not-italic'>|</span></h6>
+			<h6 class='text-[#D5FFD4] italic font-semibold'>{sectionId}구역-{lockerNum}</h6>
+		</div>
+
 	</div>
 	<div class='flex flex-row flex-end flex-grow justify-end gap-2 items-center mr-1'>
 		<Button on:click={() => click('secondary')}
