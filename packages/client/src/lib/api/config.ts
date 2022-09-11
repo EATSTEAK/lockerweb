@@ -39,7 +39,7 @@ const DepartmentConfigSchema = ConfigSchema.extend({
 });
 
 const ServiceConfigSchema = ConfigSchema.extend({
-	buildings: BuildingSchema.default({}),
+	buildings: z.record(BuildingSchema).default({}).optional(),
 	alert: z.string().optional()
 });
 
@@ -49,7 +49,7 @@ const ConfigUpdateRequestSchema = z.object({
 	activateFrom: z.string().optional(),
 	activateTo: z.string().optional(),
 	contact: z.string().optional(),
-	buildings: BuildingSchema.optional()
+	buildings: z.record(BuildingSchema).optional()
 });
 
 export async function apiGetConfig(): Promise<
@@ -74,6 +74,7 @@ export function getServiceConfig(configs: Config[]): ServiceConfig {
 	const foundConfig = configs.find((c: Config) => c.id === 'SERVICE') as ServiceConfig;
 	const parsed = ServiceConfigSchema.safeParse(foundConfig);
 	if (parsed.success) return parsed.data as ServiceConfig;
+	console.error(parsed, foundConfig);
 	return {
 		id: 'SERVICE',
 		name: null,
