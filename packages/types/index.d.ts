@@ -122,11 +122,13 @@ type ServiceConfigResponse = ConfigResponse & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
+	alert?: string;
 };
 
 type ServiceConfigDao = DaoData &
 	ConfigDao & {
 		b: { M: { [buildingId: string]: { M: BuildingData } } };
+		a?: { S: string };
 	};
 
 type Building = {
