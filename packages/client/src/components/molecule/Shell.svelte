@@ -14,6 +14,7 @@
 	import { getDepartmentConfig, getServiceConfig } from '$lib/api/config';
 	import { isActivated } from '$lib/utils';
 	import Info from '../../icons/Info.svelte';
+	import { extractLockerInfoFromId } from '$lib/utils.js';
 
 	let clazz = '';
 	export { clazz as class };
@@ -94,9 +95,15 @@
 	</section>
 </main>
 
-<Modal title='예약 불가 알림' bind:open={blockedModalOpen} preventOutclick on:cancel={() => console.log('hello')}
+<!--suppress JSUnresolvedVariable -->
+<Modal title='예약 불가 알림' bind:open={blockedModalOpen} preventOutclick on:cancel={() => {}}
 			 secondaryClass='hidden'
 			 primaryText='로그아웃' isPrimaryBtnIconRight on:click={() => goto('/logout')}>
-	현재 예약 가능한 시간이 아닙니다.
+	<p>현재 예약 가능한 시간이 아닙니다.</p>
+	{#if $user && $user.success && $user.result.lockerId}
+		{@const lockerInfo = extractLockerInfoFromId($user.result.lockerId)}
+		<p class='bg-gray-200 rounded-lg py-1 px-2 mt-1'>`{lockerInfo.floor}층 | {lockerInfo.sectionId}구역
+			- {lockerInfo.lockerNum}번</p>
+	{/if}
 	<ArrowExportLtr slot='primaryIcon' />
 </Modal>
