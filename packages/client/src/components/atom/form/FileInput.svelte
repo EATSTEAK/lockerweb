@@ -19,15 +19,16 @@
 	export { clazz as class };
 
 	function openFileDialog() {
-		if(ref) ref.click();
+		if (ref) ref.click();
 	}
 </script>
 
-<div class={clazz}>
-	<label for={id}>
-		<div>
-			<p class={labelClass} hidden={!showLabel}>{label ?? ''} <span class:hidden={!$$props.required}
-																																		class='text-red-800'>*</span></p>
+<div class='{clazz} flex flex-col'>
+	<label for={id} class='font-bold block mb-1'>
+		<div class='flex flex-col'>
+			<p class={labelClass} hidden={!showLabel}>
+				{label ?? ''} <span class:hidden={!$$props.required} class='text-red-800'>*</span>
+			</p>
 			<Button class='bg-primary-800 text-white' isIconRight on:click={openFileDialog}>
 				<ArrowUpload slot='icon' />
 				{#if !multiple && files && files.length}
@@ -38,17 +39,22 @@
 			</Button>
 		</div>
 	</label>
-	<input bind:this={ref} id={id} type='file'
-				 class={inputClass}
-				 bind:files
-				 bind:value
-				 {...$$restProps}
+	<input
+		bind:this={ref}
+		id={id}
+		type='file'
+		class='{inputClass} hidden'
+		bind:files
+		bind:value
+		{...$$restProps}
 	/>
 	{#if files}
 		{#each files ?? [] as file, index}
-			<div class='file-item'>
+			<div
+				class='flex flex-row gap-1 p-1 rounded-xl bg-gray-300 text-sm select-none text-gray-700 items-center'
+			>
 				<Document class='w-5 h-5' />
-				<div>{file.name}</div>
+				<div class='grow'>{file.name}</div>
 			</div>
 		{/each}
 	{/if}
@@ -56,18 +62,6 @@
 </div>
 
 <style>
-    div {
-        @apply flex flex-col;
-    }
-
-    input {
-        @apply hidden;
-    }
-
-    label {
-        @apply font-bold block mb-1;
-    }
-
     label > div > p[hidden] {
         @apply hidden;
     }
@@ -94,14 +88,6 @@
 
     label ~ input:disabled {
         @apply bg-gray-300 text-gray-400;
-    }
-
-    .file-item {
-        @apply flex flex-row gap-1 p-1 rounded-xl bg-gray-300 text-sm select-none text-gray-700 items-center;
-    }
-
-    .file-item > div {
-        @apply grow;
     }
 
     p.invalid {

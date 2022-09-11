@@ -39,7 +39,9 @@
 			response = data;
 			if (data.success) {
 				const { accessToken, expiresIn } = data.result;
-				document.cookie = `locker_session=${encodeURIComponent(accessToken)}; path=/; domain=${window.location.hostname}; max-age=${expiresIn}; samesite=lax`;
+				document.cookie = `locker_session=${encodeURIComponent(accessToken)}; path=/; domain=${
+					window.location.hostname
+				}; max-age=${expiresIn}; samesite=lax`;
 				user.refresh();
 				goto('/reserve');
 			} else {
@@ -47,7 +49,6 @@
 			}
 		});
 	}
-
 </script>
 
 <PageTitle name='로그인 중...' />
@@ -57,23 +58,17 @@
 		<NavigationContent>
 			<Entry class='h-full justify-center' name='SOONGSIL UNIV. IT'>
 				{#if !response}
-					<Button
-						disabled
-						class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
+					<Button disabled class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
 						로그인 중...
 						<ArrowClockwise class='animate-spin' slot='icon' />
 					</Button>
 				{:else if !response.success}
-					<Button
-						disabled
-						class='bg-red-800 text-white w-full h-16 text-xl' isIconRight={true}>
+					<Button disabled class='bg-red-800 text-white w-full h-16 text-xl' isIconRight={true}>
 						로그인 실패
 						<ErrorCircle class='animate-spin' slot='icon' />
 					</Button>
 				{:else if response.success}
-					<Button
-						disabled
-						class='bg-green-800 text-white w-full h-16 text-xl' isIconRight={true}>
+					<Button disabled class='bg-green-800 text-white w-full h-16 text-xl' isIconRight={true}>
 						로그인 성공
 						<Checkmark slot='icon' />
 					</Button>
@@ -87,6 +82,6 @@
 		</NavigationFooter>
 	</Navigation>
 	{#if response && response.success === false}
-		<ErrorScreen errorMessage={errorMessage} />
+		<ErrorScreen {errorMessage} />
 	{/if}
 </Shell>

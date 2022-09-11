@@ -115,17 +115,20 @@ type ServiceConfig = Config & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
+	alert?: string;
 };
 
 type ServiceConfigResponse = ConfigResponse & {
 	buildings: {
 		[buildingId: string]: Building;
 	};
+	alert?: string;
 };
 
 type ServiceConfigDao = DaoData &
 	ConfigDao & {
 		b: { M: { [buildingId: string]: { M: BuildingData } } };
+		a?: { S: string };
 	};
 
 type Building = {
@@ -179,6 +182,7 @@ type ConfigUpdateRequest = {
 	name?: string;
 	activateFrom?: string | null;
 	activateTo?: string | null;
+	alert?: string | null;
 };
 
 type DepartmentConfigUpdateRequest = ConfigUpdateRequest & {
@@ -247,6 +251,11 @@ type NotFoundError = LockerError & {
 type CantClaimError = LockerError & {
 	code: 403;
 	name: 'CantClaim';
+};
+
+type CantUnclaimError = LockerError & {
+	code: 403;
+	name: 'CantUnclaim';
 };
 
 type InternalError = LockerError & {

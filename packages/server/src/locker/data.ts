@@ -6,7 +6,7 @@ import type {
 	UpdateItemOutput
 } from 'aws-sdk/clients/dynamodb';
 import { adminId, dynamoDB, TableName } from '../util/database';
-import { CantClaimError, ForbiddenError, NotFoundError } from '../util/error';
+import { CantClaimError, CantUnclaimError, ForbiddenError, NotFoundError } from '../util/error';
 import type { AWSError } from 'aws-sdk';
 
 export const claimLocker = async function (
@@ -119,7 +119,7 @@ export const unclaimLocker = async function (
 			lockerId: res.Attributes.lockerId.S
 		};
 	} else {
-		throw new CantClaimError('This user is not claimed an locker yet', { id });
+		throw new CantUnclaimError('This user is not claimed an locker yet', { id });
 	}
 };
 

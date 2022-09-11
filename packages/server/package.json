@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Backend Lambda script for lockerweb",
   "license": "MIT",
   "scripts": {
@@ -11,7 +11,7 @@
     "test": "mocha tests/unit",
     "integ-test": "mocha tests/integration",
     "delete": "sam delete --no-prompts",
-    "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset",
+    "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3",
     "dryrun": "sam deploy --guided --no-execute-changeset"
   },
   "devDependencies": {

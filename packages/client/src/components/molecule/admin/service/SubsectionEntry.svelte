@@ -11,8 +11,8 @@
 	export let subsection: LockerSubsection;
 
 	const dispatch = createEventDispatcher<{
-		remove: {},
-		change: LockerSubsection
+		remove: {};
+		change: LockerSubsection;
 	}>();
 
 	$: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
@@ -60,8 +60,10 @@
 <div class='transition-all bg-white rounded-md flex flex-col gap-1 hover:brightness-95'>
 	<div class='transition-all flex items-center gap-3 overflow-hidden p-1'>
 		<div class='flex items-center'>
-			<button on:click={removeSubsection}
-							class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'>
+			<button
+				on:click={removeSubsection}
+				class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'
+			>
 				<Subtract />
 			</button>
 		</div>
@@ -69,14 +71,24 @@
 			<div class='rounded-md overflow-hidden flex items-center flex-wrap'>
 				<p class='font-bold mr-2'>세부 구역 범위</p>
 				<div class='flex items-center'>
-					<NumberInput id='range-start' class='w-24' label='세부 구역 시작' bind:value={rangeStart} />
+					<NumberInput
+						id='range-start'
+						class='w-24'
+						label='세부 구역 시작'
+						bind:value={rangeStart}
+					/>
 					<div class='p-2'>~</div>
 					<NumberInput id='range-end' class='w-24' label='세부 구역 끝' bind:value={rangeEnd} />
 				</div>
 			</div>
 			<div class='flex items-center flex-wrap'>
 				<p class='font-bold mr-2'>대상 학부</p>
-				<Select id={`subsection_${key}_department`} label='대상 학부' bind:value={department} required>
+				<Select
+					id={`subsection_${key}_department`}
+					label='대상 학부'
+					bind:value={department}
+					required
+				>
 					{#each departments as department}
 						<option value={department.id}>{department.name}</option>
 					{/each}

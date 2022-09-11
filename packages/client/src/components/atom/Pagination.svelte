@@ -22,8 +22,8 @@
 	}
 </script>
 
-<div class='wrap'>
-	<div class='item-per-page-wrap'>
+<div class='flex w-full items-center gap-3'>
+	<div class='flex gap-1 items-center'>
 		<p class='font-bold'>페이지 별 항목 수:</p>
 		<Select bind:value={itemsPerPageStr} id='items-per-page' label='페이지 별 항목 수'>
 			<option id='25'>25</option>
@@ -33,47 +33,38 @@
 			<option id='500'>500</option>
 		</Select>
 	</div>
-	<div class='current-page'>항목 <span class='font-bold'>{totalEntries}</span> 중 <span
-		class='font-bold'>{itemsPerPage * currentPage + 1 > totalEntries ? totalEntries : itemsPerPage * currentPage + 1}</span>-<span
-		class='font-bold'>{itemsPerPage * (currentPage + 1) >= totalEntries ? totalEntries : itemsPerPage * (currentPage + 1)}</span>
+	<div class='grow'>
+		항목 <span class='font-bold'>{totalEntries}</span> 중
+		<span class='font-bold'
+		>{itemsPerPage * currentPage + 1 > totalEntries
+			? totalEntries
+			: itemsPerPage * currentPage + 1}</span
+		>-<span class='font-bold'
+	>{itemsPerPage * (currentPage + 1) >= totalEntries
+		? totalEntries
+		: itemsPerPage * (currentPage + 1)}</span
+	>
 	</div>
-	<div class='pagination'>
-		<button on:click={prevPage} class='pagination-btn' disabled={currentPage < 1}>
+	<div class='flex gap-1 items-center'>
+		<button
+			on:click={prevPage}
+			class='pagination-btn transition-all bg-gray-200 p-1 text-gray-500 rounded-md'
+			disabled={currentPage < 1}
+		>
 			<CaretLeft />
 		</button>
-		<div class='page-indicator'>{currentPage + 1}</div>
-		<button on:click={nextPage} class='pagination-btn' disabled={currentPage + 1 >= totalPage}>
+		<div class='px-2'>{currentPage + 1}</div>
+		<button
+			on:click={nextPage}
+			class='pagination-btn transition-all bg-gray-200 p-1 text-gray-500 rounded-md'
+			disabled={currentPage + 1 >= totalPage}
+		>
 			<CaretRight />
 		</button>
 	</div>
 </div>
 
 <style>
-    .wrap {
-        @apply flex w-full items-center gap-3;
-    }
-
-    .item-per-page-wrap {
-        @apply flex gap-1 items-center;
-    }
-
-    .current-page {
-        @apply grow;
-    }
-
-    .pagination {
-        @apply flex gap-1 items-center;
-    }
-
-    .page-indicator {
-        @apply px-2;
-
-    }
-
-    .pagination-btn {
-        @apply transition-all bg-gray-200 p-1 text-gray-500 rounded-md;
-    }
-
     .pagination-btn:not(:disabled):hover {
         @apply brightness-90 scale-[1.01];
     }
@@ -87,6 +78,6 @@
     }
 
     .pagination-btn:disabled {
-        @apply bg-gray-100 text-gray-300;
+        @apply opacity-50;
     }
 </style>

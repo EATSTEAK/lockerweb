@@ -9,7 +9,7 @@
 	export let activateFrom: Date;
 	export let activateTo: Date;
 
-	$: activateTime = (activateFrom || activateTo) ? timeCalc(activateFrom, activateTo) : '';
+	$: activateTime = activateFrom || activateTo ? timeCalc(activateFrom, activateTo) : '';
 
 	let ref = null;
 
@@ -45,7 +45,7 @@
 
 <button
 	bind:this={ref}
-	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? "active" : ''}
+	class={`${lockerLeft <= 0 ? 'unavailable' : ''} ${selected ? 'active' : ''}
 	aspect-square max-w-[160px]
 	rounded-2xl bg-gray-100 box-border transition-all
 	flex-grow-0 flex-shrink-0 basis-[160px]
@@ -60,12 +60,12 @@
 	on:mouseleave
 	on:keydown
 	on:keydown={({ key }) => {
-    if (key === 'ArrowRight') {
-      ctx.change(1);
-    } else if (key === 'ArrowLeft') {
-      ctx.change(-1);
-    }
-  }}
+		if (key === 'ArrowRight') {
+			ctx.change(1);
+		} else if (key === 'ArrowLeft') {
+			ctx.change(-1);
+		}
+	}}
 >
 	<div class='flex flex-col'>
 		<div class='department-text'>{departmentText}</div>
@@ -105,5 +105,4 @@
         @apply shadow-md;
         box-shadow: inset 0 0 0 4px theme('colors.primary.800');
     }
-
 </style>

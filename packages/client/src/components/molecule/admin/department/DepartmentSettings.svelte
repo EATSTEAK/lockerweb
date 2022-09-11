@@ -2,7 +2,7 @@
 	import { config } from '$lib/store';
 	import UpdateScreen from '../../../atom/UpdateScreen.svelte';
 	import DepartmentConfigEditor from './DepartmentConfigEditor.svelte';
-	import Skeleton from "../../../atom/Skeleton.svelte";
+	import Skeleton from '../../../atom/Skeleton.svelte';
 	import { apiDeleteConfig, apiUpdateConfig, getDepartmentConfigs } from '$lib/api/config';
 
 	$: configs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
@@ -13,7 +13,7 @@
 	function deleteDepartment(event: CustomEvent<ConfigDeleteRequest>) {
 		updating = true;
 		apiDeleteConfig(event.detail)
-			.then(res => {
+			.then((res) => {
 				updating = false;
 				if (res.success) {
 					config.refresh();
@@ -21,7 +21,7 @@
 					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				console.error(err);
 				updating = false;
 			});
@@ -30,7 +30,7 @@
 	function updateDepartment(event: CustomEvent<ConfigUpdateRequest>) {
 		updating = true;
 		apiUpdateConfig(event.detail)
-			.then(res => {
+			.then((res) => {
 				updating = false;
 				if (res.success) {
 					config.refresh();
@@ -38,7 +38,7 @@
 					console.error((res as ErrorResponse<LockerError>).error);
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				console.error(err);
 				updating = false;
 			});
@@ -54,6 +54,6 @@
 	{:else if updating}
 		<UpdateScreen class='min-h-[32rem] md:rounded-md' />
 	{:else}
-		<Skeleton class='w-full h-[32rem] grow md:rounded-md bg-gray-200'></Skeleton>
+		<Skeleton class='w-full h-[32rem] grow md:rounded-md bg-gray-200' />
 	{/if}
 </div>

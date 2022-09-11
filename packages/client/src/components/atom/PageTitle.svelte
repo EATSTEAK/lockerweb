@@ -5,7 +5,8 @@
 
 	let serviceName = '사물함 예약 시스템';
 	$: if ($config && $config.success) {
-		serviceName = ($config.result ?? []).find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 예약 시스템';
+		serviceName =
+			($config.result ?? []).find((c: Config) => c.id === 'SERVICE')?.name ?? '사물함 예약 시스템';
 	}
 </script>
 

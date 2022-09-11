@@ -1,11 +1,16 @@
 <script lang='ts'>
 	import Skeleton from '../../atom/Skeleton.svelte';
 	import Dismiss from '../../../icons/Dismiss.svelte';
+	import { getBuildingName } from '$lib/utils.js';
+	import { getServiceConfig } from '$lib/api/config';
 	import { createEventDispatcher } from 'svelte';
+	import { config } from '$lib/store';
 
 	const dispatch = createEventDispatcher();
 
 	export let reservedLocker: ReservedLocker;
+
+	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
 	let buildingId: string;
 	let floor: string;
@@ -24,18 +29,28 @@
 	const dateFormatter = new Intl.DateTimeFormat('ko', { timeStyle: 'short', dateStyle: 'short' });
 	$: claimedUntilDisplay = claimedUntil ? dateFormatter.format(claimedUntil) : '';
 </script>
+
 {#if reservedLocker !== undefined}
-	<div class='user-reserve-locker-container w-full'>
+	<div class='relative w-full'>
 		<h4 class='text-4xl'>내 정보</h4>
 		<h5 class='text-xl text-blue-500 mt-3'>예약한 사물함</h5>
-		<div class:pointer-events-none={reservedLocker === null} on:click={() => {dispatch('unclaim')}}
-				 class='hover-wrapper cursor-pointer relative w-56 h-44 rounded-2xl'>
+		<div
+			class:pointer-events-none={reservedLocker === null}
+			on:click={() => {
+				dispatch('unclaim');
+			}}
+			class='hover-wrapper cursor-pointer relative w-56 h-44 rounded-2xl'
+		>
 			<div
-				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-2 mr-2 rounded-lg'>
+				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-2 mr-2 rounded-lg'
+			>
 				<Dismiss />
 			</div>
-			<div class:invisible={reservedLocker !== null} class:backdrop-blur-sm={reservedLocker === null}
-					 class='hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'>
+			<div
+				class:invisible={reservedLocker !== null}
+				class:backdrop-blur-sm={reservedLocker === null}
+				class='hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'
+			>
 				{#if reservedLocker !== null}
 					예약 취소
 				{:else}
@@ -43,13 +58,21 @@
 				{/if}
 			</div>
 			<div
-				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex p-2 gap-1'>
-				<div class='flex flex-col w-2/5 h-40 bg-gray-300 rounded-2xl text-center justify-center items-center'>
-					<div class='text-2xl font-extrabold align-middle'>구역</div>
-					<div class:invisible={reservedLocker === null} class='location text-7xl font-extrabold'>{section}</div>
+				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex flex-col p-2 gap-1'
+			>
+				<div
+					class='flex flex-col w-full px-2 h-16 bg-gray-300 rounded-2xl text-center justify-center items-center'
+				>
+					<div class:invisible={reservedLocker === null} class='location text-2xl font-extrabold'>
+						{getBuildingName(serviceConfig.buildings, buildingId)} {floor}층
+					</div>
 				</div>
-				<div class:invisible={reservedLocker === null}
-						 class='number text-primary-800 grow text-7xl font-extrabold text-center'>{lockerNum}</div>
+				<div
+					class:invisible={reservedLocker === null}
+					class='number text-primary-800 grow text-7xl flex items-center font-extrabold text-center'
+				>
+					{section}-{lockerNum}
+				</div>
 			</div>
 		</div>
 		{#if claimedUntil}
@@ -58,12 +81,12 @@
 	</div>
 {:else}
 	<div class='w-full'>
-		<Skeleton class='w-52 h-10 mt-9 bg-gray-300 rounded-lg'></Skeleton>
+		<Skeleton class='w-52 h-10 mt-9 bg-gray-300 rounded-lg' />
 		<div class='flex flex-row mt-6'>
-			<Skeleton class='w-16 h-32 bg-gray-300 rounded-lg mr-2'></Skeleton>
-			<Skeleton class='w-36 h-32 bg-gray-300 rounded-lg'></Skeleton>
+			<Skeleton class='w-16 h-32 bg-gray-300 rounded-lg mr-2' />
+			<Skeleton class='w-36 h-32 bg-gray-300 rounded-lg' />
 		</div>
-		<Skeleton class='w-24 h-6 mt-2 bg-gray-300 rounded-lg'></Skeleton>
+		<Skeleton class='w-24 h-6 mt-2 bg-gray-300 rounded-lg' />
 	</div>
 {/if}
 
@@ -74,9 +97,5 @@
 
     .hover-wrapper:hover > .hover-popup {
         @apply visible backdrop-blur-sm rounded-xl;
-    }
-
-    .user-reserve-locker-container {
-        @apply relative;
     }
 </style>

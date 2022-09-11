@@ -5,8 +5,8 @@
 	import { config } from '$lib/store';
 	import { getDepartmentConfigs } from '$lib/api/config';
 
-
-	$: departmentIds = $config && $config.success ? getDepartmentConfigs($config.result).map(v => v.id) : [];
+	$: departmentIds =
+		$config && $config.success ? getDepartmentConfigs($config.result).map((v) => v.id) : [];
 
 	export let subsections: LockerSubsection[];
 
@@ -21,10 +21,12 @@
 	}
 
 	function isValidSubsection(subsection: LockerSubsection) {
-		return typeof subsection.range[0] === 'number' &&
+		return (
+			typeof subsection.range[0] === 'number' &&
 			typeof subsection.range[1] === 'number' &&
 			subsection.range[0] <= subsection.range[1] &&
-			departmentIds.includes(subsection.department);
+			departmentIds.includes(subsection.department)
+		);
 	}
 
 	function removeSubsection(index: number) {
@@ -42,8 +44,12 @@
 	<p class='text-xl font-bold'>세부 구역 설정</p>
 	{#each newSubsections as subsection, index}
 		<div class='my-1'>
-			<SubsectionEntry on:remove={() => removeSubsection(index)} on:change={(evt) => updateSubsection(index, evt)}
-											 key={index} subsection={subsection} />
+			<SubsectionEntry
+				on:remove={() => removeSubsection(index)}
+				on:change={(evt) => updateSubsection(index, evt)}
+				key={index}
+				{subsection}
+			/>
 		</div>
 	{/each}
 	<Button on:click={addSubsection} class='bg-white' isIconRight>

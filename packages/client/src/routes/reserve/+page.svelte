@@ -42,7 +42,7 @@
 
 	$: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
-	$:if ($user && $user.success) {
+	$: if ($user && $user.success) {
 		reservedLocker = getUserReservedLocker($user.result);
 		targetDepartmentId = $user.result.department;
 	} else {
@@ -81,88 +81,92 @@
 	}
 
 	function queryLockerData() {
-		apiQueryLocker().then((res) => {
-			if (res.success) {
-				reservedLockerIds = res.result.map(reservedLocker => reservedLocker.lockerId);
-			} else {
-				if (res.success === false) {
-					errorData = res.error;
+		apiQueryLocker()
+			.then((res) => {
+				if (res.success) {
+					reservedLockerIds = res.result.map((reservedLocker) => reservedLocker.lockerId);
 				} else {
-					console.error(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
+					if (res.success === false) {
+						errorData = res.error;
+					} else {
+						console.error(res);
+						errorData = {
+							code: 500,
+							name: 'UnknownError'
+						};
+					}
 				}
-			}
-		}).catch(e => {
-			console.error(e);
-			errorData = e;
-		});
+			})
+			.catch((e) => {
+				console.error(e);
+				errorData = e;
+			});
 	}
 
 	function claimLocker(lockerId: string) {
 		claimModalOpen = false;
 		isClaiming = true;
-		apiClaimLocker(
-			lockerId
-		).then((res) => {
-			isClaiming = false;
-			if (res.success) {
-				user.refresh();
-				queryLockerData();
-			} else {
-				if (res.success === false) {
-					errorData = res.error;
+		apiClaimLocker(lockerId)
+			.then((res) => {
+				isClaiming = false;
+				if (res.success) {
+					user.refresh();
+					queryLockerData();
 				} else {
-					console.error(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
+					if (res.success === false) {
+						errorData = res.error;
+					} else {
+						console.error(res);
+						errorData = {
+							code: 500,
+							name: 'UnknownError'
+						};
+					}
 				}
-			}
-		}).catch(e => {
-			isClaiming = false;
-			console.error(e);
-			errorData = e;
-		});
+			})
+			.catch((e) => {
+				isClaiming = false;
+				console.error(e);
+				errorData = e;
+			});
 	}
 
 	function unclaimLocker() {
 		unclaimModalOpen = false;
 		isUnclaiming = true;
-		apiUnclaimLocker().then((res) => {
-			isUnclaiming = false;
-			if (res.success) {
-				queryLockerData();
-				user.refresh();
-			} else {
-				if (res.success === false) {
-					errorData = res.error;
+		apiUnclaimLocker()
+			.then((res) => {
+				isUnclaiming = false;
+				if (res.success) {
+					queryLockerData();
+					user.refresh();
 				} else {
-					console.log(res);
-					errorData = {
-						code: 500,
-						name: 'UnknownError'
-					};
+					if (res.success === false) {
+						errorData = res.error;
+					} else {
+						console.log(res);
+						errorData = {
+							code: 500,
+							name: 'UnknownError'
+						};
+					}
 				}
-			}
-		}).catch(e => {
-			isUnclaiming = false;
-			console.error(e);
-			errorData = e;
-		});
+			})
+			.catch((e) => {
+				isUnclaiming = false;
+				console.error(e);
+				errorData = e;
+			});
 	}
 
 	function getErrorMessage(errorData: LockerError): string {
-		if (errorData.name === 'BlockedError') {
+		if (errorData.name === 'Blocked') {
 			return '현재는 해당 작업을 수행할 수 없습니다. 이용 시간을 확인하세요.';
-		} else if (errorData.name === 'ForbiddenError') {
+		} else if (errorData.name === 'Forbidden') {
 			return '해당 작업을 수행할 권한이 없습니다. 로그인 여부를 확인하세요.';
-		} else if (errorData.name === 'CantClaimError') {
+		} else if (errorData.name === 'CantClaim') {
 			return '이미 다른 사람이 예약한 사물함입니다. 다른 사물함을 예약하세요.';
-		} else if (errorData.name === 'CantUnclaimError') {
+		} else if (errorData.name === 'CantUnclaim') {
 			return '이 사물함은 반납할 수 없습니다. 이미 반납되었을 수 있습니다.';
 		} else {
 			return '알 수 없는 오류입니다. 관리자에게 문의하세요.';
@@ -176,20 +180,22 @@
 
 <NavigationShell collapsable={innerWidth && innerWidth <= 768}>
 	<div class='w-full h-full' slot='navigation_content'>
-		<UserReservedLocker {reservedLocker} on:unclaim={() => unclaimModalOpen = true} />
+		<UserReservedLocker {reservedLocker} on:unclaim={() => (unclaimModalOpen = true)} />
 		{#if $config && $config.success}
-			<Button on:click={() => contactModalOpen = true}
-							class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'>
+			<Button
+				on:click={() => (contactModalOpen = true)}
+				class='px-0 py-0 !shadow-none text-primary-800 underline hover:!shadow-none hover:text-primary-900 active:!shadow-none active:drop-shadow-md'
+			>
 				도움이 필요하신가요?
 			</Button>
 		{:else}
-			<Skeleton class='w-36 h-6 mt-2 bg-gray-300 rounded-lg'></Skeleton>
+			<Skeleton class='w-36 h-6 mt-2 bg-gray-300 rounded-lg' />
 		{/if}
 	</div>
 	<div class='flex flex-col w-full gap-2' slot='navigation_footer'>
 		<div class='flex flex-row justify-between items-center w-full'>
-			<Button class='bg-primary-800 text-white' isIconRight href='/logout'>
-				<ArrowExportLtr slot='icon' />
+			<Button class='bg-primary-800 text-white' href='/logout'>
+				<ArrowExportLtr slot='icon' class='rotate-180' />
 				로그아웃
 			</Button>
 			{#if $user && $user.success && $user.result.isAdmin}
@@ -205,30 +211,48 @@
 	<div class='h-full relative' bind:clientWidth={contentWidth}>
 		{#if !errorData}
 			{#if selectedLockerId && !isClaiming && !isUnclaiming}
-				<SelectedLockerAlert {selectedLockerId} width={contentWidth}
-														 on:click:secondary={() => selectedLockerId = undefined}
-														 on:click={() => claimModalOpen = true} />
+				<SelectedLockerAlert
+					{selectedLockerId}
+					width={contentWidth}
+					on:click:secondary={() => (selectedLockerId = undefined)}
+					on:click={() => (claimModalOpen = true)}
+				/>
 			{/if}
 			{#if !isClaiming && !isUnclaiming}
-				<LockerReserveInfo bind:selectedLockerId {targetDepartmentId} {serviceConfig} {reservedLockerIds} />
+				<LockerReserveInfo
+					bind:selectedLockerId
+					{targetDepartmentId}
+					{serviceConfig}
+					{reservedLockerIds}
+				/>
 			{:else if isClaiming}
-				<LockerLoadingScreen class='w-full h-full' message='예약 중..'
-														 selectedLockerInfo={`${lockerInfo.floor}층 | ${lockerInfo.sectionId}구역 - ${lockerInfo.lockerNum}번`} />
+				<LockerLoadingScreen
+					class='w-full h-full'
+					message='예약 중..'
+					selectedLockerInfo={`${lockerInfo.floor}층 | ${lockerInfo.sectionId}구역 - ${lockerInfo.lockerNum}번`}
+				/>
 			{:else if isUnclaiming}
 				<LockerLoadingScreen class='w-full h-full' message='반납 중..' />
 			{/if}
 		{:else}
-			<ErrorScreen class='w-full h-full' errorTitle='{errorData.code}'
-									 errorMessage='{getErrorMessage(errorData)}' />
+			<ErrorScreen
+				class='w-full h-full'
+				errorTitle={errorData.code}
+				errorMessage={getErrorMessage(errorData)}
+			/>
 		{/if}
 	</div>
-
 </NavigationShell>
 
-<Modal title='학과(부) 연락처' bind:open={contactModalOpen} secondaryClass='hidden' primaryText='닫기'
-			 on:close={() => contactModalOpen = false}
-			 on:click={() => contactModalOpen = false}>
-	{#each (($config && $config.success) ? $config.result : []) as config}
+<Modal
+	title='학과(부) 연락처'
+	bind:open={contactModalOpen}
+	secondaryClass='hidden'
+	primaryText='닫기'
+	on:close={() => (contactModalOpen = false)}
+	on:click={() => (contactModalOpen = false)}
+>
+	{#each $config && $config.success ? $config.result : [] as config}
 		{#if config.contact}
 			<div class='my-2 leading-10'>
 				<h5>{config.name} 연락처</h5>
@@ -241,17 +265,29 @@
 	<Dismiss slot='primaryIcon' />
 </Modal>
 
-<Modal title='예약 확인' bind:open={claimModalOpen} primaryText='예약하기' on:click={() => claimLocker(selectedLockerId)}
-			 on:click:secondary={() => claimModalOpen = false} on:close={() => claimModalOpen = false}>
-	정말로 {getBuildingName(serviceConfig?.buildings, lockerInfo?.buildingId)} {lockerInfo?.floor}
+<Modal
+	title='예약 확인'
+	bind:open={claimModalOpen}
+	primaryText='예약하기'
+	on:click={() => claimLocker(selectedLockerId)}
+	on:click:secondary={() => (claimModalOpen = false)}
+	on:close={() => (claimModalOpen = false)}
+>
+	정말로 {getBuildingName(serviceConfig?.buildings, lockerInfo?.buildingId)}
+	{lockerInfo?.floor}
 	층 {lockerInfo?.sectionId}
 	구역 {lockerInfo?.lockerNum}번 사물함을 대여하시겠습니까?
 	<Bookmark slot='primaryIcon' />
 </Modal>
 
-<Modal title='예약 취소 확인' bind:open={unclaimModalOpen} primaryText='예약 취소'
-			 on:click={() => unclaimLocker()}
-			 on:click:secondary={() => unclaimModalOpen = false} on:close={() => unclaimModalOpen = false}>
+<Modal
+	title='예약 취소 확인'
+	bind:open={unclaimModalOpen}
+	primaryText='예약 취소'
+	on:click={() => unclaimLocker()}
+	on:click:secondary={() => (unclaimModalOpen = false)}
+	on:close={() => (unclaimModalOpen = false)}
+>
 	정말로 예약하신 사물함을 예약 취소하시겠습니까?
 	<BookmarkOff slot='primaryIcon' />
 </Modal>

@@ -14,21 +14,30 @@
 
 	$: if ($config.success && selectedBuildingId) {
 		const serviceConfig = getServiceConfig($config?.result);
-		alt = `${getBuildingName(serviceConfig.buildings, selectedBuildingId)} ${selectedFloor}층 배치도`;
+		alt = `${getBuildingName(
+			serviceConfig.buildings,
+			selectedBuildingId
+		)} ${selectedFloor}층 배치도`;
 	}
 </script>
+
 {#key `${selectedBuildingId}-${selectedFloor}`}
-	<div style:--bg-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}.svg")' class='{clazz} w-full h-full bg'
-			 in:fly={{ y: 100, duration: 300 }} aria-label={alt}>
+	<div
+		style:--bg-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}.png")'
+		class='{clazz} w-full h-full bg'
+		in:fly={{ y: 100, duration: 300 }}
+		aria-label={alt}
+	>
 		{#if selectedSectionId}
-			<div in:fade style:--locker-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}/{selectedSectionId}.svg"'
-					 class='w-full h-full locker animate-pulse transition-all'></div>
+			<div
+				in:fade
+				style:--locker-img='url("/floorMaps/{selectedBuildingId}/{selectedFloor}/{selectedSectionId}.svg")'
+				class='w-full h-full locker animate-pulse transition-all'></div>
 		{/if}
 	</div>
 {/key}
 
 <style>
-
     .bg {
         background-image: var(--bg-img);
         background-repeat: no-repeat;
@@ -43,5 +52,3 @@
         background-position: center;
     }
 </style>
-
-
