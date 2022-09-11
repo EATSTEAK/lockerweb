@@ -6,7 +6,7 @@ import type {
 	UpdateItemOutput
 } from 'aws-sdk/clients/dynamodb';
 import { adminId, dynamoDB, TableName } from '../util/database';
-import { CantClaimError, CantUnclaimError, ForbiddenError, NotFoundError } from '../util/error';
+import { BlockedError, CantClaimError, CantUnclaimError, NotFoundError } from '../util/error';
 import type { AWSError } from 'aws-sdk';
 
 export const claimLocker = async function (
@@ -39,7 +39,7 @@ export const claimLocker = async function (
 		blockedDepartments.map((d) => [`:${d}`, { S: d }])
 	);
 	conditionValues[':true'] = { BOOL: true };
-	const condition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
+	const condition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
@@ -62,7 +62,7 @@ export const claimLocker = async function (
 		res = await dynamoDB.updateItem(req).promise();
 	} catch (e) {
 		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
-			throw new ForbiddenError();
+			throw new BlockedError();
 		}
 		throw e;
 	}
@@ -86,14 +86,12 @@ export const unclaimLocker = async function (
 		blockedDepartments.map((d) => [`:${d}`, { S: d }])
 	);
 	conditionValues[':true'] = { BOOL: true };
-	const condition = blockedDepartments.map((d) => `(NOT d = :${d})`).join(' AND ');
+	const condition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression: 'REMOVE #lockerId',
-		ConditionExpression: `#aT = :token AND attribute_exists(#lockerId)${
-			condition ? ` AND ((${condition}) OR iA = true)` : ''
-		}`,
+		ConditionExpression: `#aT = :token ${condition ? ` AND ((${condition}) OR iA = :true)` : ''}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
@@ -109,7 +107,7 @@ export const unclaimLocker = async function (
 		res = await dynamoDB.updateItem(req).promise();
 	} catch (e) {
 		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
-			throw new ForbiddenError();
+			throw new BlockedError();
 		}
 		throw e;
 	}

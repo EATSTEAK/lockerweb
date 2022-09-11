@@ -2,15 +2,9 @@ import https from 'https';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
 import { createResponse, JWT_SECRET } from '../../common';
-import {
-	BlockedError,
-	errorResponse,
-	responseAsLockerError,
-	UnauthorizedError
-} from '../../util/error';
+import { errorResponse, responseAsLockerError, UnauthorizedError } from '../../util/error';
 import { issueToken } from '../data';
 import { queryConfig } from '../../config/data';
-import { adminId } from '../../util/database';
 import { getBlockedDepartments } from '../../util/access';
 
 function requestBody(result: string): Promise<string> {
@@ -48,13 +42,11 @@ export const ssuLoginHandler: APIGatewayProxyHandler = async (event) => {
 			const id = await obtainId(result);
 			const configs = await queryConfig();
 			const blockedDepartments = getBlockedDepartments(configs);
-			if (adminId !== id && blockedDepartments.includes('SERVICE')) {
-				return errorResponse(new BlockedError('Service unavailable'));
-			}
+			const isServiceBlocked = blockedDepartments.includes('SERVICE');
 			const accessToken = jwt.sign({ aud: id }, JWT_SECRET, {
 				expiresIn: 3600 * 1000
 			});
-			const issued = await issueToken(id, accessToken);
+			const issued = await issueToken(id, accessToken, isServiceBlocked);
 			const left = Math.floor((issued.expires - Date.now()) / 1000);
 			const res = {
 				success: true,

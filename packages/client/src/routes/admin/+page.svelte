@@ -125,7 +125,7 @@
 
 <svelte:window bind:innerWidth />
 
-<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 768}>
+<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 768} disableBlock>
 	<section class='flex flex-col gap-1' slot='navigation_content'>
 		{#if $user && $user.success}
 			<h3>설정</h3>
