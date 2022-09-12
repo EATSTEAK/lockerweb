@@ -34,7 +34,7 @@
 		name,
 		...(activateFrom ? { activateFrom: activateFrom.toISOString() } : (serviceConfig?.activateFrom && { activateFrom: null })),
 		...(activateTo ? { activateTo: activateTo.toISOString() } : (serviceConfig?.activateTo && { activateTo: null })),
-		...(alert ? { alert } : (serviceConfig.alert && { alert: null })),
+		...(alert ? { alert } : (serviceConfig?.alert && { alert: null })),
 		buildings
 	};
 	$: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);

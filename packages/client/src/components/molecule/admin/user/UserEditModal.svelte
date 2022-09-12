@@ -47,8 +47,8 @@
 			name,
 			department,
 			isAdmin,
-			...(lockerId && { lockerId }),
-			...(claimedUntil && { claimedUntil: claimedUntil.getTime() })
+			...(lockerId ? { lockerId } : targetUser?.lockerId && { lockerId: null }),
+			...(claimedUntil ? { claimedUntil: claimedUntil.getTime() } : targetUser?.claimedUntil && { claimedUntil: null })
 		};
 		dispatch('submit', newUser);
 	}
