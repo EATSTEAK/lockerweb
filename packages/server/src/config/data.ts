@@ -252,7 +252,7 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 	}
 	if (config.alert === null) {
 		attributeNames['#a'] = 'a';
-		removeExp += `${removeExp ? ',' : 'REMOVE'} #a';`;
+		removeExp += `${removeExp ? ',' : 'REMOVE'} #a`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
