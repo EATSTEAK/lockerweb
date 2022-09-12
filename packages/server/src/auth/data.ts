@@ -65,7 +65,7 @@ export const issueToken = async function (
 		res = await dynamoDB.updateItem(req).promise();
 	} catch (e) {
 		if ((e as AWSError).name === 'ConditionalCheckFailedException') {
-			throw new BlockedError('This user cannot login to service');
+			throw new ForbiddenError('This user cannot login to service');
 		}
 		throw e;
 	}
