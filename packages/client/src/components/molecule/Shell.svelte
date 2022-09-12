@@ -44,6 +44,9 @@
 	function isReservable(config: Config[], user: User, time: Date): boolean {
 		if (!user || user.isAdmin) return true;
 		const userDeptConfig: DepartmentConfig = getDepartmentConfig(config, user.department) as DepartmentConfig;
+		if (serviceConfig && userDeptConfig) {
+			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date) && isActivated(userDeptConfig.activateFrom as Date, userDeptConfig.activateTo as Date);
+		}
 		if (serviceConfig) {
 			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date);
 		}
