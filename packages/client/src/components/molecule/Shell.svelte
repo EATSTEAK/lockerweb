@@ -60,12 +60,12 @@
 	export let disableBlock = false;
 </script>
 
-<main class='{clazz} flex flex-col md:flex-row items-stretch'>
-	<section class='{navigationClass} flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
+<main class='{clazz} flex flex-col lg:flex-row items-stretch'>
+	<section class='{navigationClass} flex row w-full lg:min-w-[380px] lg:basis-[380px] lg:h-screen'>
 		<slot name='navigation'>
 			<Navigation class='flex-row w-full h-full'>
-				<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
-					<Soongsil class='w-12 h-12 md:w-20 md:h-20' />
+				<NavigationHeader class='py-1 lg:py-0 lg:pt-10' slot='header'>
+					<Soongsil class='w-12 h-12 lg:w-20 lg:h-20' />
 				</NavigationHeader>
 				<Divider class='my-6' />
 				<NavigationContent>
@@ -82,9 +82,9 @@
 			</Navigation>
 		</slot>
 	</section>
-	<section class='{mainClass} grow md:max-h-screen overflow-x-auto md:overflow-y-auto'>
+	<section class='{mainClass} grow lg:max-h-screen overflow-x-auto lg:overflow-y-auto'>
 		{#if serviceConfig && serviceConfig.alert}
-			<div class='bg-primary-200 rounded-md p-6 my-4 mx-6 md:mx-8 flex gap-3'>
+			<div class='bg-primary-200 rounded-md p-6 my-4 mx-6 lg:mx-8 flex gap-3'>
 				<Info />
 				<div class='grow'>
 					<span class='font-bold'>안내:</span> {serviceConfig.alert}

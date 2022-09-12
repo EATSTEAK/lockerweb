@@ -75,7 +75,7 @@
 				{/if}
 			</Entry>
 		</NavigationContent>
-		<NavigationFooter class='block md:hidden'>
+		<NavigationFooter class='block lg:hidden'>
 			<div class='w-full flex justify-center items-center'>
 				<ChevronDown class='animate-bounce ease-in-out text-gray-700 w-8 h-8' />
 			</div>
