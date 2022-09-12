@@ -13,8 +13,13 @@
 	import Dismiss from '../../icons/Dismiss.svelte';
 	import Eatsteak from '../../icons/creator/Eatsteak.svelte';
 	import Twince from '../../icons/creator/Twince.svelte';
+	import { scale } from 'svelte/transition';
+	import { backInOut } from 'svelte/easing';
 
 	let open = false;
+
+	let showLove = false;
+	let noLove = true;
 </script>
 
 <section class='flex gap-1 items-center'>
@@ -37,6 +42,7 @@
 <Modal
 	title='정보'
 	bind:open
+	class='{!noLove ? "opacity-0" : ""}'
 	on:close={() => (open = false)}
 	on:click:secondary={() => (open = false)}
 	on:click={() => window.open('https://github.com/EATSTEAK/lockerweb', '_blank').focus()}
@@ -204,6 +210,12 @@
 	<Dismiss slot='secondaryIcon' />
 	<GitHub slot='primaryIcon' />
 </Modal>
+
+{#if showLove}
+	<div in:scale={{ duration: 500, easing: backInOut }} out:scale={{ duration: 500, delay: 1000, easing: backInOut }} on:introstart={() => noLove = false} on:outroend={() => noLove = true} on:introend={() => showLove = false} class='fixed z-[9999] w-full h-full flex justify-center items-center top-0 left-0'>
+		<Heart class='w-[50vw] h-[50vw] text-rose-600' />
+	</div>
+{/if}
 
 <style>
     :global(.tooltip) {
