@@ -49,7 +49,7 @@
 			<div
 				class:invisible={reservedLocker !== null}
 				class:backdrop-blur-sm={reservedLocker === null}
-				class='hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'
+				class='ring-2 ring-blue-400 hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'
 			>
 				{#if reservedLocker !== null}
 					예약 취소
