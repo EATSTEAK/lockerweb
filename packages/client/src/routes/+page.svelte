@@ -115,7 +115,7 @@
 
 <PageTitle />
 
-<Shell mainClass='py-8 px-4 md:px-8'>
+<Shell>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
 			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
@@ -163,17 +163,19 @@
 			</div>
 		</NavigationFooter>
 	</Navigation>
-	{#if !errorData}
-		<LockerStatus {lockerCount} />
-	{:else}
-		<div class='h-full' transition:fade>
-			<ErrorScreen
-				class='rounded-md p-4'
-				errorTitle={errorData.code}
-				errorMessage='오류가 발생하였습니다. 관리자에게 문의하십시오.'
-			/>
-		</div>
-	{/if}
+	<div class='h-full w-full px-6 py-4 lg:px-8'>
+		{#if !errorData}
+			<LockerStatus {lockerCount} />
+		{:else}
+			<div class='h-full' transition:fade>
+				<ErrorScreen
+					class='rounded-md p-4'
+					errorTitle={errorData.code}
+					errorMessage='오류가 발생하였습니다. 관리자에게 문의하십시오.'
+				/>
+			</div>
+		{/if}
+	</div>
 </Shell>
 
 <Modal
