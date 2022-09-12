@@ -267,6 +267,9 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 		attributes[':contact'] = { S: (config as DepartmentConfigUpdateRequest).contact };
 		updateExp += `${updateExp ? ',' : 'SET'} c = :contact`;
 	}
+	if ((config as DepartmentConfigUpdateRequest).contact === null) {
+		removeExp += `${removeExp ? ',' : 'REMOVE'} c`;
+	}
 
 	const req: UpdateItemInput = {
 		TableName,
