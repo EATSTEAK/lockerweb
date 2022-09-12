@@ -40,11 +40,9 @@ export const revokeToken = async function (
 
 export const issueToken = async function (
 	id: string,
-	token: string,
-	isServiceBlocked: boolean
+	token: string
 ): Promise<{ id: string; expires: number }> {
 	const expires = Date.now() + 3600 * 1000 * 24;
-	const condition = 'attribute_exists(d)';
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: `${id}` } },
@@ -53,7 +51,7 @@ export const issueToken = async function (
 			'#aT': 'aT'
 		},
 		...(id !== adminId && {
-			ConditionExpression: `iA = :true OR (${condition})`
+			ConditionExpression: `iA = :true OR attribute_exists(d)`
 		}),
 		ExpressionAttributeValues: {
 			':token': { S: token },
@@ -72,8 +70,6 @@ export const issueToken = async function (
 		throw e;
 	}
 	if (res.Attributes.hasOwnProperty('aT') && res.Attributes.aT.S === token) {
-		if (res.Attributes.iA?.BOOL !== true && isServiceBlocked)
-			throw new BlockedError('This user cannot login to service');
 		return { id, expires };
 	} else {
 		throw new ForbiddenError('Cannot issue token', { id, expires });
