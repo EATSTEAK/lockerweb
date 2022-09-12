@@ -24,8 +24,8 @@
 		if (parseInt(a.buildingId) === parseInt(b.buildingId)) {
 			const aFloor = parseInt(a.floor.replace('B', '-'));
 			const bFloor = parseInt(b.floor.replace('B', '-'));
-			if (aFloor > bFloor) return 1;
-			if (aFloor < bFloor) return -1;
+			if (aFloor < bFloor) return 1;
+			if (aFloor > bFloor) return -1;
 			if (aFloor === bFloor) return 0;
 		}
 	}
