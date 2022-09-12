@@ -110,7 +110,7 @@
 		</div>
 	</div>
 	<div class='my-5 font-medium leading-10'>
-		<p class='text-gray-500 text-center'>Made with</p>
+		<p class='text-gray-500 text-center'>Powered by</p>
 		<div class='flex flex-row justify-center items-center gap-2 text-gray-500'>
 			<Button
 				href='https://svelte.dev'
