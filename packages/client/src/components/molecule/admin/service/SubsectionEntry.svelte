@@ -62,7 +62,7 @@
 		<div class='flex items-center'>
 			<button
 				on:click={removeSubsection}
-				class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'
+				class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-95 focus:brightness-90 active:brightness-75'
 			>
 				<Subtract />
 			</button>
