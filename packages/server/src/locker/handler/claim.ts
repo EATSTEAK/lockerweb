@@ -40,9 +40,7 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 			return errorResponse(new InternalError('Cannot find available lockers'));
 		}
 		const blockedDepartments = getBlockedDepartments(configs);
-		if (adminId !== id && blockedDepartments.includes('SERVICE')) {
-			return errorResponse(new ForbiddenError());
-		}
+		const isServiceBlocked = blockedDepartments.includes('SERVICE');
 		if (!isValidLocker(serviceConfig, data.lockerId, user.department)) {
 			return errorResponse(new InternalError('Unknown locker data'));
 		}
@@ -53,9 +51,16 @@ export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
 		const until = data?.until;
 		let res: ClaimLockerResponse;
 		if (until) {
-			res = await claimLocker(id, token, blockedDepartments, lockerId, new Date(until).getTime());
+			res = await claimLocker(
+				id,
+				token,
+				blockedDepartments,
+				isServiceBlocked,
+				lockerId,
+				new Date(until).getTime()
+			);
 		} else {
-			res = await claimLocker(id, token, blockedDepartments, lockerId);
+			res = await claimLocker(id, token, blockedDepartments, isServiceBlocked, lockerId);
 		}
 		return createResponse(200, { success: true, result: res });
 	} catch (e) {
