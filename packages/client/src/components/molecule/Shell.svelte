@@ -105,7 +105,7 @@
 	<p>현재 예약 가능한 시간이 아닙니다.</p>
 	{#if $user && $user.success && $user.result.lockerId}
 		{@const lockerInfo = extractLockerInfoFromId($user.result.lockerId)}
-		<p>내가 예약한 사물함: <span class='bg-gray-200 rounded-lg py-1 px-2'>{lockerInfo.floor}층 | {lockerInfo.sectionId}구역
+		<p>내가 예약한 사물함: <span class='bg-gray-300 rounded-lg py-1 px-2'>{lockerInfo.floor}층 | {lockerInfo.sectionId}구역
 			- {lockerInfo.lockerNum}번</span></p>
 	{/if}
 	<ArrowExportLtr slot='primaryIcon' />
