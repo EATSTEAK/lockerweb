@@ -99,7 +99,7 @@
 					<Button
 						on:click={() => click('secondary')}
 						disabled={secondaryDisabled ? true : undefined}
-						class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+						class='{secondaryClass} bg-[#D8D8D8] ring-1 ring-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
 						isIconRight={isSecondaryBtnIconRight}
 					>
 						<slot slot='icon' name='secondaryIcon' />
@@ -109,7 +109,7 @@
 					<Button
 						on:click={() => click('secondary')}
 						disabled={secondaryDisabled ? true : undefined}
-						class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+						class='{secondaryClass} bg-[#D8D8D8] ring-1 ring-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
 						isIconRight={isSecondaryBtnIconRight}
 					>
 						{secondaryText}

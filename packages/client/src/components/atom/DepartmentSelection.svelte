@@ -87,22 +87,18 @@
     }
 
     .unavailable.active {
-        @apply border-rose-600;
-        box-shadow: inset 0 0 0 4px theme('colors.red.600');
+        @apply ring-4 ring-inset ring-red-600;
     }
 
     .unavailable.active:hover {
-        @apply shadow-md;
-        box-shadow: inset 0 0 0 4px theme('colors.red.600');
+        @apply shadow-md ring-4 ring-inset ring-red-600;
     }
 
     .active {
-        @apply border-primary-800;
-        box-shadow: inset 0 0 0 4px theme('colors.primary.800');
+        @apply border-primary-800 ring-4 ring-inset ring-primary-800;
     }
 
     .active:hover {
-        @apply shadow-md;
-        box-shadow: inset 0 0 0 4px theme('colors.primary.800');
+        @apply shadow-md ring-4 ring-inset ring-primary-800;
     }
 </style>

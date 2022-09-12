@@ -58,7 +58,7 @@
 				{/if}
 			</div>
 			<div
-				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex flex-col p-2 gap-1'
+				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 ring-2 ring-blue-400 rounded-2xl bg-white items-center flex flex-col p-2 gap-1'
 			>
 				<div
 					class='flex flex-col w-full px-2 h-16 bg-gray-300 rounded-2xl text-center justify-center items-center'
