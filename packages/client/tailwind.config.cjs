@@ -19,6 +19,9 @@ const config = {
 			},
 			scale: {
 				'101': '1.01'
+			},
+			aspectRatio: {
+				'4/3': '4 / 3'
 			}
 		}
 	},
