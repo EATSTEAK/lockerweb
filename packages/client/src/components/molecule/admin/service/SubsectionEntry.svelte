@@ -35,7 +35,7 @@
       invalidText = '값 무시됨: 존재하지 않는 학과(부)';
     } else {
       invalidText = undefined;
-      const newSubsection = {
+      const newSubsection: LockerSubsection = {
         range: [rangeStart, rangeEnd],
         department,
       };
@@ -62,8 +62,7 @@
     <div class="flex items-center">
       <button
         on:click={removeSubsection}
-        class="rounded-md bg-gray-200 text-gray-500 transition-all hover:brightness-95 focus:brightness-90 active:brightness-75"
-      >
+        class="rounded-md bg-gray-200 text-gray-500 transition-all hover:brightness-95 focus:brightness-90 active:brightness-75">
         <Subtract />
       </button>
     </div>
@@ -75,8 +74,7 @@
             id="range-start"
             class="w-24"
             label="세부 구역 시작"
-            bind:value={rangeStart}
-          />
+            bind:value={rangeStart} />
           <div class="p-2">~</div>
           <NumberInput id="range-end" class="w-24" label="세부 구역 끝" bind:value={rangeEnd} />
         </div>
@@ -87,8 +85,7 @@
           id={`subsection_${key}_department`}
           label="대상 학과(부)"
           bind:value={department}
-          required
-        >
+          required>
           {#each departments as department}
             <option value={department.id}>{department.name}</option>
           {/each}

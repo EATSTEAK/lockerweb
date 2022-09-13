@@ -7,7 +7,7 @@
   export let selectedBuildingId: string;
   export let selectedFloor: string;
   export let selectedSectionId: string;
-  let clazz;
+  let clazz = '';
   export { clazz as class };
 
   let alt = '배치도';
@@ -26,14 +26,12 @@
     style:--bg-img="url('/floorMaps/{selectedBuildingId}/{selectedFloor}.png')"
     class="{clazz} bg h-full w-full"
     in:fly={{ y: 100, duration: 300 }}
-    aria-label={alt}
-  >
+    aria-label={alt}>
     {#if selectedSectionId}
       <div
         in:fade
         style:--locker-img="url('/floorMaps/{selectedBuildingId}/{selectedFloor}/{selectedSectionId}.svg')"
-        class="locker h-full w-full animate-pulse transition-all"
-      />
+        class="locker h-full w-full animate-pulse transition-all" />
     {/if}
   </div>
 {/key}

@@ -22,11 +22,11 @@
 
   let updating = false;
 
-  let name;
-  let activateFrom;
-  let activateTo;
-  let alert;
-  let buildings;
+  let name: string;
+  let activateFrom: Date;
+  let activateTo: Date;
+  let alert: string;
+  let buildings: { [buildingNum: string]: Building };
 
   $: if (serviceConfig) {
     initializeValues();
@@ -87,8 +87,7 @@
         on:click={initializeValues}
         disabled={!isModified ? true : undefined}
         class="bg-white text-gray-700 [&[disabled]]:opacity-50"
-        isIconRight
-      >
+        isIconRight>
         되돌리기
         <ArrowUndo slot="icon" />
       </Button>
@@ -96,8 +95,7 @@
         on:click={updateConfig}
         disabled={isSaveDisabled}
         class="bg-primary-800 text-white [&[disabled]]:opacity-50"
-        isIconRight
-      >
+        isIconRight>
         저장
         <SaveEdit slot="icon" />
       </Button>
@@ -128,8 +126,7 @@
             bind:value={name}
             required
             invalidClass="text-red-800"
-            invalidText="이 값은 필수입니다."
-          />
+            invalidText="이 값은 필수입니다." />
           <DateTimeInput
             class="my-2"
             inputClass="w-full max-w-sm"
@@ -137,8 +134,7 @@
             label="예약 시작일"
             showLabel
             bind:value={activateFrom}
-            invalidClass="text-red-800"
-          />
+            invalidClass="text-red-800" />
           <DateTimeInput
             class="my-2"
             inputClass="w-full max-w-sm"
@@ -146,16 +142,14 @@
             label="예약 종료일"
             showLabel
             bind:value={activateTo}
-            invalidClass="text-red-800"
-          />
+            invalidClass="text-red-800" />
           <TextInput
             class="my-2"
             inputClass="w-full max-w-sm"
             id="name"
             label="공지사항"
             showLabel
-            bind:value={alert}
-          />
+            bind:value={alert} />
         {:else}
           <div class="my-2 flex flex-col gap-1">
             <Skeleton class="h-4 w-24 bg-gray-200 lg:rounded-md" />

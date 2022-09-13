@@ -46,14 +46,13 @@
   class="{clazz} fixed bottom-5 right-5 z-20 flex
  	flex-row flex-wrap rounded-xl bg-gray-800/75
 	px-2 backdrop-blur-sm"
-  style={`width:${width - 42}px;`}
->
+  style={`width:${width - 42}px;`}>
   <div class="flex flex-row flex-wrap items-center gap-2 px-1">
     <h6 class="my-2 rounded-lg bg-gray-700/80 py-1 px-2 text-white">선택됨</h6>
     <div class="flex flex-row gap-1">
       <h6 class="font-semibold italic text-green-200">
-        {getBuildingName(serviceConfig?.buildings, buildingId)}<span class="pl-2 not-italic">|</span
-        >
+        {getBuildingName(serviceConfig?.buildings, buildingId)}<span class="pl-2 not-italic"
+          >|</span>
       </h6>
       <h6 class="font-semibold italic text-green-200">
         {floor}층<span class="pl-2 not-italic">|</span>
@@ -64,14 +63,12 @@
   <div class="flex-end mr-1 flex flex-grow flex-row items-center justify-end gap-2">
     <Button
       on:click={() => click('secondary')}
-      class="{secondaryClass} bg-gray-200 !py-2 !px-3 text-center text-gray-600 [&[disabled]]:opacity-50"
-    >
+      class="{secondaryClass} bg-gray-200 !py-2 !px-3 text-center text-gray-600 [&[disabled]]:opacity-50">
       선택 해제
     </Button>
     <Button
       on:click={() => click('primary')}
-      class="{primaryClass} my-2 !flex-none bg-primary-800 !py-2 !pl-2 text-white [&[disabled]]:opacity-50"
-    >
+      class="{primaryClass} my-2 !flex-none bg-primary-800 !py-2 !pl-2 text-white [&[disabled]]:opacity-50">
       <Bookmark slot="icon" />
       예약하기
     </Button>

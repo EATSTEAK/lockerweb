@@ -9,6 +9,7 @@
   import Navigation from '../../components/molecule/Navigation.svelte';
   import NavigationContent from '../../components/atom/NavigationContent.svelte';
   import PageTitle from '../../components/atom/PageTitle.svelte';
+  import type { LoginSuccessResponse } from '$lib/api/auth';
   import { apiSsuLogin } from '$lib/api/auth';
   import ErrorCircle from '../../icons/ErrorCircle.svelte';
   import Checkmark from '../../icons/Checkmark.svelte';
@@ -17,10 +18,14 @@
   import { user } from '$lib/store';
 
   let result: string;
-  let response: SuccessResponse<AccessTokenInfo> | ErrorResponse<BlockedError | UnauthorizedError>;
-  let id;
+  let response:
+    | SuccessResponse<LoginSuccessResponse>
+    | ErrorResponse<UnauthorizedError | BlockedError>;
+  let id: Promise<
+    SuccessResponse<LoginSuccessResponse> | ErrorResponse<UnauthorizedError | BlockedError>
+  >;
 
-  let errorMessage;
+  let errorMessage: string;
 
   $: if (response && response.success === false) {
     if (response.error.name === 'Blocked') {
@@ -82,6 +87,6 @@
     </NavigationFooter>
   </Navigation>
   {#if response && response.success === false}
-    <ErrorScreen errorTitle={response.error.code} {errorMessage} />
+    <ErrorScreen errorTitle={`${response.error.code}`} {errorMessage} />
   {/if}
 </Shell>

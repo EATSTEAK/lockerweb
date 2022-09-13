@@ -6,7 +6,7 @@ export async function apiRequest<T>(
   withAuth = false,
   { method, body }: { method: 'GET' | 'POST'; body?: unknown } = { method: 'GET' },
 ): Promise<SuccessResponse<T> | ErrorResponse<LockerError>> {
-  let response;
+  let response: SuccessResponse<T> | ErrorResponse<LockerError>;
   try {
     if (withAuth) {
       response = await fetchWithAuth(variables.baseUrl + '/api/v1' + endpoint, {

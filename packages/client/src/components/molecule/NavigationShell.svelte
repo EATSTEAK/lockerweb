@@ -39,8 +39,7 @@
     slot="navigation"
     class="w-full flex-row"
     {collapsable}
-    bind:collapsed={navigationCollapsed}
-  >
+    bind:collapsed={navigationCollapsed}>
     <NavigationHeader class="py-1 lg:py-0 lg:pt-10" slot="header">
       <slot name="navigation_header">
         <div class="flex grow flex-col flex-wrap items-start">

@@ -13,8 +13,8 @@
   export let invalidClass: string = '';
   export let invalidText: string = '이 값은 올바르지 않습니다.';
 
-  let ref;
-  let value;
+  let ref: HTMLInputElement;
+  let value: string;
   let clazz = '';
   export { clazz as class };
 
@@ -47,13 +47,11 @@
     class="{inputClass} hidden"
     bind:files
     bind:value
-    {...$$restProps}
-  />
+    {...$$restProps} />
   {#if files}
-    {#each files ?? [] as file, index}
+    {#each files ?? [] as file}
       <div
-        class="flex select-none flex-row items-center gap-1 rounded-xl bg-gray-300 p-1 text-sm text-gray-700"
-      >
+        class="flex select-none flex-row items-center gap-1 rounded-xl bg-gray-300 p-1 text-sm text-gray-700">
         <Document class="h-5 w-5" />
         <div class="grow">{file.name}</div>
       </div>

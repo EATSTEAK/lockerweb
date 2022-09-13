@@ -53,8 +53,7 @@
       required={isNew}
       pattern={`\\d{2}`}
       invalidClass="text-red-800"
-      invalidText={id ? '이 값은 2자리 숫자여야 합니다.' : '이 값은 필수입니다.'}
-    />
+      invalidText={id ? '이 값은 2자리 숫자여야 합니다.' : '이 값은 필수입니다.'} />
     <TextInput
       class="my-2"
       inputClass="w-full max-w-sm"
@@ -64,8 +63,7 @@
       bind:value={name}
       required
       invalidClass="text-red-800"
-      invalidText="이 값은 필수입니다."
-    />
+      invalidText="이 값은 필수입니다." />
   </div>
   <div class="actions-wrap">
     <hr />
@@ -79,8 +77,7 @@
           on:click={updateBuilding}
           disabled={isSaveDisabled}
           class="bg-primary-800 text-white [&[disabled]]:opacity-50"
-          isIconRight
-        >
+          isIconRight>
           적용
           <Checkmark slot="icon" />
         </Button>
@@ -89,8 +86,7 @@
           on:click={updateBuilding}
           disabled={isSaveDisabled}
           class="bg-primary-800 text-white [&[disabled]]:opacity-50"
-          isIconRight
-        >
+          isIconRight>
           추가
           <Add slot="icon" />
         </Button>

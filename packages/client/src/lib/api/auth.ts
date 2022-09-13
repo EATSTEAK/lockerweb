@@ -20,9 +20,9 @@ const LogoutSuccessResponseSchema = z.object({
   accessToken: z.string(),
 });
 
-type LoginSuccessResponse = z.infer<typeof LoginSuccessResponseSchema>;
+export type LoginSuccessResponse = z.infer<typeof LoginSuccessResponseSchema>;
 
-type LogoutSuccessResponse = z.infer<typeof LogoutSuccessResponseSchema>;
+export type LogoutSuccessResponse = z.infer<typeof LogoutSuccessResponseSchema>;
 
 export async function apiSsuLogin(
   result: string,

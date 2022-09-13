@@ -119,8 +119,7 @@
       pattern="B?\d+"
       required
       invalidClass="text-red-800"
-      invalidText={floorInput ? '층의 형식은 (B)숫자 형태입니다.' : '이 값은 필수입니다.'}
-    />
+      invalidText={floorInput ? '층의 형식은 (B)숫자 형태입니다.' : '이 값은 필수입니다.'} />
     <TextInput
       class="my-2"
       inputClass="w-full max-w-sm"
@@ -132,8 +131,7 @@
       pattern={`[A-Z]{1}`}
       required
       invalidClass="text-red-800"
-      invalidText={id ? '알파벳 대문자 1자만 허용됩니다.' : '이 값은 필수입니다.'}
-    />
+      invalidText={id ? '알파벳 대문자 1자만 허용됩니다.' : '이 값은 필수입니다.'} />
     <NumberInput
       class="my-2"
       inputClass="w-full max-w-sm"
@@ -143,8 +141,7 @@
       bind:value={height}
       invalidClass="text-red-800"
       invalidText="이 값은 필수입니다."
-      required
-    />
+      required />
     <div class="disabled-edit">
       <p class="font-bold">사용 불가 사물함 목록</p>
       <div class="flex items-center gap-2">
@@ -154,12 +151,10 @@
           id="disabled"
           label="사용 불가 사물함 목록"
           bind:value={disabledInput}
-          invalidClass="hidden"
-        />
+          invalidClass="hidden" />
         <button
           on:click={addDisabled}
-          class="rounded-md bg-gray-200 text-gray-500 transition-all hover:brightness-95 focus:brightness-90 active:brightness-75"
-        >
+          class="rounded-md bg-gray-200 text-gray-500 transition-all hover:brightness-95 focus:brightness-90 active:brightness-75">
           <Add />
         </button>
       </div>
@@ -170,8 +165,7 @@
         {#each disabled as disabledId}
           <Tag
             on:click={() => removeDisabled(disabledId)}
-            class="disabled-id cursor-pointer select-none bg-gray-300 hover:brightness-95 focus:brightness-90 active:brightness-75"
-          >
+            class="disabled-id cursor-pointer select-none bg-gray-300 hover:brightness-95 focus:brightness-90 active:brightness-75">
             <div class="flex items-center gap-1">
               {disabledId}
               <Dismiss class="h-4 w-4 text-gray-500" />
@@ -191,8 +185,7 @@
         <Button
           on:click={removeSection}
           class="bg-red-800 text-white [&[disabled]]:opacity-50"
-          isIconRight
-        >
+          isIconRight>
           삭제
           <Delete slot="icon" />
         </Button>
@@ -200,8 +193,7 @@
           on:click={updateSection}
           disabled={isSaveDisabled}
           class="bg-primary-800 text-white [&[disabled]]:opacity-50"
-          isIconRight
-        >
+          isIconRight>
           적용
           <Checkmark slot="icon" />
         </Button>
@@ -210,8 +202,7 @@
           on:click={updateSection}
           disabled={isSaveDisabled}
           class="bg-primary-800 text-white [&[disabled]]:opacity-50"
-          isIconRight
-        >
+          isIconRight>
           추가
           <Add slot="icon" />
         </Button>

@@ -6,7 +6,7 @@
   import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
   import PageTitle from '../../components/atom/PageTitle.svelte';
   import { config, user } from '$lib/store';
-  import { getServiceConfig } from '$lib/api/config';
+  import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
   import { browser } from '$app/env';
   import { deleteAuthorization, getAuthorization } from '$lib/auth';
   import Settings from '../../icons/Settings.svelte';
@@ -41,6 +41,8 @@
   $: lockerInfo = selectedLockerId ? extractLockerInfoFromId(selectedLockerId) : undefined;
 
   $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
+  $: departmentConfigs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
   $: if ($user && $user.success) {
     reservedLocker = getUserReservedLocker($user.result);
@@ -184,8 +186,7 @@
     {#if $config && $config.success}
       <Button
         on:click={() => (contactModalOpen = true)}
-        class="px-0 py-0 text-primary-800 underline !shadow-none hover:text-primary-900 hover:!shadow-none active:!shadow-none active:drop-shadow-md"
-      >
+        class="px-0 py-0 text-primary-800 underline !shadow-none hover:text-primary-900 hover:!shadow-none active:!shadow-none active:drop-shadow-md">
         도움이 필요하신가요?
       </Button>
     {:else}
@@ -215,31 +216,27 @@
           {selectedLockerId}
           width={contentWidth}
           on:click:secondary={() => (selectedLockerId = undefined)}
-          on:click={() => (claimModalOpen = true)}
-        />
+          on:click={() => (claimModalOpen = true)} />
       {/if}
       {#if !isClaiming && !isUnclaiming}
         <LockerReserveInfo
           bind:selectedLockerId
           {targetDepartmentId}
           {serviceConfig}
-          {reservedLockerIds}
-        />
+          {reservedLockerIds} />
       {:else if isClaiming}
         <LockerLoadingScreen
           class="h-full w-full"
           message="예약 중.."
-          selectedLockerInfo={`${lockerInfo.floor}층 | ${lockerInfo.sectionId}구역 - ${lockerInfo.lockerNum}번`}
-        />
+          selectedLockerInfo={`${lockerInfo.floor}층 | ${lockerInfo.sectionId}구역 - ${lockerInfo.lockerNum}번`} />
       {:else if isUnclaiming}
         <LockerLoadingScreen class="h-full w-full" message="반납 중.." />
       {/if}
     {:else}
       <ErrorScreen
         class="h-full w-full"
-        errorTitle={errorData.code}
-        errorMessage={getErrorMessage(errorData)}
-      />
+        errorTitle={`${errorData.code}`}
+        errorMessage={getErrorMessage(errorData)} />
     {/if}
   </div>
 </NavigationShell>
@@ -250,9 +247,8 @@
   secondaryClass="hidden"
   primaryText="닫기"
   on:close={() => (contactModalOpen = false)}
-  on:click={() => (contactModalOpen = false)}
->
-  {#each $config && $config.success ? $config.result : [] as config}
+  on:click={() => (contactModalOpen = false)}>
+  {#each departmentConfigs as config}
     {#if config.contact}
       <div class="my-2 leading-10">
         <h5>{config.name} 연락처</h5>
@@ -271,8 +267,7 @@
   primaryText="예약하기"
   on:click={() => claimLocker(selectedLockerId)}
   on:click:secondary={() => (claimModalOpen = false)}
-  on:close={() => (claimModalOpen = false)}
->
+  on:close={() => (claimModalOpen = false)}>
   정말로 {getBuildingName(serviceConfig?.buildings, lockerInfo?.buildingId)}
   {lockerInfo?.floor}
   층 {lockerInfo?.sectionId}
@@ -286,8 +281,7 @@
   primaryText="예약 취소"
   on:click={() => unclaimLocker()}
   on:click:secondary={() => (unclaimModalOpen = false)}
-  on:close={() => (unclaimModalOpen = false)}
->
+  on:close={() => (unclaimModalOpen = false)}>
   정말로 예약하신 사물함을 예약 취소하시겠습니까?
   <BookmarkOff slot="primaryIcon" />
 </Modal>

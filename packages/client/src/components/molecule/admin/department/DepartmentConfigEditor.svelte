@@ -4,14 +4,8 @@
   import AddSquare from '../../../../icons/AddSquare.svelte';
   import SelectScreen from '../../../atom/SelectScreen.svelte';
   import DepartmentConfigSettings from './DepartmentConfigSettings.svelte';
-  import { createEventDispatcher } from 'svelte';
 
   export let configs: DepartmentConfig[] = [];
-
-  const dispatch = createEventDispatcher<{
-    delete: ConfigDeleteRequest;
-    update: DepartmentConfigUpdateRequest;
-  }>();
 
   $: depthData = [
     ...configs.map<DepthData>((department) => ({
@@ -33,8 +27,7 @@
       breadcrumbClass="p-1"
       class="overflow-hidden rounded-md bg-white"
       data={depthData}
-      bind:selections
-    >
+      bind:selections>
       <button
         tabindex="0"
         slot="item"
@@ -42,8 +35,7 @@
         let:selected
         class="my-1 flex w-full cursor-pointer justify-between border-l-2 border-white bg-white p-2 text-gray-700 outline-none outline-0 outline-primary-800 transition-all
 									hover:scale-101 hover:brightness-90 focus:brightness-75 active:scale-100 active:brightness-75"
-        class:selected
-      >
+        class:selected>
         {option.name}
         {#if option.id === 'add'}
           <AddSquare />
@@ -59,8 +51,7 @@
         on:delete
         on:update
         original={selectedDepartmentConfig}
-        isNew={selections[0] === 'add'}
-      />
+        isNew={selections[0] === 'add'} />
     {/if}
   </article>
 </section>

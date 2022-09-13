@@ -41,14 +41,14 @@
     $user &&
     $user.success &&
     !disableBlock &&
-    !isReservable($config.result, $user.result, currentTime)
+    !isReservable($config.result, $user.result)
   ) {
     blockedModalOpen = true;
   }
 
   let blockedModalOpen = false;
 
-  function isReservable(config: Config[], user: User, time: Date): boolean {
+  function isReservable(config: Config[], user: User): boolean {
     if (!user || user.isAdmin) return true;
     const userDeptConfig: DepartmentConfig = getDepartmentConfig(
       config,
@@ -117,15 +117,13 @@
   secondaryClass="hidden"
   primaryText="로그아웃"
   isPrimaryBtnIconRight
-  on:click={() => goto('/logout')}
->
+  on:click={() => goto('/logout')}>
   <p>현재 예약 가능한 시간이 아닙니다.</p>
   {#if $user && $user.success && $user.result.lockerId}
     {@const lockerInfo = extractLockerInfoFromId($user.result.lockerId)}
     <p>
       내가 예약한 사물함: <span class="rounded-lg bg-gray-300 py-1 px-2"
-        >{lockerInfo.floor}층 | {lockerInfo.sectionId}구역 - {lockerInfo.lockerNum}번</span
-      >
+        >{lockerInfo.floor}층 | {lockerInfo.sectionId}구역 - {lockerInfo.lockerNum}번</span>
     </p>
   {/if}
   <ArrowExportLtr slot="primaryIcon" />

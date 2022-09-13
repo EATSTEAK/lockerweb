@@ -15,7 +15,7 @@
     'aria-labelledby': ariaLabelledBy,
     'aria-hidden': labelled ? undefined : true,
     role: labelled ? 'img' : undefined,
-    focusable: tabindex === '0' ? true : focusable,
+    focusable: tabindex === '0' ? `${true}` : `${focusable}`,
     tabindex,
   };
 </script>
@@ -36,7 +36,6 @@
   class={className}
   {style}
   {id}
-  {...attributes}
->
+  {...attributes}>
   <path d="M3.997 13H20a1 1 0 1 0 0-2H3.997a1 1 0 1 0 0 2Z" fill="currentColor" />
 </svg>

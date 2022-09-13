@@ -1,8 +1,9 @@
 <script lang="ts">
   import { afterUpdate, getContext, onMount } from 'svelte';
+  import type { Writable } from 'svelte/store';
 
   export let id: string;
-  export let selected: boolean;
+  export let selected: boolean = false;
   export let departmentText: string;
   export let lockerLeft: number;
   export let totalLocker: number;
@@ -13,11 +14,16 @@
 
   let ref = null;
 
-  const ctx = getContext('DepartmentSelectionGroup');
+  const ctx = getContext<{
+    currentId: Writable<string>;
+    add: ({ id: string, selected: boolean }) => void;
+    update: (id: string) => void;
+    change: (direction: number) => void;
+  }>('DepartmentSelectionGroup');
 
   ctx.add({ id, selected });
 
-  const unsubscribe = ctx.currentId.subscribe(($) => {
+  const unsubscribe = ctx.currentId.subscribe(($: string) => {
     selected = $ === id;
   });
 
@@ -67,8 +73,7 @@
     } else if (key === 'ArrowLeft') {
       ctx.change(-1);
     }
-  }}
->
+  }}>
   <div class="flex flex-col">
     <div class="department-text">{departmentText}</div>
     <div class="flex flex-col flex-wrap items-stretch font-bold">

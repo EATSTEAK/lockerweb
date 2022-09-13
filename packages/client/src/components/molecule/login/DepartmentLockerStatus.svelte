@@ -5,9 +5,12 @@
 
   export let departmentStatus: DepartmentLockerCount;
 
-  $: flatLockers = Object.entries(departmentStatus?.lockers ?? {}).flatMap(
-    ([buildingNum, floors]) =>
-      Object.entries(floors).map(([floor, status]) => [buildingNum, floor, status]),
+  $: flatLockers = Object.entries(departmentStatus?.lockers ?? {}).flatMap<
+    [string, string, { totalLocker: number; lockerLeft: number }]
+  >(([buildingNum, floors]) =>
+    Object.entries(floors).map<[string, string, { totalLocker: number; lockerLeft: number }]>(
+      ([floor, status]) => [buildingNum, floor, status],
+    ),
   );
 </script>
 
@@ -18,13 +21,12 @@
 </div>
 
 <div class="mt-5">
-  {#each flatLockers as [building, floor, status], index (floor)}
+  {#each flatLockers as [building, floor, status] (floor)}
     <FloorStatus
       class="my-2"
       {building}
       {floor}
       lockerLeft={status.lockerLeft}
-      totalLocker={status.totalLocker}
-    />
+      totalLocker={status.totalLocker} />
   {/each}
 </div>

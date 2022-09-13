@@ -15,7 +15,7 @@
     'aria-labelledby': ariaLabelledBy,
     'aria-hidden': labelled ? undefined : true,
     role: labelled ? 'img' : undefined,
-    focusable: tabindex === '0' ? true : focusable,
+    focusable: tabindex === '0' ? `${true}` : `${focusable}`,
     tabindex,
   };
 </script>
@@ -36,8 +36,7 @@
   class={className}
   {style}
   {id}
-  {...attributes}
->
+  {...attributes}>
   <rect
     x="0.113953"
     y="21.726"
@@ -45,8 +44,7 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 0.113953 21.726)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
   <rect
     x="7.39844"
     y="11.2554"
@@ -54,8 +52,7 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 7.39844 11.2554)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
   <rect
     x="8.12256"
     y="7.34521"
@@ -63,8 +60,7 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 8.12256 7.34521)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
   <rect
     x="14.4947"
     y="13.7174"
@@ -72,8 +68,7 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 14.4947 13.7174)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
   <rect
     x="10.5845"
     y="14.4415"
@@ -81,8 +76,7 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 10.5845 14.4415)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
   <rect
     x="2.86554"
     y="22.1604"
@@ -90,8 +84,7 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 2.86554 22.1604)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
   <rect
     x="-0.320557"
     y="18.9744"
@@ -99,6 +92,5 @@
     height="1.63847"
     rx="0.819234"
     transform="rotate(-45 -0.320557 18.9744)"
-    fill="currentColor"
-  />
+    fill="currentColor" />
 </svg>

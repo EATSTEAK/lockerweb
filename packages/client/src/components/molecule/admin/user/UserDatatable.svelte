@@ -60,7 +60,8 @@
     }
   }
 
-  function selectionChange(id: string, checked: boolean) {
+  function selectionChange(id: string, evt: Event) {
+    const checked = (evt.target as HTMLInputElement).checked;
     if (checked && !selected.includes(id)) {
       selected = [...selected, id];
     } else if (!checked) {
@@ -91,21 +92,18 @@
       out:fly={{ y: 10, duration: 100 }}
       on:outrostart={() => (batchActionOut = false)}
       on:outroend={() => (batchActionOut = true)}
-      class="flex justify-between rounded-t-md border border-transparent bg-primary-800 py-2 px-3 leading-6 text-white"
-    >
+      class="flex justify-between rounded-t-md border border-transparent bg-primary-800 py-2 px-3 leading-6 text-white">
       <div class="selections-text">{selected.length}개 선택됨</div>
       <div class="-m-2 flex">
         <button
           on:click={() => dispatch('batchUnclaim', {})}
-          class="flex gap-1 rounded-xl bg-primary-800 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75"
-        >
+          class="flex gap-1 rounded-xl bg-primary-800 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75">
           <BookmarkOff />
           예약 일괄 취소
         </button>
         <button
           on:click={() => dispatch('batchDelete', {})}
-          class="flex gap-1 rounded-xl bg-primary-800 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75"
-        >
+          class="flex gap-1 rounded-xl bg-primary-800 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75">
           <Delete />
           삭제
         </button>
@@ -122,8 +120,7 @@
           label="검색"
           class="grow"
           bind:value={filter}
-          placeholder="검색하기..."
-        />
+          placeholder="검색하기..." />
       </div>
     </div>
   {/if}
@@ -152,16 +149,14 @@
                     id={`${user.id}`}
                     checked={selected.includes(user.id)}
                     on:change={(evt) => {
-                      selectionChange(user.id, evt.target.checked);
-                    }}
-                  />
+                      selectionChange(user.id, evt);
+                    }} />
                 </div>
               </td>
               <td
                 >{$config && $config.success
                   ? getDepartmentNameById($config.result, user.department)
-                  : '알 수 없음'}</td
-              >
+                  : '알 수 없음'}</td>
               <td>{user.id}</td>
               <td>{user.name}</td>
               <td>
@@ -175,8 +170,7 @@
               <td>
                 <button
                   on:click={() => editUser(user)}
-                  class="rounded-md bg-gray-100 p-2 hover:brightness-95 focus:outline-0 focus:brightness-90 active:brightness-75"
-                >
+                  class="rounded-md bg-gray-100 p-2 hover:brightness-95 focus:outline-0 focus:brightness-90 active:brightness-75">
                   <Edit class="h-4 w-4" slot="icon" />
                 </button>
               </td>

@@ -13,13 +13,6 @@
   let selectedFloor: string;
   let selectedSectionId: string;
   export let selectedLockerId: string;
-  let selectedLockerNum: number;
-  $: if (selectedLockerId) {
-    const [, , location] = selectedLockerId.split('-');
-    selectedLockerNum = parseInt(location.slice(1));
-  } else {
-    selectedLockerNum = undefined;
-  }
   $: selectedSection =
     serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
   export let reservedLockerIds: string[];
@@ -75,19 +68,16 @@
 
 <div class="h-max-content flex w-auto flex-col items-start lg:min-h-screen">
   <div
-    class="flex min-h-[280px] w-full grow flex-col-reverse justify-between gap-4 py-4 lg:flex-row lg:px-8"
-  >
+    class="flex min-h-[280px] w-full grow flex-col-reverse justify-between gap-4 py-4 lg:flex-row lg:px-8">
     <div
-      class="flex w-full shrink flex-col items-stretch overflow-hidden bg-slate-200 p-8 lg:w-1/2 lg:max-w-[480px] lg:basis-1/2 lg:rounded-xl"
-    >
+      class="flex w-full shrink flex-col items-stretch overflow-hidden bg-slate-200 p-8 lg:w-1/2 lg:max-w-[480px] lg:basis-1/2 lg:rounded-xl">
       {#if serviceConfig && targetDepartmentId}
         <LockerSectionSelector
           {buildings}
           {targetDepartmentId}
           bind:selectedBuildingId
           bind:selectedFloor
-          bind:selectedSectionId
-        />
+          bind:selectedSectionId />
       {:else}
         <Skeleton class="mb-4 h-10 w-48 rounded-lg bg-gray-300" />
         <div class="flex h-5/6 w-full gap-2">
@@ -97,16 +87,14 @@
       {/if}
     </div>
     <div
-      class="flex h-full w-full grow flex-col gap-4 overflow-hidden bg-slate-200 p-8 lg:basis-1/2 lg:rounded-xl"
-    >
+      class="flex h-full w-full grow flex-col gap-4 overflow-hidden bg-slate-200 p-8 lg:basis-1/2 lg:rounded-xl">
       {#if serviceConfig && selectedBuildingId && selectedFloor}
         <h4 class="text-3xl">배치도</h4>
         <FloorMap
           class="aspect-4/3 max-h-[50vh] grow rounded-xl"
           {selectedBuildingId}
           {selectedFloor}
-          {selectedSectionId}
-        />
+          {selectedSectionId} />
       {:else}
         <Skeleton class="h-10 w-48 rounded-lg bg-gray-300" />
         <Skeleton class="aspect-4/3 max-h-[50vh] grow rounded-xl bg-gray-300" />
@@ -119,8 +107,7 @@
         <LockerList
           bind:selectedId={selectedLockerId}
           lockers={lockerList}
-          height={lockerGridHeight}
-        />
+          height={lockerGridHeight} />
       {:else}
         <LockerLoadingScreen class="min-h-[340px] w-full" message="로드 중.." />
       {/if}

@@ -9,6 +9,9 @@
 
   export let selectedId = undefined;
 
+  let clazz = '';
+  export { clazz as class };
+
   $: currentIndex = -1;
   $: items = [];
 
@@ -20,17 +23,17 @@
 
   setContext('ListItemGroup', {
     currentId,
-    add: ({ id, selected }) => {
+    add: ({ id, selected }: { id: string; selected: boolean }) => {
       if (selected) {
         selectedIndex = items.length;
       }
 
       items = [...items, { id, selected }];
     },
-    update: (id) => {
+    update: (id: string) => {
       selectedIndex = items.map(({ id }) => id).indexOf(id);
     },
-    change: (direction) => {
+    change: (direction: number) => {
       let index = currentIndex + direction;
 
       if (index < 0) {

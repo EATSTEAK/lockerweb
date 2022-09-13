@@ -9,17 +9,18 @@
   import Navigation from '../../components/molecule/Navigation.svelte';
   import NavigationContent from '../../components/atom/NavigationContent.svelte';
   import PageTitle from '../../components/atom/PageTitle.svelte';
+  import type { LogoutSuccessResponse } from '$lib/api/auth';
   import { apiLogout } from '$lib/api/auth';
   import { goto } from '$app/navigation';
   import ErrorCircle from '../../icons/ErrorCircle.svelte';
   import Checkmark from '../../icons/Checkmark.svelte';
   import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 
-  let result;
-  let id;
-  let response;
+  let result: string;
+  let id: Promise<SuccessResponse<LogoutSuccessResponse> | ErrorResponse<UnauthorizedError>>;
+  let response: SuccessResponse<LogoutSuccessResponse> | ErrorResponse<UnauthorizedError>;
 
-  let errorMessage;
+  let errorMessage: string;
 
   $: if (response && response.success === false) {
     if (response.error.name === 'Unauthorized') {
@@ -78,6 +79,6 @@
     </NavigationFooter>
   </Navigation>
   {#if response && response.success === false}
-    <ErrorScreen errorTitle={response.error.code} {errorMessage} />
+    <ErrorScreen errorTitle={`${response.error.code}`} {errorMessage} />
   {/if}
 </Shell>

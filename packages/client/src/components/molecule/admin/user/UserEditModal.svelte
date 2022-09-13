@@ -10,7 +10,7 @@
   import { config } from '$lib/store';
   import { getDepartmentConfigs } from '$lib/api/config';
 
-  const dispatch = createEventDispatcher<{ submit: User }>();
+  const dispatch = createEventDispatcher<{ submit: UserUpdateRequest }>();
 
   export let open = false;
   export let targetUser: User;
@@ -42,7 +42,7 @@
   }
 
   function submitUser() {
-    const newUser: User = {
+    const newUser: UserUpdateRequest = {
       id,
       name,
       department,
@@ -65,8 +65,7 @@
   primaryText="저장"
   isPrimaryBtnIconRight
   isSecondaryBtnIconRight
-  {...$$restProps}
->
+  {...$$restProps}>
   <div class="flex flex-col gap-1">
     <TextInput
       id="id"
@@ -77,8 +76,7 @@
       required={!targetUser}
       invalidClass="text-red-800"
       invalidText={id ? '학번은 숫자로만 이루어져야 합니다.' : '이 값은 필수입니다.'}
-      pattern="\d+"
-    />
+      pattern="\d+" />
     <TextInput
       id="name"
       bind:value={name}
@@ -86,8 +84,7 @@
       showLabel
       invalidClass="text-red-800"
       invalidText="이 값은 필수입니다."
-      required
-    />
+      required />
     <div class="department">
       <p class="font-bold">대상 학과(부)</p>
       <Select id={`department`} label="대상 학과(부)" bind:value={department} required>
@@ -103,14 +100,12 @@
       label="대여한 사물함 ID"
       invalidClass="text-red-800"
       invalidText="사물함 ID의 값은 (건물번호)-(층)-(구역)(번호) 형식입니다.(ex. 21-1-A003)"
-      showLabel
-    />
+      showLabel />
     <DateTimeInput
       id="claimed_until"
       bind:value={claimedUntil}
       label="사물함 대여 기한(미입력시 무기한)"
-      showLabel
-    />
+      showLabel />
   </div>
   <SaveEdit slot="primaryIcon" />
   <Dismiss slot="secondaryIcon" />

@@ -59,14 +59,12 @@
   <aside
     class="{clazz} z-40 flex max-h-screen flex-col-reverse justify-end overflow-y-auto"
     transition:fly={{ y: -100, duration: 500 }}
-    class:fixed={collapsable}
-  >
+    class:fixed={collapsable}>
     {#if !collapsable || !collapsed}
       <nav
         transition:fly={{ y: -100, duration: 500 }}
         class="{navClass} flex grow flex-col overflow-y-auto bg-gray-200 px-6 shadow-md lg:px-10"
-        class:mb-2={collapsable}
-      >
+        class:mb-2={collapsable}>
         <slot />
       </nav>
     {/if}
@@ -74,8 +72,7 @@
       bind:clientHeight={h}
       class="{headerClass} bg-gray-200 px-6 transition-all lg:px-10"
       class:shadow-md={collapsable && collapsed}
-      class:mb-2={collapsable && collapsed}
-    >
+      class:mb-2={collapsable && collapsed}>
       <slot name="header" />
     </section>
   </aside>

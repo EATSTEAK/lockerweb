@@ -6,15 +6,15 @@
   import Skeleton from '../../atom/Skeleton.svelte';
   import QuestionCircle from '../../../icons/QuestionCircle.svelte';
   import { fade } from 'svelte/transition';
+  import type { LockerCount } from '$lib/types';
 
-  export let lockerCount;
+  export let lockerCount: LockerCount;
 
-  let selectedDept;
+  let selectedDept: string;
   $: if (lockerCount && !selectedDept) {
     selectedDept = Object.keys(lockerCount)[0];
   }
   $: departmentStatus = selectedDept ? lockerCount[selectedDept] : undefined;
-  $: availableDates = [];
 </script>
 
 <div class="flex h-full flex-col gap-7">
@@ -22,41 +22,34 @@
     <div class="flex items-center gap-3">
       <h3>사물함 예약 현황</h3>
       <Tag class="bg-gray-200 text-primary-800"
-        >{new Date().getMonth() + 1}/{new Date().getDate()}</Tag
-      >
+        >{new Date().getMonth() + 1}/{new Date().getDate()}</Tag>
     </div>
     {#if lockerCount}
       <div transition:fade class="overflow-x-auto">
         <DepartmentSelectionGroup bind:selectedId={selectedDept}>
-          {#each Object.entries(lockerCount ?? {}) as [key, value], index (key)}
+          {#each Object.entries(lockerCount) as [key, value] (key)}
             <DepartmentSelection
               id={key}
               departmentText={value.departmentName}
               lockerLeft={value.lockerLeft}
               totalLocker={value.totalLocker}
               activateFrom={value.activateFrom}
-              activateTo={value.activateTo}
-            />
+              activateTo={value.activateTo} />
           {/each}
         </DepartmentSelectionGroup>
       </div>
     {:else}
       <div class="flex gap-2 overflow-x-auto overflow-y-hidden py-2">
         <Skeleton
-          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200"
-        />
+          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200" />
         <Skeleton
-          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200"
-        />
+          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200" />
         <Skeleton
-          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200"
-        />
+          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200" />
         <Skeleton
-          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200"
-        />
+          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200" />
         <Skeleton
-          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200"
-        />
+          class="h-[160px] w-[160px] shrink-0 grow-0 basis-[160px] rounded-2xl bg-gray-200" />
       </div>
     {/if}
   </div>
@@ -78,8 +71,7 @@
     {:else}
       <div
         transition:fade
-        class="flex h-full flex-col items-center justify-center rounded-md bg-primary-200 text-gray-700"
-      >
+        class="flex h-full flex-col items-center justify-center rounded-md bg-primary-200 text-gray-700">
         <div class="flex flex-col items-start gap-1">
           <div class="flex flex-row items-center gap-2">
             <QuestionCircle class="h-16 w-16" />

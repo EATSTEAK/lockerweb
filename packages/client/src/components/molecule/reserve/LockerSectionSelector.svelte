@@ -62,8 +62,8 @@
 
     return Object.entries(buildings).flatMap(([id, building]) =>
       Object.entries(building.lockers)
-        .filter(([floor, lockers]) => isReservableFloor(lockers, departmentId))
-        .map(([floor, lockers]) => ({
+        .filter(([, lockers]) => isReservableFloor(lockers, departmentId))
+        .map(([floor, _]) => ({
           buildingId: id,
           floor,
         })),
@@ -77,8 +77,8 @@
   ): string[] {
     const targetFloor = buildings[floor.buildingId].lockers[floor.floor];
     return Object.entries(targetFloor)
-      .filter(([sectionId, section]) => isReservableSection(section, departmentId))
-      .map(([sectionId, section]) => sectionId);
+      .filter(([, section]) => isReservableSection(section, departmentId))
+      .map(([sectionId, _]) => sectionId);
   }
 
   let selectedFloorIndex: number;
@@ -101,16 +101,15 @@
 <div class="flex h-5/6 gap-1">
   <div class="basis-1/2">
     {#key `${selectedBuildingId}-${selectedFloor}`}
-      <SelectionListItemGroup bind:selectedIndex={selectedFloorIndex} class="h-full">
-        {#each floorList as item, index}
+      <SelectionListItemGroup bind:selectedIndex={selectedFloorIndex}>
+        {#each floorList as item}
           <SelectionListItem
             id="{item.buildingId}-{item.floor}"
             class="min-h-11 focus:!brightness-95"
             ><span class="text-sm text-gray-500"
               >{getBuildingName(buildings, item.buildingId)}
               |
-            </span>{getFloorDisplay(item.floor)}</SelectionListItem
-          >
+            </span>{getFloorDisplay(item.floor)}</SelectionListItem>
         {/each}
       </SelectionListItemGroup>
     {/key}
@@ -118,7 +117,7 @@
   <div class="basis-1/2">
     {#key `${selectedBuildingId}-${selectedFloor}-${selectedSectionId}`}
       <SelectionListItemGroup bind:selectedIndex={selectedSectionIndex}>
-        {#each sectionList as section, index}
+        {#each sectionList as section}
           <SelectionListItem
             id="{selectedBuildingId}-{selectedFloor}-{section}"
             class="min-h-11 focus:!brightness-95"

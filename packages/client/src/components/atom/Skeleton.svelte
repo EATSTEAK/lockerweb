@@ -10,13 +10,11 @@
   class="{clazz} relative cursor-progress overflow-hidden"
   bind:clientWidth={width}
   bind:clientHeight={height}
-  {...$$restProps}
->
+  {...$$restProps}>
   <div
     style:--widthSize={`${width * 4 * 1.8}px`}
     style:--heightSize={`${height * 4 * 3}px`}
-    class="skeleton-inner-animation absolute top-0 left-0"
-  />
+    class="skeleton-inner-animation absolute top-0 left-0" />
 </div>
 
 <style lang="postcss">

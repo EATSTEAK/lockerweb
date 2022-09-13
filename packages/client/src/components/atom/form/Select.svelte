@@ -14,14 +14,12 @@
 <div class="{clazz} flex flex-col">
   <!--suppress XmlInvalidId -->
   <label class="{labelClass} mb-1 block font-bold" for={id} class:hidden={!showLabel}
-    >{label ?? ''} <span class:hidden={!$$props.required} class="text-red-800">*</span></label
-  >
+    >{label ?? ''} <span class:hidden={!$$props.required} class="text-red-800">*</span></label>
   <select
     {id}
     class="{selectClass} rounded-md border-transparent bg-gray-100 transition-all hover:bg-gray-200 focus:bg-white disabled:bg-gray-300 disabled:text-gray-400"
     bind:value
-    {...$$restProps}
-  >
+    {...$$restProps}>
     <slot />
   </select>
   <p class="{invalidClass} mt-1 hidden">{invalidText}</p>

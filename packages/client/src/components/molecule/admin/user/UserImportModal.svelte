@@ -23,8 +23,8 @@
   let files: FileList = null;
 
   let workbook: WorkBook;
-  let data;
-  let error;
+  let data: unknown[];
+  let error: Error;
   let userConversion = null;
   let nameConversion = null;
   let overwrite = false;
@@ -98,8 +98,7 @@
   primaryDisabled={!users}
   isPrimaryBtnIconRight
   isSecondaryBtnIconRight
-  {...$$restProps}
->
+  {...$$restProps}>
   <div class="flex flex-col gap-3">
     <Select
       id="department"
@@ -108,8 +107,7 @@
       bind:value={department}
       required
       invalidText="이 값은 필수입니다."
-      invalidClass="text-red-800"
-    >
+      invalidClass="text-red-800">
       {#each departments as department}
         <option value={department.id}>{department.name}</option>
       {/each}
@@ -122,8 +120,7 @@
       required
       invalidText="이 값은 필수입니다."
       invalidClass="text-red-800"
-      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-    />
+      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
     <Select
       id="id"
       label="학번을 읽을 열"
@@ -132,8 +129,7 @@
       disabled={dropdownItems ? undefined : true}
       required
       invalidText="이 값은 필수입니다."
-      invalidClass="text-red-800"
-    >
+      invalidClass="text-red-800">
       {#each dropdownItems as col}
         <option value={col.id}>{col.name}</option>
       {/each}
@@ -146,8 +142,7 @@
       disabled={dropdownItems ? undefined : true}
       required
       invalidText="이 값은 필수입니다."
-      invalidClass="text-red-800"
-    >
+      invalidClass="text-red-800">
       {#each dropdownItems as col}
         <option value={col.id}>{col.name}</option>
       {/each}

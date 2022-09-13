@@ -30,7 +30,7 @@
   }
 
   function removeSubsection(index: number) {
-    newSubsections = newSubsections.filter((v, idx) => idx !== index);
+    newSubsections = newSubsections.filter((_, idx) => idx !== index);
     subsections = [...newSubsections.filter(isValidSubsection)];
   }
 
@@ -47,9 +47,8 @@
       <SubsectionEntry
         on:remove={() => removeSubsection(index)}
         on:change={(evt) => updateSubsection(index, evt)}
-        key={index}
-        {subsection}
-      />
+        key={`${index}`}
+        {subsection} />
     </div>
   {/each}
   <Button on:click={addSubsection} class="bg-white" isIconRight>

@@ -109,8 +109,7 @@
       breadcrumbClass="p-1"
       class="max-h-[480px] overflow-x-hidden overflow-y-scroll rounded-md bg-white"
       data={depthData}
-      bind:selections
-    >
+      bind:selections>
       <button
         tabindex="0"
         slot="item"
@@ -122,8 +121,7 @@
 							hover:scale-101 hover:brightness-90
 							focus:brightness-90 active:scale-100
 							active:brightness-75"
-        class:selected
-      >
+        class:selected>
         {option.name}
         {#if option.id === 'add'}
           <AddSquare />
@@ -139,8 +137,7 @@
         on:update={buildingUpdate}
         on:remove={buildingRemove}
         original={selectedBuilding}
-        isNew={selections[0] === 'add'}
-      />
+        isNew={selections[0] === 'add'} />
     {:else if selections.length === 2}
       <SectionSettings
         on:update={sectionUpdate}
@@ -148,8 +145,7 @@
         floor={selectedFloor}
         originalId={selectedSectionId}
         original={selectedSection}
-        isNew={selections[1] === 'add'}
-      />
+        isNew={selections[1] === 'add'} />
     {/if}
   </article>
 </section>

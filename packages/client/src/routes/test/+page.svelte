@@ -26,7 +26,6 @@
   on:close={() => (open = false)}
   bind:open
   title="축하합니다!"
-  subtitle="테스트 페이지를 찾았다!"
->
+  subtitle="테스트 페이지를 찾았다!">
   테스트 페이지를 찾으셨습니다! 보상은 뿌듯함..이랄까?
 </Modal>

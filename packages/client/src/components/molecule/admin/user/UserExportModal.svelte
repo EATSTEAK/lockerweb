@@ -38,8 +38,7 @@
   primaryText="내보내기"
   isPrimaryBtnIconRight
   isSecondaryBtnIconRight
-  {...$$restProps}
->
+  {...$$restProps}>
   <div class="flex flex-col gap-3">
     <Select
       id="department"
@@ -48,8 +47,7 @@
       bind:value={department}
       required
       invalidText="이 값은 필수입니다."
-      invalidClass="text-red-800"
-    >
+      invalidClass="text-red-800">
       <option value="all">전체</option>
       {#each departments as department}
         <option value={department.id}>{department.name}</option>
@@ -59,8 +57,7 @@
       id="reserved_only"
       bind:checked={reservedOnly}
       label="사물함을 예약한 사람만 내보내기"
-      showLabel
-    />
+      showLabel />
   </div>
   <DocumentArrowLeft slot="primaryIcon" />
   <Dismiss slot="secondaryIcon" />

@@ -30,7 +30,7 @@
 
   $: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
-  let selectedTab;
+  let selectedTab: string;
 
   $: departmentUsers = selectedTab ? getUsersByDepartment(selectedTab, users) : [];
 
@@ -66,7 +66,7 @@
     return users.filter((user) => !departments.map((dept) => dept.id).includes(user.department));
   }
 
-  function updateUser(evt: CustomEvent<User>) {
+  function updateUser(evt: CustomEvent<UserUpdateRequest>) {
     userEditModalOpen = false;
     editTargetUser = null;
     dispatch('user:update', evt.detail);
@@ -136,7 +136,7 @@
       .map((u: User) => ({
         학번: u.id,
         성명: u.name,
-        '학과(부)': departments.find((dept) => u.department === dept)?.name ?? '알 수 없음',
+        '학과(부)': departments.find((dept) => u.department === dept.id)?.name ?? '알 수 없음',
         '관리자 여부': u.isAdmin ? '예' : '아니오',
         ...(u.lockerId && { '예약한 사물함': u.lockerId ?? '없음' }),
         ...(u.claimedUntil && { '사용 기한': dateFormatter.format(u.claimedUntil as Date) }),
@@ -182,8 +182,7 @@
   </div>
   {#if !updating && !error}
     <div
-      class="flex min-w-[640px] basis-[640px] flex-col gap-3 bg-white p-6 shadow-md lg:rounded-md"
-    >
+      class="flex min-w-[640px] basis-[640px] flex-col gap-3 bg-white p-6 shadow-md lg:rounded-md">
       <TabGroup bind:selectedId={selectedTab}>
         {#each departments as department}
           <TabItem id={department.id}>{department.name}</TabItem>
@@ -200,8 +199,7 @@
         on:batchUnclaim={() => (batchUnclaimModalOpen = true)}
         on:edit={(evt) => editUser(evt.detail)}
         users={departmentUsers}
-        bind:selected={selectedUser}
-      />
+        bind:selected={selectedUser} />
     </div>
   {:else if updating}
     <UpdateScreen class="min-h-[360px] lg:rounded-md" />
@@ -214,28 +212,24 @@
   targetUser={editTargetUser}
   bind:open={userEditModalOpen}
   on:close={() => (userEditModalOpen = false)}
-  on:submit={updateUser}
-/>
+  on:submit={updateUser} />
 <UserImportModal
   bind:open={uploadUserModalOpen}
   on:close={() => (uploadUserModalOpen = false)}
-  on:submit={importUser}
-/>
+  on:submit={importUser} />
 
 <UserExportModal
   bind:open={userExportModalOpen}
   on:close={() => (userExportModalOpen = false)}
   on:submit={exportUser}
-  {users}
-/>
+  {users} />
 
 <Modal
   bind:open={batchDeleteModalOpen}
   title="일괄 삭제"
   on:close={() => (batchDeleteModalOpen = false)}
   on:click:secondary={() => (batchDeleteModalOpen = false)}
-  on:click={() => batchDeleteUser(selectedUser)}
->
+  on:click={() => batchDeleteUser(selectedUser)}>
   <p>
     선택된 <span class="font-bold">{selectedUser.length}</span>명의 사용자를 일괄 삭제하시겠습니까?
   </p>
@@ -248,8 +242,7 @@
   title="일괄 예약 취소"
   on:close={() => (batchUnclaimModalOpen = false)}
   on:click:secondary={() => (batchUnclaimModalOpen = false)}
-  on:click={() => batchUnclaimUser(selectedUser)}
->
+  on:click={() => batchUnclaimUser(selectedUser)}>
   <p>
     선택된 <span class="font-bold">{selectedUser.length}</span>명의 사용자 사물함을
     취소하시겠습니까?

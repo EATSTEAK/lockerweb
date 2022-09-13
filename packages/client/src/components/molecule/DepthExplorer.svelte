@@ -21,7 +21,7 @@
     if (!depthData || !depthData.length) return [data.find((v) => v.id === elem)];
     return [...depthData, depthData.at(-1).children.find((v) => v.id === elem)];
   }, []);
-  $: currentDepth = selections.reduce(
+  $: currentDepth = selections.reduce<[number, DepthData[]]>(
     ([depthIdx, depth]: [number, DepthData[]], elem: string) => {
       if (!depth) return [depthIdx, depth];
       const selected = depth.find((options) => options.id === elem);
@@ -35,8 +35,7 @@
   <header class="{breadcrumbClass} breadcrumb flex">
     {#if selections.length}
       <button class="cursor-pointer text-primary-800" on:click={() => deselect(0)}
-        >{rootText}</button
-      >
+        >{rootText}</button>
       {#each selections as selection, index}
         {#if index + 1 < selections.length}
           <button class="cursor-pointer text-primary-800" on:click={() => select(index, selection)}>
@@ -57,14 +56,12 @@
     <div
       on:click={() => {
         select(currentDepth[0], option.id);
-      }}
-    >
+      }}>
       <slot
         name="item"
         depth={currentDepth[0]}
         {option}
-        selected={selections.at(-1) === option.id}
-      />
+        selected={selections.at(-1) === option.id} />
     </div>
   {/each}
 </div>

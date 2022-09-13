@@ -31,8 +31,7 @@
 	 active:shadow-md active:brightness-75
 	 [&[disabled]]:pointer-events-none
 	 [&[disabled]]:opacity-50 [&[disabled]]:shadow-none"
-  {...$$restProps}
->
+  {...$$restProps}>
   {#if !isIconRight}
     {#if $$slots.icon}
       <div class="btn-icon">

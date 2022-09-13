@@ -33,15 +33,11 @@
 
   let contactModalOpen = false;
 
-  $: callbackNotLoaded = true;
-  $: mappedConfigsData = {};
-
   if (browser) {
     if (getAuthorization()) {
       goto('/reserve');
     }
     callbackUrl = window.location.protocol + '//' + window.location.host + '/callback/';
-    callbackNotLoaded = false;
     apiCountLocker()
       .then((data) => {
         apiResponse = data;
@@ -54,6 +50,8 @@
   $: errorData = apiResponse && apiResponse.success === false ? apiResponse.error : undefined;
 
   $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
+  $: departmentConfigs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
   $: if ($config && $config.success && countData) {
     lockerCount = updateLockerCount($config.result, countData);
@@ -127,8 +125,7 @@
             )}"
             rel="external"
             class="h-16 w-full bg-red-800 text-xl text-white"
-            isIconRight
-          >
+            isIconRight>
             예약 불가(열람만 가능)
             <ErrorCircle class="h-8 w-8" slot="icon" />
           </Button>
@@ -140,8 +137,7 @@
             )}"
             rel="external"
             class="h-16 w-full bg-primary-800 text-xl text-white"
-            isIconRight
-          >
+            isIconRight>
             통합 로그인
             <Soongsil class="h-8 w-8" slot="icon" />
           </Button>
@@ -150,8 +146,7 @@
           <Credit />
           <Button
             on:click={() => (contactModalOpen = true)}
-            class="px-0 py-0 text-primary-800 underline !shadow-none hover:text-primary-900 hover:!shadow-none active:!shadow-none active:drop-shadow-md"
-          >
+            class="px-0 py-0 text-primary-800 underline !shadow-none hover:text-primary-900 hover:!shadow-none active:!shadow-none active:drop-shadow-md">
             도움이 필요하신가요?
           </Button>
         </div>
@@ -170,9 +165,8 @@
       <div class="h-full" transition:fade>
         <ErrorScreen
           class="rounded-md p-4"
-          errorTitle={errorData.code}
-          errorMessage="오류가 발생하였습니다. 관리자에게 문의하십시오."
-        />
+          errorTitle={`${errorData.code}`}
+          errorMessage="오류가 발생하였습니다. 관리자에게 문의하십시오." />
       </div>
     {/if}
   </div>
@@ -184,9 +178,8 @@
   secondaryClass="hidden"
   primaryText="닫기"
   on:close={() => (contactModalOpen = false)}
-  on:click={() => (contactModalOpen = false)}
->
-  {#each $config && $config.success ? $config.result : [] as config}
+  on:click={() => (contactModalOpen = false)}>
+  {#each departmentConfigs as config}
     {#if config.contact}
       <div class="my-2 leading-10">
         <h5>{config.name} 연락처</h5>

@@ -4,10 +4,9 @@
   export let disabled: boolean = false;
   export let titleOverride: string = null;
 
-  const [buildingId, floor, locker] = id.split('-');
+  const [, , locker] = id.split('-');
   let section = locker.slice(0, 1);
   let lockerNum: number = parseInt(locker.slice(1));
-  let claimedUntil: Date;
   let clazz = '';
   export { clazz as class };
 </script>
@@ -33,8 +32,7 @@
   class="{clazz} flex h-16
   w-16 cursor-pointer cursor-pointer select-none flex-col items-stretch rounded-xl p-1 ring-2 ring-inset ring-gray-300 transition-all hover:scale-105 hover:brightness-95
 	focus:ring focus:ring-blue-400 focus:brightness-90 active:scale-100 active:ring active:brightness-75 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-50"
-  {...$$restProps}
->
+  {...$$restProps}>
   <div class="flex grow select-none items-center justify-center text-xs font-normal text-gray-400">
     {#if titleOverride}
       <p>{titleOverride}</p>

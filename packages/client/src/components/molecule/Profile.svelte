@@ -5,6 +5,8 @@
   import Skeleton from '../atom/Skeleton.svelte';
 
   export let user: User;
+
+  $: configs = $config && $config.success && $config.result;
 </script>
 
 {#if user}
@@ -14,9 +16,7 @@
       <span class="text-5xl font-bold text-primary-800">{user?.name ?? '알 수 없음'}</span>님
     </p>
     <Tag class="bg-gray-300 text-gray-700"
-      >학과(부) \ {getDepartmentNameById($config?.result ?? [], user.department) ??
-        '알 수 없음'}</Tag
-    >
+      >학과(부) \ {getDepartmentNameById(configs ?? [], user.department) ?? '알 수 없음'}</Tag>
     <Tag class="bg-gray-300 text-gray-700">학번 \ {user.id}</Tag>
   </div>
 {:else}

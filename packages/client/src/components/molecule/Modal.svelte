@@ -23,7 +23,7 @@
 
   const dispatch = createEventDispatcher();
 
-  let dialog;
+  let dialog: HTMLDialogElement;
 
   $: if (open) {
     if (!noBackdrop && dialog) dialog.showModal();
@@ -46,7 +46,7 @@
   function outClick(event: MouseEvent) {
     const rect = dialog.getBoundingClientRect();
     const doc = dialog.ownerDocument;
-    const win = doc.defaultView || doc.parentWindow;
+    const win = doc.defaultView || (doc as unknown as { parentWindow: Window }).parentWindow;
     if (event.view !== win || (event.clientX === 0 && event.clientY === 0)) return;
     const isInDialog =
       rect.top <= event.clientY &&
@@ -76,11 +76,9 @@
         transition-all
         backdrop:bg-black
 				backdrop:opacity-30 lg:w-[480px]"
-  {...$$restProps}
->
+  {...$$restProps}>
   <div
-    class="flex h-full max-h-[calc(100vh-2rem)] w-full flex-col items-stretch gap-3 overflow-hidden rounded-xl"
-  >
+    class="flex h-full max-h-[calc(100vh-2rem)] w-full flex-col items-stretch gap-3 overflow-hidden rounded-xl">
     <div class="flex shrink-0 select-none justify-between">
       <div class="pl-4 pt-3 text-gray-700">
         <h4>{title}</h4>
@@ -88,8 +86,7 @@
       </div>
       <button
         on:click={closeModal}
-        class="flex h-10 w-14 cursor-pointer items-center justify-center rounded-bl-2.5xl rounded-tr-xl bg-gray-300 text-center text-2xl transition-all hover:bg-primary-800 hover:text-white"
-      >
+        class="flex h-10 w-14 cursor-pointer items-center justify-center rounded-bl-2.5xl rounded-tr-xl bg-gray-300 text-center text-2xl transition-all hover:bg-primary-800 hover:text-white">
         <Dismiss />
       </button>
     </div>
@@ -103,8 +100,7 @@
             on:click={() => click('secondary')}
             disabled={secondaryDisabled ? true : undefined}
             class="{secondaryClass} bg-gray-300 text-gray-600 hover:bg-gray-200 [&[disabled]]:opacity-50"
-            isIconRight={isSecondaryBtnIconRight}
-          >
+            isIconRight={isSecondaryBtnIconRight}>
             <slot slot="icon" name="secondaryIcon" />
             {secondaryText}
           </Button>
@@ -113,8 +109,7 @@
             on:click={() => click('secondary')}
             disabled={secondaryDisabled ? true : undefined}
             class="{secondaryClass} bg-gray-300 text-gray-600 hover:bg-gray-200 [&[disabled]]:opacity-50"
-            isIconRight={isSecondaryBtnIconRight}
-          >
+            isIconRight={isSecondaryBtnIconRight}>
             {secondaryText}
           </Button>
         {/if}
@@ -123,8 +118,7 @@
             on:click={() => click('primary')}
             disabled={primaryDisabled ? true : undefined}
             class="{primaryClass} bg-primary-800 text-white [&[disabled]]:opacity-50"
-            isIconRight={isPrimaryBtnIconRight}
-          >
+            isIconRight={isPrimaryBtnIconRight}>
             <slot slot="icon" name="primaryIcon" />
             {primaryText}
           </Button>
@@ -133,8 +127,7 @@
             on:click={() => click('primary')}
             disabled={primaryDisabled ? true : undefined}
             class="{primaryClass} bg-primary-800 text-white [&[disabled]]:opacity-50"
-            isIconRight={isPrimaryBtnIconRight}
-          >
+            isIconRight={isPrimaryBtnIconRight}>
             {primaryText}
           </Button>
         {/if}

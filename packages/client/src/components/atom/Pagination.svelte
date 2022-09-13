@@ -42,23 +42,20 @@
     >-<span class="font-bold"
       >{itemsPerPage * (currentPage + 1) >= totalEntries
         ? totalEntries
-        : itemsPerPage * (currentPage + 1)}</span
-    >
+        : itemsPerPage * (currentPage + 1)}</span>
   </div>
   <div class="flex items-center gap-1">
     <button
       on:click={prevPage}
       class="pagination-btn rounded-md bg-gray-200 p-1 text-gray-500 transition-all"
-      disabled={currentPage < 1}
-    >
+      disabled={currentPage < 1}>
       <CaretLeft />
     </button>
     <div class="px-2">{currentPage + 1}</div>
     <button
       on:click={nextPage}
       class="pagination-btn rounded-md bg-gray-200 p-1 text-gray-500 transition-all"
-      disabled={currentPage + 1 >= totalPage}
-    >
+      disabled={currentPage + 1 >= totalPage}>
       <CaretRight />
     </button>
   </div>

@@ -21,17 +21,14 @@
 <div
   class={`${clazz || ''} ${
     lockerLeft <= 0 ? 'disabled' : ''
-  } relative overflow-hidden rounded-2xl ring-2 ring-gray-300`}
->
+  } relative overflow-hidden rounded-2xl ring-2 ring-gray-300`}>
   <div
     class="progress absolute top-0 left-0 h-full rounded-2xl bg-gray-100"
-    style="width: {percentage}%"
-  />
+    style="width: {percentage}%" />
   <div class="absolute top-0 left-0 flex h-full w-full items-center justify-between px-3">
     <div
       class="flex items-center justify-end px-3 font-bold text-gray-400"
-      style="width: {percentage}%"
-    >
+      style="width: {percentage}%">
       <span class="hidden lg:inline">
         {#if percentage >= 20}
           {percentage}%
@@ -40,13 +37,11 @@
     </div>
     <div class="font-bold">
       <span class="locker-left text-4xl text-primary-800">{lockerLeft}</span><span class="text-xl"
-        >/{totalLocker}</span
-      >
+        >/{totalLocker}</span>
     </div>
   </div>
   <div
-    class="absolute relative top-0 left-0 flex flex-row items-center justify-between gap-5 px-4 py-1.5"
-  >
+    class="absolute relative top-0 left-0 flex flex-row items-center justify-between gap-5 px-4 py-1.5">
     <div class="flex flex-col">
       <p class="text-sm text-gray-500">{buildingDisplay}</p>
       <div class="flex gap-5 text-3xl font-bold">

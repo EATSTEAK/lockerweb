@@ -1,5 +1,6 @@
 <script lang="ts">
   import { afterUpdate, getContext, onMount } from 'svelte';
+  import type { Writable } from 'svelte/store';
 
   export let id: string;
   export let selected: boolean = false;
@@ -8,11 +9,16 @@
 
   let ref = null;
 
-  const ctx = getContext('ListItemGroup');
+  const ctx = getContext<{
+    currentId: Writable<string>;
+    add: ({ id: string, selected: boolean }) => void;
+    update: (id: string) => void;
+    change: (direction: number) => void;
+  }>('ListItemGroup');
 
   ctx.add({ id, selected });
 
-  const unsubscribe = ctx.currentId.subscribe(($) => {
+  const unsubscribe = ctx.currentId.subscribe(($: string) => {
     selected = $ === id;
   });
 
@@ -50,8 +56,7 @@
     } else if (key === 'ArrowLeft') {
       ctx.change(-1);
     }
-  }}
->
+  }}>
   <slot />
 </button>
 

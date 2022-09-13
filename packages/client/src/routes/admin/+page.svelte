@@ -128,8 +128,7 @@
 <NavigationShell
   bind:navigationCollapsed
   collapsable={innerWidth && innerWidth <= 1024}
-  disableBlock
->
+  disableBlock>
   <section class="flex flex-col gap-1" slot="navigation_content">
     {#if $user && $user.success}
       <h3>설정</h3>
@@ -137,24 +136,21 @@
         <SelectionListItem
           on:click={closeSidebarMenu}
           class="flex items-center justify-between"
-          id="user"
-        >
+          id="user">
           <span>사용자 설정</span>
           <PeopleSettings />
         </SelectionListItem>
         <SelectionListItem
           on:click={closeSidebarMenu}
           class="flex items-center justify-between"
-          id="service"
-        >
+          id="service">
           <span>서비스 설정</span>
           <Settings />
         </SelectionListItem>
         <SelectionListItem
           on:click={closeSidebarMenu}
           class="flex items-center justify-between"
-          id="department"
-        >
+          id="department">
           <span>학과(부)별 설정</span>
           <ContentSettings />
         </SelectionListItem>
@@ -191,8 +187,7 @@
             on:user:batchDelete={batchDeleteUser}
             updating={userUpdating}
             error={userRequestError}
-            {users}
-          />
+            {users} />
         {:catch err}
           <div class="my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch">
             <div class="mx-6 lg:mx-0 flex flex-wrap w-full">

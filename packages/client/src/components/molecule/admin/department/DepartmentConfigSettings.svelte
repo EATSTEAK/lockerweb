@@ -77,8 +77,7 @@
       required={isNew}
       pattern="\w+"
       invalidClass="text-red-800"
-      invalidText={id ? 'ID는 알파벳 혹은 _ 만 허용됩니다.' : '이 값은 필수입니다.'}
-    />
+      invalidText={id ? 'ID는 알파벳 혹은 _ 만 허용됩니다.' : '이 값은 필수입니다.'} />
     <TextInput
       class="my-2"
       inputClass="w-full max-w-sm"
@@ -88,8 +87,7 @@
       bind:value={name}
       required
       invalidClass="text-red-800"
-      invalidText="이 값은 필수입니다."
-    />
+      invalidText="이 값은 필수입니다." />
     <DateTimeInput
       class="my-2"
       inputClass="w-full max-w-sm"
@@ -97,8 +95,7 @@
       label="예약 시작일"
       showLabel
       bind:value={activateFrom}
-      invalidClass="text-red-800"
-    />
+      invalidClass="text-red-800" />
     <DateTimeInput
       class="my-2"
       inputClass="w-full max-w-sm"
@@ -106,16 +103,14 @@
       label="예약 종료일"
       showLabel
       bind:value={activateTo}
-      invalidClass="text-red-800"
-    />
+      invalidClass="text-red-800" />
     <TextInput
       class="my-2"
       inputClass="w-full max-w-sm"
       id="contact"
       label="학과(부) 연락처"
       showLabel
-      bind:value={contact}
-    />
+      bind:value={contact} />
   </div>
   <div class="actions-wrap">
     <hr />
@@ -131,8 +126,7 @@
           disabled={isSaveDisabled}
           on:click={updateDepartment}
           class="bg-primary-800 text-white [&[disabled]]:bg-primary-400"
-          isIconRight
-        >
+          isIconRight>
           저장
           <SaveEdit slot="icon" />
         </Button>
@@ -141,8 +135,7 @@
           disabled={isSaveDisabled}
           on:click={updateDepartment}
           class="bg-primary-800 text-white [&[disabled]]:bg-primary-400"
-          isIconRight
-        >
+          isIconRight>
           추가
           <Add slot="icon" />
         </Button>

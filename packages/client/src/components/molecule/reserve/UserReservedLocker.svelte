@@ -39,18 +39,15 @@
       on:click={() => {
         dispatch('unclaim');
       }}
-      class="hover-wrapper relative h-44 w-56 cursor-pointer rounded-2xl"
-    >
+      class="hover-wrapper relative h-44 w-56 cursor-pointer rounded-2xl">
       <div
-        class="absolute right-0 top-0 z-10 mt-4 mr-4 flex flex-col justify-center rounded-lg text-center font-bold text-gray-500"
-      >
+        class="absolute right-0 top-0 z-10 mt-4 mr-4 flex flex-col justify-center rounded-lg text-center font-bold text-gray-500">
         <Dismiss />
       </div>
       <div
         class:invisible={reservedLocker !== null}
         class:backdrop-blur-sm={reservedLocker === null}
-        class="hover-popup invisible absolute top-0 left-0 z-30 flex h-full w-full items-center justify-center rounded-xl text-2xl font-bold text-gray-600 ring-2 ring-blue-400 drop-shadow-md"
-      >
+        class="hover-popup invisible absolute top-0 left-0 z-30 flex h-full w-full items-center justify-center rounded-xl text-2xl font-bold text-gray-600 ring-2 ring-blue-400 drop-shadow-md">
         {#if reservedLocker !== null}
           예약 취소
         {:else}
@@ -58,11 +55,9 @@
         {/if}
       </div>
       <div
-        class="user-reserve-box absolute top-0 left-0 z-0 flex h-44 w-56 flex-col items-center gap-1 rounded-2xl bg-white p-2 ring-2 ring-blue-400"
-      >
+        class="user-reserve-box absolute top-0 left-0 z-0 flex h-44 w-56 flex-col items-center gap-1 rounded-2xl bg-white p-2 ring-2 ring-blue-400">
         <div
-          class="flex h-16 w-full flex-col items-center justify-center rounded-2xl bg-gray-300 px-2 text-center"
-        >
+          class="flex h-16 w-full flex-col items-center justify-center rounded-2xl bg-gray-300 px-2 text-center">
           <div class:invisible={reservedLocker === null} class="location text-2xl font-extrabold">
             {getBuildingName(serviceConfig.buildings, buildingId)}
             {floor}층
@@ -70,8 +65,7 @@
         </div>
         <div
           class:invisible={reservedLocker === null}
-          class="number flex grow items-center text-center text-7xl font-extrabold text-primary-800"
-        >
+          class="number flex grow items-center text-center text-7xl font-extrabold text-primary-800">
           {section}-{lockerNum}
         </div>
       </div>

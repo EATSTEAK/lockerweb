@@ -12,8 +12,7 @@
 <div class="{clazz} flex flex-col">
   <!--suppress XmlInvalidId -->
   <label class="{labelClass} mb-1 block font-bold" for={id} class:hidden={!showLabel}
-    >{label ?? ''}</label
-  >
+    >{label ?? ''}</label>
   <input
     {id}
     type="checkbox"
@@ -21,8 +20,7 @@
     on:input
     class="{inputClass} rounded-md transition-all"
     bind:checked
-    {...$$restProps}
-  />
+    {...$$restProps} />
 </div>
 
 <style lang="postcss">
