@@ -42,7 +42,7 @@
 			class='hover-wrapper cursor-pointer relative w-56 h-44 rounded-2xl'
 		>
 			<div
-				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-2 mr-2 rounded-lg'
+				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-4 mr-4 rounded-lg'
 			>
 				<Dismiss />
 			</div>

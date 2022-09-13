@@ -61,11 +61,11 @@
 </script>
 
 
-<div class='w-auto h-max-content md:min-h-screen flex flex-col items-start'>
+<div class='w-auto h-max-content lg:min-h-screen flex flex-col items-start'>
 	<div
-		class='grow flex flex-col-reverse md:flex-row justify-between min-h-[280px] w-full py-4 md:px-8 gap-4'>
+		class='grow flex flex-col-reverse lg:flex-row justify-between min-h-[280px] w-full py-4 lg:px-8 gap-4'>
 		<div
-			class='bg-slate-200 md:basis-1/2 w-full md:w-1/2 md:max-w-[480px] items-stretch shrink flex flex-col md:rounded-xl overflow-hidden p-8'>
+			class='bg-slate-200 lg:basis-1/2 w-full lg:w-1/2 lg:max-w-[480px] items-stretch shrink flex flex-col lg:rounded-xl overflow-hidden p-8'>
 			{#if serviceConfig && targetDepartmentId}
 				<LockerSectionSelector {buildings} {targetDepartmentId}
 															 bind:selectedBuildingId
@@ -80,7 +80,7 @@
 			{/if}
 		</div>
 		<div
-			class='w-full h-full flex flex-col md:rounded-xl overflow-hidden bg-slate-200 md:basis-1/2 grow p-8 gap-4'>
+			class='w-full h-full flex flex-col lg:rounded-xl overflow-hidden bg-slate-200 lg:basis-1/2 grow p-8 gap-4'>
 			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<h4 class='text-3xl'>배치도</h4>
 				<FloorMap class='grow rounded-xl aspect-[4/3] max-h-[50vh]' {selectedBuildingId} {selectedFloor}

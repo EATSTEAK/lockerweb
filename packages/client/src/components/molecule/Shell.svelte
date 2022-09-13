@@ -44,6 +44,9 @@
 	function isReservable(config: Config[], user: User, time: Date): boolean {
 		if (!user || user.isAdmin) return true;
 		const userDeptConfig: DepartmentConfig = getDepartmentConfig(config, user.department) as DepartmentConfig;
+		if (serviceConfig && userDeptConfig) {
+			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date) && isActivated(userDeptConfig.activateFrom as Date, userDeptConfig.activateTo as Date);
+		}
 		if (serviceConfig) {
 			return isActivated(serviceConfig.activateFrom as Date, serviceConfig.activateTo as Date);
 		}
@@ -60,12 +63,12 @@
 	export let disableBlock = false;
 </script>
 
-<main class='{clazz} flex flex-col md:flex-row items-stretch'>
-	<section class='{navigationClass} flex row w-full md:min-w-[380px] md:basis-[380px] md:h-screen'>
+<main class='{clazz} flex flex-col lg:flex-row items-stretch'>
+	<section class='{navigationClass} flex row w-full lg:min-w-[380px] lg:basis-[380px] lg:h-screen'>
 		<slot name='navigation'>
 			<Navigation class='flex-row w-full h-full'>
-				<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
-					<Soongsil class='w-12 h-12 md:w-20 md:h-20' />
+				<NavigationHeader class='py-1 lg:py-0 lg:pt-10' slot='header'>
+					<Soongsil class='w-12 h-12 lg:w-20 lg:h-20' />
 				</NavigationHeader>
 				<Divider class='my-6' />
 				<NavigationContent>
@@ -82,9 +85,9 @@
 			</Navigation>
 		</slot>
 	</section>
-	<section class='{mainClass} grow md:max-h-screen overflow-x-auto md:overflow-y-auto'>
+	<section class='{mainClass} grow lg:max-h-screen overflow-x-auto lg:overflow-y-auto'>
 		{#if serviceConfig && serviceConfig.alert}
-			<div class='bg-primary-200 rounded-md p-6 my-4 mx-6 md:mx-8 flex gap-3'>
+			<div class='bg-primary-200 rounded-md p-6 my-4 mx-6 lg:mx-8 flex gap-3'>
 				<Info />
 				<div class='grow'>
 					<span class='font-bold'>안내:</span> {serviceConfig.alert}
@@ -102,7 +105,7 @@
 	<p>현재 예약 가능한 시간이 아닙니다.</p>
 	{#if $user && $user.success && $user.result.lockerId}
 		{@const lockerInfo = extractLockerInfoFromId($user.result.lockerId)}
-		<p>내가 예약한 사물함: <span class='bg-gray-200 rounded-lg py-1 px-2'>{lockerInfo.floor}층 | {lockerInfo.sectionId}구역
+		<p>내가 예약한 사물함: <span class='bg-gray-300 rounded-lg py-1 px-2'>{lockerInfo.floor}층 | {lockerInfo.sectionId}구역
 			- {lockerInfo.lockerNum}번</span></p>
 	{/if}
 	<ArrowExportLtr slot='primaryIcon' />

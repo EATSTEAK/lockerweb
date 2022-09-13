@@ -32,9 +32,9 @@
 	class:active={selected}
 	class='{clazz}
 		bg-white text-gray-800 box-border rounded-xl transition-all p-4 outline-0 outline-none
-		hover:brightness-90
+		hover:brightness-95
 		active:brightness-75 active:bg-primary-800 active:text-white active:font-bold
-		focus:outline-1 focus:outline-primary-600'
+		focus:brightness-90 focus:outline-1 focus:outline-primary-600'
 	on:click
 	on:click|preventDefault={() => {
 		ctx.update(id);

@@ -32,7 +32,7 @@
 		} else if (rangeStart > rangeEnd) {
 			invalidText = '값 무시됨: 구역 시작이 끝보다 큼';
 		} else if (!departments.find((d) => d.id === department)) {
-			invalidText = '값 무시됨: 존재하지 않는 학부';
+			invalidText = '값 무시됨: 존재하지 않는 학과(부)';
 		} else {
 			invalidText = undefined;
 			const newSubsection = {
@@ -62,7 +62,7 @@
 		<div class='flex items-center'>
 			<button
 				on:click={removeSubsection}
-				class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90'
+				class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-95 focus:brightness-90 active:brightness-75'
 			>
 				<Subtract />
 			</button>
@@ -82,10 +82,10 @@
 				</div>
 			</div>
 			<div class='flex items-center flex-wrap'>
-				<p class='font-bold mr-2'>대상 학부</p>
+				<p class='font-bold mr-2'>대상 학과(부)</p>
 				<Select
 					id={`subsection_${key}_department`}
-					label='대상 학부'
+					label='대상 학과(부)'
 					bind:value={department}
 					required
 				>
