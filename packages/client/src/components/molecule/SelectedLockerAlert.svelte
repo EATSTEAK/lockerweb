@@ -69,7 +69,7 @@
 		</Button>
 		<Button
 			on:click={() => click('primary')}
-			class='{primaryClass} !py-2 !pl-2 my-2 bg-[#7088DF] text-white [&[disabled]]:opacity-50 !flex-none'
+			class='{primaryClass} !py-2 !pl-2 my-2 bg-primary-800 text-white [&[disabled]]:opacity-50 !flex-none'
 		>
 			<Bookmark slot='icon' />
 			예약하기

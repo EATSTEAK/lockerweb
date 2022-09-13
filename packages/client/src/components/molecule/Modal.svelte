@@ -86,7 +86,7 @@
 			</div>
 			<button
 				on:click={closeModal}
-				class='w-14 h-10 bg-gray-300 rounded-bl-2.5xl rounded-tr-xl cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'
+				class='w-14 h-10 bg-gray-300 rounded-bl-2.5xl rounded-tr-xl cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-primary-800 hover:text-white'
 			>
 				<Dismiss />
 			</button>
@@ -120,7 +120,7 @@
 					<Button
 						on:click={() => click('primary')}
 						disabled={primaryDisabled ? true : undefined}
-						class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+						class='{primaryClass} bg-primary-800 text-white [&[disabled]]:opacity-50'
 						isIconRight={isPrimaryBtnIconRight}
 					>
 						<slot slot='icon' name='primaryIcon' />
@@ -130,7 +130,7 @@
 					<Button
 						on:click={() => click('primary')}
 						disabled={primaryDisabled ? true : undefined}
-						class='{primaryClass} bg-[#7088DF] text-white [&[disabled]]:opacity-50'
+						class='{primaryClass} bg-primary-800 text-white [&[disabled]]:opacity-50'
 						isIconRight={isPrimaryBtnIconRight}
 					>
 						{primaryText}
