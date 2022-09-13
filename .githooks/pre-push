@@ -3,5 +3,6 @@
 set -e
 
 pnpm install --frozen-lockfile
+pnpm -r prettier
 pnpm -r lint
 pnpm -r check
