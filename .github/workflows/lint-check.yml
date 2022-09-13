@@ -36,8 +36,6 @@ jobs:
         uses: tj-actions/eslint-changed-files@v13.3
         with:
           path: "./packages/client"
-          config_path: "./packages/client/.eslintrc.cjs"
-          ignore_path: "./packages/client/.eslintignore"
           file_extensions: |
             **/*.ts
             **/*.svelte
