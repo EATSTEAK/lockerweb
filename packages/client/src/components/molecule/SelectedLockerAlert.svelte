@@ -45,7 +45,7 @@
 	transition:fly={{ y: 10, duration: 150 }}
 	class='background flex flex-row flex-wrap px-2
  	fixed bottom-5 right-5 backdrop-blur-sm
-	rounded-xl z-50'
+	rounded-xl z-20'
 	style={`width:${width - 42}px; background: rgba(80, 80, 80, 0.8);`}
 >
 	<div class='flex flex-row flex-wrap gap-2 items-center px-1'>

@@ -160,8 +160,8 @@
 	}
 </script>
 
-<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
-	<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
+<div class='my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+	<div class='mx-6 lg:mx-0 flex flex-wrap w-full'>
 		<h3>사용자 설정</h3>
 		{#if !updating && !error}
 			<div class='grow flex justify-end items-center gap-1'>
@@ -182,13 +182,13 @@
 	</div>
 	{#if !updating && !error}
 		<div
-			class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3 basis-[640px] min-w-[640px]'
+			class='lg:rounded-md shadow-md p-6 bg-white flex flex-col gap-3 basis-[640px] min-w-[640px]'
 		>
 			<TabGroup bind:selectedId={selectedTab}>
 				{#each departments as department}
 					<TabItem id={department.id}>{department.name}</TabItem>
 				{/each}
-				<!-- 존재하지 않는 학부를 가진 사용자가 있을 경우 -->
+				<!-- 존재하지 않는 학과(부)를 가진 사용자가 있을 경우 -->
 				{#if users.filter((user) => !departments
 					.map((dept) => dept.id)
 					.includes(user.department)).length}
@@ -204,9 +204,9 @@
 			/>
 		</div>
 	{:else if updating}
-		<UpdateScreen class='md:rounded-md min-h-[360px]' />
+		<UpdateScreen class='lg:rounded-md min-h-[360px]' />
 	{:else if error}
-		<ErrorScreen class='md:rounded-md min-h-[360px]' />
+		<ErrorScreen class='lg:rounded-md min-h-[360px]' />
 	{/if}
 </div>
 
