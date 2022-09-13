@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const chai = require("chai");
-const AWS = require("aws-sdk");
-const https = require("https");
+const chai = require('chai');
+const AWS = require('aws-sdk');
+const https = require('https');
 const expect = chai.expect;
 
 /**
@@ -10,11 +10,11 @@ const expect = chai.expect;
  * throw exception if AWS_SAM_STACK_NAME is not set.
  */
 const getStackName = () => {
-  const stackName = process.env["AWS_SAM_STACK_NAME"];
+  const stackName = process.env['AWS_SAM_STACK_NAME'];
   if (!stackName) {
     throw new Error(
-      "Cannot find env var AWS_SAM_STACK_NAME.\n" +
-        "Please setup this environment variable with the stack name where we are running integration tests."
+      'Cannot find env var AWS_SAM_STACK_NAME.\n' +
+        'Please setup this environment variable with the stack name where we are running integration tests.',
     );
   }
 
@@ -24,7 +24,7 @@ const getStackName = () => {
 /**
  * Make sure env variable AWS_SAM_STACK_NAME exists with the name of the stack we are going to test.
  */
-describe("Test API Gateway", function () {
+describe('Test API Gateway', function () {
   let apiEndpoint;
 
   /**
@@ -46,19 +46,16 @@ describe("Test API Gateway", function () {
     } catch (e) {
       throw new Error(
         `Cannot find stack ${stackName}: ${e.message}\n` +
-          `Please make sure stack with the name "${stackName}" exists.`
+          `Please make sure stack with the name "${stackName}" exists.`,
       );
     }
 
     const stacks = response.Stacks;
 
     const stackOutputs = stacks[0].Outputs;
-    const apiOutput = stackOutputs.find(
-      (output) => output.OutputKey === "HelloWorldApi"
-    );
+    const apiOutput = stackOutputs.find((output) => output.OutputKey === 'HelloWorldApi');
 
-    expect(apiOutput, `Cannot find output HelloWorldApi in stack ${stackName}`)
-      .not.to.be.undefined;
+    expect(apiOutput, `Cannot find output HelloWorldApi in stack ${stackName}`).not.to.be.undefined;
 
     apiEndpoint = apiOutput.OutputValue;
   });
@@ -66,20 +63,20 @@ describe("Test API Gateway", function () {
   /**
    * Call the API Gateway endpoint and check the response
    */
-  it("verifies successful response from api gateway", (done) => {
-    console.info("api endpoint:", apiEndpoint);
+  it('verifies successful response from api gateway', (done) => {
+    console.info('api endpoint:', apiEndpoint);
     https
       .get(apiEndpoint, (res) => {
         expect(res.statusCode).to.be.equal(200);
 
-        res.on("data", (data) => {
+        res.on('data', (data) => {
           const response = JSON.parse(data);
-          expect(response).to.be.an("object");
-          expect(response.message).to.be.equal("hello world");
+          expect(response).to.be.an('object');
+          expect(response.message).to.be.equal('hello world');
           done();
         });
       })
-      .on("error", (e) => {
+      .on('error', (e) => {
         throw e;
       });
   });

@@ -1,62 +1,62 @@
-<script lang='ts'>
-	import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
-	import { writable } from 'svelte/store';
+<script lang="ts">
+  import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
+  import { writable } from 'svelte/store';
 
-	export let selectedIndex = 0;
+  export let selectedIndex = 0;
 
-	const dispatch = createEventDispatcher();
-	const currentId = writable(null);
+  const dispatch = createEventDispatcher();
+  const currentId = writable(null);
 
-	export let selectedId = undefined;
+  export let selectedId = undefined;
 
-	$: currentIndex = -1;
-	$: departments = [];
+  $: currentIndex = -1;
+  $: departments = [];
 
-	$: if (departments[currentIndex]) {
-		dispatch('change', currentIndex);
-		currentId.set(departments[currentIndex].id);
-		selectedId = departments[currentIndex].id;
-	}
+  $: if (departments[currentIndex]) {
+    dispatch('change', currentIndex);
+    currentId.set(departments[currentIndex].id);
+    selectedId = departments[currentIndex].id;
+  }
 
-	setContext('DepartmentSelectionGroup', {
-		currentId,
-		add: ({ id, selected }) => {
-			if (selected) {
-				selectedIndex = departments.length;
-			}
+  setContext('DepartmentSelectionGroup', {
+    currentId,
+    add: ({ id, selected }) => {
+      if (selected) {
+        selectedIndex = departments.length;
+      }
 
-			departments = [...departments, { id, selected }];
-		},
-		update: (id) => {
-			selectedIndex = departments.map(({ id }) => id).indexOf(id);
-		},
-		change: (direction) => {
-			let index = currentIndex + direction;
+      departments = [...departments, { id, selected }];
+    },
+    update: (id) => {
+      selectedIndex = departments.map(({ id }) => id).indexOf(id);
+    },
+    change: (direction) => {
+      let index = currentIndex + direction;
 
-			if (index < 0) {
-				index = departments.length - 1;
-			} else if (index >= departments.length) {
-				index = 0;
-			}
+      if (index < 0) {
+        index = departments.length - 1;
+      } else if (index >= departments.length) {
+        index = 0;
+      }
 
-			selectedIndex = index;
-		}
-	});
+      selectedIndex = index;
+    },
+  });
 
-	afterUpdate(() => {
-		if (selectedIndex !== currentIndex) {
-			currentIndex = selectedIndex;
-		}
-	});
+  afterUpdate(() => {
+    if (selectedIndex !== currentIndex) {
+      currentIndex = selectedIndex;
+    }
+  });
 </script>
 
-<div class='wrap flex gap-2 py-2 overflow-x-scroll overflow-y-hidden'>
-	<slot />
+<div class="wrap flex gap-2 overflow-y-hidden overflow-x-scroll py-2">
+  <slot />
 </div>
 
-<style>
-    .wrap {
-        scrollbar-color: #c2c2c2 #e0e0e0;
-        scrollbar-width: thin;
-    }
+<style lang="postcss">
+  .wrap {
+    scrollbar-color: #c2c2c2 #e0e0e0;
+    scrollbar-width: thin;
+  }
 </style>
