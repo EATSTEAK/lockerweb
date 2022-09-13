@@ -4,9 +4,7 @@
 
   export let selectedId: string;
   export let lockers: { lockerId: string; disabled: boolean; reserved: boolean }[] = [];
-  export let height: number = 5;
-  $: widthScale = 5 * (lockers.length / height) + 1;
-  $: heightScale = 5 * height;
+  export let height: number;
 
   const dispatch = createEventDispatcher();
   $: if (selectedId) {
@@ -15,8 +13,8 @@
 </script>
 
 <div
-  class="mx-4 mt-8 mb-20 flex flex-col flex-wrap gap-4"
-  style={`width:${widthScale}rem; height:${heightScale}rem;`}>
+  class="mx-auto mb-16 grid grid-flow-col gap-4 p-4"
+  style={`grid-template-rows: repeat(${height ?? 5}, minmax(0, 1fr));`}>
   {#each lockers as { lockerId, disabled, reserved }}
     <LockerItem
       class="my-2"
