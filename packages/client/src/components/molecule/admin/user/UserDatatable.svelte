@@ -135,7 +135,7 @@
 					<Checkbox id='select_all' bind:checked={selectAll} />
 				</div>
 			</th>
-			<th data-key='department'>학부</th>
+			<th data-key='department'>학과(부)</th>
 			<th data-key='id'>학번</th>
 			<th data-key='name'>이름</th>
 			<th class='w-16' data-key='isAdmin'>관리자</th>

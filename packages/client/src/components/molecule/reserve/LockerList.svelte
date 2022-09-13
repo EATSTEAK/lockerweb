@@ -15,12 +15,12 @@
 </script>
 
 <div
-	class='flex flex-col flex-wrap mt-8 mb-20 ml-auto mr-auto'
+	class='flex flex-col flex-wrap mt-8 mb-20 gap-4 mx-4'
 	style={`width:${widthScale}rem; height:${heightScale}rem;`}
 >
 	{#each lockers as { lockerId, disabled, reserved }, index}
 		<LockerItem
-			class='ml-4 my-2'
+			class='my-2'
 			id={lockerId}
 			disabled={disabled || reserved}
 			on:click={() => (selectedId = lockerId)}
