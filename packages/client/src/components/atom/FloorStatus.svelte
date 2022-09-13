@@ -21,7 +21,7 @@
 <div
 	class={`${clazz || ''} ${
 		lockerLeft <= 0 ? 'disabled' : ''
-	} relative border-2 rounded-2xl overflow-hidden`}
+	} relative ring-2 ring-gray-300 rounded-2xl overflow-hidden`}
 >
 	<div
 		class='progress absolute top-0 left-0 bg-gray-100 rounded-2xl h-full'
@@ -32,7 +32,7 @@
 			class='flex justify-end items-center px-3 font-bold text-gray-400'
 			style='width: {percentage}%'
 		>
-			<span class='hidden md:inline'>
+			<span class='hidden lg:inline'>
 				{#if percentage >= 20}
 					{percentage}%
 				{/if}
@@ -67,7 +67,7 @@
 
 <style>
     .disabled {
-        @apply border-gray-300 text-gray-400 bg-gray-300;
+        @apply ring-gray-300 text-gray-400 bg-gray-300;
     }
 
     .disabled .progress {

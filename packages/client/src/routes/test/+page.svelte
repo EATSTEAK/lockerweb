@@ -17,7 +17,7 @@
 
 <svelte:window bind:innerWidth />
 
-<NavigationShell collapsable={innerWidth <= 768}>
+<NavigationShell collapsable={innerWidth <= 1024}>
 	<Button on:click={openModal}>모달 열기</Button>
 	<div class='h-[200vh]'>길어요</div>
 </NavigationShell>

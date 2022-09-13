@@ -69,37 +69,38 @@
         rounded-xl
         fixed
         p-0
+        my-4
         z-50
-        overflow-hidden
+        overflow-visible
         transition-all
         shadow-xl
-        md:w-[480px]
+        lg:w-[480px]
 				backdrop:bg-black backdrop:opacity-30'
 	{...$$restProps}
 >
-	<div class='flex flex-col items-stretch gap-3 w-full h-auto max-h-screen'>
-		<div class='flex justify-between select-none'>
+	<div class='flex flex-col items-stretch gap-3 w-full h-full max-h-[calc(100vh-2rem)] rounded-xl overflow-hidden'>
+		<div class='flex justify-between select-none shrink-0'>
 			<div class='pl-4 pt-3 text-gray-700'>
 				<h4>{title}</h4>
 				{#if subtitle}<h5>{subtitle}</h5>{/if}
 			</div>
 			<button
 				on:click={closeModal}
-				class='w-14 h-10 bg-gray-300 rounded-bl-[20px] cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'
+				class='w-14 h-10 bg-gray-300 rounded-bl-[20px] rounded-tr-xl cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'
 			>
 				<Dismiss />
 			</button>
 		</div>
-		<div class='mx-4 grow overflow-y-auto'>
+		<div class='h-auto mx-4 grow overflow-y-auto overflow-x-visible my-2'>
 			<slot />
 		</div>
-		<div class='mx-4 pb-4 flex justify-end gap-3'>
+		<div class='mx-4 pb-4 flex justify-end gap-3 shrink-0'>
 			<slot name='actions'>
 				{#if $$slots.secondaryIcon}
 					<Button
 						on:click={() => click('secondary')}
 						disabled={secondaryDisabled ? true : undefined}
-						class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+						class='{secondaryClass} bg-[#D8D8D8] ring-1 ring-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
 						isIconRight={isSecondaryBtnIconRight}
 					>
 						<slot slot='icon' name='secondaryIcon' />
@@ -109,7 +110,7 @@
 					<Button
 						on:click={() => click('secondary')}
 						disabled={secondaryDisabled ? true : undefined}
-						class='{secondaryClass} bg-[#D8D8D8] border-px border-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
+						class='{secondaryClass} bg-[#D8D8D8] ring-1 ring-[#CECECE] bg-[#D8D8D8] text-gray-600 hover:bg-[#EDEDED] [&[disabled]]:opacity-50'
 						isIconRight={isSecondaryBtnIconRight}
 					>
 						{secondaryText}

@@ -103,7 +103,7 @@
 </script>
 
 <section class='flex flex-col xl:flex-row flex-wrap gap-2'>
-	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px]'>
+	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 lg:min-h-[540px]'>
 		<DepthExplorer
 			rootText='건물 선택'
 			breadcrumbClass='p-1'
@@ -119,9 +119,9 @@
 				class='my-1 w-full text-gray-700 flex justify-between
 							p-2 bg-white cursor-pointer border-l-2 border-white transition-all
 							outline-primary-800 outline-0 outline-none
-							hover:brightness-90 hover:scale-[1.01]
+							hover:brightness-95 hover:scale-[1.01]
 							active:brightness-75 active:scale-100
-							focus:brightness-75'
+							focus:brightness-90'
 				class:selected
 			>
 				{option.name}

@@ -45,7 +45,7 @@
 	transition:fly={{ y: 10, duration: 150 }}
 	class='background flex flex-row flex-wrap px-2
  	fixed bottom-5 right-5 backdrop-blur-sm
-	rounded-xl z-50'
+	rounded-xl z-20'
 	style={`width:${width - 42}px; background: rgba(80, 80, 80, 0.8);`}
 >
 	<div class='flex flex-row flex-wrap gap-2 items-center px-1'>
@@ -63,7 +63,7 @@
 	<div class='flex flex-row flex-end flex-grow justify-end gap-2 items-center mr-1'>
 		<Button
 			on:click={() => click('secondary')}
-			class='{secondaryClass} !py-2 !px-3 bg-[#EBEBEB] border-px border-[#CECECE] text-gray-600 text-center [&[disabled]]:opacity-50'
+			class='{secondaryClass} !py-2 !px-3 bg-[#EBEBEB] ring-1 ring-[#CECECE] text-gray-600 text-center [&[disabled]]:opacity-50'
 		>
 			선택 해제
 		</Button>

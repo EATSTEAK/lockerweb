@@ -45,7 +45,7 @@
 				user.refresh();
 				goto('/reserve');
 			} else {
-				setTimeout(() => goto('/'), 5000);
+				setTimeout(() => goto('/', { replaceState: true }), 5000);
 			}
 		});
 	}
@@ -56,32 +56,32 @@
 <Shell>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
-			<Entry class='h-full justify-center' name='SOONGSIL UNIV. IT'>
+			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
 				{#if !response}
-					<Button disabled class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
+					<Button disabled class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight>
 						로그인 중...
 						<ArrowClockwise class='animate-spin' slot='icon' />
 					</Button>
 				{:else if !response.success}
-					<Button disabled class='bg-red-800 text-white w-full h-16 text-xl' isIconRight={true}>
+					<Button disabled class='bg-red-800 text-white w-full h-16 text-xl' isIconRight>
 						로그인 실패
 						<ErrorCircle class='animate-spin' slot='icon' />
 					</Button>
 				{:else if response.success}
-					<Button disabled class='bg-green-800 text-white w-full h-16 text-xl' isIconRight={true}>
+					<Button disabled class='bg-green-800 text-white w-full h-16 text-xl' isIconRight>
 						로그인 성공
 						<Checkmark slot='icon' />
 					</Button>
 				{/if}
 			</Entry>
 		</NavigationContent>
-		<NavigationFooter class='block md:hidden'>
+		<NavigationFooter class='block lg:hidden'>
 			<div class='w-full flex justify-center items-center'>
 				<ChevronDown class='animate-bounce ease-in-out text-gray-700 w-8 h-8' />
 			</div>
 		</NavigationFooter>
 	</Navigation>
 	{#if response && response.success === false}
-		<ErrorScreen {errorMessage} />
+		<ErrorScreen errorTitle={response.error.code} {errorMessage} />
 	{/if}
 </Shell>
