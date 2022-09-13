@@ -10,6 +10,8 @@
     "stop-db": "docker-compose down",
     "test": "mocha tests/unit",
     "integ-test": "mocha tests/integration",
+    "lint": "prettier --check --plugin-search-dir=. . && eslint .",
+    "format": "eslint . --fix && prettier --write --plugin-search-dir=. .",
     "delete": "sam delete --no-prompts",
     "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3",
     "dryrun": "sam deploy --guided --no-execute-changeset"

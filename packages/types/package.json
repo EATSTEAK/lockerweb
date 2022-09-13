@@ -3,6 +3,10 @@
   "version": "0.11.0",
   "types": "index.d.ts",
   "license": "MIT",
+  "scripts": {
+    "lint": "prettier --check --plugin-search-dir=. . && eslint .",
+    "format": "eslint . --fix && prettier --write --plugin-search-dir=. ."
+  },
   "dependencies": {
     "@types/lockerweb": "link:"
   },
