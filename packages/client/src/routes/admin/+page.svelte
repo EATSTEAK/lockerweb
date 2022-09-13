@@ -125,7 +125,7 @@
 
 <svelte:window bind:innerWidth />
 
-<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 768} disableBlock>
+<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 1024} disableBlock>
 	<section class='flex flex-col gap-1' slot='navigation_content'>
 		{#if $user && $user.success}
 			<h3>설정</h3>
@@ -174,11 +174,11 @@
 		{#if $user && $user.success && (!$user.result.department || $user.result.isAdmin)}
 			{#if selectedTab === 'user'}
 				{#await userPromise}
-					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
-						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
+					<div class='my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+						<div class='mx-6 lg:mx-0 flex flex-wrap w-full'>
 							<h3>사용자 설정</h3>
 						</div>
-						<LoadingScreen class='min-h-[32rem] md:rounded-md' />
+						<LoadingScreen class='min-h-[32rem] lg:rounded-md' />
 					</div>
 				{:then users}
 					<UserSettings
@@ -190,11 +190,11 @@
 						{users}
 					/>
 				{:catch err}
-					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
-						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
+					<div class='my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+						<div class='mx-6 lg:mx-0 flex flex-wrap w-full'>
 							<h3 class='mb-1'>사용자 설정</h3>
 						</div>
-						<ErrorScreen class='min-h-[32rem] md:rounded-md' />
+						<ErrorScreen class='min-h-[32rem] lg:rounded-md' />
 					</div>
 				{/await}
 			{:else if selectedTab === 'service'}

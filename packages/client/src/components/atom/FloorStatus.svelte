@@ -32,7 +32,7 @@
 			class='flex justify-end items-center px-3 font-bold text-gray-400'
 			style='width: {percentage}%'
 		>
-			<span class='hidden md:inline'>
+			<span class='hidden lg:inline'>
 				{#if percentage >= 20}
 					{percentage}%
 				{/if}

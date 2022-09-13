@@ -27,7 +27,7 @@
 </script>
 
 <section class='flex flex-col xl:flex-row flex-wrap gap-2'>
-	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px]'>
+	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 lg:min-h-[540px]'>
 		<DepthExplorer
 			rootText='학과(부) 선택'
 			breadcrumbClass='p-1'

@@ -74,7 +74,7 @@
         overflow-visible
         transition-all
         shadow-xl
-        md:w-[480px]
+        lg:w-[480px]
 				backdrop:bg-black backdrop:opacity-30'
 	{...$$restProps}
 >
