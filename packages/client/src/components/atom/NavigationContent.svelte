@@ -1,8 +1,8 @@
-<script lang='ts'>
-	let clazz = '';
-	export { clazz as class };
+<script lang="ts">
+  let clazz = '';
+  export { clazz as class };
 </script>
 
-<article class='{clazz} grow flex flex-col justify-start my-2'>
-	<slot />
+<article class="{clazz} my-2 flex grow flex-col justify-start">
+  <slot />
 </article>

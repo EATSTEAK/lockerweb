@@ -1,55 +1,58 @@
-<script lang='ts'>
-	import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
-	import { writable } from 'svelte/store';
+<script lang="ts">
+  import { afterUpdate, createEventDispatcher, setContext } from 'svelte';
+  import { writable } from 'svelte/store';
 
-	export let selectedIndex = 0;
+  export let selectedIndex = 0;
 
-	const dispatch = createEventDispatcher();
-	const currentId = writable(null);
+  const dispatch = createEventDispatcher();
+  const currentId = writable(null);
 
-	export let selectedId = undefined;
+  export let selectedId = undefined;
 
-	$: currentIndex = -1;
-	$: items = [];
+  let clazz = '';
+  export { clazz as class };
 
-	$: if (items[currentIndex]) {
-		dispatch('change', currentIndex);
-		currentId.set(items[currentIndex].id);
-		selectedId = items[currentIndex].id;
-	}
+  $: currentIndex = -1;
+  $: items = [];
 
-	setContext('ListItemGroup', {
-		currentId,
-		add: ({ id, selected }) => {
-			if (selected) {
-				selectedIndex = items.length;
-			}
+  $: if (items[currentIndex]) {
+    dispatch('change', currentIndex);
+    currentId.set(items[currentIndex].id);
+    selectedId = items[currentIndex].id;
+  }
 
-			items = [...items, { id, selected }];
-		},
-		update: (id) => {
-			selectedIndex = items.map(({ id }) => id).indexOf(id);
-		},
-		change: (direction) => {
-			let index = currentIndex + direction;
+  setContext('ListItemGroup', {
+    currentId,
+    add: ({ id, selected }: { id: string; selected: boolean }) => {
+      if (selected) {
+        selectedIndex = items.length;
+      }
 
-			if (index < 0) {
-				index = items.length - 1;
-			} else if (index >= items.length) {
-				index = 0;
-			}
+      items = [...items, { id, selected }];
+    },
+    update: (id: string) => {
+      selectedIndex = items.map(({ id }) => id).indexOf(id);
+    },
+    change: (direction: number) => {
+      let index = currentIndex + direction;
 
-			selectedIndex = index;
-		}
-	});
+      if (index < 0) {
+        index = items.length - 1;
+      } else if (index >= items.length) {
+        index = 0;
+      }
 
-	afterUpdate(() => {
-		if (selectedIndex !== currentIndex) {
-			currentIndex = selectedIndex;
-		}
-	});
+      selectedIndex = index;
+    },
+  });
+
+  afterUpdate(() => {
+    if (selectedIndex !== currentIndex) {
+      currentIndex = selectedIndex;
+    }
+  });
 </script>
 
-<div class='flex flex-col overflow-hidden rounded-xl'>
-	<slot />
+<div class="flex flex-col overflow-hidden rounded-xl">
+  <slot />
 </div>

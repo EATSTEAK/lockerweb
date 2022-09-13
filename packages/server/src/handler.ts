@@ -15,28 +15,28 @@ import { unclaimLockerHandler } from './locker/handler/unclaim';
 import { deleteConfigHandler } from './config/handler/delete';
 
 export const auth = {
-	ssuLoginHandler,
-	logoutHandler
+  ssuLoginHandler,
+  logoutHandler,
 };
 
 export const config = {
-	getConfigHandler,
-	updateConfigHandler,
-	deleteConfigHandler
+  getConfigHandler,
+  updateConfigHandler,
+  deleteConfigHandler,
 };
 
 export const locker = {
-	claimLockerHandler,
-	unclaimLockerHandler,
-	getClaimedLockerCountHandler,
-	queryClaimedLockersHandler
+  claimLockerHandler,
+  unclaimLockerHandler,
+  getClaimedLockerCountHandler,
+  queryClaimedLockersHandler,
 };
 
 export const user = {
-	deleteUserHandler,
-	getUserHandler,
-	queryUserHandler,
-	updateUserHandler,
-	batchDeleteUserHandler,
-	batchPutUserHandler
+  deleteUserHandler,
+  getUserHandler,
+  queryUserHandler,
+  updateUserHandler,
+  batchDeleteUserHandler,
+  batchPutUserHandler,
 };

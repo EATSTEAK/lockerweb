@@ -1,4 +1,5 @@
 /* Write your global styles here, in PostCSS syntax */
+/*noinspection CssUnknownTarget*/
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.5/dist/web/variable/pretendardvariable.css');
 
 @import 'css/normalize.css';
@@ -8,15 +9,15 @@
 @tailwind utilities;
 
 html {
-    font-size: 1em;
-    line-height: 1.4;
+  font-size: 1em;
+  line-height: 1.4;
 }
 
 :root {
-    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
     Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
-    @apply text-gray-700;
+  @apply text-gray-700;
 }
 
 h1,
@@ -25,29 +26,29 @@ h3,
 h4,
 h5,
 h6 {
-    @apply font-bold;
+  @apply font-bold;
 }
 
 h1 {
-    @apply text-6xl;
+  @apply text-6xl;
 }
 
 h2 {
-    @apply text-5xl;
+  @apply text-5xl;
 }
 
 h3 {
-    @apply text-4xl;
+  @apply text-4xl;
 }
 
 h4 {
-    @apply text-2xl;
+  @apply text-2xl;
 }
 
 h5 {
-    @apply text-xl;
+  @apply text-xl;
 }
 
 h6 {
-    @apply text-lg;
+  @apply text-lg;
 }

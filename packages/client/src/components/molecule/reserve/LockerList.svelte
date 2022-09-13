@@ -1,22 +1,22 @@
-<script lang='ts'>
-	import { createEventDispatcher } from 'svelte';
-	import LockerItem from './LockerItem.svelte';
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import LockerItem from './LockerItem.svelte';
 
-	export let selectedId;
+	export let selectedId: string;
 	export let lockers: { lockerId: string; disabled: boolean; reserved: boolean }[] = [];
 	export let height: number;
 
-	const dispatch = createEventDispatcher();
-	$: if (selectedId) {
-		dispatch('change', selectedId);
-	}
+  const dispatch = createEventDispatcher();
+  $: if (selectedId) {
+    dispatch('change', selectedId);
+  }
 </script>
 
 <div
 	class='grid grid-flow-col gap-4 mb-16 mx-auto p-4'
 	style={`grid-template-rows: repeat(${height ?? 5}, minmax(0, 1fr));`}
 >
-	{#each lockers as { lockerId, disabled, reserved }, index}
+	{#each lockers as { lockerId, disabled, reserved }}
 		<LockerItem
 			class='my-2'
 			id={lockerId}
