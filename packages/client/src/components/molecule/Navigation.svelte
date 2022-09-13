@@ -55,7 +55,7 @@
 <svelte:window bind:scrollY={y} />
 {#if !collapsable || !hideNavbar || isOnTop || !collapsed}
 	<!-- fly animation 시 header 아래로 nav 가 expand 되도록 element 의 순서를 바꾸고 `flex-col-reverse` 를 적용 -->
-	<aside class='{clazz} flex flex-col-reverse justify-end max-h-screen z-50 overflow-y-auto'
+	<aside class='{clazz} flex flex-col-reverse justify-end max-h-screen z-40 overflow-y-auto'
 				 transition:fly={{ y: -100, duration: 500 }}
 				 class:fixed={collapsable}>
 		{#if !collapsable || !collapsed}
