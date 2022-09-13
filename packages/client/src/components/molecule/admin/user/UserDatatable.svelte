@@ -97,14 +97,14 @@
 			<div class='flex -m-2'>
 				<button
 					on:click={() => dispatch('batchUnclaim', {})}
-					class='rounded-xl bg-primary-800 flex gap-1 p-2 hover:brightness-90 active:brightness-75'
+					class='rounded-xl bg-primary-800 flex gap-1 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75'
 				>
 					<BookmarkOff />
 					예약 일괄 취소
 				</button>
 				<button
 					on:click={() => dispatch('batchDelete', {})}
-					class='rounded-xl bg-primary-800 flex gap-1 p-2 hover:brightness-90 active:brightness-75'
+					class='rounded-xl bg-primary-800 flex gap-1 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75'
 				>
 					<Delete />
 					삭제
@@ -175,7 +175,7 @@
 						<td>
 							<button
 								on:click={() => editUser(user)}
-								class='bg-gray-100 p-2 rounded-md hover:brightness-90 active:brightness-75 focus:brightness-75 focus:outline-0'
+								class='bg-gray-100 p-2 rounded-md hover:brightness-95 active:brightness-75 focus:brightness-90 focus:outline-0'
 							>
 								<Edit class='w-4 h-4' slot='icon' />
 							</button>
