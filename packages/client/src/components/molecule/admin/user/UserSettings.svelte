@@ -188,7 +188,7 @@
 				{#each departments as department}
 					<TabItem id={department.id}>{department.name}</TabItem>
 				{/each}
-				<!-- 존재하지 않는 학부를 가진 사용자가 있을 경우 -->
+				<!-- 존재하지 않는 학과(부)를 가진 사용자가 있을 경우 -->
 				{#if users.filter((user) => !departments
 					.map((dept) => dept.id)
 					.includes(user.department)).length}

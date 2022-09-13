@@ -18,7 +18,7 @@
 			id: department.id,
 			name: department.name
 		})),
-		{ id: 'add', name: '학부 추가' }
+		{ id: 'add', name: '학과(부) 추가' }
 	];
 	let selections: string[] = [];
 
@@ -29,7 +29,7 @@
 <section class='flex flex-col xl:flex-row flex-wrap gap-2'>
 	<aside class='p-3 xl:w-1/4 rounded-md bg-gray-200 md:min-h-[540px]'>
 		<DepthExplorer
-			rootText='학부 선택'
+			rootText='학과(부) 선택'
 			breadcrumbClass='p-1'
 			class='bg-white rounded-md overflow-hidden'
 			data={depthData}

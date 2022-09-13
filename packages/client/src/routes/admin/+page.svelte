@@ -151,7 +151,7 @@
 					class='flex justify-between items-center'
 					id='department'
 				>
-					<span>학부별 설정</span>
+					<span>학과(부)별 설정</span>
 					<ContentSettings />
 				</SelectionListItem>
 			</SelectionListItemGroup>

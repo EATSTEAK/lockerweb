@@ -87,8 +87,8 @@
 			required
 		/>
 		<div class='department'>
-			<p>대상 학부</p>
-			<Select id={`department`} label='대상 학부' bind:value={department} required>
+			<p class='font-bold'>대상 학과(부)</p>
+			<Select id={`department`} label='대상 학과(부)' bind:value={department} required>
 				{#each departments as department}
 					<option value={department.id}>{department.name}</option>
 				{/each}
