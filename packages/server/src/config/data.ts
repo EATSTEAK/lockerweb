@@ -252,7 +252,7 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 	}
 	if (config.alert === null) {
 		attributeNames['#a'] = 'a';
-		removeExp += `${removeExp ? ',' : 'REMOVE'} #a';`;
+		removeExp += `${removeExp ? ',' : 'REMOVE'} #a`;
 	}
 	if ((config as ServiceConfigUpdateRequest).buildings) {
 		const buildings = (config as ServiceConfigUpdateRequest).buildings;
@@ -266,6 +266,9 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
 	if ((config as DepartmentConfigUpdateRequest).contact) {
 		attributes[':contact'] = { S: (config as DepartmentConfigUpdateRequest).contact };
 		updateExp += `${updateExp ? ',' : 'SET'} c = :contact`;
+	}
+	if ((config as DepartmentConfigUpdateRequest).contact === null) {
+		removeExp += `${removeExp ? ',' : 'REMOVE'} c`;
 	}
 
 	const req: UpdateItemInput = {

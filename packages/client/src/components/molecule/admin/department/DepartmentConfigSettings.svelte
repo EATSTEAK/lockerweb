@@ -35,9 +35,9 @@
 	$: newConfig = {
 		id,
 		name,
-		...(activateFrom && { activateFrom: activateFrom.toISOString() }),
-		...(activateTo && { activateTo: activateTo.toISOString() }),
-		...(contact && { contact })
+		...(activateFrom ? { activateFrom: activateFrom.toISOString() } : original?.activateFrom && { activateFrom: null }),
+		...(activateTo ? { activateTo: activateTo.toISOString() } : original?.activateTo && { activateTo: null }),
+		...(contact ? { contact } : original?.contact && { contact: null })
 	};
 
 	$: isModified = !isEqual(original, newConfig);
