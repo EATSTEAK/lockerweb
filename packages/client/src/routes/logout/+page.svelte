@@ -49,7 +49,7 @@
 
 <PageTitle name='로그아웃 중...' />
 
-<Shell mainClass='p-10'>
+<Shell>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
 			<Entry class='h-full justify-center' name='SOONGSIL UNIV. IT'>
