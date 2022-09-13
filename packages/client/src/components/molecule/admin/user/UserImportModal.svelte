@@ -103,7 +103,7 @@
 	<div class='flex flex-col gap-3'>
 		<Select
 			id='department'
-			label='업로드 대상 학부'
+			label='업로드 대상 학과(부)'
 			showLabel
 			bind:value={department}
 			required

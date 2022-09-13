@@ -24,8 +24,12 @@
 		mounted = true;
 	});
 
-	$: if (mounted && localDate) {
-		value = new Date(localDate);
+	$: if (mounted) {
+		if(localDate) {
+			value = new Date(localDate);
+		} else {
+			value = null;
+		}
 	}
 </script>
 

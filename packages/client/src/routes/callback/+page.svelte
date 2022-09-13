@@ -56,7 +56,7 @@
 <Shell mainClass='p-10'>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
-			<Entry class='h-full justify-center' name='SOONGSIL UNIV. IT'>
+			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
 				{#if !response}
 					<Button disabled class='bg-primary-800 text-white w-full h-16 text-xl' isIconRight={true}>
 						로그인 중...
@@ -75,7 +75,7 @@
 				{/if}
 			</Entry>
 		</NavigationContent>
-		<NavigationFooter class='block md:hidden'>
+		<NavigationFooter class='block lg:hidden'>
 			<div class='w-full flex justify-center items-center'>
 				<ChevronDown class='animate-bounce ease-in-out text-gray-700 w-8 h-8' />
 			</div>

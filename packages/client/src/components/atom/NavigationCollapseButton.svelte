@@ -13,7 +13,7 @@
 </script>
 
 <button
-	class='{clazz} p-1 rounded-md hover:brightness-95 hover:backdrop-brightness-95 active:backdrop-brightness-75 active:brightness-75'
+	class='{clazz} p-1 rounded-md hover:brightness-95 hover:backdrop-brightness-95 focus:brightness-90 focus:backdrop-brightness-90 active:backdrop-brightness-75 active:brightness-75'
 	on:click={() => set(!$collapsed)}
 >
 	<ChevronDown class="transition-all{$collapsed ? ' rotate-180' : ''}" />

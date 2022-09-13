@@ -48,7 +48,7 @@
     }
 
     input:focus {
-        @apply outline-0 scale-100;
+        @apply brightness-90 outline-0 scale-100;
     }
 
     input:active:not(:disabled) {

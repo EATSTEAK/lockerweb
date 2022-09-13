@@ -30,8 +30,8 @@
 	on:keydown
 	tabindex='0'
 	class='{clazz} cursor-pointer select-none
-  flex flex-col items-stretch w-16 h-16 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 active:scale-100
-	focus:border-[3px] focus:border-blue-400 active:border-[3px] p-1 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:pointer-events-none'
+  flex flex-col items-stretch w-16 h-16 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:brightness-95 active:scale-100 active:brightness-75
+	focus:border-[3px] focus:brightness-90 focus:border-blue-400 active:border-[3px] p-1 disabled:opacity-50 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:pointer-events-none'
 	{...$$restProps}
 >
 	<div class='grow flex font-normal text-xs text-gray-400 justify-center items-center select-none'>

@@ -115,7 +115,7 @@
 
 <PageTitle />
 
-<Shell mainClass='py-8 px-4 md:px-8'>
+<Shell mainClass='py-8 px-4 lg:px-8'>
 	<Navigation slot='navigation' class='w-full h-full min-h-screen' collapsable={false}>
 		<NavigationContent>
 			<Entry class='grow h-full justify-center' name='SOONGSIL UNIV. IT'>
@@ -157,7 +157,7 @@
 				</div>
 			</Entry>
 		</NavigationContent>
-		<NavigationFooter class='block md:hidden'>
+		<NavigationFooter class='block lg:hidden'>
 			<div class='w-full flex justify-center items-center'>
 				<ChevronDown class='animate-bounce ease-in-out text-gray-700 w-8 h-8' />
 			</div>

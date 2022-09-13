@@ -28,7 +28,8 @@
 	 flex justify-between items-center px-4 py-3 flex-shrink-0 gap-x-3
 	 rounded-xl shadow-md font-bold transition-all ease-in
 	 [&[disabled]]:opacity-50 [&[disabled]]:shadow-none [&[disabled]]:pointer-events-none
-	 hover:brightness-90 hover:shadow-lg
+	 hover:brightness-95 hover:shadow-lg
+	 focus:brightness-90
 	 active:brightness-75 active:shadow-md'
 	{...$$restProps}
 >

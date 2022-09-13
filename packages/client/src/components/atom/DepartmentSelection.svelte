@@ -49,7 +49,9 @@
 	aspect-square max-w-[160px]
 	rounded-2xl bg-gray-100 box-border transition-all
 	flex-grow-0 flex-shrink-0 basis-[160px]
-	hover:brightness-90`}
+	hover:brightness-95
+	focus:brightness-90
+	active:brightness-75`}
 	on:click
 	on:click|preventDefault={() => {
 		ctx.update(id);

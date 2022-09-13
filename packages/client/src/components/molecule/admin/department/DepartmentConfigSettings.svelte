@@ -35,9 +35,9 @@
 	$: newConfig = {
 		id,
 		name,
-		...(activateFrom && { activateFrom: activateFrom.toISOString() }),
-		...(activateTo && { activateTo: activateTo.toISOString() }),
-		...(contact && { contact })
+		...(activateFrom ? { activateFrom: activateFrom.toISOString() } : original?.activateFrom && { activateFrom: null }),
+		...(activateTo ? { activateTo: activateTo.toISOString() } : original?.activateTo && { activateTo: null }),
+		...(contact ? { contact } : original?.contact && { contact: null })
 	};
 
 	$: isModified = !isEqual(original, newConfig);
@@ -58,7 +58,7 @@
 <div class='h-full flex flex-col justify-between p-3'>
 	<div class='flex flex-col mb-3'>
 		{#if isNew}
-			<h4>새 학부 추가</h4>
+			<h4>새 학과(부) 추가</h4>
 		{:else}
 			<h4>{original.name} 수정</h4>
 		{/if}
@@ -66,7 +66,7 @@
 			class='my-2'
 			inputClass='w-full max-w-sm'
 			id='id'
-			label='학부 ID'
+			label='학과(부) ID'
 			showLabel
 			disabled={!isNew}
 			bind:value={id}
@@ -79,7 +79,7 @@
 			class='my-2'
 			inputClass='w-full max-w-sm'
 			id='name'
-			label='학부 이름'
+			label='학과(부) 이름'
 			showLabel
 			bind:value={name}
 			required
@@ -108,7 +108,7 @@
 			class='my-2'
 			inputClass='w-full max-w-sm'
 			id='contact'
-			label='학부 연락처'
+			label='학과(부) 연락처'
 			showLabel
 			bind:value={contact}
 		/>
