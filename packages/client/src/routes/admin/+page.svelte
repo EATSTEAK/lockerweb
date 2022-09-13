@@ -160,7 +160,7 @@
 			<Skeleton class='w-full h-36 bg-gray-300 rounded-xl' />
 		{/if}
 	</section>
-	<section class='flex gap-3 items-center w-full' slot='navigation_footer'>
+	<section class='flex justify-between items-center w-full' slot='navigation_footer'>
 		<Button class='bg-primary-800 text-white' href='/logout'>
 			<ArrowExportLtr slot='icon' class='rotate-180' />
 			로그아웃
