@@ -3,7 +3,6 @@ name: Check code
 on:
   pull_request:
     types: [ opened, edited, reopened, synchronize ]
-  push:
 jobs:
   check:
     runs-on: ubuntu-22.04
