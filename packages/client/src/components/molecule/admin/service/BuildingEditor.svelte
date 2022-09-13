@@ -119,7 +119,7 @@
 				class='my-1 w-full text-gray-700 flex justify-between
 							p-2 bg-white cursor-pointer border-l-2 border-white transition-all
 							outline-primary-800 outline-0 outline-none
-							hover:brightness-95 hover:scale-[1.01]
+							hover:brightness-90 hover:scale-101
 							active:brightness-75 active:scale-100
 							focus:brightness-90'
 				class:selected

@@ -44,7 +44,7 @@
     }
 
     input:hover:not(:disabled) {
-        @apply brightness-95 scale-[1.01];
+        @apply brightness-90 scale-101;
     }
 
     input:focus {

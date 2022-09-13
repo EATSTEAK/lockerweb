@@ -77,13 +77,13 @@
 		<h3>서비스 설정</h3>
 		<div class='grow flex justify-end gap-1'>
 			<Button on:click={initializeValues} disabled={!isModified ? true : undefined}
-							class='bg-white text-gray-700 [&[disabled]]:opacity-[0.5]'
+							class='bg-white text-gray-700 [&[disabled]]:opacity-50'
 							isIconRight>
 				되돌리기
 				<ArrowUndo slot='icon' />
 			</Button>
 			<Button on:click={updateConfig} disabled={isSaveDisabled}
-							class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
+							class='bg-primary-800 text-white [&[disabled]]:opacity-50' isIconRight>
 				저장
 				<SaveEdit slot='icon' />
 			</Button>

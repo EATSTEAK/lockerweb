@@ -16,6 +16,15 @@ const config = {
 					100: '#b8eaf2',
 					50: '#e3f7fa'
 				}
+			},
+			scale: {
+				'101': '1.01'
+			},
+			aspectRatio: {
+				'4/3': '4 / 3'
+			},
+			borderRadius: {
+				'2.5xl': '1.25rem'
 			}
 		}
 	},

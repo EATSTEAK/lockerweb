@@ -78,7 +78,7 @@
 				<Button
 					on:click={updateBuilding}
 					disabled={isSaveDisabled}
-					class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]'
+					class='bg-primary-800 text-white [&[disabled]]:opacity-50'
 					isIconRight
 				>
 					적용
@@ -88,7 +88,7 @@
 				<Button
 					on:click={updateBuilding}
 					disabled={isSaveDisabled}
-					class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]'
+					class='bg-primary-800 text-white [&[disabled]]:opacity-50'
 					isIconRight
 				>
 					추가

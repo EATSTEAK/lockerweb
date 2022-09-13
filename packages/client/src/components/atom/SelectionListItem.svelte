@@ -32,7 +32,7 @@
 	class:active={selected}
 	class='{clazz}
 		bg-white box-border border-l-4 border-white transition-all p-4 outline-0 outline-none
-		hover:brightness-95 hover:scale-[1.01]
+		hover:brightness-90 hover:scale-101
 		active:brightness-75 active:border-primary-800 active:font-bold active:scale-100
 		focus:brightness-90'
 	on:click

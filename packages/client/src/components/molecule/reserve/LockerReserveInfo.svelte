@@ -83,11 +83,11 @@
 			class='w-full h-full flex flex-col lg:rounded-xl overflow-hidden bg-slate-200 lg:basis-1/2 grow p-8 gap-4'>
 			{#if serviceConfig && selectedBuildingId && selectedFloor}
 				<h4 class='text-3xl'>배치도</h4>
-				<FloorMap class='grow rounded-xl aspect-[4/3] max-h-[50vh]' {selectedBuildingId} {selectedFloor}
+				<FloorMap class='grow rounded-xl aspect-4/3 max-h-[50vh]' {selectedBuildingId} {selectedFloor}
 									{selectedSectionId} />
 			{:else}
 				<Skeleton class='rounded-lg h-10 w-48 bg-gray-300' />
-				<Skeleton class='grow rounded-xl bg-gray-300 aspect-[4/3] max-h-[50vh]' />
+				<Skeleton class='grow rounded-xl bg-gray-300 aspect-4/3 max-h-[50vh]' />
 			{/if}
 		</div>
 	</div>
