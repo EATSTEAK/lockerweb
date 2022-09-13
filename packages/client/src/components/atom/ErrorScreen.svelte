@@ -1,21 +1,21 @@
 <script>
-	import ErrorCircle from '../../icons/ErrorCircle.svelte';
+  import ErrorCircle from '../../icons/ErrorCircle.svelte';
 
-	export let errorMessage = '오류가 발생하였습니다. 관리자에게 문의하십시오.';
-	export let errorTitle = '오류!';
-	let clazz = '';
-	export { clazz as class };
+  export let errorMessage = '오류가 발생하였습니다. 관리자에게 문의하십시오.';
+  export let errorTitle = '오류!';
+  let clazz = '';
+  export { clazz as class };
 </script>
 
-<div class='{clazz} h-full bg-red-200 text-gray-700 flex flex-col justify-center items-center'>
-	<div class='flex flex-col gap-1 items-start'>
-		<div class='flex flex-row gap-2 items-center'>
-			<ErrorCircle class='w-16 h-16' />
-			<h1>{errorTitle}</h1>
-		</div>
-		<p>{errorMessage}</p>
-	</div>
+<div class="{clazz} flex h-full flex-col items-center justify-center bg-red-200 text-gray-700">
+  <div class="flex flex-col items-start gap-1">
+    <div class="flex flex-row items-center gap-2">
+      <ErrorCircle class="h-16 w-16" />
+      <h1>{errorTitle}</h1>
+    </div>
+    <p>{errorMessage}</p>
+  </div>
 </div>
 
-<style>
+<style lang="postcss">
 </style>

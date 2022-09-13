@@ -1,6 +1,6 @@
-<script lang='ts'>
-	let clazz = '';
-	export { clazz as class };
+<script lang="ts">
+  let clazz = '';
+  export { clazz as class };
 </script>
 
-<hr class='{clazz} w-full h-0.5 bg-gray-300' />
+<hr class="{clazz} h-0.5 w-full bg-gray-300" />
