@@ -41,5 +41,7 @@ jobs:
             **/*.svelte
             **/*.js
             **/*.json
+      - name: Build client
+        run: pnpm -r --filter=client build
       - name: Run svelte-check
         run: pnpm -r check
