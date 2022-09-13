@@ -86,7 +86,7 @@
 			</div>
 			<button
 				on:click={closeModal}
-				class='w-14 h-10 bg-gray-300 rounded-bl-[20px] rounded-tr-xl cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'
+				class='w-14 h-10 bg-gray-300 rounded-bl-2.5xl rounded-tr-xl cursor-pointer transition-all text-center text-2xl flex justify-center items-center hover:bg-[#7088DF] hover:text-white'
 			>
 				<Dismiss />
 			</button>

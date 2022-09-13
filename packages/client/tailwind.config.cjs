@@ -22,6 +22,9 @@ const config = {
 			},
 			aspectRatio: {
 				'4/3': '4 / 3'
+			},
+			borderRadius: {
+				'2.5xl': '1.25rem'
 			}
 		}
 	},
