@@ -178,7 +178,7 @@
 
 <svelte:window bind:innerWidth />
 
-<NavigationShell collapsable={innerWidth && innerWidth <= 768}>
+<NavigationShell collapsable={innerWidth && innerWidth <= 1024}>
 	<div class='w-full h-full' slot='navigation_content'>
 		<UserReservedLocker {reservedLocker} on:unclaim={() => (unclaimModalOpen = true)} />
 		{#if $config && $config.success}

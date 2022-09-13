@@ -13,8 +13,13 @@
 	import Dismiss from '../../icons/Dismiss.svelte';
 	import Eatsteak from '../../icons/creator/Eatsteak.svelte';
 	import Twince from '../../icons/creator/Twince.svelte';
+	import { scale } from 'svelte/transition';
+	import { backInOut } from 'svelte/easing';
 
 	let open = false;
+
+	let showLove = false;
+	let noLove = true;
 </script>
 
 <section class='flex gap-1 items-center'>
@@ -37,6 +42,7 @@
 <Modal
 	title='정보'
 	bind:open
+	class='{!noLove ? "opacity-0" : ""}'
 	on:close={() => (open = false)}
 	on:click:secondary={() => (open = false)}
 	on:click={() => window.open('https://github.com/EATSTEAK/lockerweb', '_blank').focus()}
@@ -71,7 +77,11 @@
 				href='https://github.com/EATSTEAK'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF8C00] active:!shadow-none active:brightness-95'
+				aria-label='EATSTEAK'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#FF8C00]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<Eatsteak />
 			</Button>
@@ -79,7 +89,11 @@
 				href='https://github.com/Twince'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#F38630] active:!shadow-none active:brightness-95'
+				aria-label='Twince'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#F38630]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<Twince />
 			</Button>
@@ -92,20 +106,27 @@
 				href='https://github.com/TEAM-MAT'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-gray-700 active:!shadow-none active:brightness-95'
+				aria-label='TEAM-MAT'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-gray-700
+				active:!shadow-none active:brightness-95'
 			>
 				TEAM-MAT
 			</Button>
 		</div>
 	</div>
 	<div class='my-5 font-medium leading-10'>
-		<p class='text-gray-500 text-center'>Made with</p>
+		<p class='text-gray-500 text-center'>Powered by</p>
 		<div class='flex flex-row justify-center items-center gap-2 text-gray-500'>
 			<Button
 				href='https://svelte.dev'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF3E00] active:!shadow-none active:brightness-95'
+				aria-label='Svelte'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#FF3E00]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<Svelte />
 			</Button>
@@ -113,7 +134,11 @@
 				href='https://tailwindcss.com'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#38BDF8] active:!shadow-none active:brightness-95'
+				aria-label='Tailwind CSS'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#38BDF8]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<TailwindCss />
 			</Button>
@@ -121,7 +146,11 @@
 				href='https://aws.amazon.com/lambda/'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF9900] active:!shadow-none active:brightness-95'
+				aria-label='AWS Lambda'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#FF9900]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<AwsLambda />
 			</Button>
@@ -129,7 +158,11 @@
 				href='https://aws.amazon.com/dynamodb/'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#4053D6] active:!shadow-none active:brightness-95'
+				aria-label='Amazon DynamoDB'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#4053D6]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<AmazonDynamoDB />
 			</Button>
@@ -137,7 +170,11 @@
 				href='https://aws.amazon.com/api-gateway/'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#FF4F8B] active:!shadow-none active:brightness-95'
+				aria-label='Amazon API Gateway'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#FF4F8B]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<AmazonAPIGateway />
 			</Button>
@@ -145,7 +182,11 @@
 				href='https://aws.amazon.com/s3/'
 				rel='external'
 				target='_blank'
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-[#569A31] active:!shadow-none active:brightness-95'
+				aria-label='Amazon S3'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-[#569A31]
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
 			>
 				<AmazonS3 />
 			</Button>
@@ -155,7 +196,12 @@
 		<p class='text-gray-500 text-center'>and...</p>
 		<div class='flex flex-row justify-center items-center gap-1 text-gray-500'>
 			<Button
-				class='px-0 py-0 !shadow-none hover:!shadow-none hover:text-rose-600 active:!shadow-none active:brightness-95'
+				aria-label='Love'
+				class='px-0 py-0 !shadow-none
+				hover:!shadow-none hover:text-rose-600
+				active:!shadow-none active:brightness-95
+				after:content-[attr(aria-label)] tooltip'
+				on:click={() => showLove = true}
 			>
 				<Heart />
 			</Button>
@@ -164,3 +210,22 @@
 	<Dismiss slot='secondaryIcon' />
 	<GitHub slot='primaryIcon' />
 </Modal>
+
+{#if showLove}
+	<div in:scale={{ duration: 500, easing: backInOut }} out:scale={{ duration: 500, delay: 1000, easing: backInOut }} on:introstart={() => noLove = false} on:outroend={() => noLove = true} on:introend={() => showLove = false} class='fixed z-[9999] w-full h-full flex justify-center items-center top-0 left-0'>
+		<Heart class='w-[50vw] h-[50vw] text-rose-600' />
+	</div>
+{/if}
+
+<style>
+    :global(.tooltip) {
+        @apply hover:after:opacity-100 hover:after:visible;
+    }
+
+    :global(.tooltip::after) {
+        @apply transition-all invisible opacity-0
+        bg-gray-800 bg-opacity-75 rounded-xl
+        text-white absolute top-full left-1/2 px-2
+        -translate-x-1/2 w-max;
+    }
+</style>

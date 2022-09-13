@@ -42,14 +42,14 @@
 			class='hover-wrapper cursor-pointer relative w-56 h-44 rounded-2xl'
 		>
 			<div
-				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-2 mr-2 rounded-lg'
+				class='absolute z-10 flex flex-col justify-center text-center text-gray-500 font-bold right-0 top-0 mt-4 mr-4 rounded-lg'
 			>
 				<Dismiss />
 			</div>
 			<div
 				class:invisible={reservedLocker !== null}
 				class:backdrop-blur-sm={reservedLocker === null}
-				class='hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'
+				class='ring-2 ring-blue-400 hover-popup absolute top-0 left-0 z-30 invisible flex justify-center items-center w-full h-full drop-shadow-md font-bold text-gray-600 text-2xl rounded-xl'
 			>
 				{#if reservedLocker !== null}
 					예약 취소
@@ -58,7 +58,7 @@
 				{/if}
 			</div>
 			<div
-				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 border-2 border-blue-400 rounded-2xl bg-white items-center flex flex-col p-2 gap-1'
+				class='user-reserve-box absolute top-0 left-0 z-0 w-56 h-44 ring-2 ring-blue-400 rounded-2xl bg-white items-center flex flex-col p-2 gap-1'
 			>
 				<div
 					class='flex flex-col w-full px-2 h-16 bg-gray-300 rounded-2xl text-center justify-center items-center'

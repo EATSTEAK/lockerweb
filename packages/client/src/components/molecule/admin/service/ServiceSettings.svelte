@@ -34,7 +34,7 @@
 		name,
 		...(activateFrom ? { activateFrom: activateFrom.toISOString() } : (serviceConfig?.activateFrom && { activateFrom: null })),
 		...(activateTo ? { activateTo: activateTo.toISOString() } : (serviceConfig?.activateTo && { activateTo: null })),
-		...(alert ? { alert } : (serviceConfig.alert && { alert: null })),
+		...(alert ? { alert } : (serviceConfig?.alert && { alert: null })),
 		buildings
 	};
 	$: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
@@ -72,18 +72,18 @@
 
 </script>
 
-<div class='my-8 md:mx-4 flex flex-col gap-3'>
-	<div class='mx-4 md:mx-0 flex flex-wrap items-start'>
+<div class='my-8 lg:mx-8 flex flex-col gap-3'>
+	<div class='mx-6 lg:mx-0 flex flex-wrap items-start'>
 		<h3>서비스 설정</h3>
 		<div class='grow flex justify-end gap-1'>
 			<Button on:click={initializeValues} disabled={!isModified ? true : undefined}
-							class='bg-white text-gray-700 [&[disabled]]:opacity-[0.5]'
+							class='bg-white text-gray-700 [&[disabled]]:opacity-50'
 							isIconRight>
 				되돌리기
 				<ArrowUndo slot='icon' />
 			</Button>
 			<Button on:click={updateConfig} disabled={isSaveDisabled}
-							class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]' isIconRight>
+							class='bg-primary-800 text-white [&[disabled]]:opacity-50' isIconRight>
 				저장
 				<SaveEdit slot='icon' />
 			</Button>
@@ -98,9 +98,9 @@
 		</div>
 	{/if}
 	{#if updating}
-		<UpdateScreen class='min-h-[32rem] md:rounded-md' />
+		<UpdateScreen class='min-h-[32rem] lg:rounded-md' />
 	{:else}
-		<section class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
+		<section class='lg:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
 			<h4>전체 서비스 설정</h4>
 			<div class='service'>
 				{#if serviceConfig}
@@ -114,25 +114,25 @@
 										 bind:value={alert} />
 				{:else}
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
-						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
-						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
-						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 					<div class='flex flex-col gap-1 my-2'>
-						<Skeleton class='md:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
-						<Skeleton class='md:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-4 w-24'></Skeleton>
+						<Skeleton class='lg:rounded-md bg-gray-200 h-8 w-96'></Skeleton>
 					</div>
 				{/if}
 			</div>
 		</section>
-		<section class='md:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
+		<section class='lg:rounded-md shadow-md p-6 bg-white flex flex-col gap-3'>
 			<h4>건물/사물함 수정</h4>
 			{#if serviceConfig && isBuildingModified}
 				<div class='bg-primary-200 rounded-md p-6 flex gap-3'>
@@ -146,7 +146,7 @@
 			{#if serviceConfig}
 				<BuildingEditor bind:buildings />
 			{:else}
-				<Skeleton class='md:rounded-md bg-gray-200 w-full min-h-[32rem]'></Skeleton>
+				<Skeleton class='lg:rounded-md bg-gray-200 w-full min-h-[32rem]'></Skeleton>
 			{/if}
 		</section>
 	{/if}

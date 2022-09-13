@@ -125,7 +125,7 @@
 
 <svelte:window bind:innerWidth />
 
-<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 768} disableBlock>
+<NavigationShell bind:navigationCollapsed collapsable={innerWidth && innerWidth <= 1024} disableBlock>
 	<section class='flex flex-col gap-1' slot='navigation_content'>
 		{#if $user && $user.success}
 			<h3>설정</h3>
@@ -151,7 +151,7 @@
 					class='flex justify-between items-center'
 					id='department'
 				>
-					<span>학부별 설정</span>
+					<span>학과(부)별 설정</span>
 					<ContentSettings />
 				</SelectionListItem>
 			</SelectionListItemGroup>
@@ -160,7 +160,7 @@
 			<Skeleton class='w-full h-36 bg-gray-300 rounded-xl' />
 		{/if}
 	</section>
-	<section class='flex gap-3 items-center w-full' slot='navigation_footer'>
+	<section class='flex justify-between items-center w-full' slot='navigation_footer'>
 		<Button class='bg-primary-800 text-white' href='/logout'>
 			<ArrowExportLtr slot='icon' class='rotate-180' />
 			로그아웃
@@ -174,11 +174,11 @@
 		{#if $user && $user.success && (!$user.result.department || $user.result.isAdmin)}
 			{#if selectedTab === 'user'}
 				{#await userPromise}
-					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
-						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
+					<div class='my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+						<div class='mx-6 lg:mx-0 flex flex-wrap w-full'>
 							<h3>사용자 설정</h3>
 						</div>
-						<LoadingScreen class='min-h-[32rem] md:rounded-md' />
+						<LoadingScreen class='min-h-[32rem] lg:rounded-md' />
 					</div>
 				{:then users}
 					<UserSettings
@@ -190,11 +190,11 @@
 						{users}
 					/>
 				{:catch err}
-					<div class='my-8 md:mx-8 flex flex-col gap-3 w-auto items-stretch'>
-						<div class='mx-6 md:mx-0 flex flex-wrap w-full'>
+					<div class='my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch'>
+						<div class='mx-6 lg:mx-0 flex flex-wrap w-full'>
 							<h3 class='mb-1'>사용자 설정</h3>
 						</div>
-						<ErrorScreen class='min-h-[32rem] md:rounded-md' />
+						<ErrorScreen class='min-h-[32rem] lg:rounded-md' />
 					</div>
 				{/await}
 			{:else if selectedTab === 'service'}

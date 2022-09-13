@@ -13,6 +13,7 @@ export const claimLocker = async function (
 	id: string,
 	token: string,
 	blockedDepartments: Array<string>,
+	isServiceBlocked: boolean,
 	lockerId: string,
 	claimedUntil?: number
 ): Promise<ClaimLockerResponse> {
@@ -35,18 +36,24 @@ export const claimLocker = async function (
 	};
 	const checkRes = await dynamoDB.query(checkReq).promise();
 	if (checkRes.Count > 0) throw new CantClaimError('Requested locker is already claimed');
-	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(
-		blockedDepartments.map((d) => [`:${d}`, { S: d }])
-	);
-	conditionValues[':true'] = { BOOL: true };
-	const condition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
+	let conditionValues: ExpressionAttributeValueMap = {};
+	const blockDeptCondition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
+	let condition = '';
+	if (isServiceBlocked) {
+		condition = 'iA = :true';
+		conditionValues[':true'] = { BOOL: true };
+	} else if (blockDeptCondition) {
+		condition = `((${blockDeptCondition}) OR iA = :true)`;
+		conditionValues = Object.fromEntries(blockedDepartments.map((d) => [`:${d}`, { S: d }]));
+		conditionValues[':true'] = { BOOL: true };
+	} else {
+		condition = 'attribute_exists(d)';
+	}
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression: 'SET #lockerId = :lockerId, cU = :claimedUntil',
-		ConditionExpression: `#aT = :token${
-			id !== adminId && condition ? ` AND ((${condition}) OR iA = :true)` : ''
-		}`,
+		ConditionExpression: `#aT = :token${id !== adminId && condition ? ` AND ${condition}` : ''}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'
@@ -82,20 +89,27 @@ export const claimLocker = async function (
 export const unclaimLocker = async function (
 	id: string,
 	token: string,
-	blockedDepartments: Array<string>
+	blockedDepartments: Array<string>,
+	isServiceBlocked: boolean
 ): Promise<UnclaimLockerResponse> {
-	const conditionValues: ExpressionAttributeValueMap = Object.fromEntries(
-		blockedDepartments.map((d) => [`:${d}`, { S: d }])
-	);
-	conditionValues[':true'] = { BOOL: true };
-	const condition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
+	let conditionValues: ExpressionAttributeValueMap = {};
+	const blockDeptCondition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
+	let condition = '';
+	if (isServiceBlocked) {
+		condition = 'iA = :true';
+		conditionValues[':true'] = { BOOL: true };
+	} else if (blockDeptCondition) {
+		condition = `((${blockDeptCondition}) OR iA = :true)`;
+		conditionValues = Object.fromEntries(blockedDepartments.map((d) => [`:${d}`, { S: d }]));
+		conditionValues[':true'] = { BOOL: true };
+	} else {
+		condition = 'attribute_exists(d)';
+	}
 	const req: UpdateItemInput = {
 		TableName,
 		Key: { type: { S: 'user' }, id: { S: id } },
 		UpdateExpression: 'REMOVE #lockerId',
-		ConditionExpression: `#aT = :token ${
-			id !== adminId && condition ? ` AND ((${condition}) OR iA = :true)` : ''
-		}`,
+		ConditionExpression: `#aT = :token ${id !== adminId && condition ? ` AND ${condition}` : ''}`,
 		ExpressionAttributeNames: {
 			'#lockerId': 'lockerId',
 			'#aT': 'aT'

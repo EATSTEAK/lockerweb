@@ -41,10 +41,10 @@
 		{collapsable}
 		bind:collapsed={navigationCollapsed}
 	>
-		<NavigationHeader class='py-1 md:py-0 md:pt-10' slot='header'>
+		<NavigationHeader class='py-1 lg:py-0 lg:pt-10' slot='header'>
 			<slot name='navigation_header'>
 				<div class='flex flex-col grow items-start flex-wrap'>
-					<Soongsil class='w-12 h-12 md:w-20 md:h-20' />
+					<Soongsil class='w-12 h-12 lg:w-20 lg:h-20' />
 				</div>
 				{#if collapsable}
 					<div class='flex justify-center items-center'>

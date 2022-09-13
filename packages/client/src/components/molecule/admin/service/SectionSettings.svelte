@@ -158,7 +158,7 @@
 				/>
 				<button
 					on:click={addDisabled}
-					class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-90 active:brightness-75'
+					class='transition-all rounded-md bg-gray-200 text-gray-500 hover:brightness-95 focus:brightness-90 active:brightness-75'
 				>
 					<Add />
 				</button>
@@ -170,7 +170,7 @@
 				{#each disabled as disabledId}
 					<Tag
 						on:click={() => removeDisabled(disabledId)}
-						class='disabled-id bg-gray-300 select-none cursor-pointer hover:brightness-95 active:brightness-75'
+						class='disabled-id bg-gray-300 select-none cursor-pointer hover:brightness-95 focus:brightness-90 active:brightness-75'
 					>
 						<div class='flex items-center gap-1'>
 							{disabledId}
@@ -190,7 +190,7 @@
 			{#if !isNew}
 				<Button
 					on:click={removeSection}
-					class='bg-red-800 text-white [&[disabled]]:opacity-[0.5]'
+					class='bg-red-800 text-white [&[disabled]]:opacity-50'
 					isIconRight
 				>
 					삭제
@@ -199,7 +199,7 @@
 				<Button
 					on:click={updateSection}
 					disabled={isSaveDisabled}
-					class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]'
+					class='bg-primary-800 text-white [&[disabled]]:opacity-50'
 					isIconRight
 				>
 					적용
@@ -209,7 +209,7 @@
 				<Button
 					on:click={updateSection}
 					disabled={isSaveDisabled}
-					class='bg-primary-800 text-white [&[disabled]]:opacity-[0.5]'
+					class='bg-primary-800 text-white [&[disabled]]:opacity-50'
 					isIconRight
 				>
 					추가
