@@ -1,6 +1,6 @@
 {
   "name": "lockerweb",
-  "version": "0.10.3",
+  "version": "0.11.0",
   "description": "SSU IT Collage Locker system.",
   "private": true,
   "scripts": {
