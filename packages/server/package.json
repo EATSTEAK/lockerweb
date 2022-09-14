@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Backend Lambda script for lockerweb",
   "license": "MIT",
   "scripts": {
@@ -10,6 +10,9 @@
     "stop-db": "docker-compose down",
     "test": "mocha tests/unit",
     "integ-test": "mocha tests/integration",
+    "prettier": "prettier --check --plugin-search-dir=. . ",
+    "lint": "eslint .",
+    "format": "eslint . --fix && prettier --write --plugin-search-dir=. .",
     "delete": "sam delete --no-prompts",
     "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3",
     "dryrun": "sam deploy --guided --no-execute-changeset"

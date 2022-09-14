@@ -1,13 +1,12 @@
-version: "3.7"
+version: '3.7'
 services:
   dynamodb:
     image: amazon/dynamodb-local:latest
     container_name: ssu-it-locker-dynamodb
     ports:
-      - "8000:8000"
+      - '8000:8000'
     command: -jar DynamoDBLocal.jar -sharedDb
 networks:
   default:
     external: true
     name: local-dev
-

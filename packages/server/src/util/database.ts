@@ -7,12 +7,12 @@ export const TableName = process.env.TABLE_NAME ?? 'LockerTable';
 export const adminId = process.env.ADMIN_ID ?? '20211561';
 
 const options: ServiceConfigurationOptions & ClientApiVersions = {
-	apiVersion: '2012-08-10',
-	region: awsRegion
+  apiVersion: '2012-08-10',
+  region: awsRegion,
 };
 
 if (process.env.AWS_SAM_LOCAL) {
-	options.endpoint = new AWS.Endpoint('http://dynamodb:8000');
+  options.endpoint = new AWS.Endpoint('http://dynamodb:8000');
 }
 
 export const dynamoDB = new AWS.DynamoDB(options);

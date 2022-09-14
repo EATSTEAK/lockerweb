@@ -1,8 +1,13 @@
 {
   "name": "@types/lockerweb",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "types": "index.d.ts",
   "license": "MIT",
+  "scripts": {
+    "prettier": "prettier --check --plugin-search-dir=. . ",
+    "lint": "eslint .",
+    "format": "eslint . --fix && prettier --write --plugin-search-dir=. ."
+  },
   "dependencies": {
     "@types/lockerweb": "link:"
   },
