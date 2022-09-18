@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
 
   export let id: string;
   export let value: Date | undefined;
@@ -22,6 +22,14 @@
           .slice(0, -1)
       : undefined;
     mounted = true;
+  });
+
+  afterUpdate(() => {
+    localDate = value
+      ? new Date(value.getTime() - new Date().getTimezoneOffset() * 60000)
+          .toISOString()
+          .slice(0, -1)
+      : undefined;
   });
 
   $: if (mounted) {
