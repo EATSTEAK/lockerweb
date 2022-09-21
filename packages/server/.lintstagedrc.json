@@ -1,3 +1,4 @@
 {
-  "*": ["eslint --fix", "prettier --write"]
+  "*": ["eslint --fix", "prettier --write"],
+  "*.yaml": ["prettier --write"]
 }
