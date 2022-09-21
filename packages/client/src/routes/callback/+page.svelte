@@ -20,9 +20,10 @@
   let result: string;
   let response:
     | SuccessResponse<LoginSuccessResponse>
-    | ErrorResponse<UnauthorizedError | BlockedError>;
+    | ErrorResponse<UnauthorizedError | BlockedError | ForbiddenError>;
   let id: Promise<
-    SuccessResponse<LoginSuccessResponse> | ErrorResponse<UnauthorizedError | BlockedError>
+    | SuccessResponse<LoginSuccessResponse>
+    | ErrorResponse<UnauthorizedError | BlockedError | ForbiddenError>
   >;
 
   let errorMessage: string;
