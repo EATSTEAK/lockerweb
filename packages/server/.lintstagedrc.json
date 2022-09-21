@@ -1,4 +1,4 @@
 {
-  "*": ["eslint --fix", "prettier --write --plugin-search-dir=."],
-  "*.yaml": ["prettier --write --plugin-search-dir=."]
+  "*.ts": ["eslint --fix", "prettier --write --plugin-search-dir=."],
+  "*.js": ["eslint --fix", "prettier --write --plugin-search-dir=."]
 }
