@@ -6,6 +6,7 @@ import {
   BlockedErrorSchema,
   createErrorResponse,
   createSuccessResponse,
+  ForbiddenErrorSchema,
   UnauthorizedErrorSchema,
 } from '$lib/api/schema';
 
@@ -27,7 +28,8 @@ export type LogoutSuccessResponse = z.infer<typeof LogoutSuccessResponseSchema>;
 export async function apiSsuLogin(
   result: string,
 ): Promise<
-  SuccessResponse<LoginSuccessResponse> | ErrorResponse<UnauthorizedError | BlockedError>
+  | SuccessResponse<LoginSuccessResponse>
+  | ErrorResponse<UnauthorizedError | BlockedError | ForbiddenError>
 > {
   const response = await apiRequest<LoginSuccessResponse>(
     '/auth/ssu_login?result=' + encodeURIComponent(result),
@@ -44,6 +46,10 @@ export async function apiSsuLogin(
   const blocked = createErrorResponse(BlockedErrorSchema).safeParse(response);
   if (blocked.success) {
     return blocked.data as ErrorResponse<BlockedError>;
+  }
+  const forbidden = createErrorResponse(ForbiddenErrorSchema).safeParse(response);
+  if (forbidden.success) {
+    return forbidden.data as ErrorResponse<ForbiddenError>;
   }
   const other = createErrorResponse(z.object({})).parse(response);
   throw other.error;

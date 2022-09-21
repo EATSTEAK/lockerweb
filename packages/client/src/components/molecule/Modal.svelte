@@ -67,6 +67,7 @@
   {open}
   class="{clazz} fixed z-50
         my-4
+        h-auto
         grow
         overflow-visible
         rounded-xl
