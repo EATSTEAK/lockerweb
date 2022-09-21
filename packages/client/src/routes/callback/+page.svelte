@@ -30,6 +30,8 @@
   $: if (response && response.success === false) {
     if (response.error.name === 'Blocked') {
       errorMessage = '현재는 접속할 수 없는 시간입니다. 운영 시간을 확인하세요.';
+    } else if (response.error.name == 'Forbidden') {
+      errorMessage = '등록되지 않은 사용자입니다. 관리자에게 문의하세요.';
     } else if (response.error.name === 'Unauthorized') {
       errorMessage = '인증 토큰이 올바르지 않습니다. 인증 토큰을 확인하세요.';
     } else {
@@ -52,6 +54,9 @@
       } else {
         setTimeout(() => goto('/', { replaceState: true }), 5000);
       }
+    }).catch((err) => {
+      response = err;
+      console.error(err);
     });
   }
 </script>
