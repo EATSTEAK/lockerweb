@@ -2,27 +2,27 @@ openapi: '3.0.2'
 info:
   title: ssu-it-locker
   version: '1.0'
-  description: 숭실대학교 IT대학 사물함 시스템의 내부 API 문서입니다.
+  description: '숭실대학교 IT대학 사물함 시스템의 내부 API 문서입니다.'
 servers:
-  - url: https://itlocker.soongsil.dev/api/v1
-    description: 예상 주소
+  - url: https://ssuitlocker.com/api/v1
+    description: '예상 주소'
   - url: http://localhost:3000/api/v1
-    description: 로컬 테스트용 주소
+    description: '로컬 테스트용 주소'
 tags:
   - name: auth
-    description: 사용자 로그인/로그아웃 플로우를 구성합니다.
+    description: '사용자 로그인/로그아웃 플로우를 구성합니다.'
   - name: user
-    description: 사용자 정보를 열람/수정합니다.
+    description: '사용자 정보를 열람/수정합니다.'
   - name: locker
-    description: 사물함 정보를 열람, 대여/반납합니다.
+    description: '사물함 정보를 열람, 대여/반납합니다.'
   - name: config
-    description: 서비스 설정 정보를 열람/수정합니다.
+    description: '서비스 설정 정보를 열람/수정합니다.'
 paths:
   /auth/ssu_login:
     get:
       tags:
         - auth
-      summary: 숭실대 통합 로그인 엔드포인트
+      summary: '숭실대 통합 로그인 엔드포인트'
       description: '숭실대 통합 로그인을 위한 엔드포인트입니다. `https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url=` 링크의 callback_url 을 이 엔드포인트로 지정해 주세요.'
       parameters:
         - name: result
@@ -30,7 +30,7 @@ paths:
           required: true
           schema:
             type: string
-          description: 통합 로그인 서비스에서 제공하는 검증 토큰입니다.
+          description: '통합 로그인 서비스에서 제공하는 검증 토큰입니다.'
       responses:
         '200':
           description: OK
@@ -47,7 +47,7 @@ paths:
                   result:
                     $ref: '#/components/schemas/AccessTokenInfo'
         '401':
-          description: result 값이 전달되지 않을 경우
+          description: 'result 값이 전달되지 않을 경우'
           content:
             application/json:
               schema:
@@ -59,22 +59,33 @@ paths:
                   name: 'Unauthorized'
                   message: 'No result parameter provided'
         '403':
-          description: 현재 로그인 불가할 경우
+          description: '현재 로그인 불가할 경우'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-              example:
-                success: false
-                error:
-                  code: 403
-                  name: 'Blocked'
-                  message: 'Service unavailable'
+              examples:
+                Blocked:
+                  description: '서비스 중단으로 인해 현재 접속이 불가능할 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Blocked'
+                      message: 'Service unavailable'
+                Forbidden:
+                  description: '접속 명단에 없는 사용자일 경우'
+                  value:
+                    success: false
+                    error:
+                      code: 403
+                      name: 'Forbidden'
+                      message: 'This user cannot login to '
   /auth/logout:
     get:
       tags:
         - auth
-      summary: 로그아웃
+      summary: '로그아웃'
       description: '로그아웃을 위한 엔드포인트입니다. 로그아웃 이후에는 클라이언트에서 토큰을 폐기해 주세요.'
       security:
         - UserSessionAuth: []
@@ -99,7 +110,7 @@ paths:
                       accessToken:
                         type: string
         '401':
-          description: 로그인 상태가 아닐 경우
+          description: '로그인 상태가 아닐 경우'
           content:
             application/json:
               schema:
@@ -114,12 +125,12 @@ paths:
     get:
       tags:
         - locker
-      summary: 대여된 사물함 목록
-      description: 대여된 사물함 목록을 봅니다.
+      summary: '대여된 사물함 목록'
+      description: '대여된 사물함 목록을 봅니다.'
       parameters:
         - name: show_id
           in: query
-          description: 대여한 사용자 표시 여부(관리자만 사용 가능)
+          description: '대여한 사용자 표시 여부(관리자만 사용 가능)'
           schema:
             type: boolean
       security:
@@ -142,7 +153,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/ReservedLockerResponse'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -154,7 +165,7 @@ paths:
                   name: 'Forbidden'
                   message: 'Sufficient permission'
         '404':
-          description: 사물함을 찾을 수 없을 경우
+          description: '사물함을 찾을 수 없을 경우'
           content:
             application/json:
               schema:
@@ -169,8 +180,8 @@ paths:
     get:
       tags:
         - locker
-      summary: 대여된 사물함 갯수
-      description: 학부별 대여된 사물함 갯수를 가져옵니다.
+      summary: '대여된 사물함 갯수'
+      description: '학부별 대여된 사물함 갯수를 가져옵니다.'
       responses:
         '200':
           description: OK
@@ -198,7 +209,7 @@ paths:
                     05:
                       B1: 100
         '404':
-          description: 사물함을 찾을 수 없을 경우
+          description: '사물함을 찾을 수 없을 경우'
           content:
             application/json:
               schema:
@@ -213,8 +224,8 @@ paths:
     post:
       tags:
         - locker
-      summary: 사물함 대여(일반 학부생용)
-      description: 로그인된 학부생 명의로 사물함을 대여합니다.
+      summary: '사물함 대여(일반 학부생용)'
+      description: '로그인된 학부생 명의로 사물함을 대여합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -302,7 +313,7 @@ paths:
                       name: 'CantClaim'
                       message: 'Requested locker is already claimed'
         '500':
-          description: 사물함 정보를 찾을 수 없을 경우
+          description: '사물함 정보를 찾을 수 없을 경우'
           content:
             application/json:
               schema:
@@ -317,8 +328,8 @@ paths:
     post:
       tags:
         - locker
-      summary: 사물함 반납(일반 학부생용)
-      description: 로그인된 학부생 명의로 대여된 사물함을 반납합니다.
+      summary: '사물함 반납(일반 학부생용)'
+      description: '로그인된 학부생 명의로 대여된 사물함을 반납합니다.'
       security:
         - UserSessionAuth: []
       responses:
@@ -387,14 +398,14 @@ paths:
     get:
       tags:
         - user
-      summary: 사용자 정보 열람
-      description: 사용자의 정보를 열람합니다.
+      summary: '사용자 정보 열람'
+      description: '사용자의 정보를 열람합니다.'
       security:
         - UserSessionAuth: []
       parameters:
         - name: id
           in: query
-          description: 열람할 사용자의 학번(관리자용)
+          description: '열람할 사용자의 학번(관리자용)'
           schema:
             type: string
       responses:
@@ -413,7 +424,7 @@ paths:
                   result:
                     $ref: '#/components/schemas/UserResponse'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -425,7 +436,7 @@ paths:
                   name: 'Forbidden'
                   message: 'Sufficient permission'
         '404':
-          description: 사용자를 찾을 수 없을 경우
+          description: '사용자를 찾을 수 없을 경우'
           content:
             application/json:
               schema:
@@ -440,8 +451,8 @@ paths:
     post:
       tags:
         - user
-      summary: 사용자 정보 수정
-      description: 사용자의 정보를 수정합니다.
+      summary: '사용자 정보 수정'
+      description: '사용자의 정보를 수정합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -462,7 +473,7 @@ paths:
                   success:
                     type: boolean
         '400':
-          description: 요청 형식이 잘못되었을 때
+          description: '요청 형식이 잘못되었을 때'
           content:
             application/json:
               schema:
@@ -474,7 +485,7 @@ paths:
                   name: 'BadRequest'
                   message: 'Request body is malformed JSON'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -489,8 +500,8 @@ paths:
     post:
       tags:
         - user
-      summary: 사용자 정보 삭제
-      description: 사용자의 정보를 삭제합니다.
+      summary: '사용자 정보 삭제'
+      description: '사용자의 정보를 삭제합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -514,7 +525,7 @@ paths:
                   result:
                     $ref: '#/components/schemas/UserDeleteRequest'
         '400':
-          description: 요청 형식이 잘못되었을 때
+          description: '요청 형식이 잘못되었을 때'
           content:
             application/json:
               schema:
@@ -526,7 +537,7 @@ paths:
                   name: 'BadRequest'
                   message: 'Request body is malformed JSON'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -541,8 +552,8 @@ paths:
     get:
       tags:
         - user
-      summary: 사용자 목록 열람
-      description: 사용자 목록을 열람합니다.
+      summary: '사용자 목록 열람'
+      description: '사용자 목록을 열람합니다.'
       security:
         - UserSessionAuth: []
       parameters:
@@ -568,7 +579,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/UserResponse'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -580,7 +591,7 @@ paths:
                   name: 'Forbidden'
                   message: 'Sufficient permission'
         '404':
-          description: 사용자를 찾을 수 없을 경우
+          description: '사용자를 찾을 수 없을 경우'
           content:
             application/json:
               schema:
@@ -595,8 +606,8 @@ paths:
     post:
       tags:
         - user
-      summary: 사용자 일괄 삽입
-      description: 사용자를 일괄 삽입합니다.
+      summary: '사용자 일괄 삽입'
+      description: '사용자를 일괄 삽입합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -617,7 +628,7 @@ paths:
                   success:
                     type: boolean
         '400':
-          description: 요청 형식이 잘못되었을 때
+          description: '요청 형식이 잘못되었을 때'
           content:
             application/json:
               schema:
@@ -629,7 +640,7 @@ paths:
                   name: 'BadRequest'
                   message: 'Request body is malformed JSON'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -644,8 +655,8 @@ paths:
     post:
       tags:
         - user
-      summary: 사용자 일괄 삭제
-      description: 사용자를 일괄 삭제합니다.
+      summary: '사용자 일괄 삭제'
+      description: '사용자를 일괄 삭제합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -666,7 +677,7 @@ paths:
                   success:
                     type: boolean
         '400':
-          description: 요청 형식이 잘못되었을 때
+          description: '요청 형식이 잘못되었을 때'
           content:
             application/json:
               schema:
@@ -678,7 +689,7 @@ paths:
                   name: 'BadRequest'
                   message: 'Request body is malformed JSON'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -693,8 +704,8 @@ paths:
     get:
       tags:
         - config
-      summary: 전체 설정 열람
-      description: 서비스의 전체 설정을 열람합니다.
+      summary: '전체 설정 열람'
+      description: '서비스의 전체 설정을 열람합니다.'
       responses:
         '200':
           description: OK
@@ -716,7 +727,7 @@ paths:
                       SERVICE:
                         $ref: '#/components/schemas/ConfigResponse'
         '404':
-          description: 설정을 찾을 수 없을 경우
+          description: '설정을 찾을 수 없을 경우'
           content:
             application/json:
               schema:
@@ -731,8 +742,8 @@ paths:
     post:
       tags:
         - config
-      summary: 설정 수정
-      description: 서비스 혹은 학부의 설정을 수정합니다.
+      summary: '설정 수정'
+      description: '서비스 혹은 학부의 설정을 수정합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -753,7 +764,7 @@ paths:
                   success:
                     type: boolean
         '400':
-          description: 요청 형식이 잘못되었을 때
+          description: '요청 형식이 잘못되었을 때'
           content:
             application/json:
               schema:
@@ -765,7 +776,7 @@ paths:
                   name: 'BadRequest'
                   message: 'Request body is malformed JSON'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -780,8 +791,8 @@ paths:
     post:
       tags:
         - config
-      summary: 설정 삭제
-      description: 학부의 설정을 삭제합니다.
+      summary: '설정 삭제'
+      description: '학부의 설정을 삭제합니다.'
       security:
         - UserSessionAuth: []
       requestBody:
@@ -805,7 +816,7 @@ paths:
                   result:
                     type: string
         '400':
-          description: 요청 형식이 잘못되었을 때
+          description: '요청 형식이 잘못되었을 때'
           content:
             application/json:
               schema:
@@ -817,7 +828,7 @@ paths:
                   name: 'BadRequest'
                   message: 'Request body is malformed JSON'
         '403':
-          description: 권한 부족
+          description: '권한 부족'
           content:
             application/json:
               schema:
@@ -839,7 +850,7 @@ components:
   schemas:
     DepartmentEnum:
       title: DepartmentEnum
-      description: 학부 타입 목록입니다.
+      description: '학부 타입 목록입니다.'
       type: string
       enum:
         - E
@@ -849,7 +860,7 @@ components:
         - G
     ErrorResponse:
       title: ErrorResponse
-      description: 오류 발생시 응답 형태입니다.
+      description: '오류 발생시 응답 형태입니다.'
       type: object
       required:
         - success
@@ -872,7 +883,7 @@ components:
               type: string
     AccessTokenInfo:
       title: AccessTokenInfo
-      description: 로그인 성공 시 발급되는 엑세스 토큰의 정보입니다.
+      description: '로그인 성공 시 발급되는 엑세스 토큰의 정보입니다.'
       type: object
       required:
         - id
@@ -893,7 +904,7 @@ components:
           format: int32
     ReservedLockerResponse:
       title: ReservedLockerResponse
-      description: 대여된 사물함 정보입니다.
+      description: '대여된 사물함 정보입니다.'
       type: object
       required:
         - lockerId
@@ -902,14 +913,14 @@ components:
           type: string
         id:
           type: string
-          description: 이 사물함을 사용중인 사용자의 학번입니다.
+          description: '이 사물함을 사용중인 사용자의 학번입니다.'
         claimedUntil:
           type: string
           format: date-time
-          description: 이 사물함을 사용하는 기한을 표현한 ISODate 입니다. 이 값이 없다면 무기한입니다.
+          description: '이 사물함을 사용하는 기한을 표현한 ISODate 입니다. 이 값이 없다면 무기한입니다.'
     LockerCountResponse:
       title: LockerCountResponse
-      description: 사물함 갯수 요청 시 반환하는 형식입니다.
+      description: '사물함 갯수 요청 시 반환하는 형식입니다.'
       type: object
       properties:
         departmentId:
@@ -923,7 +934,7 @@ components:
                   format: int32
     LockerClaimRequest:
       title: LockerClaimRequest
-      description: 사물함 대여 요청입니다.
+      description: '사물함 대여 요청입니다.'
       type: object
       required:
         - lockerId
@@ -935,7 +946,7 @@ components:
           format: date-time
     UserResponse:
       title: UserResponse
-      description: 사용자 정보입니다.
+      description: '사용자 정보입니다.'
       type: object
       required:
         - id
@@ -958,7 +969,7 @@ components:
           format: date-time
     UserUpdateRequest:
       title: UserUpdateRequest
-      description: 사용자 정보를 수정하고자 할 때 사용합니다.
+      description: '사용자 정보를 수정하고자 할 때 사용합니다.'
       type: object
       required:
         - id
@@ -978,7 +989,7 @@ components:
           format: date-time
     UserDeleteRequest:
       title: UserDeleteRequest
-      description: 사용자 정보를 삭제하고자 할 때 사용합니다.
+      description: '사용자 정보를 삭제하고자 할 때 사용합니다.'
       type: object
       required:
         - id
@@ -987,19 +998,19 @@ components:
           type: string
     UserBatchDeleteRequest:
       title: UserBatchDeleteRequest
-      description: 사용자 정보를 일괄 삭제하고자 할 때 사용합니다. 사용자 ID의 배열이 필요합니다.
+      description: '사용자 정보를 일괄 삭제하고자 할 때 사용합니다. 사용자 ID의 배열이 필요합니다.'
       type: array
       items:
         type: string
     UserBatchPutRequest:
       title: UserBatchPutRequest
-      description: 사용자 정보를 일괄 삽입하고자 할 때 사용합니다.
+      description: '사용자 정보를 일괄 삽입하고자 할 때 사용합니다.'
       type: array
       items:
         $ref: '#/components/schemas/UserResponse'
     ConfigResponse:
       title: ConfigResponse
-      description: 서비스의 설정 정보입니다.
+      description: '서비스의 설정 정보입니다.'
       type: object
       required:
         - id
@@ -1017,12 +1028,12 @@ components:
           format: date-time
         buildings:
           type: object
-          description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
+          description: '(서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.'
         contact:
           type: string
     ConfigUpdateRequest:
       title: ConfigUpdateRequest
-      description: 서비스의 설정을 수정하고자 할 때 사용됩니다.
+      description: '서비스의 설정을 수정하고자 할 때 사용됩니다.'
       type: object
       required:
         - id
@@ -1039,12 +1050,12 @@ components:
           format: date-time
         buildings:
           type: object
-          description: (서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.
+          description: '(서비스 설정 전용) 서비스에서 사용하는 건물의 목록입니다. 건물 번호를 키로, `Building` 을 값으로 하는 맵입니다.'
         contact:
           type: string
     ConfigDeleteRequest:
       title: ConfigDeleteRequest
-      description: 설정 정보를 삭제하고자 할 때 사용합니다.
+      description: '설정 정보를 삭제하고자 할 때 사용합니다.'
       type: object
       required:
         - id
@@ -1053,7 +1064,7 @@ components:
           type: string
     Building:
       title: Building
-      description: 건물을 표현합니다.
+      description: '건물을 표현합니다.'
       type: object
       required:
         - id
@@ -1066,10 +1077,10 @@ components:
           type: string
         lockers:
           type: object
-          description: 건물 내부에 존재하는 사물함의 목록입니다. "사물함 구역 이름을 키로, `LockerSection` 을 값으로 하는 맵"을 값으로 하고, 층수를 키로 하는 맵입니다.
+          description: '건물 내부에 존재하는 사물함의 목록입니다. "사물함 구역 이름을 키로, `LockerSection` 을 값으로 하는 맵"을 값으로 하고, 층수를 키로 하는 맵입니다.'
     LockerSection:
       title: LockerSection
-      description: 사물함의 한 구역입니다.
+      description: '사물함의 한 구역입니다.'
       type: object
       required:
         - subsections
@@ -1077,22 +1088,22 @@ components:
         - height
       properties:
         subsections:
-          description: 사물함의 내부 구역의 목록입니다.
+          description: '사물함의 내부 구역의 목록입니다.'
           type: array
           items:
             $ref: '#/components/schemas/LockerSubsection'
         disabled:
-          description: 사용할 수 없는 사물함의 번호 목록입니다.
+          description: '사용할 수 없는 사물함의 번호 목록입니다.'
           type: array
           items:
             type: string
         height:
-          description: 실제 사물함 모양 추정을 위한 사물함의 세로 칸 갯수입니다.
+          description: '실제 사물함 모양 추정을 위한 사물함의 세로 칸 갯수입니다.'
           type: integer
           format: int32
     LockerSubsection:
       title: LockerSubsection
-      description: 사물함의 내부 구역입니다. 사물함의 한 구역을 각각 다른 학부가 관할할 때 사용됩니다.
+      description: '사물함의 내부 구역입니다. 사물함의 한 구역을 각각 다른 학부가 관할할 때 사용됩니다.'
       type: object
       required:
         - department
