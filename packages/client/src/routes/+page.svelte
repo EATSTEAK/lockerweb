@@ -120,7 +120,7 @@
         {#if serviceConfig && !isActivated(serviceConfig.activateFrom, serviceConfig.activateTo)}
           <Button
             disabled={callbackUrl ? undefined : true}
-            href="https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
+            href="https://lms.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
               callbackUrl,
             )}"
             rel="external"
@@ -132,7 +132,7 @@
         {:else}
           <Button
             disabled={callbackUrl ? undefined : true}
-            href="https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
+            href="https://lms.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url={encodeURIComponent(
               callbackUrl,
             )}"
             rel="external"

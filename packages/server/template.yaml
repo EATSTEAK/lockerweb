@@ -466,10 +466,11 @@ Resources:
     Metadata:
       Comment: 'Bucket to store client files'
     Properties:
-      AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
     Type: 'AWS::S3::Bucket'
   FrontS3BucketPolicy:
     Metadata:
@@ -478,12 +479,11 @@ Resources:
       Bucket: !Ref FrontS3Bucket
       PolicyDocument:
         Statement:
-          - Action:
-              - 's3:GetObject'
-            Effect: 'Allow'
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
             Principal: '*'
-            Resource:
-              - !Sub 'arn:aws:s3:::${FrontS3Bucket}/*'
+            Action: 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${FrontS3Bucket}/*
     Type: 'AWS::S3::BucketPolicy'
   CfApiCachePolicy:
     Properties:
