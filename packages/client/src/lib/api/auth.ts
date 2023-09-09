@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { apiRequest } from '$lib/api/api';
 import {
+  BadRequestErrorSchema,
   BlockedErrorSchema,
   createErrorResponse,
   createSuccessResponse,
@@ -25,19 +26,25 @@ export type LoginSuccessResponse = z.infer<typeof LoginSuccessResponseSchema>;
 
 export type LogoutSuccessResponse = z.infer<typeof LogoutSuccessResponseSchema>;
 
-export async function apiSsuLogin(
+export async function apiLogin(
   result: string,
+  service: string = null
 ): Promise<
   | SuccessResponse<LoginSuccessResponse>
-  | ErrorResponse<UnauthorizedError | BlockedError | ForbiddenError>
+  | ErrorResponse<BadRequestError | UnauthorizedError | BlockedError | ForbiddenError>
 > {
+  const requestStr = '/auth/login?result=' + encodeURIComponent(result) + (service ? `&service=${service}` : "")
   const response = await apiRequest<LoginSuccessResponse>(
-    '/auth/ssu_login?result=' + encodeURIComponent(result),
+    requestStr,
     false,
   );
   const login = createSuccessResponse(LoginSuccessResponseSchema).safeParse(response);
   if (login.success) {
     return login.data as SuccessResponse<LoginSuccessResponse>;
+  }
+  const badRequest = createErrorResponse(BadRequestErrorSchema).safeParse(response);
+  if (badRequest.success) {
+    return badRequest.data as ErrorResponse<BadRequestError>;
   }
   const unauthorized = createErrorResponse(UnauthorizedErrorSchema).safeParse(response);
   if (unauthorized.success) {
