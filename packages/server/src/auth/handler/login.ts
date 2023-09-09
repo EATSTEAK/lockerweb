@@ -2,9 +2,15 @@ import https from 'https';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
 import { createResponse, JWT_SECRET, SSUTODAY_SECRET } from '../../common.js';
-import { BadRequestError, errorResponse, ForbiddenError, InternalError, responseAsLockerError, UnauthorizedError } from '../../util/error.js';
+import {
+  BadRequestError,
+  errorResponse,
+  ForbiddenError,
+  InternalError,
+  responseAsLockerError,
+  UnauthorizedError,
+} from '../../util/error.js';
 import { issueToken } from '../data.js';
-
 
 function requestBody(result: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -50,7 +56,8 @@ async function requestSsutoday(result: string): Promise<string> {
         res.on('end', function () {
           resolve(body);
         });
-      }).on('error', (res) => {
+      })
+      .on('error', (res) => {
         console.log('Error thrown..');
         reject(res);
       });
@@ -69,7 +76,7 @@ async function obtainIdFromSsu(result: string) {
 
 type SsuTodayResponse = {
   statusCode: 'SSU4000' | 'SSU4001' | 'SSU4160' | 'SSU2160';
-  data: null | { studentId: number, name: string, major: 'cse' | 'sw' | 'media' };
+  data: null | { studentId: number; name: string; major: 'cse' | 'sw' | 'media' };
   message: string;
 };
 
@@ -90,12 +97,11 @@ async function obtainIdFromSsuToday(result: string) {
   }
 }
 
-
 function obtainId(result: string, service?: string) {
   switch (service) {
     case 'ssutoday':
       return obtainIdFromSsuToday(result);
-    default: 
+    default:
   }
   return obtainIdFromSsu(result);
 }

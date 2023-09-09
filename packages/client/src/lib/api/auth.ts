@@ -28,16 +28,14 @@ export type LogoutSuccessResponse = z.infer<typeof LogoutSuccessResponseSchema>;
 
 export async function apiLogin(
   result: string,
-  service: string = null
+  service: string = null,
 ): Promise<
   | SuccessResponse<LoginSuccessResponse>
   | ErrorResponse<BadRequestError | UnauthorizedError | BlockedError | ForbiddenError>
 > {
-  const requestStr = '/auth/login?result=' + encodeURIComponent(result) + (service ? `&service=${service}` : "")
-  const response = await apiRequest<LoginSuccessResponse>(
-    requestStr,
-    false,
-  );
+  const requestStr =
+    '/auth/login?result=' + encodeURIComponent(result) + (service ? `&service=${service}` : '');
+  const response = await apiRequest<LoginSuccessResponse>(requestStr, false);
   const login = createSuccessResponse(LoginSuccessResponseSchema).safeParse(response);
   if (login.success) {
     return login.data as SuccessResponse<LoginSuccessResponse>;
