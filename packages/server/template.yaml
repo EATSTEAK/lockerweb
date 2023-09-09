@@ -39,7 +39,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: common.localCorsHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Architectures:
         - x86_64
       Events:
@@ -121,19 +121,19 @@ Resources:
   DependenciesLayer:
     Type: AWS::Serverless::LayerVersion
     Metadata:
-      BuildMethod: nodejs14.x
+      BuildMethod: nodejs18.x
     Properties:
       LayerName: 'dependencies'
       ContentUri: dependencies/
       CompatibleRuntimes:
-        - nodejs14.x
+        - nodejs18.x
   # Backend Lambda Resources
   AuthSsuLoginFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
       Handler: handler.auth.ssuLoginHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -153,7 +153,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.auth.logoutHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -173,7 +173,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.config.getConfigHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -193,7 +193,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.config.updateConfigHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -213,7 +213,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.config.deleteConfigHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -233,7 +233,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.claimLockerHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -253,7 +253,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.unclaimLockerHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -273,7 +273,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.getClaimedLockerCountHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -293,7 +293,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.queryClaimedLockersHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -313,7 +313,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.getUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -333,7 +333,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.queryUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -353,7 +353,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.updateUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -373,7 +373,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.deleteUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -393,7 +393,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.batchDeleteUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -413,7 +413,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.batchPutUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
