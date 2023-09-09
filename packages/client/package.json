@@ -8,9 +8,9 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "prettier": "prettier --check --plugin-search-dir=. . ",
+    "prettier": "prettier --check . ",
     "lint": "eslint .",
-    "format": "eslint . --fix && prettier --write --plugin-search-dir=. .",
+    "format": "eslint . --fix && prettier --write .",
     "delete": "node ./scripts/delete.js",
     "deploy": "node ./scripts/deploy.js"
   },

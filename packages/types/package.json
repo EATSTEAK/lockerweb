@@ -4,9 +4,9 @@
   "types": "index.d.ts",
   "license": "MIT",
   "scripts": {
-    "prettier": "prettier --check --plugin-search-dir=. . ",
+    "prettier": "prettier --check . ",
     "lint": "eslint .",
-    "format": "eslint . --fix && prettier --write --plugin-search-dir=. ."
+    "format": "eslint . --fix && prettier --write ."
   },
   "dependencies": {
     "@types/lockerweb": "link:"

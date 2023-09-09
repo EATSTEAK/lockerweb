@@ -1,13 +1,35 @@
 module.exports = {
   root: true,
-  extends: ['plugin:import/recommended', 'eslint:recommended'],
-  plugins: ['svelte3', '@typescript-eslint', 'tailwindcss'],
+  extends: ['plugin:import/recommended', 'eslint:recommended', 'plugin:svelte/recommended'],
+  plugins: ['@typescript-eslint', 'tailwindcss'],
   ignorePatterns: ['*.cjs'],
+  parserOptions: {
+    project: 'tsconfig.json',
+    sourceType: 'module',
+    ecmaVersion: 2020,
+    extraFileExtensions: ['.svelte'],
+  },
+  env: {
+    browser: true,
+    es2017: true,
+    node: true,
+  },
+  settings: {
+    svelte: {
+      kit: {
+        files: {
+          routes: 'src/routes',
+        },
+      },
+    },
+  },
   overrides: [
     {
       files: ['*.svelte'],
-      processor: 'svelte3/svelte3',
-      parser: '@typescript-eslint/parser',
+      parser: 'svelte-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+      },
       extends: [
         'plugin:import/typescript',
         'airbnb-typescript/base',
@@ -17,6 +39,11 @@ module.exports = {
       ],
       rules: {
         '@typescript-eslint/indent': 'off',
+        '@typescript-eslint/no-throw-literal': 'off',
+        'import/no-extraneous-dependencies': 'off',
+        'import/extensions': 'off',
+        'import/no-unresolved': 'off',
+        'no-undef': 'off',
       },
     },
     {
@@ -30,20 +57,8 @@ module.exports = {
       ],
       rules: {
         '@typescript-eslint/indent': 'off',
+        '@typescript-eslint/no-throw-literal': 'off',
       },
     },
   ],
-  settings: {
-    'svelte3/typescript': () => require('typescript'),
-  },
-  parserOptions: {
-    project: 'tsconfig.json',
-    sourceType: 'module',
-    ecmaVersion: 2020,
-  },
-  env: {
-    browser: true,
-    es2017: true,
-    node: true,
-  },
 };
