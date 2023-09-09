@@ -28,7 +28,7 @@
       departments = [...departments, { id, selected }];
     },
     update: (id: string) => {
-      selectedIndex = departments.map(({ id }) => id).indexOf(id);
+      selectedIndex = departments.map(({ id: v }) => v).indexOf(id);
     },
     change: (direction: number) => {
       let index = currentIndex + direction;

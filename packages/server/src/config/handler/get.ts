@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import { createResponse } from '../../common';
-import { queryConfig, toConfigResponse } from '../data';
-import { responseAsLockerError } from '../../util/error';
+import { createResponse } from '../../common.js';
+import { queryConfig, toConfigResponse } from '../data.js';
+import { responseAsLockerError } from '../../util/error.js';
 
 export const getConfigHandler: APIGatewayProxyHandler = async () => {
   try {

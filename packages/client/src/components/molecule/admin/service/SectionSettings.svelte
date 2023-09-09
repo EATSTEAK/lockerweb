@@ -32,30 +32,8 @@
   let disabled: number[] = original?.disabled ?? [];
   let subsections: LockerSubsection[] = structuredClone(original?.subsections) ?? [];
 
-  $: if ((floor && originalId) || isNew) {
-    initializeValues();
-  }
-
   const isNotUppercaseAlphabet = new RegExp('[^A-Z]+');
   const isNotNumeric = new RegExp('[^0-9]+');
-
-  $: isModified =
-    floor !== floorInput ||
-    originalId !== id ||
-    original?.height !== height ||
-    !isEqual(disabled, original?.disabled ?? []) ||
-    !isEqual(subsections, original?.subsections ?? []);
-  $: isAppliable =
-    !!floorInput &&
-    !!id &&
-    !!height &&
-    id.length === 1 &&
-    !isNotUppercaseAlphabet.test(id) &&
-    !isNotNumeric.test(
-      floorInput.startsWith('B') && floorInput.length >= 2 ? floorInput.slice(1) : floorInput,
-    );
-
-  $: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
 
   function initializeValues() {
     floorInput = floor ?? '';
@@ -87,8 +65,8 @@
     disabled = [...disabled, disabledInput];
   }
 
-  function removeDisabled(id: number) {
-    disabled = disabled.filter((disabledId) => disabledId !== id);
+  function removeDisabled(targetId: number) {
+    disabled = disabled.filter((disabledId) => disabledId !== targetId);
   }
 
   function removeSection() {
@@ -99,6 +77,28 @@
     const req: SectionUpdateRequest = { floor: floorInput, id, disabled, height, subsections };
     dispatch('update', req);
   }
+
+  $: if ((floor && originalId) || isNew) {
+    initializeValues();
+  }
+
+  $: isModified =
+    floor !== floorInput ||
+    originalId !== id ||
+    original?.height !== height ||
+    !isEqual(disabled, original?.disabled ?? []) ||
+    !isEqual(subsections, original?.subsections ?? []);
+  $: isAppliable =
+    !!floorInput &&
+    !!id &&
+    !!height &&
+    id.length === 1 &&
+    !isNotUppercaseAlphabet.test(id) &&
+    !isNotNumeric.test(
+      floorInput.startsWith('B') && floorInput.length >= 2 ? floorInput.slice(1) : floorInput,
+    );
+
+  $: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
 </script>
 
 <div class="flex h-full flex-col justify-between p-3">

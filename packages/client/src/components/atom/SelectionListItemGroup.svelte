@@ -31,7 +31,7 @@
       items = [...items, { id, selected }];
     },
     update: (id: string) => {
-      selectedIndex = items.map(({ id }) => id).indexOf(id);
+      selectedIndex = items.map(({ id: v }) => v).indexOf(id);
     },
     change: (direction: number) => {
       let index = currentIndex + direction;
@@ -53,6 +53,6 @@
   });
 </script>
 
-<div class="flex flex-col overflow-hidden rounded-xl">
+<div class="{clazz} flex flex-col overflow-hidden rounded-xl">
   <slot />
 </div>

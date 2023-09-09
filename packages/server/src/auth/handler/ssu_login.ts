@@ -1,9 +1,9 @@
 import https from 'https';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import * as jwt from 'jsonwebtoken';
-import { createResponse, JWT_SECRET } from '../../common';
-import { errorResponse, responseAsLockerError, UnauthorizedError } from '../../util/error';
-import { issueToken } from '../data';
+import { createResponse, JWT_SECRET } from '../../common.js';
+import { errorResponse, responseAsLockerError, UnauthorizedError } from '../../util/error.js';
+import { issueToken } from '../data.js';
 
 function requestBody(result: string): Promise<string> {
   return new Promise((resolve, reject) => {

@@ -1,9 +1,9 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import { createResponse } from '../../common';
-import { assertAccessible } from '../../auth/data';
-import { deleteUser } from '../data';
-import { BadRequestError, errorResponse, responseAsLockerError } from '../../util/error';
-import { verifyPayload } from '../../util/access';
+import { createResponse } from '../../common.js';
+import { assertAccessible } from '../../auth/data.js';
+import { deleteUser } from '../data.js';
+import { BadRequestError, errorResponse, responseAsLockerError } from '../../util/error.js';
+import { verifyPayload } from '../../util/access.js';
 
 export const deleteUserHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');

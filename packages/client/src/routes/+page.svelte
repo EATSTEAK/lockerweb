@@ -3,7 +3,7 @@
   import Button from '../components/atom/Button.svelte';
   import Soongsil from '../icons/Soongsil.svelte';
   import LockerStatus from '../components/molecule/login/LockerStatus.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import { getAuthorization } from '$lib/auth';
   import { config } from '$lib/store';
   import type { DepartmentLockerCount, LockerCount } from '$lib/types';
@@ -25,41 +25,9 @@
   import { isActivated } from '$lib/utils.js';
   import ErrorCircle from '../icons/ErrorCircle.svelte';
 
-  let callbackUrl = undefined;
-
-  let apiResponse: SuccessResponse<LockerCountResponse> | ErrorResponse<LockerError>;
-
-  let lockerCount: LockerCount = null;
-
-  let contactModalOpen = false;
-
-  if (browser) {
-    if (getAuthorization()) {
-      goto('/reserve');
-    }
-    callbackUrl = window.location.protocol + '//' + window.location.host + '/callback/';
-    apiCountLocker()
-      .then((data) => {
-        apiResponse = data;
-      })
-      .catch((error) => console.error(error));
-  }
-
-  $: countData = apiResponse && apiResponse.success ? apiResponse.result : undefined;
-
-  $: errorData = apiResponse && apiResponse.success === false ? apiResponse.error : undefined;
-
-  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
-
-  $: departmentConfigs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
-
-  $: if ($config && $config.success && countData) {
-    lockerCount = updateLockerCount($config.result, countData);
-  }
-
   function updateLockerCount(configs: Config[], countInfo: LockerCountResponse): LockerCount {
     const departmentConfigs = getDepartmentConfigs(configs);
-    const serviceConfig = getServiceConfig(configs);
+    const sConfig = getServiceConfig(configs);
 
     function transformLockerCount(
       serviceConfig: ServiceConfig,
@@ -103,11 +71,43 @@
     }
 
     return Object.fromEntries(
-      departmentConfigs.map<[string, DepartmentLockerCount]>((config) => [
-        config.id,
-        transformLockerCount(serviceConfig, config, countInfo?.[config.id]),
+      departmentConfigs.map<[string, DepartmentLockerCount]>((conf) => [
+        conf.id,
+        transformLockerCount(sConfig, conf, countInfo?.[conf.id]),
       ]),
     );
+  }
+
+  let callbackUrl = undefined;
+
+  let apiResponse: SuccessResponse<LockerCountResponse> | ErrorResponse<LockerError>;
+
+  let lockerCount: LockerCount = null;
+
+  let contactModalOpen = false;
+
+  if (browser) {
+    if (getAuthorization()) {
+      goto('/reserve');
+    }
+    callbackUrl = window.location.protocol + '//' + window.location.host + '/callback/';
+    apiCountLocker()
+      .then((data) => {
+        apiResponse = data;
+      })
+      .catch((error) => console.error(error));
+  }
+
+  $: countData = apiResponse && apiResponse.success ? apiResponse.result : undefined;
+
+  $: errorData = apiResponse && apiResponse.success === false ? apiResponse.error : undefined;
+
+  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
+  $: departmentConfigs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
+
+  $: if ($config && $config.success && countData) {
+    lockerCount = updateLockerCount($config.result, countData);
   }
 </script>
 
@@ -179,11 +179,11 @@
   primaryText="닫기"
   on:close={() => (contactModalOpen = false)}
   on:click={() => (contactModalOpen = false)}>
-  {#each departmentConfigs as config}
-    {#if config.contact}
+  {#each departmentConfigs as conf}
+    {#if conf.contact}
       <div class="my-2 leading-10">
-        <h5>{config.name} 연락처</h5>
-        <p class="text-gray-700">{config.contact}</p>
+        <h5>{conf.name} 연락처</h5>
+        <p class="text-gray-700">{conf.contact}</p>
       </div>
     {/if}
   {:else}

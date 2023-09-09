@@ -3,7 +3,7 @@
   import ChevronDown from '../../icons/ChevronDown.svelte';
   import ArrowClockwise from '../../icons/ArrowClockwise.svelte';
   import Button from '../../components/atom/Button.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import NavigationFooter from '../../components/atom/NavigationFooter.svelte';
   import Shell from '../../components/molecule/Shell.svelte';
   import Navigation from '../../components/molecule/Navigation.svelte';

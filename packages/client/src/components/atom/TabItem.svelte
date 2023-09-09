@@ -11,7 +11,7 @@
 
   const ctx = getContext<{
     currentId: Writable<string>;
-    add: ({ id: string, selected: boolean }) => void;
+    add: ({ id, selected }: { id: string, selected: boolean }) => void;
     update: (id: string) => void;
     change: (direction: number) => void;
   }>('TabGroup');

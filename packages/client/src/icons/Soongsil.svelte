@@ -21,13 +21,6 @@
 </script>
 
 <svg
-  on:click
-  on:focus
-  on:mouseover
-  on:mouseenter
-  on:mouseleave
-  on:keyup
-  on:keydown
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 257.67 108.53"
   width="16"

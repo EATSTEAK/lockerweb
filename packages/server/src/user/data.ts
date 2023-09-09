@@ -10,9 +10,9 @@ import type {
   QueryOutput,
   UpdateItemInput,
   WriteRequest,
-} from 'aws-sdk/clients/dynamodb';
-import { dynamoDB, TableName } from '../util/database';
-import { InternalError, NotFoundError } from '../util/error';
+} from 'aws-sdk/clients/dynamodb.ts';
+import { dynamoDB, TableName } from '../util/database.js';
+import { InternalError, NotFoundError } from '../util/error.js';
 import type { AWSError } from 'aws-sdk';
 
 export const fromUserDao = (dao: UserDao): User => ({

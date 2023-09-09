@@ -3,7 +3,7 @@
   import ChevronDown from '../../icons/ChevronDown.svelte';
   import ArrowClockwise from '../../icons/ArrowClockwise.svelte';
   import Button from '../../components/atom/Button.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import NavigationFooter from '../../components/atom/NavigationFooter.svelte';
   import Shell from '../../components/molecule/Shell.svelte';
   import Navigation from '../../components/molecule/Navigation.svelte';
@@ -16,7 +16,6 @@
   import Checkmark from '../../icons/Checkmark.svelte';
   import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 
-  let result: string;
   let id: Promise<SuccessResponse<LogoutSuccessResponse> | ErrorResponse<UnauthorizedError>>;
   let response: SuccessResponse<LogoutSuccessResponse> | ErrorResponse<UnauthorizedError>;
 
@@ -31,7 +30,6 @@
   }
 
   if (browser) {
-    result = new URLSearchParams(window.location.search).get('result');
     id = apiLogout();
     document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
     id.then((data) => {

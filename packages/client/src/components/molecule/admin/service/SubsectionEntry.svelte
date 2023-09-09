@@ -11,7 +11,7 @@
   export let subsection: LockerSubsection;
 
   const dispatch = createEventDispatcher<{
-    remove: {};
+    remove: void;
     change: LockerSubsection;
   }>();
 
@@ -21,6 +21,17 @@
   let rangeEnd = subsection?.range?.[1] ?? 0;
   let department = subsection?.department;
   let invalidText: string;
+
+  function initializeValues() {
+    rangeStart = subsection?.range?.[0] ?? 0;
+    rangeEnd = subsection?.range?.[1] ?? 0;
+    department = subsection?.department;
+    invalidText = undefined;
+  }
+
+  function removeSubsection() {
+    dispatch('remove');
+  }
 
   $: if (subsection) {
     initializeValues();
@@ -43,17 +54,6 @@
     }
   } else {
     invalidText = '값 무시됨: 모든 값이 입력되지 않음';
-  }
-
-  function initializeValues() {
-    rangeStart = subsection?.range?.[0] ?? 0;
-    rangeEnd = subsection?.range?.[1] ?? 0;
-    department = subsection?.department;
-    invalidText = undefined;
-  }
-
-  function removeSubsection() {
-    dispatch('remove', {});
   }
 </script>
 
@@ -86,8 +86,8 @@
           label="대상 학과(부)"
           bind:value={department}
           required>
-          {#each departments as department}
-            <option value={department.id}>{department.name}</option>
+          {#each departments as deptOption}
+            <option value={deptOption.id}>{deptOption.name}</option>
           {/each}
         </Select>
       </div>

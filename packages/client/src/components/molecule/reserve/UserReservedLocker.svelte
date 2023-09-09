@@ -19,9 +19,9 @@
   let claimedUntil: Date;
 
   $: if (reservedLocker) {
-    const [building_, floor_, locker] = reservedLocker.lockerId.split('-');
-    buildingId = building_;
-    floor = floor_;
+    const [building, buildingFloor, locker] = reservedLocker.lockerId.split('-');
+    buildingId = building;
+    floor = buildingFloor;
     section = locker.slice(0, 1);
     lockerNum = parseInt(locker.slice(1));
     if (reservedLocker.claimedUntil) claimedUntil = reservedLocker.claimedUntil as Date;
@@ -36,7 +36,13 @@
     <h5 class="mt-3 text-xl text-blue-500">예약한 사물함</h5>
     <div
       class:pointer-events-none={reservedLocker === null}
+      role="button"
+      tabindex="0"
       on:click={() => {
+        dispatch('unclaim');
+      }}
+      on:keydown
+      on:keyup={() => {
         dispatch('unclaim');
       }}
       class="hover-wrapper relative h-44 w-56 cursor-pointer rounded-2xl">

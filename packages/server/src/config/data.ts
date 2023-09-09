@@ -10,9 +10,9 @@ import type {
   QueryInput,
   QueryOutput,
   UpdateItemInput,
-} from 'aws-sdk/clients/dynamodb';
-import { dynamoDB, TableName } from '../util/database';
-import { NotFoundError } from '../util/error';
+} from 'aws-sdk/clients/dynamodb.ts';
+import { dynamoDB, TableName } from '../util/database.js';
+import { NotFoundError } from '../util/error.js';
 import type { AWSError } from 'aws-sdk';
 
 function fromLockerSubsectionData(data: LockerSubsectionData): LockerSubsection {

@@ -1,5 +1,5 @@
 import type { APIGatewayProxyResult } from 'aws-lambda';
-import { createResponse } from '../common';
+import { createResponse } from '../common.js';
 
 export class LockerError extends Error {
   isLockerError: true;
