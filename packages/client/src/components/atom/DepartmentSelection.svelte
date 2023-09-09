@@ -2,6 +2,17 @@
   import { afterUpdate, getContext, onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
 
+  function timeCalc(activateFrom: Date, activateTo: Date): string {
+    const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
+    const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
+    const fromMinutes = activateFrom ? `${activateFrom.getMinutes()}`.padStart(2, '0') : '';
+    const fromTime = activateFrom ? `${activateFrom.getHours()}:${fromMinutes}` : '';
+    const toMinutes = activateTo ? `${activateTo.getMinutes()}`.padStart(2, '0') : '';
+    const toTime = activateTo ? `${activateTo.getHours()}:${toMinutes}` : '';
+    const isToDateDifferent = toDate && toDate !== fromDate;
+    return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
+  }
+
   export let id: string;
   export let selected: boolean = false;
   export let departmentText: string;
@@ -16,7 +27,7 @@
 
   const ctx = getContext<{
     currentId: Writable<string>;
-    add: ({ id: string, selected: boolean }) => void;
+    add: ({ id, selected }: { id: string, selected: boolean }) => void;
     update: (id: string) => void;
     change: (direction: number) => void;
   }>('DepartmentSelectionGroup');
@@ -36,17 +47,6 @@
   onMount(() => {
     return () => unsubscribe();
   });
-
-  function timeCalc(activateFrom: Date, activateTo: Date): string {
-    const fromDate = activateFrom ? `${activateFrom.getMonth() + 1}/${activateFrom.getDate()}` : '';
-    const toDate = activateTo ? `${activateTo.getMonth() + 1}/${activateTo.getDate()}` : '';
-    const fromMinutes = activateFrom ? `${activateFrom.getMinutes()}`.padStart(2, '0') : '';
-    const fromTime = activateFrom ? `${activateFrom.getHours()}:${fromMinutes}` : '';
-    const toMinutes = activateTo ? `${activateTo.getMinutes()}`.padStart(2, '0') : '';
-    const toTime = activateTo ? `${activateTo.getHours()}:${toMinutes}` : '';
-    const isToDateDifferent = toDate && toDate !== fromDate;
-    return `${fromDate} ${fromTime} ~ ${isToDateDifferent ? `${toDate} ` : ''}${toTime}`;
-  }
 </script>
 
 <button

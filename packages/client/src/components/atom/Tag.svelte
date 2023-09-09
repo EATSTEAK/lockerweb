@@ -4,6 +4,6 @@
   export { clazz as class };
 </script>
 
-<div on:click class="{clazz} inline rounded-xl py-1 px-2 font-semibold" style={`${style || ''}`}>
+<div on:click on:keyup on:keydown role="none" class="{clazz} inline rounded-xl py-1 px-2 font-semibold" style={`${style || ''}`}>
   <slot />
 </div>

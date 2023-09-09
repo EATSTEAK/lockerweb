@@ -17,11 +17,24 @@
   import BookmarkOff from '../../icons/BookmarkOff.svelte';
   import { apiClaimLocker, apiQueryLocker, apiUnclaimLocker } from '$lib/api/locker';
   import SelectedLockerAlert from '../../components/molecule/SelectedLockerAlert.svelte';
-  import { extractLockerInfoFromId } from '$lib/utils';
-  import { getBuildingName } from '$lib/utils.js';
+  import { extractLockerInfoFromId, getBuildingName } from '$lib/utils';
   import Bookmark from '../../icons/Bookmark.svelte';
   import LockerLoadingScreen from '../../components/atom/LockerLoadingScreen.svelte';
   import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
+
+  function getErrorMessage(errorData: LockerError): string {
+    if (errorData.name === 'Blocked') {
+      return '현재는 해당 작업을 수행할 수 없습니다. 이용 시간을 확인하세요.';
+    } else if (errorData.name === 'Forbidden') {
+      return '해당 작업을 수행할 권한이 없습니다. 로그인 여부를 확인하세요.';
+    } else if (errorData.name === 'CantClaim') {
+      return '이미 다른 사람이 예약한 사물함입니다. 다른 사물함을 예약하세요.';
+    } else if (errorData.name === 'CantUnclaim') {
+      return '이 사물함은 반납할 수 없습니다. 이미 반납되었을 수 있습니다.';
+    } else {
+      return '알 수 없는 오류입니다. 관리자에게 문의하세요.';
+    }
+  }
 
   let innerWidth: number = 0;
   let contentWidth: number = 0;
@@ -44,29 +57,6 @@
 
   $: departmentConfigs = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
-  $: if ($user && $user.success) {
-    reservedLocker = getUserReservedLocker($user.result);
-    targetDepartmentId = $user.result.department;
-  } else {
-    reservedLocker = undefined;
-  }
-
-  if (browser && !getAuthorization()) {
-    deleteSessionAndGoIndex();
-  }
-
-  if (browser) {
-    queryLockerData();
-  }
-
-  // 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
-  $: if ($user && $user.success === false && browser) {
-    const error = $user.error;
-    if (error.code === 401 || error.code === 403 || error.code === 404) {
-      deleteSessionAndGoIndex();
-    }
-  }
-
   function deleteSessionAndGoIndex() {
     deleteAuthorization();
     window.location.href = '/';
@@ -86,7 +76,7 @@
     apiQueryLocker()
       .then((res) => {
         if (res.success) {
-          reservedLockerIds = res.result.map((reservedLocker) => reservedLocker.lockerId);
+          reservedLockerIds = res.result.map((reserved) => reserved.lockerId);
         } else {
           if (res.success === false) {
             errorData = res.error;
@@ -161,17 +151,26 @@
       });
   }
 
-  function getErrorMessage(errorData: LockerError): string {
-    if (errorData.name === 'Blocked') {
-      return '현재는 해당 작업을 수행할 수 없습니다. 이용 시간을 확인하세요.';
-    } else if (errorData.name === 'Forbidden') {
-      return '해당 작업을 수행할 권한이 없습니다. 로그인 여부를 확인하세요.';
-    } else if (errorData.name === 'CantClaim') {
-      return '이미 다른 사람이 예약한 사물함입니다. 다른 사물함을 예약하세요.';
-    } else if (errorData.name === 'CantUnclaim') {
-      return '이 사물함은 반납할 수 없습니다. 이미 반납되었을 수 있습니다.';
-    } else {
-      return '알 수 없는 오류입니다. 관리자에게 문의하세요.';
+  $: if ($user && $user.success) {
+    reservedLocker = getUserReservedLocker($user.result);
+    targetDepartmentId = $user.result.department;
+  } else {
+    reservedLocker = undefined;
+  }
+
+  if (browser && !getAuthorization()) {
+    deleteSessionAndGoIndex();
+  }
+
+  if (browser) {
+    queryLockerData();
+  }
+
+  // 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
+  $: if ($user && $user.success === false && browser) {
+    const error = $user.error;
+    if (error.code === 401 || error.code === 403 || error.code === 404) {
+      deleteSessionAndGoIndex();
     }
   }
 </script>
@@ -248,11 +247,11 @@
   primaryText="닫기"
   on:close={() => (contactModalOpen = false)}
   on:click={() => (contactModalOpen = false)}>
-  {#each departmentConfigs as config}
-    {#if config.contact}
+  {#each departmentConfigs as departmentConfig}
+    {#if departmentConfig.contact}
       <div class="my-2 leading-10">
-        <h5>{config.name} 연락처</h5>
-        <p class="text-gray-700">{config.contact}</p>
+        <h5>{departmentConfig.name} 연락처</h5>
+        <p class="text-gray-700">{departmentConfig.contact}</p>
       </div>
     {/if}
   {:else}

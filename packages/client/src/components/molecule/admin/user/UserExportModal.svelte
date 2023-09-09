@@ -49,8 +49,8 @@
       invalidText="이 값은 필수입니다."
       invalidClass="text-red-800">
       <option value="all">전체</option>
-      {#each departments as department}
-        <option value={department.id}>{department.name}</option>
+      {#each departments as dept}
+        <option value={dept.id}>{dept.name}</option>
       {/each}
     </Select>
     <Checkbox

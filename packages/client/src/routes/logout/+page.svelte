@@ -16,7 +16,6 @@
   import Checkmark from '../../icons/Checkmark.svelte';
   import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
 
-  let result: string;
   let id: Promise<SuccessResponse<LogoutSuccessResponse> | ErrorResponse<UnauthorizedError>>;
   let response: SuccessResponse<LogoutSuccessResponse> | ErrorResponse<UnauthorizedError>;
 
@@ -31,7 +30,6 @@
   }
 
   if (browser) {
-    result = new URLSearchParams(window.location.search).get('result');
     id = apiLogout();
     document.cookie = `locker_session=; path=/; domain=${window.location.hostname}; max-age=-9999999; samesite=lax`;
     id.then((data) => {

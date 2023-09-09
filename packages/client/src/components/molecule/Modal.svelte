@@ -59,6 +59,7 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <dialog
   on:click={outClick}
   on:cancel

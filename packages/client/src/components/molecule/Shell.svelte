@@ -7,7 +7,6 @@
   import Divider from '../../components/atom/Divider.svelte';
   import Button from '../atom/Button.svelte';
   import ArrowExportLtr from '../../icons/ArrowExportLtr.svelte';
-  import { onMount } from 'svelte';
   import Modal from './Modal.svelte';
   import { goto } from '$app/navigation';
   import { config, user } from '$lib/store';
@@ -15,44 +14,23 @@
   import { isActivated } from '$lib/utils';
   import Info from '../../icons/Info.svelte';
   import { extractLockerInfoFromId } from '$lib/utils.js';
+  // import { onMount } from 'svelte';
 
+  // let currentTime = new Date();
+  let blockedModalOpen = false;
   let clazz = '';
   export { clazz as class };
-
-  let currentTime = new Date();
+  export let navigationClass = '';
+  export let mainClass = '';
+  export let disableBlock = false;
 
   $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
-  onMount(() => {
-    if (!disableBlock) {
-      const interval = setInterval(() => {
-        currentTime = new Date();
-      }, 1000);
-
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  });
-
-  $: if (
-    $config &&
-    $config.success &&
-    $user &&
-    $user.success &&
-    !disableBlock &&
-    !isReservable($config.result, $user.result)
-  ) {
-    blockedModalOpen = true;
-  }
-
-  let blockedModalOpen = false;
-
-  function isReservable(config: Config[], user: User): boolean {
-    if (!user || user.isAdmin) return true;
+  function isReservable(fullConfig: Config[], target: User): boolean {
+    if (!target || target.isAdmin) return true;
     const userDeptConfig: DepartmentConfig = getDepartmentConfig(
-      config,
-      user.department,
+      fullConfig,
+      target.department,
     ) as DepartmentConfig;
     if (serviceConfig && userDeptConfig) {
       return (
@@ -69,10 +47,28 @@
     return true;
   }
 
-  export let navigationClass = '';
-  export let mainClass = '';
+  // onMount(() => {
+  //   if (!disableBlock) {
+  //     const interval = setInterval(() => {
+  //       currentTime = new Date();
+  //     }, 1000);
 
-  export let disableBlock = false;
+  //     return () => {
+  //       clearInterval(interval);
+  //     };
+  //   }
+  // });
+
+  $: if (
+    $config &&
+    $config.success &&
+    $user &&
+    $user.success &&
+    !disableBlock &&
+    !isReservable($config.result, $user.result)
+  ) {
+    blockedModalOpen = true;
+  }
 </script>
 
 <main class="{clazz} flex flex-col items-stretch lg:flex-row">

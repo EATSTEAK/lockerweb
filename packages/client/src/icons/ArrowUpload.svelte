@@ -21,13 +21,6 @@
 </script>
 
 <svg
-  on:click
-  on:focus
-  on:mouseover
-  on:mouseenter
-  on:mouseleave
-  on:keyup
-  on:keydown
   width="24"
   height="24"
   fill="none"

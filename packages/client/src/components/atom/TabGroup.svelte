@@ -28,7 +28,7 @@
       items = [...items, { id, selected }];
     },
     update: (id: string) => {
-      selectedIndex = items.map(({ id }) => id).indexOf(id);
+      selectedIndex = items.map(({ id: v }) => v).indexOf(id);
     },
     change: (direction: number) => {
       let index = currentIndex + direction;

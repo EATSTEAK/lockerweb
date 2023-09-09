@@ -14,32 +14,18 @@
 
   export let buildings: { [buildingNum: string]: Building } = {};
 
+  let selections: string[] = [];
+
   function formatFloor(floor: string) {
     return floor.length < 2 ? `${floor}F` : floor;
   }
 
-  let selections: string[] = [];
-  let depthData = constructDepthData(buildings);
-
-  $: selectedBuilding = buildings[selections[0]];
-  $: selectedFloor =
-    selections[1] && selections[1] !== 'add' ? selections[1].split('-')[0] : undefined;
-  $: selectedSectionId =
-    selections[1] && selections[1] !== 'add' ? selections[1].split('-')[1] : undefined;
-  $: selectedSection = selectedFloor
-    ? selectedBuilding.lockers[selectedFloor]?.[selectedSectionId]
-    : undefined;
-
-  $: if (buildings) {
-    depthData = constructDepthData(buildings);
-  }
-
-  function constructDepthData(buildings: { [buildingNum: string]: Building }): DepthData[] {
+  function constructDepthData(buildingList: { [buildingNum: string]: Building }): DepthData[] {
     if (selections.length) {
-      if (selections[0] !== 'add' && !buildings[selections[0]]) selections = [];
+      if (selections[0] !== 'add' && !buildingList[selections[0]]) selections = [];
       if (selections[1] && selections[1] !== 'add') {
         const [floor, id] = selections[1].split('-');
-        const sect = buildings[selections[0]];
+        const sect = buildingList[selections[0]];
         if (!sect[floor]?.[id]) selections = [];
       }
     }
@@ -99,6 +85,21 @@
     if (Object.keys(buildings[selections[0]].lockers[floor]).length === 0)
       delete buildings[selections[0]].lockers[floor];
     buildings = { ...buildings };
+  }
+
+  let depthData = constructDepthData(buildings);
+
+  $: selectedBuilding = buildings[selections[0]];
+  $: selectedFloor =
+    selections[1] && selections[1] !== 'add' ? selections[1].split('-')[0] : undefined;
+  $: selectedSectionId =
+    selections[1] && selections[1] !== 'add' ? selections[1].split('-')[1] : undefined;
+  $: selectedSection = selectedFloor
+    ? selectedBuilding.lockers[selectedFloor]?.[selectedSectionId]
+    : undefined;
+
+  $: if (buildings) {
+    depthData = constructDepthData(buildings);
   }
 </script>
 

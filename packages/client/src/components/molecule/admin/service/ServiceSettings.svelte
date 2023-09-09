@@ -12,14 +12,6 @@
   import Warning from '../../../../icons/Warning.svelte';
   import Skeleton from '../../../atom/Skeleton.svelte';
 
-  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
-
-  $: isServiceReady = !!(
-    $config &&
-    $config.success &&
-    $config.result.find((v) => v.id === 'SERVICE')
-  );
-
   let updating = false;
 
   let name: string;
@@ -28,10 +20,13 @@
   let alert: string;
   let buildings: { [buildingNum: string]: Building };
 
-  $: if (serviceConfig) {
-    initializeValues();
-    updating = false;
-  }
+  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
+  $: isServiceReady = !!(
+    $config &&
+    $config.success &&
+    $config.result.find((v) => v.id === 'SERVICE')
+  );
 
   $: newConfig = {
     id: 'SERVICE',
@@ -45,13 +40,6 @@
     ...(alert ? { alert } : serviceConfig?.alert && { alert: null }),
     buildings,
   };
-  $: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
-
-  $: isAppliable = isModified && name;
-
-  $: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
-
-  $: isBuildingModified = !isEqual(serviceConfig?.buildings ?? {}, buildings);
 
   function initializeValues() {
     name = serviceConfig?.name ?? '';
@@ -77,6 +65,21 @@
         updating = false;
       });
   }
+
+  $: if (serviceConfig) {
+    initializeValues();
+    updating = false;
+  }
+
+  $: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
+
+  $: isAppliable = isModified && name;
+
+  $: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
+
+  $: isBuildingModified = !isEqual(serviceConfig?.buildings ?? {}, buildings);
+
+  
 </script>
 
 <div class="my-8 flex flex-col gap-3 lg:mx-8">

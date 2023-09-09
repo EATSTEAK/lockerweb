@@ -16,6 +16,7 @@
   $: selectedSection =
     serviceConfig?.buildings?.[selectedBuildingId]?.lockers?.[selectedFloor]?.[selectedSectionId];
   export let reservedLockerIds: string[];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let errorData: LockerError;
 
   let lockerList: { lockerId: string; disabled: boolean; reserved: boolean }[] = [];
@@ -32,11 +33,7 @@
     );
   }
 
-  $: if (selectedSection && reservedLockerIds) {
-    const sectionRange = getSectionRange(selectedSection.subsections);
-    const lockerCount = sectionRange[1] - sectionRange[0] + 1;
-
-    function constructLockerId(
+  function constructLockerId(
       buildingId: string,
       floor: string,
       section: string,
@@ -45,6 +42,11 @@
       const fixedLengthNum = `${num}`.padStart(3, '0');
       return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
     }
+
+  $: if (selectedSection && reservedLockerIds) {
+    const sectionRange = getSectionRange(selectedSection.subsections);
+    const lockerCount = sectionRange[1] - sectionRange[0] + 1;
+
 
     lockerList = new Array(lockerCount).fill(0).map((_, idx) => {
       const lockerNum = sectionRange[0] + idx;

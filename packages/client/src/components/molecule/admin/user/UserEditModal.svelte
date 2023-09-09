@@ -22,20 +22,20 @@
   let lockerId = targetUser?.lockerId ?? null;
   let claimedUntil = targetUser?.claimedUntil ?? null;
 
+  function initializeValues(target: User) {
+    id = target?.id ?? null;
+    name = target?.name ?? null;
+    department = target?.department ?? null;
+    isAdmin = target?.isAdmin ?? false;
+    lockerId = target?.lockerId ?? null;
+    claimedUntil = target?.claimedUntil ?? null;
+  }
+
   $: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
 
   $: initializeValues(targetUser);
 
   $: title = targetUser ? '사용자 수정' : '사용자 추가';
-
-  function initializeValues(targetUser: User) {
-    id = targetUser?.id ?? null;
-    name = targetUser?.name ?? null;
-    department = targetUser?.department ?? null;
-    isAdmin = targetUser?.isAdmin ?? false;
-    lockerId = targetUser?.lockerId ?? null;
-    claimedUntil = targetUser?.claimedUntil ?? null;
-  }
 
   function closeModal() {
     open = false;
@@ -72,7 +72,7 @@
       bind:value={id}
       label="학번"
       showLabel
-      disabled={!!targetUser ? true : undefined}
+      disabled={targetUser ? true : undefined}
       required={!targetUser}
       invalidClass="text-red-800"
       invalidText={id ? '학번은 숫자로만 이루어져야 합니다.' : '이 값은 필수입니다.'}
@@ -88,8 +88,8 @@
     <div class="department">
       <p class="font-bold">대상 학과(부)</p>
       <Select id={`department`} label="대상 학과(부)" bind:value={department} required>
-        {#each departments as department}
-          <option value={department.id}>{department.name}</option>
+        {#each departments as deptOption}
+          <option value={deptOption.id}>{deptOption.name}</option>
         {/each}
       </Select>
     </div>
