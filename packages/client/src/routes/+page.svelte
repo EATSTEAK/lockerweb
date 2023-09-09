@@ -3,7 +3,7 @@
   import Button from '../components/atom/Button.svelte';
   import Soongsil from '../icons/Soongsil.svelte';
   import LockerStatus from '../components/molecule/login/LockerStatus.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import { getAuthorization } from '$lib/auth';
   import { config } from '$lib/store';
   import type { DepartmentLockerCount, LockerCount } from '$lib/types';

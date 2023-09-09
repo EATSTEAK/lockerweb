@@ -12,14 +12,10 @@ const config = {
   ],
 
   kit: {
-    prerender: {
-      default: true,
-    },
     adapter: adapter({
       pages: 'build',
       assets: 'build',
     }),
-    trailingSlash: 'always',
   },
 };
 

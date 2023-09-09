@@ -11,7 +11,7 @@
   import PeopleSettings from '../../icons/PeopleSettings.svelte';
   import Settings from '../../icons/Settings.svelte';
   import ContentSettings from '../../icons/ContentSettings.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import { deleteAuthorization, getAuthorization } from '$lib/auth';
   import { apiBatchDeleteUser, apiBatchPutUser, apiQueryUser, apiUpdateUser } from '$lib/api/user';
   import LoadingScreen from '../../components/atom/LoadingScreen.svelte';

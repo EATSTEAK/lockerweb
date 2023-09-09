@@ -7,7 +7,7 @@
   import PageTitle from '../../components/atom/PageTitle.svelte';
   import { config, user } from '$lib/store';
   import { getDepartmentConfigs, getServiceConfig } from '$lib/api/config';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import { deleteAuthorization, getAuthorization } from '$lib/auth';
   import Settings from '../../icons/Settings.svelte';
   import Credit from '../../components/molecule/Credit.svelte';
