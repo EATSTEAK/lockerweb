@@ -1,8 +1,8 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import { assertAccessible, revokeToken } from '../data';
-import { createResponse } from '../../common';
-import { responseAsLockerError, UnauthorizedError } from '../../util/error';
-import { verifyPayload } from '../../util/access';
+import { assertAccessible, revokeToken } from '../data.js';
+import { createResponse } from '../../common.js';
+import { responseAsLockerError, UnauthorizedError } from '../../util/error.js';
+import { verifyPayload } from '../../util/access.js';
 
 export const logoutHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');

@@ -1,16 +1,16 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import { createResponse } from '../../common';
-import { claimLocker } from '../data';
-import { getUser } from '../../user/data';
-import { isValidLocker } from '../../util/locker';
-import { queryConfig } from '../../config/data';
+import { createResponse } from '../../common.js';
+import { claimLocker } from '../data.js';
+import { getUser } from '../../user/data.js';
+import { isValidLocker } from '../../util/locker.js';
+import { queryConfig } from '../../config/data.js';
 import {
   BadRequestError,
   errorResponse,
   InternalError,
   responseAsLockerError,
-} from '../../util/error';
-import { getBlockedDepartments, verifyPayload } from '../../util/access';
+} from '../../util/error.js';
+import { getBlockedDepartments, verifyPayload } from '../../util/access.js';
 
 export const claimLockerHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');

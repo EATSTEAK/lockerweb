@@ -4,9 +4,9 @@ import type {
   QueryOutput,
   UpdateItemInput,
   UpdateItemOutput,
-} from 'aws-sdk/clients/dynamodb';
-import { adminId, dynamoDB, TableName } from '../util/database';
-import { BlockedError, CantClaimError, CantUnclaimError, NotFoundError } from '../util/error';
+} from 'aws-sdk/clients/dynamodb.ts';
+import { adminId, dynamoDB, TableName } from '../util/database.js';
+import { BlockedError, CantClaimError, CantUnclaimError, NotFoundError } from '../util/error.js';
 import type { AWSError } from 'aws-sdk';
 
 export const claimLocker = async function (

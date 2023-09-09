@@ -1,9 +1,9 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import { queryLockers } from '../data';
-import { createResponse } from '../../common';
-import { getLockerDepartment } from '../../util/locker';
-import { getConfig } from '../../config/data';
-import { responseAsLockerError } from '../../util/error';
+import { queryLockers } from '../data.js';
+import { createResponse } from '../../common.js';
+import { getLockerDepartment } from '../../util/locker.js';
+import { getConfig } from '../../config/data.js';
+import { responseAsLockerError } from '../../util/error.js';
 
 export const getClaimedLockerCountHandler: APIGatewayProxyHandler = async () => {
   try {

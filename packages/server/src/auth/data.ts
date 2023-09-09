@@ -1,6 +1,6 @@
-import type { GetItemInput, UpdateItemInput, UpdateItemOutput } from 'aws-sdk/clients/dynamodb';
-import { ForbiddenError, UnauthorizedError } from '../util/error';
-import { adminId, dynamoDB, TableName } from '../util/database';
+import type { GetItemInput, UpdateItemInput, UpdateItemOutput } from 'aws-sdk/clients/dynamodb.ts';
+import { ForbiddenError, UnauthorizedError } from '../util/error.js';
+import { adminId, dynamoDB, TableName } from '../util/database.js';
 import type { AWSError } from 'aws-sdk';
 
 /* ISSUE/REVOKE TOKEN */

@@ -1,15 +1,15 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import type { JwtPayload } from 'jsonwebtoken';
-import { createResponse } from '../../../common';
-import { assertAccessible } from '../../../auth/data';
-import { batchDeleteUser } from '../../data';
+import { createResponse } from '../../../common.js';
+import { assertAccessible } from '../../../auth/data.js';
+import { batchDeleteUser } from '../../data.js';
 import {
   BadRequestError,
   errorResponse,
   InternalError,
   responseAsLockerError,
-} from '../../../util/error';
-import { verifyPayload } from '../../../util/access';
+} from '../../../util/error.js';
+import { verifyPayload } from '../../../util/access.js';
 
 export const batchDeleteUserHandler: APIGatewayProxyHandler = async (event) => {
   const token = (event.headers.Authorization ?? '').replace('Bearer ', '');

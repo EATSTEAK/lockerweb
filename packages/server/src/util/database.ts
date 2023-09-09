@@ -1,5 +1,5 @@
-import type { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
-import type { ClientApiVersions } from 'aws-sdk/clients/dynamodb';
+import type { ServiceConfigurationOptions } from 'aws-sdk/lib/service.ts';
+import type { ClientApiVersions } from 'aws-sdk/clients/dynamodb.ts';
 import AWS from 'aws-sdk';
 
 const awsRegion = process.env.AWS_REGION ?? 'ap-southeast-2';
