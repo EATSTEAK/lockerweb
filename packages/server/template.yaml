@@ -18,7 +18,7 @@ Parameters:
     Default: '20211561'
   JwtSecret:
     Type: String
-    Default: 'this-is-sample-secret-key'
+    Default: 'this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase-this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase'
   SsutodaySecret:
     Type: String
     Default: 'this-is-sample-secret-key'

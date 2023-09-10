@@ -1,6 +1,6 @@
 import https from 'https';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { createResponse, JWT_SECRET, SSUTODAY_SECRET } from '../../common.js';
 import {
   BadRequestError,
