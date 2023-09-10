@@ -1,5 +1,5 @@
 import type { JwtPayload } from 'jsonwebtoken';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from './error.js';
 import { JWT_SECRET } from '../common.js';
 
