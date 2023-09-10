@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - dev
+permissions: read-all|write-all
 jobs:
   openapi-gen:
     runs-on: ubuntu-22.04
