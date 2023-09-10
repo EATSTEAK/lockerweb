@@ -8,7 +8,7 @@ on:
 jobs:
   openapi-gen:
     runs-on: ubuntu-22.04
-    permissions: read-all|write-all
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v2
