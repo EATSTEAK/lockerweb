@@ -105,6 +105,7 @@ export function responseAsLockerError(
     return errorResponse(error as LockerError);
   }
   console.error(error);
+  console.debug(`Found non-lockererror: ${JSON.stringify(error)}`);
   if (additionalInfo) fallback.additionalInfo = { ...fallback.additionalInfo, ...additionalInfo };
   return errorResponse(fallback);
 }
