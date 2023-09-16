@@ -19,6 +19,12 @@ Parameters:
   JwtSecret:
     Type: String
     Default: 'this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase-this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase'
+  SsutodayBaseUrl:
+    Type: String
+    Default: 'backend.ssu.today'
+  SsutodaySecret:
+    Type: String
+    Default: 'this-is-sample-secret-key'
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -29,6 +35,8 @@ Globals:
         AWS_SAM_LOCAL: !Ref AwsSamLocal
         ADMIN_ID: !Ref AdminId
         JWT_SECRET: !Ref JwtSecret
+        SSUTODAY_SECRET: !Ref SsutodaySecret
+        SSUTODAY_BASE_URL: !Ref SsutodayBaseUrl
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
@@ -43,10 +51,10 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        AuthSsuLogin:
+        AuthLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/v1/auth/ssu_login
+            Path: /api/v1/auth/login
             Method: options
         AuthLogout:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -128,11 +136,11 @@ Resources:
       CompatibleRuntimes:
         - nodejs18.x
   # Backend Lambda Resources
-  AuthSsuLoginFunction:
+  AuthLoginFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: handler.auth.ssuLoginHandler
+      Handler: handler.auth.loginHandler
       Runtime: nodejs18.x
       Layers:
         - !Ref DependenciesLayer
@@ -143,10 +151,10 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        AuthSsuLogin:
+        AuthLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/v1/auth/ssu_login
+            Path: /api/v1/auth/login
             Method: get
   AuthLogoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
