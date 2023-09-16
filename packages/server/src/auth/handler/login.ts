@@ -97,14 +97,14 @@ async function obtainIdFromSsuToday(result: string) {
   }
 }
 
-function obtainId(result: string, service = "ssu") {
+function obtainId(result: string, service = 'ssu') {
   switch (service) {
     case 'ssutoday':
       return obtainIdFromSsuToday(result);
     case 'ssu':
       return obtainIdFromSsu(result);
     default:
-      throw new BadRequestError("Given service is not supported")
+      throw new BadRequestError('Given service is not supported');
   }
   return obtainIdFromSsu(result);
 }
