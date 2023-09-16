@@ -50,7 +50,7 @@ async function requestSsutoday(result: string): Promise<SsuTodayResponse> {
     method: 'POST',
   };
   return fetch(`https://${SSUTODAY_BASE_URL}/sso/validateToken`, options).then((res) => {
-    return res.json() as unknown as SsuTodayResponse
+    return res.json() as unknown as SsuTodayResponse;
   });
 }
 
