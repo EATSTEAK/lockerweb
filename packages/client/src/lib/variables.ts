@@ -5,5 +5,5 @@ declare global {
 }
 
 export const variables = {
-  baseUrl: 'http://locker.soongsil.media'
+  baseUrl: 'https://locker.soongsil.media'
 };
