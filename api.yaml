@@ -4,7 +4,7 @@ info:
   version: '1.0'
   description: '숭실대학교 IT대학 사물함 시스템의 내부 API 문서입니다.'
 servers:
-  - url: https://locker.soongsil.media/api/v1
+  - url: https://ssuitlocker.com/api/v1
     description: '예상 주소'
   - url: http://localhost:3000/api/v1
     description: '로컬 테스트용 주소'
@@ -18,25 +18,19 @@ tags:
   - name: config
     description: '서비스 설정 정보를 열람/수정합니다.'
 paths:
-  /auth/login:
+  /auth/ssu_login:
     get:
       tags:
         - auth
-      summary: '로그인 엔드포인트'
-      description: '서비스 로그인을 위한 엔드포인트입니다. 숭실대 로그인을 사용할 경우, `https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url=` 링크의 callback_url 을 이 엔드포인트로 지정해 주세요.'
+      summary: '숭실대 통합 로그인 엔드포인트'
+      description: '숭실대 통합 로그인을 위한 엔드포인트입니다. `https://class.ssu.ac.kr/xn-sso/gw.php?login_type=sso&callback_url=` 링크의 callback_url 을 이 엔드포인트로 지정해 주세요.'
       parameters:
         - name: result
           in: query
           required: true
           schema:
             type: string
-          description: '로그인 서비스에서 제공하는 검증 토큰입니다.'
-        - name: service
-          in: query
-          required: false
-          schema:
-            type: string
-          description: '서비스의 종류를 지정합니다. `ssu`, `ssutoday` 가 있으며, 기본값은 `ssu` 입니다.'
+          description: '통합 로그인 서비스에서 제공하는 검증 토큰입니다.'
       responses:
         '200':
           description: OK
@@ -52,18 +46,6 @@ paths:
                     type: boolean
                   result:
                     $ref: '#/components/schemas/AccessTokenInfo'
-        '400':
-          description: '제공하지 않는 서비스에 대한 `service` 값이 전달된 경우'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                success: false
-                error:
-                  code: 400
-                  name: 'BadRequest'
-                  message: 'Provided service is not supported'
         '401':
           description: 'result 값이 전달되지 않을 경우'
           content:
