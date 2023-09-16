@@ -12,6 +12,12 @@ import {
 } from '../../util/error.js';
 import { issueToken } from '../data.js';
 
+type SsuTodayResponse = {
+  statusCode: 'SSU4000' | 'SSU4001' | 'SSU4160' | 'SSU2160';
+  data: null | { studentId: number; name: string; major: 'cse' | 'sw' | 'media' };
+  message: string;
+};
+
 function requestBody(result: string): Promise<string> {
   return new Promise((resolve, reject) => {
     https
@@ -31,38 +37,20 @@ function requestBody(result: string): Promise<string> {
   });
 }
 
-async function requestSsutoday(result: string): Promise<string> {
-  const data = JSON.stringify({
-    ssoToken: result,
-  });
+async function requestSsutoday(result: string): Promise<SsuTodayResponse> {
+  const data = JSON.stringify({ ssoToken: result });
   const options = {
-    hostname: SSUTODAY_BASE_URL,
-    port: 443,
-    path: '/sso/validateToken',
-    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Content-Length': `${data.length}`,
       'X-SSUtoday-Client-Id': 'itlocker',
       'X-SSUtoday-Client-Secret': SSUTODAY_SECRET,
     },
+    body: data,
+    method: 'POST',
   };
-  return new Promise((resolve, reject) => {
-    const req = https
-      .request(options, (res) => {
-        let body = '';
-        res.on('data', function (chunk) {
-          body += chunk;
-        });
-        res.on('end', function () {
-          resolve(body);
-        });
-      })
-      .on('error', (res) => {
-        console.log('Error thrown..');
-        reject(res);
-      });
-    req.write(data);
-    req.end();
+  return fetch(`https://${SSUTODAY_BASE_URL}/sso/validateToken`, options).then((res) => {
+    return res.json() as unknown as SsuTodayResponse
   });
 }
 
@@ -74,14 +62,8 @@ async function obtainIdFromSsu(result: string) {
   return body.substring(body.indexOf('pseudonym_session_unique_id') + 36).split('"')[0];
 }
 
-type SsuTodayResponse = {
-  statusCode: 'SSU4000' | 'SSU4001' | 'SSU4160' | 'SSU2160';
-  data: null | { studentId: number; name: string; major: 'cse' | 'sw' | 'media' };
-  message: string;
-};
-
 async function obtainIdFromSsuToday(result: string) {
-  const response: SsuTodayResponse = JSON.parse(await requestSsutoday(result)) as SsuTodayResponse;
+  const response: SsuTodayResponse = await requestSsutoday(result);
   switch (response.statusCode) {
     case 'SSU4000':
       throw new BadRequestError(response.message);
@@ -92,7 +74,7 @@ async function obtainIdFromSsuToday(result: string) {
     case 'SSU2160':
       return `${response.data?.studentId}`;
     default:
-      console.error(response);
+      console.error(JSON.stringify(response));
       throw new InternalError('Service ssutoday sent incorrect response.');
   }
 }
@@ -106,7 +88,6 @@ function obtainId(result: string, service = 'ssu') {
     default:
       throw new BadRequestError('Given service is not supported');
   }
-  return obtainIdFromSsu(result);
 }
 
 export const loginHandler: APIGatewayProxyHandler = async (event) => {
