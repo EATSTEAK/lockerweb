@@ -19,6 +19,9 @@ Parameters:
   JwtSecret:
     Type: String
     Default: 'this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase-this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase'
+  SsutodayBaseUrl:
+    Type: String
+    Default: 'backend.ssu.today'
   SsutodaySecret:
     Type: String
     Default: 'this-is-sample-secret-key'
@@ -33,6 +36,7 @@ Globals:
         ADMIN_ID: !Ref AdminId
         JWT_SECRET: !Ref JwtSecret
         SSUTODAY_SECRET: !Ref SsutodaySecret
+        SSUTODAY_BASE_URL: !Ref SsutodayBaseUrl
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
