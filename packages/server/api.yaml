@@ -6,6 +6,8 @@ info:
 servers:
   - url: https://locker.soongsil.media/api/v1
     description: '예상 주소'
+  - url: http://localhost:3000/api/v1
+    description: '로컬 테스트용 주소'
 tags:
   - name: auth
     description: '사용자 로그인/로그아웃 플로우를 구성합니다.'
