@@ -1,7 +1,7 @@
 import https from 'https';
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import jwt from 'jsonwebtoken';
-import { createResponse, JWT_SECRET, SSUTODAY_SECRET } from '../../common.js';
+import { createResponse, JWT_SECRET, SSUTODAY_BASE_URL, SSUTODAY_SECRET } from '../../common.js';
 import {
   BadRequestError,
   errorResponse,
@@ -36,7 +36,7 @@ async function requestSsutoday(result: string): Promise<string> {
     ssoToken: result,
   });
   const options = {
-    hostname: 'backend.ssu.today',
+    hostname: SSUTODAY_BASE_URL,
     port: 443,
     path: '/sso/validateToken',
     method: 'POST',
@@ -97,11 +97,14 @@ async function obtainIdFromSsuToday(result: string) {
   }
 }
 
-function obtainId(result: string, service?: string) {
+function obtainId(result: string, service = "ssu") {
   switch (service) {
     case 'ssutoday':
       return obtainIdFromSsuToday(result);
+    case 'ssu':
+      return obtainIdFromSsu(result);
     default:
+      throw new BadRequestError("Given service is not supported")
   }
   return obtainIdFromSsu(result);
 }
