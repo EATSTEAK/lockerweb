@@ -7,7 +7,8 @@
     "build": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client build \" \"pnpm run -r -filter=server build\"",
     "dev": "concurrently -p \"[{name} / {time}]\" -c \"green,blue,magenta\" -n \"client,server(tsc),server\" \"pnpm run -r --filter=client dev \" \"pnpm run -r --filter=server watch\" \"pnpm run -r -filter=server dev\"",
     "delete": "pnpm run --filter=client delete && pnpm run --filter=server delete",
-    "deploy": "node ./scripts/deploy.js"
+    "deploy": "node ./scripts/deploy.js",
+    "cf-invalidate": "node ./scripts/cf-invalidate.js"
   },
   "repository": {
     "type": "git",
