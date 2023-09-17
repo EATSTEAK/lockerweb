@@ -1,10 +1,12 @@
-import type {
-  ExpressionAttributeValueMap,
-  QueryInput,
-  QueryOutput,
-  UpdateItemInput,
-  UpdateItemOutput,
-} from 'aws-sdk/clients/dynamodb.ts';
+import {
+  QueryCommand,
+  type AttributeValue,
+  type QueryInput,
+  type QueryOutput,
+  type UpdateItemInput,
+  type UpdateItemOutput,
+  UpdateItemCommand,
+} from '@aws-sdk/client-dynamodb';
 import { adminId, dynamoDB, TableName } from '../util/database.js';
 import { BlockedError, CantClaimError, CantUnclaimError, NotFoundError } from '../util/error.js';
 import type { AWSError } from 'aws-sdk';
@@ -34,9 +36,10 @@ export const claimLocker = async function (
       ':lockerId': { S: lockerId },
     },
   };
-  const checkRes = await dynamoDB.query(checkReq).promise();
+  const checkCmd = new QueryCommand(checkReq);
+  const checkRes = await dynamoDB.send(checkCmd);
   if (checkRes.Count > 0) throw new CantClaimError('Requested locker is already claimed');
-  let conditionValues: ExpressionAttributeValueMap = {};
+  let conditionValues: Record<string, AttributeValue> = {};
   const blockDeptCondition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
   let condition = '';
   if (isServiceBlocked) {
@@ -68,7 +71,8 @@ export const claimLocker = async function (
   };
   let res: UpdateItemOutput;
   try {
-    res = await dynamoDB.updateItem(req).promise();
+    const cmd = new UpdateItemCommand(req);
+    res = await dynamoDB.send(cmd);
   } catch (e) {
     if ((e as AWSError).name === 'ConditionalCheckFailedException') {
       throw new BlockedError();
@@ -96,7 +100,7 @@ export const unclaimLocker = async function (
   blockedDepartments: Array<string>,
   isServiceBlocked: boolean,
 ): Promise<UnclaimLockerResponse> {
-  let conditionValues: ExpressionAttributeValueMap = {};
+  let conditionValues: Record<string, AttributeValue> = {};
   const blockDeptCondition = blockedDepartments.map((d) => `NOT d = :${d}`).join(' AND ');
   let condition = '';
   if (isServiceBlocked) {
@@ -126,7 +130,8 @@ export const unclaimLocker = async function (
   };
   let res: UpdateItemOutput;
   try {
-    res = await dynamoDB.updateItem(req).promise();
+    const cmd = new UpdateItemCommand(req);
+    res = await dynamoDB.send(cmd);
   } catch (e) {
     if ((e as AWSError).name === 'ConditionalCheckFailedException') {
       throw new BlockedError();
@@ -168,7 +173,8 @@ export const queryLockers = async function (
   };
   let res: QueryOutput;
   try {
-    res = await dynamoDB.query(req).promise();
+    const cmd = new QueryCommand(req);
+    res = await dynamoDB.send(cmd);
   } catch (e) {
     if ((e as AWSError).name === 'ConditionalCheckFailedException') {
       throw new NotFoundError('Cannot find lockers');

@@ -1,16 +1,21 @@
 /* USER CRUD */
 
-import type {
-  BatchWriteItemInput,
-  DeleteItemInput,
-  ExpressionAttributeValueMap,
-  GetItemInput,
-  GetItemOutput,
-  QueryInput,
-  QueryOutput,
-  UpdateItemInput,
-  WriteRequest,
-} from 'aws-sdk/clients/dynamodb.ts';
+import {
+  type BatchWriteItemInput,
+  type DeleteItemInput,
+  type AttributeValue,
+  type GetItemInput,
+  type GetItemOutput,
+  type QueryInput,
+  type QueryOutput,
+  type UpdateItemInput,
+  type WriteRequest,
+  GetItemCommand,
+  QueryCommand,
+  UpdateItemCommand,
+  DeleteItemCommand,
+  BatchWriteItemCommand,
+} from '@aws-sdk/client-dynamodb';
 import { dynamoDB, TableName } from '../util/database.js';
 import { InternalError, NotFoundError } from '../util/error.js';
 import type { AWSError } from 'aws-sdk';
@@ -54,7 +59,8 @@ export const getUser = async function (id: string): Promise<User> {
   };
   let res: GetItemOutput;
   try {
-    res = await dynamoDB.getItem(req).promise();
+    const cmd = new GetItemCommand(req);
+    res = await dynamoDB.send(cmd);
   } catch (e) {
     if ((e as AWSError).name === 'ConditionalCheckFailedException') {
       throw new NotFoundError(`Cannot find user info of id ${id}`);
@@ -85,15 +91,14 @@ export const queryUser = async function (startsWith: string): Promise<Array<User
   let res: QueryOutput;
   do {
     try {
-      res = await dynamoDB
-        .query({
-          ...req,
-          ...(res &&
-            res.LastEvaluatedKey && {
-              ExclusiveStartKey: res.LastEvaluatedKey,
-            }),
-        })
-        .promise();
+      const cmd = new QueryCommand({
+        ...req,
+        ...(res &&
+          res.LastEvaluatedKey && {
+            ExclusiveStartKey: res.LastEvaluatedKey,
+          }),
+      });
+      res = await dynamoDB.send(cmd);
     } catch (e) {
       if ((e as AWSError).name === 'ConditionalCheckFailedException') {
         throw new NotFoundError('Cannot find user info');
@@ -109,7 +114,7 @@ export const queryUser = async function (startsWith: string): Promise<Array<User
 };
 
 export const updateUser = async function (info: UserUpdateRequest): Promise<UserUpdateRequest> {
-  const attributes: ExpressionAttributeValueMap = {};
+  const attributes: Record<string, AttributeValue> = {};
   let updateExp = '';
   let removeExp = '';
   if (info.name) {
@@ -149,7 +154,8 @@ export const updateUser = async function (info: UserUpdateRequest): Promise<User
       ExpressionAttributeValues: attributes,
     }),
   };
-  await dynamoDB.updateItem(req).promise();
+  const cmd = new UpdateItemCommand(req);
+  await dynamoDB.send(cmd);
   return info;
 };
 
@@ -161,7 +167,8 @@ export const deleteUser = async function (id: string): Promise<string> {
       id: { S: id },
     },
   };
-  await dynamoDB.deleteItem(req).promise();
+  const cmd = new DeleteItemCommand(req);
+  await dynamoDB.send(cmd);
   return id;
 };
 export const batchPutUser = async function (infos: Array<User>): Promise<Array<User>> {
@@ -178,7 +185,8 @@ export const batchPutUser = async function (infos: Array<User>): Promise<Array<U
     RequestItems: {},
   };
   req.RequestItems[TableName] = requests;
-  await dynamoDB.batchWriteItem(req).promise();
+  const cmd = new BatchWriteItemCommand(req);
+  await dynamoDB.send(cmd);
   return infos;
 };
 
@@ -201,6 +209,7 @@ export const batchDeleteUser = async function (ids: Array<string>): Promise<Arra
     RequestItems: {},
   };
   req.RequestItems[TableName] = requests;
-  await dynamoDB.batchWriteItem(req).promise();
+  const cmd = new BatchWriteItemCommand(req);
+  await dynamoDB.send(cmd);
   return ids;
 };
