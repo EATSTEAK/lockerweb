@@ -39,14 +39,13 @@
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function resizeCanvas(_entries: ResizeObserverEntry[], _observer: ResizeObserver) {
     if(resizeCallback) clearTimeout(resizeCallback);
-    if(width !== parent.clientWidth || height !== parent.clientHeight) {
+    if(parent && (width !== parent.clientWidth || height !== parent.clientHeight)) {
       width = undefined;
       height = undefined;
       resizeCallback = setTimeout(function() {
         if(parent) {
           width = parent?.clientWidth;
           height = parent?.clientHeight;
-          console.log(`resized: ${width}, ${height}`);
         }
         resizeCallback = undefined;
       }, 500);
@@ -115,7 +114,7 @@
 {#key `${selectedBuildingId}-${selectedFloor}`}
   <div
     bind:this={parent}
-    class="{clazz} relative h-full w-full"
+    class="{clazz} relative h-full w-full cursor-grab"
     in:fly={{ y: 100, duration: 300 }}
     aria-label={alt}>
     {#if !isNaN(width) && !isNaN(height)}
