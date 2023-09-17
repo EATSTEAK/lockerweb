@@ -72,11 +72,6 @@
     };
   }
 
-  $: if(imageRatio && canvasRatio) {
-    defaultScale = canvasRatio >= imageRatio ? height / image.height : width / image.width;
-    zoomScale = defaultScale;
-  }
-
   function zoomMap(e: KonvaWheelEvent): void {
     e.detail.evt.preventDefault();
     let oldScale = zoomScale;
@@ -108,6 +103,15 @@
   function updateStageCoord(e: KonvaDragTransformEvent): void {
       stageX = e.detail.target.x();
       stageY = e.detail.target.y();
+  }
+
+  $: if(imageRatio && canvasRatio) {
+    defaultScale = canvasRatio >= imageRatio ? height / image.height : width / image.width;
+    zoomScale = defaultScale;
+  }
+
+  $: if(selectedBuildingId && selectedFloor) {
+    reset();
   }
 </script>
 
