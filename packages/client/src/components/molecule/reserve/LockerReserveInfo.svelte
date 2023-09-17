@@ -93,7 +93,7 @@
       {#if serviceConfig && selectedBuildingId && selectedFloor}
         <h4 class="text-3xl">배치도</h4>
         <FloorMap
-          class="aspect-4/3 max-h-[50vh] grow rounded-xl"
+          class="max-h-[50vh] aspect-video grow rounded-xl"
           {selectedBuildingId}
           {selectedFloor}
           {selectedSectionId} />
