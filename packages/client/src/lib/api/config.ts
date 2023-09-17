@@ -13,35 +13,35 @@ import {
 const LockerSubsectionSchema = z.object({
   department: z.string(),
   range: z.tuple([z.number(), z.number()]),
-});
+}).strict();
 
 const LockerSectionSchema = z.object({
   subsections: z.array(LockerSubsectionSchema).default([]),
   disabled: z.array(z.number()).default([]),
   height: z.number(),
-});
+}).strict();
 
 const BuildingSchema = z.object({
   id: z.string().regex(/\d{2}/),
   name: z.string(),
   lockers: z.record(z.record(LockerSectionSchema).default({})).default({}),
-});
+}).strict();
 
 export const ConfigSchema = z.object({
   id: z.string().min(1),
   name: z.string(),
   activateFrom: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),
   activateTo: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),
-});
+}).strict();
 
-const DepartmentConfigSchema = ConfigSchema.extend({
+export const DepartmentConfigSchema = ConfigSchema.extend({
   contact: z.string().optional(),
-});
+}).strict();
 
-const ServiceConfigSchema = ConfigSchema.extend({
+export const ServiceConfigSchema = ConfigSchema.extend({
   buildings: z.record(BuildingSchema).default({}).optional(),
   alert: z.string().optional(),
-});
+}).strict();
 
 // const ConfigUpdateRequestSchema = z.object({
 //   id: z.string().min(1),
