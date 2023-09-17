@@ -35,7 +35,7 @@ export const ConfigSchema = z.object({
 }).strict();
 
 export const DepartmentConfigSchema = ConfigSchema.extend({
-  id: z.string().min(1).refine((val) => val.toUpperCase() !== "SERVICE"),
+  id: z.string().min(1).regex(/[a-zA-Z_]+/).refine((val) => val.toUpperCase() !== "SERVICE"),
   contact: z.string().optional(),
 }).strict();
 
