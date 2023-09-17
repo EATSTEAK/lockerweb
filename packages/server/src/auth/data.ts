@@ -1,4 +1,11 @@
-import { UpdateItemCommand, type GetItemInput, type UpdateItemInput, type UpdateItemOutput, GetItemCommand, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
+import {
+  UpdateItemCommand,
+  type GetItemInput,
+  type UpdateItemInput,
+  type UpdateItemOutput,
+  GetItemCommand,
+  ConditionalCheckFailedException,
+} from '@aws-sdk/client-dynamodb';
 import { ForbiddenError, UnauthorizedError } from '../util/error.js';
 import { adminId, dynamoDB, TableName } from '../util/database.js';
 
