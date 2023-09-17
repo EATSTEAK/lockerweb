@@ -69,6 +69,9 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: ^3.13.0
         version: 3.13.0(tailwindcss@3.3.3)
+      konva:
+        specifier: ^9.2.1
+        version: 9.2.1
       postcss:
         specifier: ^8.4.29
         version: 8.4.29
@@ -87,6 +90,9 @@ importers:
       svelte-check:
         specifier: ^3.5.1
         version: 3.5.1(postcss-load-config@4.0.1)(postcss@8.4.29)(svelte@4.2.0)
+      svelte-konva:
+        specifier: ^0.3.1
+        version: 0.3.1(konva@9.2.1)(svelte@4.2.0)
       svelte-preprocess:
         specifier: ^5.0.4
         version: 5.0.4(postcss-load-config@4.0.1)(postcss@8.4.29)(svelte@4.2.0)(typescript@5.2.2)
@@ -3185,6 +3191,10 @@ packages:
     resolution: {integrity: sha512-9pSL5XB4J+ifHP0e0jmmC98OGC1nL8/JjS+fi6mnTlIf//yt/MfVLtKg7S6nCtj/8KTcWX7nRlY0XywoYY1ISQ==}
     dev: true
 
+  /konva@9.2.1:
+    resolution: {integrity: sha512-/D9mZttzjqrkjVPlWyJirdBjFJ/uafrFFR5BD41PsFUX+ctqmoFZjcnjs/ag6YnZNEVsU4/E9dRaH5FH9Y4cLw==}
+    dev: true
+
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -4299,6 +4309,16 @@ packages:
     peerDependencies:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
+      svelte: 4.2.0
+    dev: true
+
+  /svelte-konva@0.3.1(konva@9.2.1)(svelte@4.2.0):
+    resolution: {integrity: sha512-nbQ7S3NhtgrwcEMXS1LSYLbF21BZ6iHN6yvgrYUUnmFdXsSXmAN+I1/Ip7qQ6MQxVTTcSO5lGpGxEuwRg2q3hw==}
+    peerDependencies:
+      konva: 8 - 9
+      svelte: 3 - 4
+    dependencies:
+      konva: 9.2.1
       svelte: 4.2.0
     dev: true
 
