@@ -15,10 +15,10 @@ import {
   UpdateItemCommand,
   DeleteItemCommand,
   BatchWriteItemCommand,
+  ConditionalCheckFailedException,
 } from '@aws-sdk/client-dynamodb';
 import { dynamoDB, TableName } from '../util/database.js';
 import { InternalError, NotFoundError } from '../util/error.js';
-import type { AWSError } from 'aws-sdk';
 
 export const fromUserDao = (dao: UserDao): User => ({
   id: dao.id.S,
@@ -62,7 +62,7 @@ export const getUser = async function (id: string): Promise<User> {
     const cmd = new GetItemCommand(req);
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new NotFoundError(`Cannot find user info of id ${id}`);
     }
     throw e;
@@ -100,7 +100,7 @@ export const queryUser = async function (startsWith: string): Promise<Array<User
       });
       res = await dynamoDB.send(cmd);
     } catch (e) {
-      if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+      if (e instanceof ConditionalCheckFailedException) {
         throw new NotFoundError('Cannot find user info');
       }
       throw e;
