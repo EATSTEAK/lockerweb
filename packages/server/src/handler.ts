@@ -1,4 +1,4 @@
-import { ssuLoginHandler } from './auth/handler/ssu_login.js';
+import { loginHandler } from './auth/handler/login.js';
 import { logoutHandler } from './auth/handler/logout.js';
 import { getConfigHandler } from './config/handler/get.js';
 import { updateConfigHandler } from './config/handler/update.js';
@@ -15,7 +15,7 @@ import { unclaimLockerHandler } from './locker/handler/unclaim.js';
 import { deleteConfigHandler } from './config/handler/delete.js';
 
 export const auth = {
-  ssuLoginHandler,
+  loginHandler,
   logoutHandler,
 };
 
