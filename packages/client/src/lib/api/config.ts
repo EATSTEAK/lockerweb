@@ -10,37 +10,49 @@ import {
   NotFoundErrorSchema,
 } from '$lib/api/schema';
 
-const LockerSubsectionSchema = z.object({
-  department: z.string(),
-  range: z.tuple([z.number(), z.number()]),
-}).strict();
+const LockerSubsectionSchema = z
+  .object({
+    department: z.string(),
+    range: z.tuple([z.number(), z.number()]),
+  })
+  .strict();
 
-const LockerSectionSchema = z.object({
-  subsections: z.array(LockerSubsectionSchema).default([]),
-  disabled: z.array(z.number()).default([]),
-  height: z.number(),
-}).strict();
+const LockerSectionSchema = z
+  .object({
+    subsections: z.array(LockerSubsectionSchema).default([]),
+    disabled: z.array(z.number()).default([]),
+    height: z.number(),
+  })
+  .strict();
 
-const BuildingSchema = z.object({
-  id: z.string().regex(/\d{2}/),
-  name: z.string(),
-  lockers: z.record(z.record(LockerSectionSchema).default({})).default({}),
-}).strict();
+const BuildingSchema = z
+  .object({
+    id: z.string().regex(/\d{2}/),
+    name: z.string(),
+    lockers: z.record(z.record(LockerSectionSchema).default({})).default({}),
+  })
+  .strict();
 
-export const ConfigSchema = z.object({
-  id: z.string().min(1),
-  name: z.string(),
-  activateFrom: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),
-  activateTo: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),
-}).strict();
+export const ConfigSchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string(),
+    activateFrom: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),
+    activateTo: z.optional(z.preprocess((isoDateStr: string) => new Date(isoDateStr), z.date())),
+  })
+  .strict();
 
 export const DepartmentConfigSchema = ConfigSchema.extend({
-  id: z.string().min(1).regex(/[a-zA-Z_]+/).refine((val) => val.toUpperCase() !== "SERVICE"),
+  id: z
+    .string()
+    .min(1)
+    .regex(/[a-zA-Z_]+/)
+    .refine((val) => val.toUpperCase() !== 'SERVICE'),
   contact: z.string().optional(),
 }).strict();
 
 export const ServiceConfigSchema = ConfigSchema.extend({
-  id: z.literal("SERVICE"),
+  id: z.literal('SERVICE'),
   buildings: z.record(BuildingSchema).default({}).optional(),
   alert: z.string().optional(),
 }).strict();
