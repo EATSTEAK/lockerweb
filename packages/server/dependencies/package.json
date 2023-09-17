@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
-    "aws-sdk": "^2.1454.0",
     "jsonwebtoken": "^9.0.2"
   }
 }
