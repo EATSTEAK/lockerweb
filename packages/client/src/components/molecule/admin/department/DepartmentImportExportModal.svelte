@@ -69,7 +69,7 @@
 
 <Modal
   on:close
-  on:click:secondary={checkConfigJSON}
+  on:click:secondary={() => green = checkConfigJSON()}
   on:click={updateConfigs}
   {title}
   bind:open
