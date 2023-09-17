@@ -1,7 +1,6 @@
-import { UpdateItemCommand, type GetItemInput, type UpdateItemInput, type UpdateItemOutput, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { UpdateItemCommand, type GetItemInput, type UpdateItemInput, type UpdateItemOutput, GetItemCommand, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { ForbiddenError, UnauthorizedError } from '../util/error.js';
 import { adminId, dynamoDB, TableName } from '../util/database.js';
-import type { AWSError } from 'aws-sdk';
 
 /* ISSUE/REVOKE TOKEN */
 
@@ -27,7 +26,7 @@ export const revokeToken = async function (
   try {
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new ForbiddenError('Cannot logout when token is invalid');
     }
     throw e;
@@ -66,7 +65,7 @@ export const issueToken = async function (
   try {
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new ForbiddenError('This user cannot login to service');
     }
     throw e;

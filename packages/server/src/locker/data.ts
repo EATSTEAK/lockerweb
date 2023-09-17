@@ -6,10 +6,10 @@ import {
   type UpdateItemInput,
   type UpdateItemOutput,
   UpdateItemCommand,
+  ConditionalCheckFailedException,
 } from '@aws-sdk/client-dynamodb';
 import { adminId, dynamoDB, TableName } from '../util/database.js';
 import { BlockedError, CantClaimError, CantUnclaimError, NotFoundError } from '../util/error.js';
-import type { AWSError } from 'aws-sdk';
 
 export const claimLocker = async function (
   id: string,
@@ -74,7 +74,7 @@ export const claimLocker = async function (
     const cmd = new UpdateItemCommand(req);
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new BlockedError();
     }
     throw e;
@@ -133,7 +133,7 @@ export const unclaimLocker = async function (
     const cmd = new UpdateItemCommand(req);
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new BlockedError();
     }
     throw e;
@@ -176,7 +176,7 @@ export const queryLockers = async function (
     const cmd = new QueryCommand(req);
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new NotFoundError('Cannot find lockers');
     }
     throw e;

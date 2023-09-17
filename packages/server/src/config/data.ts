@@ -13,10 +13,10 @@ import {
   GetItemCommand,
   UpdateItemCommand,
   DeleteItemCommand,
+  ConditionalCheckFailedException,
 } from '@aws-sdk/client-dynamodb';
 import { dynamoDB, TableName } from '../util/database.js';
 import { NotFoundError } from '../util/error.js';
-import type { AWSError } from 'aws-sdk';
 
 function fromLockerSubsectionData(data: LockerSubsectionData): LockerSubsection {
   return {
@@ -190,7 +190,7 @@ export const queryConfig = async function (startsWith = ''): Promise<Array<Confi
       });
       res = await dynamoDB.send(cmd);
     } catch (e) {
-      if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+      if (e instanceof ConditionalCheckFailedException) {
         throw new NotFoundError('Cannot find config');
       }
       throw e;
@@ -220,7 +220,7 @@ export const getConfig = async function (id: string): Promise<Config> {
     const cmd = new GetItemCommand(req);
     res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new NotFoundError(`Cannot find config of id ${id}`);
     }
     throw e;
