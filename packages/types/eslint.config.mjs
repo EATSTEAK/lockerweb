@@ -16,11 +16,13 @@ const compat = new FlatCompat({
 });
 
 export default [
+  {
+    ignores: [
+      'eslint.config.mjs',
+    ]
+  },
   ...fixupConfigRules(
     compat.extends(
-      'plugin:import/recommended',
-      'plugin:import/typescript',
-      'airbnb-typescript/base',
       'plugin:@typescript-eslint/recommended',
       'plugin:@typescript-eslint/recommended-requiring-type-checking',
       'prettier',
@@ -44,10 +46,6 @@ export default [
       parserOptions: {
         project: ['tsconfig.json'],
       },
-    },
-
-    rules: {
-      'import/no-extraneous-dependencies': 'off',
     },
   },
 ];

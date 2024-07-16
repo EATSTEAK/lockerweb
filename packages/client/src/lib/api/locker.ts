@@ -1,5 +1,3 @@
-/* eslint-disable import/extensions */
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { z } from 'zod';
 import { apiRequest } from '$lib/api/api';
 import {

@@ -10,7 +10,7 @@
 
   export let collapsed = true;
 
-  let collapsedState = writable<boolean>(collapsed);
+  const collapsedState = writable<boolean>(collapsed);
 
   export let navClass = '';
   export let headerClass = '';

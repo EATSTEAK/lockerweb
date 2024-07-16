@@ -1,4 +1,4 @@
-import { fixupConfigRules, fixupConfigRules } from '@eslint/compat';
+import {fixupConfigRules, fixupPluginRules} from '@eslint/compat';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import globals from 'globals';
 import tsParser from '@typescript-eslint/parser';
@@ -16,10 +16,16 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...fixupConfigRules(compat.extends('plugin:import/recommended', 'prettier')),
+  {
+    ignores: [
+        '**/*.js',
+        'eslint.config.mjs',
+    ]
+  },
+  ...fixupConfigRules(compat.extends('prettier')),
   {
     plugins: {
-      '@typescript-eslint': typescriptEslint,
+      '@typescript-eslint': fixupPluginRules(typescriptEslint),
     },
 
     languageOptions: {
@@ -35,15 +41,9 @@ export default [
         project: 'tsconfig.json',
       },
     },
-
-    rules: {
-      'import/no-extraneous-dependencies': 'off',
-    },
   },
   ...fixupConfigRules(
     compat.extends(
-      'plugin:import/typescript',
-      'airbnb-typescript/base',
       'plugin:@typescript-eslint/recommended',
       'plugin:@typescript-eslint/recommended-requiring-type-checking',
     ),
@@ -59,7 +59,6 @@ export default [
     },
 
     rules: {
-      'import/no-extraneous-dependencies': 'off',
       '@typescript-eslint/indent': 'off',
     },
   },
