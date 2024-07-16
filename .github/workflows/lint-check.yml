@@ -7,21 +7,21 @@ jobs:
   check:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
           run_install: false
       - name: Get pnpm store directory
         id: pnpm-cache
         run: |
           echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
       - name: Setup pnpm cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -29,12 +29,14 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+      - name: Build client
+        run: pnpm -r --filter=client build
       - name: Run prettier check
         run: pnpm -r prettier
       - name: Run eslint in server and types
         run: pnpm -r --filter=!client lint
       - name: Run eslint on changed files in client
-        uses: tj-actions/eslint-changed-files@v13.3
+        uses: tj-actions/eslint-changed-files@v25
         with:
           path: "./packages/client"
           file_extensions: |
@@ -42,7 +44,5 @@ jobs:
             **/*.svelte
             **/*.js
             **/*.json
-      - name: Build client
-        run: pnpm -r --filter=client build
       - name: Run svelte-check
         run: pnpm -r check

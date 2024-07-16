@@ -9,7 +9,7 @@ const options: DynamoDBClientConfig = {
 };
 
 if (process.env.AWS_SAM_LOCAL) {
-  options.endpoint = 'http://localhost:8000';
+  options.endpoint = 'http://dynamodb:8000';
 }
 
-export const dynamoDB = new DynamoDBClient({});
+export const dynamoDB = new DynamoDBClient(options);

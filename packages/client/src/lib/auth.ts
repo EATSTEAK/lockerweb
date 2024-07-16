@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/extensions
 import { getCookieValue } from '$lib/utils';
 
 export const getAuthorization = () => getCookieValue('locker_session');
