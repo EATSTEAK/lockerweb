@@ -92,7 +92,7 @@
         <Dismiss />
       </button>
     </div>
-    <div class="mx-4 my-2 h-auto grow overflow-y-auto overflow-x-visible">
+    <div class="mx-4 my-2 h-auto grow overflow-y-auto overflow-x-visible p-1">
       <slot />
     </div>
     <div class="mx-4 flex shrink-0 justify-end gap-3 pb-4">
