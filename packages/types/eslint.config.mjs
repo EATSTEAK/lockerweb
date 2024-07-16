@@ -17,9 +17,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: [
-      'eslint.config.mjs',
-    ]
+    ignores: ['eslint.config.mjs'],
   },
   ...fixupConfigRules(
     compat.extends(
