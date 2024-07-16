@@ -1,4 +1,4 @@
-import {fixupConfigRules, fixupPluginRules} from '@eslint/compat';
+import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import globals from 'globals';
 import tsParser from '@typescript-eslint/parser';
@@ -17,10 +17,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: [
-        '**/*.js',
-        'eslint.config.mjs',
-    ]
+    ignores: ['**/*.js', 'eslint.config.mjs'],
   },
   ...fixupConfigRules(compat.extends('prettier')),
   {
