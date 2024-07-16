@@ -29,6 +29,8 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+      - name: Build client
+        run: pnpm -r --filter=client build
       - name: Run prettier check
         run: pnpm -r prettier
       - name: Run eslint in server and types
@@ -42,7 +44,5 @@ jobs:
             **/*.svelte
             **/*.js
             **/*.json
-      - name: Build client
-        run: pnpm -r --filter=client build
       - name: Run svelte-check
         run: pnpm -r check
