@@ -5,8 +5,8 @@
   export let titleOverride: string = null;
 
   const [, , locker] = id.split('-');
-  let section = locker.slice(0, 1);
-  let lockerNum: number = parseInt(locker.slice(1));
+  const section = locker.slice(0, 1);
+  const lockerNum: number = parseInt(locker.slice(1));
   let clazz = '';
   export { clazz as class };
 </script>

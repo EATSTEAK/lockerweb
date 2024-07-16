@@ -11,6 +11,8 @@
   import UpdateScreen from '../../../atom/UpdateScreen.svelte';
   import Warning from '../../../../icons/Warning.svelte';
   import Skeleton from '../../../atom/Skeleton.svelte';
+  import Code from 'src/icons/Code.svelte';
+  import ServiceImportExportModal from './ServiceImportExportModal.svelte';
 
   let updating = false;
 
@@ -19,6 +21,11 @@
   let activateTo: Date;
   let alert: string;
   let buildings: { [buildingNum: string]: Building };
+  let importExportModalOpen = false;
+
+  function openImportExportModal() {
+    importExportModalOpen = true;
+  }
 
   $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
 
@@ -52,6 +59,25 @@
   function updateConfig() {
     updating = true;
     apiUpdateConfig(newConfig)
+      .then((res) => {
+        updating = false;
+        if (res.success) {
+          config.refresh();
+        } else {
+          console.error((res as ErrorResponse<LockerError>).error);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        updating = false;
+      });
+  }
+
+  function importServiceConfig(event: CustomEvent<ServiceConfigResponse>) {
+    importExportModalOpen = false;
+    const importedConfig = event.detail;
+    updating = true;
+    apiUpdateConfig(importedConfig as ServiceConfigUpdateRequest)
       .then((res) => {
         updating = false;
         if (res.success) {
@@ -101,6 +127,12 @@
         isIconRight>
         저장
         <SaveEdit slot="icon" />
+      </Button>
+      <Button
+        on:click={openImportExportModal}
+        class="bg-gray-200 text-gray-700"
+        isIconRight>
+        <Code slot="icon" />
       </Button>
     </div>
   </div>
@@ -193,3 +225,8 @@
     </section>
   {/if}
 </div>
+
+<ServiceImportExportModal
+  bind:open={importExportModalOpen}
+  on:close={() => (importExportModalOpen = false)}
+  on:submit={importServiceConfig} />

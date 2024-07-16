@@ -6,7 +6,7 @@
   let clazz = '';
   export { clazz as class };
 
-  let { collapsed, set } = getContext<{
+  const { collapsed, set } = getContext<{
     collapsed: Writable<boolean>;
     set: (isCollapsed: boolean) => void;
   }>('Sidebar');
