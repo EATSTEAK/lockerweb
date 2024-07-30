@@ -179,6 +179,10 @@ Temporary Items
 
 **/.aws-sam
 
+### Terraform ###
+# Ignore directories for Terraform states
+**/.terraform
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
