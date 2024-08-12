@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   extends: ['plugin:import/recommended', 'eslint:recommended', 'plugin:svelte/recommended'],
   plugins: ['@typescript-eslint', 'tailwindcss'],
-  ignorePatterns: ['*.cjs'],
+  ignorePatterns: ['*.cjs', '*.js'],
   parserOptions: {
     project: 'tsconfig.json',
     sourceType: 'module',
@@ -58,6 +58,9 @@ module.exports = {
       rules: {
         '@typescript-eslint/indent': 'off',
         '@typescript-eslint/no-throw-literal': 'off',
+        'import/no-extraneous-dependencies': 'off',
+        'import/extensions': 'off',
+        'import/no-unresolved': 'off',
       },
     },
   ],
