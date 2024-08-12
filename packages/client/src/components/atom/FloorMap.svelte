@@ -2,8 +2,8 @@
   import { getBuildingName } from '$lib/utils';
   import { config } from '$lib/store';
   import { getServiceConfig } from '$lib/api/config';
-  import { fade, fly } from 'svelte/transition';
-  import { Image, Layer, Stage, type KonvaWheelEvent, type KonvaDragTransformEvent } from 'svelte-konva';
+  import { fly } from 'svelte/transition';
+  import { Image, type KonvaDragTransformEvent, type KonvaWheelEvent, Layer, Stage } from 'svelte-konva';
   import type { Stage as StageHandle } from 'konva/lib/Stage';
   import { onMount } from 'svelte';
   import Skeleton from './Skeleton.svelte';
@@ -20,7 +20,7 @@
 
   let clazz = '';
   export { clazz as class };
-  
+
   let alt = '배치도';
 
   let parent: HTMLDivElement;
@@ -36,14 +36,15 @@
   let defaultScale: number;
 
   $: canvasRatio = width && height && width / height;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function resizeCanvas(_entries: ResizeObserverEntry[], _observer: ResizeObserver) {
-    if(resizeCallback) clearTimeout(resizeCallback);
-    if(parent && (width !== parent.clientWidth || height !== parent.clientHeight)) {
+    if (resizeCallback) clearTimeout(resizeCallback);
+    if (parent && (width !== parent.clientWidth || height !== parent.clientHeight)) {
       width = undefined;
       height = undefined;
       resizeCallback = setTimeout(function() {
-        if(parent) {
+        if (parent) {
           width = parent?.clientWidth;
           height = parent?.clientHeight;
         }
@@ -64,11 +65,11 @@
       serviceConfig.buildings,
       selectedBuildingId,
     )} ${selectedFloor}층 배치도`;
-    const img = document.createElement("img");
+    const img = document.createElement('img');
     img.src = resolveFloorMapSrc(selectedBuildingId, selectedFloor);
     img.onload = () => {
-        image = img;
-        imageRatio = img.width / img.height;
+      image = img;
+      imageRatio = img.width / img.height;
     };
   }
 
@@ -84,14 +85,14 @@
 
     let direction = e.detail.evt.deltaY > 0 ? -1 : 1;
 
-    if (e.detail.evt.ctrlKey) {
-      direction = -direction;
+    let newScale = direction > 0 ? oldScale * 1.1 : oldScale / 1.1;
+    // Allow zoom level from 0.25 to 4.0
+    if (newScale <= 4.0 && newScale >= 0.25) {
+      zoomScale = newScale;
+
+      stageX = pointer.x - mousePointTo.x * zoomScale;
+      stageY = pointer.y - mousePointTo.y * zoomScale;
     }
-
-    zoomScale = direction > 0 ? oldScale * 1.2 : oldScale / 1.2;
-
-    stageX = pointer.x - mousePointTo.x * zoomScale;
-    stageY = pointer.y - mousePointTo.y * zoomScale;
   }
 
   function reset() {
@@ -101,16 +102,16 @@
   }
 
   function updateStageCoord(e: KonvaDragTransformEvent): void {
-      stageX = e.detail.target.x();
-      stageY = e.detail.target.y();
+    stageX = e.detail.target.x();
+    stageY = e.detail.target.y();
   }
 
-  $: if(imageRatio && canvasRatio) {
+  $: if (imageRatio && canvasRatio) {
     defaultScale = canvasRatio >= imageRatio ? height / image.height : width / image.width;
     zoomScale = defaultScale;
   }
 
-  $: if(selectedBuildingId && selectedFloor) {
+  $: if (selectedBuildingId && selectedFloor) {
     reset();
   }
 </script>
@@ -135,13 +136,15 @@
         </Stage>
       {/key}
       {#if stageX !== 0 || stageY !== 0 || zoomScale !== defaultScale}
-        <Button class="absolute bottom-0 right-0 m-4 bg-white" on:click={reset}><ArrowClockwise /></Button>
+        <Button class="absolute bottom-0 right-0 m-4 bg-white" on:click={reset}>
+          <ArrowClockwise />
+        </Button>
       {/if}
       {#if selectedSectionId}
-        <div
-          in:fade
-          style:--locker-img="url('/floorMaps/{selectedBuildingId}/{selectedFloor}/{selectedSectionId}.svg')"
-          class="locker h-full w-full animate-pulse transition-all" />
+        <!--        <div-->
+        <!--          in:fade-->
+        <!--          style:&#45;&#45;locker-img="url('/floorMaps/{selectedBuildingId}/{selectedFloor}/{selectedSectionId}.svg')"-->
+        <!--          class="locker h-full w-full animate-pulse transition-all" />-->
       {/if}
     {:else}
       <Skeleton class="w-full h-full rounded-xl bg-gray-300" />
@@ -150,11 +153,11 @@
 {/key}
 
 <style lang="postcss">
-  /*noinspection CssUnresolvedCustomProperty*/
-  .locker {
-    background-image: var(--locker-img);
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-  }
+    /*noinspection CssUnresolvedCustomProperty*/
+    .locker {
+        background-image: var(--locker-img);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+    }
 </style>
