@@ -8,16 +8,17 @@ on:
 jobs:
   openapi-gen:
     runs-on: ubuntu-22.04
+    permissions: write-all
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Generate Swagger UI
         uses: Legion2/swagger-ui-action@v1
         with:
           output: swagger-ui
           spec-file: "packages/server/api.yaml"
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: swagger-ui

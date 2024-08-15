@@ -2,7 +2,7 @@ version: '3.7'
 services:
   dynamodb:
     image: amazon/dynamodb-local:latest
-    container_name: ssu-it-locker-dynamodb
+    container_name: lockerweb-dynamodb
     ports:
       - '8000:8000'
     command: -jar DynamoDBLocal.jar -sharedDb

@@ -3,6 +3,47 @@
   import SelectionListItem from '../../atom/SelectionListItem.svelte';
   import { getBuildingName } from '$lib/utils';
 
+  function isReservableSection(section: LockerSection, departmentId: string) {
+    return section.subsections.some((subsection) => subsection.department === departmentId);
+  }
+
+  function constructFloorListByDepartment(
+    buildings: { [buildingId: string]: Building },
+    departmentId: string,
+  ): Floor[] {
+    function isReservableFloor(
+      lockers: { [lockerName: string]: LockerSection },
+      deptId: string,
+    ): boolean {
+      return Object.values(lockers).some((section) => isReservableSection(section, deptId));
+    }
+
+    return Object.entries(buildings).flatMap(([id, building]) =>
+      Object.entries(building.lockers)
+        .filter(([, lockers]) => isReservableFloor(lockers, departmentId))
+        .map(([floor,]) => ({
+          buildingId: id,
+          floor,
+        })),
+    );
+  }
+
+  function constructSectionListByDepartmentAndFloor(
+    buildings: { [buildingId: string]: Building },
+    departmentId: string,
+    floor: Floor,
+  ): string[] {
+    const targetFloor = buildings[floor.buildingId].lockers[floor.floor];
+    return Object.entries(targetFloor)
+      .filter(([, section]) => isReservableSection(section, departmentId))
+      .map(([sectionId,]) => sectionId);
+  }
+
+  function getFloorDisplay(floor: string): string {
+    if (!floor.startsWith('B')) return `${floor}F`;
+    return floor;
+  }
+
   export let buildings: {
     [buildingId: string]: Building;
   };
@@ -30,6 +71,9 @@
     }
   }
 
+  let selectedFloorIndex: number;
+  let selectedSectionIndex: number;
+
   $: if (buildings && targetDepartmentId && !floorList.length) {
     floorList = constructFloorListByDepartment(buildings, targetDepartmentId).sort(sortFloor);
   }
@@ -39,50 +83,6 @@
       floor: selectedFloor,
     });
   }
-
-  function getFloorDisplay(floor: string): string {
-    if (!floor.startsWith('B')) return `${floor}F`;
-    return floor;
-  }
-
-  function isReservableSection(section: LockerSection, departmentId: string) {
-    return section.subsections.some((subsection) => subsection.department === departmentId);
-  }
-
-  function constructFloorListByDepartment(
-    buildings: { [buildingId: string]: Building },
-    departmentId: string,
-  ): Floor[] {
-    function isReservableFloor(
-      lockers: { [lockerName: string]: LockerSection },
-      departmentId: string,
-    ): boolean {
-      return Object.values(lockers).some((section) => isReservableSection(section, departmentId));
-    }
-
-    return Object.entries(buildings).flatMap(([id, building]) =>
-      Object.entries(building.lockers)
-        .filter(([, lockers]) => isReservableFloor(lockers, departmentId))
-        .map(([floor, _]) => ({
-          buildingId: id,
-          floor,
-        })),
-    );
-  }
-
-  function constructSectionListByDepartmentAndFloor(
-    buildings: { [buildingId: string]: Building },
-    departmentId: string,
-    floor: Floor,
-  ): string[] {
-    const targetFloor = buildings[floor.buildingId].lockers[floor.floor];
-    return Object.entries(targetFloor)
-      .filter(([, section]) => isReservableSection(section, departmentId))
-      .map(([sectionId, _]) => sectionId);
-  }
-
-  let selectedFloorIndex: number;
-  let selectedSectionIndex: number;
 
   $: if (typeof selectedFloorIndex === 'number') {
     selectedBuildingId = floorList[selectedFloorIndex].buildingId;

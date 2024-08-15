@@ -11,14 +11,8 @@
   import UpdateScreen from '../../../atom/UpdateScreen.svelte';
   import Warning from '../../../../icons/Warning.svelte';
   import Skeleton from '../../../atom/Skeleton.svelte';
-
-  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
-
-  $: isServiceReady = !!(
-    $config &&
-    $config.success &&
-    $config.result.find((v) => v.id === 'SERVICE')
-  );
+  import Code from 'src/icons/Code.svelte';
+  import ServiceImportExportModal from './ServiceImportExportModal.svelte';
 
   let updating = false;
 
@@ -27,11 +21,19 @@
   let activateTo: Date;
   let alert: string;
   let buildings: { [buildingNum: string]: Building };
+  let importExportModalOpen = false;
 
-  $: if (serviceConfig) {
-    initializeValues();
-    updating = false;
+  function openImportExportModal() {
+    importExportModalOpen = true;
   }
+
+  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+
+  $: isServiceReady = !!(
+    $config &&
+    $config.success &&
+    $config.result.find((v) => v.id === 'SERVICE')
+  );
 
   $: newConfig = {
     id: 'SERVICE',
@@ -45,13 +47,6 @@
     ...(alert ? { alert } : serviceConfig?.alert && { alert: null }),
     buildings,
   };
-  $: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
-
-  $: isAppliable = isModified && name;
-
-  $: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
-
-  $: isBuildingModified = !isEqual(serviceConfig?.buildings ?? {}, buildings);
 
   function initializeValues() {
     name = serviceConfig?.name ?? '';
@@ -77,6 +72,40 @@
         updating = false;
       });
   }
+
+  function importServiceConfig(event: CustomEvent<ServiceConfigResponse>) {
+    importExportModalOpen = false;
+    const importedConfig = event.detail;
+    updating = true;
+    apiUpdateConfig(importedConfig as ServiceConfigUpdateRequest)
+      .then((res) => {
+        updating = false;
+        if (res.success) {
+          config.refresh();
+        } else {
+          console.error((res as ErrorResponse<LockerError>).error);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        updating = false;
+      });
+  }
+
+  $: if (serviceConfig) {
+    initializeValues();
+    updating = false;
+  }
+
+  $: isModified = !!serviceConfig && !isEqual(serviceConfig, newConfig);
+
+  $: isAppliable = isModified && name;
+
+  $: isSaveDisabled = !isModified || !isAppliable ? true : undefined;
+
+  $: isBuildingModified = !isEqual(serviceConfig?.buildings ?? {}, buildings);
+
+  
 </script>
 
 <div class="my-8 flex flex-col gap-3 lg:mx-8">
@@ -98,6 +127,12 @@
         isIconRight>
         저장
         <SaveEdit slot="icon" />
+      </Button>
+      <Button
+        on:click={openImportExportModal}
+        class="bg-gray-200 text-gray-700"
+        isIconRight>
+        <Code slot="icon" />
       </Button>
     </div>
   </div>
@@ -190,3 +225,8 @@
     </section>
   {/if}
 </div>
+
+<ServiceImportExportModal
+  bind:open={importExportModalOpen}
+  on:close={() => (importExportModalOpen = false)}
+  on:submit={importServiceConfig} />

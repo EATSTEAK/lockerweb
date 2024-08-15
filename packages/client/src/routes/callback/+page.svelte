@@ -3,14 +3,14 @@
   import ChevronDown from '../../icons/ChevronDown.svelte';
   import ArrowClockwise from '../../icons/ArrowClockwise.svelte';
   import Button from '../../components/atom/Button.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import NavigationFooter from '../../components/atom/NavigationFooter.svelte';
   import Shell from '../../components/molecule/Shell.svelte';
   import Navigation from '../../components/molecule/Navigation.svelte';
   import NavigationContent from '../../components/atom/NavigationContent.svelte';
   import PageTitle from '../../components/atom/PageTitle.svelte';
   import type { LoginSuccessResponse } from '$lib/api/auth';
-  import { apiSsuLogin } from '$lib/api/auth';
+  import { apiLogin } from '$lib/api/auth';
   import ErrorCircle from '../../icons/ErrorCircle.svelte';
   import Checkmark from '../../icons/Checkmark.svelte';
   import ErrorScreen from '../../components/atom/ErrorScreen.svelte';
@@ -18,12 +18,13 @@
   import { user } from '$lib/store';
 
   let result: string;
+  let service: string;
   let response:
     | SuccessResponse<LoginSuccessResponse>
-    | ErrorResponse<UnauthorizedError | BlockedError | ForbiddenError>;
+    | ErrorResponse<BadRequestError | UnauthorizedError | BlockedError | ForbiddenError>;
   let id: Promise<
     | SuccessResponse<LoginSuccessResponse>
-    | ErrorResponse<UnauthorizedError | BlockedError | ForbiddenError>
+    | ErrorResponse<BadRequestError | UnauthorizedError | BlockedError | ForbiddenError>
   >;
 
   let errorMessage: string;
@@ -41,8 +42,10 @@
   }
 
   if (browser) {
-    result = new URLSearchParams(window.location.search).get('result');
-    id = apiSsuLogin(result);
+    const params = new URLSearchParams(window.location.search);
+    result = params.get('result');
+    service = params.has('service') ? params.get('service') : null;
+    if(service) id = apiLogin(result, service); else id = apiLogin(result);
     id.then((data) => {
       response = data;
       if (data.success) {

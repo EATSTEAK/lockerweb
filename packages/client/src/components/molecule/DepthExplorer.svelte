@@ -54,7 +54,13 @@
 <div class={clazz}>
   {#each currentDepth[1] as option}
     <div
+      role="button"
+      tabindex="0"
       on:click={() => {
+        select(currentDepth[0], option.id);
+      }}
+      on:keydown
+      on:keyup={() => {
         select(currentDepth[0], option.id);
       }}>
       <slot

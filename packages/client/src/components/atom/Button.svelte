@@ -20,8 +20,8 @@
   on:mouseenter
   on:mouseleave
   on:keydown
-  on:keypress
   on:keyup
+  role="button"
   {href}
   tabindex="0"
   class="{clazz} flex flex-shrink-0

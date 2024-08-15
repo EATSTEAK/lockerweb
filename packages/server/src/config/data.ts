@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // noinspection JSUnusedLocalSymbols
 
-import type {
-  DeleteItemInput,
-  ExpressionAttributeNameMap,
-  ExpressionAttributeValueMap,
-  GetItemInput,
-  GetItemOutput,
-  QueryInput,
-  QueryOutput,
-  UpdateItemInput,
-} from 'aws-sdk/clients/dynamodb';
-import { dynamoDB, TableName } from '../util/database';
-import { NotFoundError } from '../util/error';
-import type { AWSError } from 'aws-sdk';
+import {
+  QueryCommand,
+  type AttributeValue,
+  type DeleteItemInput,
+  type GetItemInput,
+  type GetItemOutput,
+  type QueryInput,
+  type QueryOutput,
+  type UpdateItemInput,
+  GetItemCommand,
+  UpdateItemCommand,
+  DeleteItemCommand,
+  ConditionalCheckFailedException,
+} from '@aws-sdk/client-dynamodb';
+import { dynamoDB, TableName } from '../util/database.js';
+import { NotFoundError } from '../util/error.js';
 
 function fromLockerSubsectionData(data: LockerSubsectionData): LockerSubsection {
   return {
@@ -178,17 +181,16 @@ export const queryConfig = async function (startsWith = ''): Promise<Array<Confi
   let res: QueryOutput;
   do {
     try {
-      res = await dynamoDB
-        .query({
-          ...req,
-          ...(res &&
-            res.LastEvaluatedKey && {
-              ExclusiveStartKey: res.LastEvaluatedKey,
-            }),
-        })
-        .promise();
+      const cmd = new QueryCommand({
+        ...req,
+        ...(res &&
+          res.LastEvaluatedKey && {
+            ExclusiveStartKey: res.LastEvaluatedKey,
+          }),
+      });
+      res = await dynamoDB.send(cmd);
     } catch (e) {
-      if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+      if (e instanceof ConditionalCheckFailedException) {
         throw new NotFoundError('Cannot find config');
       }
       throw e;
@@ -215,9 +217,10 @@ export const getConfig = async function (id: string): Promise<Config> {
   };
   let res: GetItemOutput;
   try {
-    res = await dynamoDB.getItem(req).promise();
+    const cmd = new GetItemCommand(req);
+    res = await dynamoDB.send(cmd);
   } catch (e) {
-    if ((e as AWSError).name === 'ConditionalCheckFailedException') {
+    if (e instanceof ConditionalCheckFailedException) {
       throw new NotFoundError(`Cannot find config of id ${id}`);
     }
     throw e;
@@ -232,8 +235,8 @@ export const getConfig = async function (id: string): Promise<Config> {
 };
 
 export const updateConfig = async function (config: ConfigUpdateRequest) {
-  const attributes: ExpressionAttributeValueMap = {};
-  const attributeNames: ExpressionAttributeNameMap = {};
+  const attributes: Record<string, AttributeValue> = {};
+  const attributeNames: Record<string, string> = {};
   let updateExp = '';
   let removeExp = '';
   if (config.name) {
@@ -298,7 +301,8 @@ export const updateConfig = async function (config: ConfigUpdateRequest) {
       ExpressionAttributeValues: attributes,
     }),
   };
-  await dynamoDB.updateItem(req).promise();
+  const cmd = new UpdateItemCommand(req);
+  await dynamoDB.send(cmd);
   return config;
 };
 
@@ -310,6 +314,7 @@ export const deleteConfig = async function (id: string): Promise<string> {
       id: { S: id },
     },
   };
-  await dynamoDB.deleteItem(req).promise();
+  const cmd = new DeleteItemCommand(req);
+  await dynamoDB.send(cmd);
   return id;
 };

@@ -18,6 +18,12 @@ Parameters:
     Default: '20211561'
   JwtSecret:
     Type: String
+    Default: 'this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase-this-is-sample-key-of-ssu-lockerweb-service-please-change-it-before-using-in-production-if-you-wont-change-you-made-a-terrible-security-mistakes-so-please-change-it-right-now-if-you-see-this-passphase'
+  SsutodayBaseUrl:
+    Type: String
+    Default: 'backend.ssu.today'
+  SsutodaySecret:
+    Type: String
     Default: 'this-is-sample-secret-key'
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -29,6 +35,8 @@ Globals:
         AWS_SAM_LOCAL: !Ref AwsSamLocal
         ADMIN_ID: !Ref AdminId
         JWT_SECRET: !Ref JwtSecret
+        SSUTODAY_SECRET: !Ref SsutodaySecret
+        SSUTODAY_BASE_URL: !Ref SsutodayBaseUrl
 Conditions:
   IsSamLocal: !Equals
     - !Ref AwsSamLocal
@@ -39,14 +47,14 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: common.localCorsHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Architectures:
         - x86_64
       Events:
-        AuthSsuLogin:
+        AuthLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/v1/auth/ssu_login
+            Path: /api/v1/auth/login
             Method: options
         AuthLogout:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -121,19 +129,19 @@ Resources:
   DependenciesLayer:
     Type: AWS::Serverless::LayerVersion
     Metadata:
-      BuildMethod: nodejs14.x
+      BuildMethod: nodejs20.x
     Properties:
       LayerName: 'dependencies'
       ContentUri: dependencies/
       CompatibleRuntimes:
-        - nodejs14.x
+        - nodejs20.x
   # Backend Lambda Resources
-  AuthSsuLoginFunction:
+  AuthLoginFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
-      Handler: handler.auth.ssuLoginHandler
-      Runtime: nodejs14.x
+      Handler: handler.auth.loginHandler
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -143,17 +151,17 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        AuthSsuLogin:
+        AuthLogin:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /api/v1/auth/ssu_login
+            Path: /api/v1/auth/login
             Method: get
   AuthLogoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./dist
       Handler: handler.auth.logoutHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -173,7 +181,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.config.getConfigHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -193,7 +201,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.config.updateConfigHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -213,7 +221,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.config.deleteConfigHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -233,7 +241,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.claimLockerHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -253,7 +261,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.unclaimLockerHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -273,7 +281,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.getClaimedLockerCountHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -293,7 +301,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.locker.queryClaimedLockersHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -313,7 +321,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.getUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -333,7 +341,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.queryUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -353,7 +361,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.updateUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -373,7 +381,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.deleteUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -393,7 +401,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.batchDeleteUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:
@@ -413,7 +421,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: handler.user.batchPutUserHandler
-      Runtime: nodejs14.x
+      Runtime: nodejs20.x
       Layers:
         - !Ref DependenciesLayer
       Policies:

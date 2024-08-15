@@ -14,9 +14,24 @@
 
   const dispatch = createEventDispatcher<{
     edit: User;
-    batchDelete: {};
-    batchUnclaim: {};
+    batchDelete: void;
+    batchUnclaim: void;
   }>();
+
+  function getFilteredUsers(filter: string, users: User[]) {
+    if (!filter) return users;
+    return users.filter(
+      (user) =>
+        user.id.includes(filter) ||
+        user.name.includes(filter) ||
+        (user.lockerId && user.lockerId.includes(filter)),
+    );
+  }
+
+  function getShownUsers(currentPage: number, itemsPerPage: number, users: Array<User>) {
+    const start = currentPage * itemsPerPage;
+    return users.slice(start, start + itemsPerPage);
+  }
 
   export let users: Array<User>;
 
@@ -31,22 +46,6 @@
   $: filteredUsers = users ? getFilteredUsers(filter, users) : [];
 
   $: shownUsers = users ? getShownUsers(currentPage, itemsPerPage, filteredUsers) : [];
-
-  $: if (itemsPerPage && filteredUsers) {
-    if (currentPage * itemsPerPage > filteredUsers.length) currentPage = 0;
-  }
-
-  $: if (selected.every((id) => shownUsers.includes(id))) {
-    selected = [];
-  }
-
-  $: if (selectAll) {
-    selected = [...shownUsers.map((user) => user.id)];
-  } else if (selectAll === false) {
-    selected = [];
-  }
-
-  $: if (selected.length >= 0) updateSelectAll();
 
   function editUser(user: User) {
     dispatch('edit', user);
@@ -69,20 +68,21 @@
     }
   }
 
-  function getFilteredUsers(filter: string, users: User[]) {
-    if (!filter) users;
-    return users.filter(
-      (user) =>
-        user.id.includes(filter) ||
-        user.name.includes(filter) ||
-        (user.lockerId && user.lockerId.includes(filter)),
-    );
+  $: if (itemsPerPage && filteredUsers) {
+    if (currentPage * itemsPerPage > filteredUsers.length) currentPage = 0;
   }
 
-  function getShownUsers(currentPage: number, itemsPerPage: number, users: Array<User>) {
-    const start = currentPage * itemsPerPage;
-    return users.slice(start, start + itemsPerPage);
+  $: if (selected.every((id) => shownUsers.includes(id))) {
+    selected = [];
   }
+
+  $: if (selectAll) {
+    selected = [...shownUsers.map((user) => user.id)];
+  } else if (selectAll === false) {
+    selected = [];
+  }
+
+  $: if (selected.length >= 0) updateSelectAll();
 </script>
 
 <div class="flex h-full flex-col">
@@ -96,13 +96,13 @@
       <div class="selections-text">{selected.length}개 선택됨</div>
       <div class="-m-2 flex">
         <button
-          on:click={() => dispatch('batchUnclaim', {})}
+          on:click={() => dispatch('batchUnclaim')}
           class="flex gap-1 rounded-xl bg-primary-800 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75">
           <BookmarkOff />
           예약 일괄 취소
         </button>
         <button
-          on:click={() => dispatch('batchDelete', {})}
+          on:click={() => dispatch('batchDelete')}
           class="flex gap-1 rounded-xl bg-primary-800 p-2 hover:brightness-95 focus:brightness-90 active:brightness-75">
           <Delete />
           삭제

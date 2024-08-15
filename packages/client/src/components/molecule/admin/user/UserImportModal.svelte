@@ -24,6 +24,7 @@
 
   let workbook: WorkBook;
   let data: unknown[];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let error: Error;
   let userConversion = null;
   let nameConversion = null;
@@ -108,8 +109,8 @@
       required
       invalidText="이 값은 필수입니다."
       invalidClass="text-red-800">
-      {#each departments as department}
-        <option value={department.id}>{department.name}</option>
+      {#each departments as deptOption}
+        <option value={deptOption.id}>{deptOption.name}</option>
       {/each}
     </Select>
     <FileInput

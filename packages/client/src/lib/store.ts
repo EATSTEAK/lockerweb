@@ -1,14 +1,9 @@
-/* eslint-disable import/extensions */
 import type { Readable, StartStopNotifier } from 'svelte/store';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { writable } from 'svelte/store';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { browser, prerendering } from '$app/env';
+import { browser, building, dev } from '$app/environment';
 import { getAuthorization } from '$lib/auth';
 import { apiGetConfig, ConfigSchema } from '$lib/api/config';
 import { apiGetUser } from '$lib/api/user';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { z } from 'zod';
 
 type ConfigStore = {
@@ -85,7 +80,7 @@ async function refreshConfig(
       };
     }
   }
-  if (!prerendering) throw new Error('This function must be ran in browser');
+  if (!building && !dev) throw new Error('This function must be ran in browser');
 }
 
 async function refreshUser(): Promise<SuccessResponse<User> | ErrorResponse<LockerError>> {

@@ -26,9 +26,16 @@
     'user:batchDelete': string[];
   }>();
 
-  export let users: Array<User>;
-
   $: departments = $config && $config.success ? getDepartmentConfigs($config.result) : [];
+
+  function getUsersByDepartment(department: string, users: Array<User>) {
+    if (departments.map((dept) => dept.id).includes(department)) {
+      return users.filter((user) => user.department === department);
+    }
+    return users.filter((user) => !departments.map((dept) => dept.id).includes(user.department));
+  }
+
+  export let users: Array<User>;
 
   let selectedTab: string;
 
@@ -58,14 +65,7 @@
     editTargetUser = user;
     userEditModalOpen = true;
   }
-
-  function getUsersByDepartment(department: string, users: Array<User>) {
-    if (departments.map((dept) => dept.id).includes(department)) {
-      return users.filter((user) => user.department === department);
-    }
-    return users.filter((user) => !departments.map((dept) => dept.id).includes(user.department));
-  }
-
+  
   function updateUser(evt: CustomEvent<UserUpdateRequest>) {
     userEditModalOpen = false;
     editTargetUser = null;
@@ -122,6 +122,21 @@
     hour12: false,
   });
 
+  function generate(readableUsers: ReadableUser[]) {
+    const workBook = utils.book_new();
+    const workSheet = utils.json_to_sheet(readableUsers);
+    utils.book_append_sheet(workBook, workSheet, '예약자 목록');
+    const xlsx = writeXLSX(workBook, {
+      type: 'array',
+      bookType: 'xlsx',
+    });
+    const blob = URL.createObjectURL(new Blob([xlsx], { type: 'application/octet-stream' }));
+    const link = document.createElement('a');
+    link.href = blob;
+    link.download = `예약자_목록_${dateFormatter.format(new Date())}.xlsx`.replace(' ', '_');
+    link.click();
+  }
+
   function exportUser(evt: CustomEvent<{ department: string; reservedOnly: boolean }>) {
     const { department, reservedOnly } = evt.detail;
     userExportModalOpen = false;
@@ -142,21 +157,6 @@
         ...(u.claimedUntil && { '사용 기한': dateFormatter.format(u.claimedUntil as Date) }),
       }));
     generate(readableUsers);
-  }
-
-  function generate(readableUsers: ReadableUser[]) {
-    const workBook = utils.book_new();
-    const workSheet = utils.json_to_sheet(readableUsers);
-    utils.book_append_sheet(workBook, workSheet, '예약자 목록');
-    const xlsx = writeXLSX(workBook, {
-      type: 'array',
-      bookType: 'xlsx',
-    });
-    const blob = URL.createObjectURL(new Blob([xlsx], { type: 'application/octet-stream' }));
-    const link = document.createElement('a');
-    link.href = blob;
-    link.download = `예약자_목록_${dateFormatter.format(new Date())}.xlsx`.replace(' ', '_');
-    link.click();
   }
 </script>
 

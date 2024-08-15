@@ -10,7 +10,7 @@
 
   export let collapsed = true;
 
-  let collapsedState = writable<boolean>(collapsed);
+  const collapsedState = writable<boolean>(collapsed);
 
   export let navClass = '';
   export let headerClass = '';
@@ -21,6 +21,11 @@
   let yDirection: number = 0;
   let hideNavbar = false;
 
+  function calculateYDirection(yDiff: number) {
+    if ((yDiff > 0 && yDirection < 0) || (yDiff < 0 && yDirection > 0)) yDirection = 0;
+    else yDirection += yDiff;
+  }
+
   $: if (collapsed !== $collapsedState) {
     collapsedState.set(collapsed);
   }
@@ -29,11 +34,6 @@
     const yDiff = y - oldY;
     oldY = y;
     calculateYDirection(yDiff);
-  }
-
-  function calculateYDirection(yDiff: number) {
-    if ((yDiff > 0 && yDirection < 0) || (yDiff < 0 && yDirection > 0)) yDirection = 0;
-    else yDirection += yDiff;
   }
 
   $: isOnTop = y <= 80;

@@ -11,7 +11,7 @@
   import PeopleSettings from '../../icons/PeopleSettings.svelte';
   import Settings from '../../icons/Settings.svelte';
   import ContentSettings from '../../icons/ContentSettings.svelte';
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import { deleteAuthorization, getAuthorization } from '$lib/auth';
   import { apiBatchDeleteUser, apiBatchPutUser, apiQueryUser, apiUpdateUser } from '$lib/api/user';
   import LoadingScreen from '../../components/atom/LoadingScreen.svelte';
@@ -28,22 +28,6 @@
   let userRequestError = null;
 
   let userPromise: Promise<Array<User>>;
-
-  if (browser) {
-    queryUser();
-  }
-
-  if (browser && !getAuthorization()) {
-    deleteSessionAndGoIndex();
-  }
-
-  // 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
-  $: if ($user && $user.success === false && browser) {
-    const error = $user.error;
-    if (error.code === 401 || error.code === 403 || error.code === 404) {
-      deleteSessionAndGoIndex();
-    }
-  }
 
   let navigationCollapsed = true;
   let innerWidth = 0;
@@ -119,6 +103,22 @@
         userRequestError = err;
       });
   }
+
+  if (browser) {
+    queryUser();
+  }
+
+  if (browser && !getAuthorization()) {
+    deleteSessionAndGoIndex();
+  }
+
+  // 사용자의 세션이 잘못되었을 경우, 세션 삭제 후 메인 페이지로 이동
+  $: if ($user && $user.success === false && browser) {
+    const error = $user.error;
+    if (error.code === 401 || error.code === 403 || error.code === 404) {
+      deleteSessionAndGoIndex();
+    }
+  }
 </script>
 
 <PageTitle name="서비스 관리" />
@@ -188,6 +188,7 @@
             updating={userUpdating}
             error={userRequestError}
             {users} />
+        <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
         {:catch err}
           <div class="my-8 lg:mx-8 flex flex-col gap-3 w-auto items-stretch">
             <div class="mx-6 lg:mx-0 flex flex-wrap w-full">

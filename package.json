@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "build": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client build \" \"pnpm run -r -filter=server build\"",
-    "dev": "concurrently -p \"[{name} / {time}]\" -c \"green,magenta\" -n \"client,server\" \"pnpm run -r --filter=client dev \" \"pnpm run -r -filter=server dev\"",
+    "dev": "concurrently -p \"[{name} / {time}]\" -c \"green,blue,magenta\" -n \"client,server(tsc),server\" \"pnpm run -r --filter=client dev \" \"pnpm run -r --filter=server watch\" \"pnpm run -r -filter=server dev\"",
     "delete": "pnpm run --filter=client delete && pnpm run --filter=server delete",
-    "deploy": "node ./scripts/deploy.js"
+    "deploy": "node ./scripts/deploy.js",
+    "cf-invalidate": "node ./scripts/cf-invalidate.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,7 @@
   },
   "homepage": "https://github.com/EATSTEAK/lockerweb",
   "devDependencies": {
-    "concurrently": "^7.3.0",
-    "lint-staged": "^13.0.3"
+    "concurrently": "^8.2.1",
+    "lint-staged": "^15.2.8"
   }
 }

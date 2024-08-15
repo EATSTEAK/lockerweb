@@ -1,21 +1,21 @@
-import { ssuLoginHandler } from './auth/handler/ssu_login';
-import { logoutHandler } from './auth/handler/logout';
-import { getConfigHandler } from './config/handler/get';
-import { updateConfigHandler } from './config/handler/update';
-import { claimLockerHandler } from './locker/handler/claim';
-import { getClaimedLockerCountHandler } from './locker/handler/count';
-import { queryClaimedLockersHandler } from './locker/handler/query';
-import { deleteUserHandler } from './user/handler/delete';
-import { getUserHandler } from './user/handler/get';
-import { queryUserHandler } from './user/handler/query';
-import { updateUserHandler } from './user/handler/update';
-import { batchDeleteUserHandler } from './user/handler/batch/delete';
-import { batchPutUserHandler } from './user/handler/batch/put';
-import { unclaimLockerHandler } from './locker/handler/unclaim';
-import { deleteConfigHandler } from './config/handler/delete';
+import { loginHandler } from './auth/handler/login.js';
+import { logoutHandler } from './auth/handler/logout.js';
+import { getConfigHandler } from './config/handler/get.js';
+import { updateConfigHandler } from './config/handler/update.js';
+import { claimLockerHandler } from './locker/handler/claim.js';
+import { getClaimedLockerCountHandler } from './locker/handler/count.js';
+import { queryClaimedLockersHandler } from './locker/handler/query.js';
+import { deleteUserHandler } from './user/handler/delete.js';
+import { getUserHandler } from './user/handler/get.js';
+import { queryUserHandler } from './user/handler/query.js';
+import { updateUserHandler } from './user/handler/update.js';
+import { batchDeleteUserHandler } from './user/handler/batch/delete.js';
+import { batchPutUserHandler } from './user/handler/batch/put.js';
+import { unclaimLockerHandler } from './locker/handler/unclaim.js';
+import { deleteConfigHandler } from './config/handler/delete.js';
 
 export const auth = {
-  ssuLoginHandler,
+  loginHandler,
   logoutHandler,
 };
 
