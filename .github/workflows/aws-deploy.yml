@@ -15,7 +15,7 @@ jobs:
           python-version: "3.10"
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 21
       - uses: aws-actions/setup-sam@v2
       - uses: aws-actions/configure-aws-credentials@v4
         with:

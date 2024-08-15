@@ -3,7 +3,7 @@
   import LockerLoadingScreen from '../../atom/LockerLoadingScreen.svelte';
   import LockerList from './LockerList.svelte';
   import LockerSectionSelector from './LockerSectionSelector.svelte';
-  import FloorMap from '../../atom/FloorMap.svelte';
+  import FloorMap from '../FloorMap.svelte';
 
   export let serviceConfig: ServiceConfig;
   export let targetDepartmentId: string;
@@ -34,14 +34,14 @@
   }
 
   function constructLockerId(
-      buildingId: string,
-      floor: string,
-      section: string,
-      num: number,
-    ): string {
-      const fixedLengthNum = `${num}`.padStart(3, '0');
-      return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
-    }
+    buildingId: string,
+    floor: string,
+    section: string,
+    num: number,
+  ): string {
+    const fixedLengthNum = `${num}`.padStart(3, '0');
+    return `${buildingId}-${floor}-${section}${fixedLengthNum}`;
+  }
 
   $: if (selectedSection && reservedLockerIds) {
     const sectionRange = getSectionRange(selectedSection.subsections);
@@ -93,7 +93,7 @@
       {#if serviceConfig && selectedBuildingId && selectedFloor}
         <h4 class="text-3xl">배치도</h4>
         <FloorMap
-          class="aspect-4/3 max-h-[50vh] grow rounded-xl"
+          class="max-h-[50vh] aspect-video grow rounded-xl"
           {selectedBuildingId}
           {selectedFloor}
           {selectedSectionId} />
@@ -118,9 +118,9 @@
 </div>
 
 <style lang="postcss">
-  /* -------------- 사물함 그리드 영역 -------------- */
-  .locker-grid {
-    scrollbar-color: #c2c2c2 #e0e0e0;
-    scrollbar-width: thin;
-  }
+    /* -------------- 사물함 그리드 영역 -------------- */
+    .locker-grid {
+        scrollbar-color: #c2c2c2 #e0e0e0;
+        scrollbar-width: thin;
+    }
 </style>
