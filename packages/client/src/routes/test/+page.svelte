@@ -3,11 +3,7 @@
   import Modal from '../../components/molecule/Modal.svelte';
   import NavigationShell from '../../components/molecule/NavigationShell.svelte';
   import PageTitle from '../../components/atom/PageTitle.svelte';
-  import FloorMap from 'src/components/atom/FloorMap.svelte';
-  import { config } from '$lib/store';
-  import { getServiceConfig } from '$lib/api/config';
-
-  $: serviceConfig = $config && $config.success ? getServiceConfig($config.result) : undefined;
+  import MapCanvas from 'src/components/atom/MapCanvas.svelte';
 
   let open = false;
 
@@ -24,10 +20,8 @@
 
 <NavigationShell collapsable={innerWidth <= 1024}>
   <Button on:click={openModal}>모달 열기</Button>
-  {#if $config && $config.success}
-    <FloorMap selectedBuildingId="21" selectedFloor="5" selectedSectionId="E" />
-  {/if}
-  <div class="h-[200vh]">길어요</div>
+  <MapCanvas class="h-[50vh]" src={`/floorMaps/21/5.png`} highlightSrc={`/floorMaps/21/5/H.svg`} highlightX={0}
+             highlightY={0} />
 </NavigationShell>
 
 <Modal
