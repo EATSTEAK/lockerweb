@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "scripts": {
     "dev": "vite dev --port 5002 --host 0.0.0.0",
     "build": "cross-env VITE_BASE_URL= vite build",
